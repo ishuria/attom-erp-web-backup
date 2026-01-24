@@ -22,6 +22,7 @@ import type {
   IGetReductionCostDetailListReq,
   IGetReductionCostDetailListRes,
   IGetReductionCostListRes,
+  IOperationCommissionCoefficientRes,
   IUpdateCommissionArtTypeReq,
   IUpdateCommissionProductTypeReq,
   IUpdateCommissionSetting1Req,
@@ -551,5 +552,83 @@ export function getOperationBonusDetailList(data: {
     url: `${BASE_API}/operation/commission/detail`,
     method: 'post',
     data,
+  })
+}
+
+/**
+ * @description 获取老品提成比例
+ */
+export function getOldProductProportion(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/operation/old/commission/proportion`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 更新老品提成比例
+ */
+export function updateOldProductProportion(params: { proportion: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/old/commission/proportion/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * @description 获取运营绩效-运营考核参数
+ */
+export function getOperationCommissionCoefficient(): Promise<IOperationCommissionCoefficientRes> {
+  return request({
+    url: `${BASE_API}/operation/commission/coefficient`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 更新运营绩效-运营考核参数
+ */
+export function updateOperationCommissionCoefficient(data: {
+  id: number
+  valThreshold: number
+  stepValue: number
+  dayThreshold?: number
+  commissionReduction: number
+}): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/commission/coefficient/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 获取ASIN汇总-月份列表
+ */
+export function getAsinSummaryMonthList(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/operation/asin/summary`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 获取ASIN明细-月份列表
+ */
+export function getAsinDetailMonthList(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/operation/asin/month`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 获取运营奖金明细-月份列表
+ */
+export function getOperationCommissionDateList(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/operation/commission/date`,
+    method: 'get',
   })
 }

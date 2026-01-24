@@ -338,6 +338,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(0)"
                     />
                     %
                   </span>
@@ -354,6 +355,7 @@
                       :min="0.01"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(0)"
                     />
                     %（不足
                     <span class="inline-value">{{ operationConfig.indicators[0].stepValue }}</span>
@@ -368,6 +370,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(0)"
                     />
                     %
                   </span>
@@ -388,6 +391,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(1)"
                     />
                     %
                   </span>
@@ -401,9 +405,10 @@
                       class="inline-input highlight-input"
                       :controls="false"
                       :max="100"
-                      :min="0.01"
+                      :min="0.0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(1)"
                     />
                     %（不足
                     <span class="inline-value">{{ operationConfig.indicators[1].stepValue }}</span>
@@ -418,6 +423,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(1)"
                     />
                     %
                   </span>
@@ -438,6 +444,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(2)"
                     />
                     %
                   </span>
@@ -451,9 +458,10 @@
                       class="inline-input highlight-input"
                       :controls="false"
                       :max="100"
-                      :min="0.01"
+                      :min="0.0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(2)"
                     />
                     %（不足
                     <span class="inline-value">{{ operationConfig.indicators[2].stepValue }}</span>
@@ -468,6 +476,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(2)"
                     />
                     %
                   </span>
@@ -488,6 +497,7 @@
                       :min="0"
                       :precision="0"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(3)"
                     />
                     天的产品的库存占比<=
                     <el-input-number
@@ -498,6 +508,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(3)"
                     />
                     %）
                   </span>
@@ -511,9 +522,10 @@
                       class="inline-input highlight-input"
                       :controls="false"
                       :max="100"
-                      :min="0.01"
+                      :min="0.0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(3)"
                     />
                     %，提成比例减少
                     <el-input-number
@@ -524,6 +536,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(3)"
                     />
                     %
                   </span>
@@ -544,6 +557,7 @@
                       :min="0"
                       :precision="0"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(4)"
                     />
                     天）的比例<=
                     <el-input-number
@@ -554,6 +568,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(4)"
                     />
                     %
                   </span>
@@ -567,9 +582,10 @@
                       class="inline-input highlight-input"
                       :controls="false"
                       :max="100"
-                      :min="0.01"
+                      :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(4)"
                     />
                     %，提成比例减少
                     <el-input-number
@@ -580,6 +596,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(4)"
                     />
                     %
                   </span>
@@ -600,6 +617,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(5)"
                     />
                     %）
                   </span>
@@ -613,9 +631,10 @@
                       class="inline-input highlight-input"
                       :controls="false"
                       :max="100"
-                      :min="0.01"
+                      :min="0.0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(5)"
                     />
                     %，提成比例减少
                     <el-input-number
@@ -626,6 +645,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(5)"
                     />
                     %
                   </span>
@@ -646,6 +666,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(6)"
                     />
                     %
                   </span>
@@ -659,9 +680,10 @@
                       class="inline-input highlight-input"
                       :controls="false"
                       :max="100"
-                      :min="0.01"
+                      :min="0.0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(6)"
                     />
                     %，提成比例减少
                     <el-input-number
@@ -672,6 +694,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(6)"
                     />
                     %
                   </span>
@@ -692,6 +715,7 @@
                       :min="0"
                       :precision="0"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(7)"
                     />
                     天的产品比例<=
                     <el-input-number
@@ -702,6 +726,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(7)"
                     />
                     %）
                   </span>
@@ -715,9 +740,10 @@
                       class="inline-input highlight-input"
                       :controls="false"
                       :max="100"
-                      :min="0.01"
+                      :min="0.0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(7)"
                     />
                     %，提成比例减少
                     <el-input-number
@@ -728,6 +754,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="() => handleIndicatorBlur(7)"
                     />
                     %
                   </span>
@@ -792,12 +819,14 @@ import {
   getCommissionProductTypeList,
   getCommissionSetting,
   getOldProductProportion,
+  getOperationCommissionCoefficient,
   updateCommissionArtType,
   updateCommissionProductType,
   updateCommissionProductTypeScore,
   updateCommissionSetting1,
   updateCommissionSetting2,
   updateOldProductProportion,
+  updateOperationCommissionCoefficient,
 } from '/@/api/devlocal/commission'
 import type {
   IGetCommissionArtTypeList,
@@ -1008,6 +1037,7 @@ const clickCancel3 = async (event: any, value: any) => {
 // ============ 运营类型相关 ============
 
 interface OperationIndicator {
+  id?: number // 规则ID，用于更新接口
   key: string
   name: string
   baseValue: number
@@ -1023,66 +1053,66 @@ interface OperationConfig {
 
 // 运营配置数据
 const operationConfig = ref<OperationConfig>({
-  oldProductClaimRatio: 20,
+  oldProductClaimRatio: 0,
   indicators: [
     {
       key: 'acos',
       name: '广告ACOS',
-      baseValue: 35,
-      stepValue: 1,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      deductionRate: 0,
     },
     {
       key: 'totalAcos',
       name: 'Total ACOS (ACOG)',
-      baseValue: 15,
-      stepValue: 0.5,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      deductionRate: 0,
     },
     {
       key: 'adSalesRatio',
       name: 'ASOAS广告销售额占比',
-      baseValue: 40,
-      stepValue: 1,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      deductionRate: 0,
     },
     {
       key: 'redundantInventory',
       name: '冗余库存占比',
-      baseValue: 16,
-      stepValue: 0.5,
-      daysThreshold: 360,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      daysThreshold: 0,
+      deductionRate: 0,
     },
     {
       key: 'lowSalesRatio',
       name: '低动销比例',
-      baseValue: 20,
-      stepValue: 1,
-      daysThreshold: 150,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      daysThreshold: 0,
+      deductionRate: 0,
     },
     {
       key: 'highAgeInventory',
       name: '高库龄库存占比',
-      baseValue: 15,
-      stepValue: 1,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      deductionRate: 0,
     },
     {
       key: 'unsellableRatio',
       name: '不可售产品销量占比',
-      baseValue: 2.5,
-      stepValue: 0.1,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      deductionRate: 0,
     },
     {
       key: 'unshippedInventory',
       name: '未发库存比例',
-      baseValue: 10,
-      stepValue: 1,
-      daysThreshold: 60,
-      deductionRate: 0.2,
+      baseValue: 0,
+      stepValue: 0,
+      daysThreshold: 0,
+      deductionRate: 0,
     },
   ],
 })
@@ -1093,9 +1123,88 @@ let copyOperationConfig: OperationConfig | null = null
 // 获取运营配置
 const fetchOperationConfig = async () => {
   try {
-    // 获取老品认领比例
-    const { data: oldProductProportion } = await getOldProductProportion()
+    // 并行获取老品认领比例和运营考核参数
+    const [oldProductRes, coefficientRes] = await Promise.all([getOldProductProportion(), getOperationCommissionCoefficient()])
+
+    const { data: oldProductProportion } = oldProductRes
+    const { data: coefficientData } = coefficientRes
+
+    // 更新老品认领比例
     operationConfig.value.oldProductClaimRatio = oldProductProportion
+
+    // 映射API数据到本地数据结构
+    if (coefficientData) {
+      const indicators = operationConfig.value.indicators
+
+      // 广告ACOS -> acos
+      if (coefficientData.acos) {
+        indicators[0].id = coefficientData.acos.id
+        indicators[0].baseValue = coefficientData.acos.valThreshold
+        indicators[0].stepValue = coefficientData.acos.stepValue
+        indicators[0].deductionRate = coefficientData.acos.commissionReduction
+      }
+
+      // Total ACOS (ACOG) -> tcos
+      if (coefficientData.tcos) {
+        indicators[1].id = coefficientData.tcos.id
+        indicators[1].baseValue = coefficientData.tcos.valThreshold
+        indicators[1].stepValue = coefficientData.tcos.stepValue
+        indicators[1].deductionRate = coefficientData.tcos.commissionReduction
+      }
+
+      // ASOAS广告销售额占比 -> asoas
+      if (coefficientData.asoas) {
+        indicators[2].id = coefficientData.asoas.id
+        indicators[2].baseValue = coefficientData.asoas.valThreshold
+        indicators[2].stepValue = coefficientData.asoas.stepValue
+        indicators[2].deductionRate = coefficientData.asoas.commissionReduction
+      }
+
+      // 冗余库存占比 -> redundancyStock
+      if (coefficientData.redundancyStock) {
+        indicators[3].id = coefficientData.redundancyStock.id
+        indicators[3].baseValue = coefficientData.redundancyStock.valThreshold
+        indicators[3].stepValue = coefficientData.redundancyStock.stepValue
+        indicators[3].daysThreshold = coefficientData.redundancyStock.dayThreshold
+        indicators[3].deductionRate = coefficientData.redundancyStock.commissionReduction
+      }
+
+      // 低动销 -> lowSalesTurnover
+      if (coefficientData.lowSalesTurnover) {
+        indicators[4].id = coefficientData.lowSalesTurnover.id
+        indicators[4].baseValue = coefficientData.lowSalesTurnover.valThreshold
+        indicators[4].stepValue = coefficientData.lowSalesTurnover.stepValue
+        indicators[4].daysThreshold = coefficientData.lowSalesTurnover.dayThreshold
+        indicators[4].deductionRate = coefficientData.lowSalesTurnover.commissionReduction
+      }
+
+      // 高库龄库存 -> heightStock
+      if (coefficientData.heightStock) {
+        indicators[5].id = coefficientData.heightStock.id
+        indicators[5].baseValue = coefficientData.heightStock.valThreshold
+        indicators[5].stepValue = coefficientData.heightStock.stepValue
+        indicators[5].deductionRate = coefficientData.heightStock.commissionReduction
+      }
+
+      // 不可售产品销量占比 -> notSaleProportion
+      if (coefficientData.notSaleProportion) {
+        indicators[6].id = coefficientData.notSaleProportion.id
+        indicators[6].baseValue = coefficientData.notSaleProportion.valThreshold
+        indicators[6].stepValue = coefficientData.notSaleProportion.stepValue
+        indicators[6].deductionRate = coefficientData.notSaleProportion.commissionReduction
+      }
+
+      // 未发库存 -> unsoldInventory
+      if (coefficientData.unsoldInventory) {
+        indicators[7].id = coefficientData.unsoldInventory.id
+        indicators[7].baseValue = coefficientData.unsoldInventory.valThreshold
+        indicators[7].stepValue = coefficientData.unsoldInventory.stepValue
+        indicators[7].daysThreshold = coefficientData.unsoldInventory.dayThreshold
+        indicators[7].deductionRate = coefficientData.unsoldInventory.commissionReduction
+      }
+    }
+
+    // 复制原始数据用于对比
     copyOperationConfig = JSON.parse(JSON.stringify(operationConfig.value))
   } catch (error) {
     console.error('获取运营配置失败:', error)
@@ -1127,19 +1236,46 @@ const handleOldProductRatioBlur = async () => {
   }
 }
 
-// 保存老品认领比例
-const handleSaveOldProductProportion = async () => {
+// 考核指标参数失焦保存
+const handleIndicatorBlur = async (index: number) => {
+  if (!copyOperationConfig) return
+
+  const current = operationConfig.value.indicators[index]
+  const original = copyOperationConfig.indicators[index]
+
+  // 检查值是否发生变化
+  if (
+    current.baseValue === original.baseValue &&
+    current.stepValue === original.stepValue &&
+    current.deductionRate === original.deductionRate &&
+    current.daysThreshold === original.daysThreshold
+  ) {
+    return
+  }
+
+  // 检查是否有id（如果没有id说明是从API获取失败，不保存）
+  if (!current.id) {
+    $baseMessage('保存失败：缺少指标ID', 'error')
+    return
+  }
+
   try {
-    const { data } = await updateOldProductProportion({
-      proportion: operationConfig.value.oldProductClaimRatio,
+    const { data } = await updateOperationCommissionCoefficient({
+      id: current.id,
+      valThreshold: current.baseValue,
+      stepValue: current.stepValue,
+      commissionReduction: current.deductionRate,
+      dayThreshold: current.daysThreshold,
     })
     if (data) {
       $baseMessage('保存成功！', 'success')
       copyOperationConfig = JSON.parse(JSON.stringify(operationConfig.value))
     }
   } catch (error) {
-    console.error('保存老品认领比例失败:', error)
+    console.error('保存考核指标参数失败:', error)
     $baseMessage('保存失败，请重试', 'error')
+    // 保存失败时恢复原值
+    operationConfig.value.indicators[index] = { ...original }
   }
 }
 

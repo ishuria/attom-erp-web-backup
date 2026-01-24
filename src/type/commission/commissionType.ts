@@ -852,3 +852,36 @@ export interface IGetCostReductionHistoryPriceList {
    */
   releaseDate: string
 }
+
+// 运营绩效-运营考核系数
+export interface IOperationCommissionCoefficientRes {
+  data: {
+    acos?: IOperationCoefficientIndicator
+    tcos?: IOperationCoefficientIndicator
+    asoas?: IOperationCoefficientIndicator
+    redundancyStock?: IOperationCoefficientIndicator
+    lowSalesTurnover?: IOperationCoefficientIndicator
+    heightStock?: IOperationCoefficientIndicator
+    notSaleProportion?: IOperationCoefficientIndicator
+    unsoldInventory?: IOperationCoefficientIndicator
+  }
+}
+
+export interface IOperationCoefficientIndicator {
+  /** 指标名称 */
+  indicatorName: string
+  /** 值阈值 */
+  valThreshold: number
+  /** 步长 */
+  stepValue: number
+  /** 指标代码 */
+  indicatorCode: string
+  /** 天阈值 */
+  dayThreshold?: number
+  /** 规则ID */
+  id: number
+  /** 指标分类: ADVERTISING(广告), INVENTORY(库存), SALES(销售) */
+  indicatorCategory: string
+  /** 每次违规提成减少比例 */
+  commissionReduction: number
+}

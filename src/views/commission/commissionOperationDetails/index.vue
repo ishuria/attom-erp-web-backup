@@ -20,7 +20,7 @@
 
               <el-form-item label="月份">
                 <el-select v-model="asinSummaryQueryForm.month" placeholder="请选择月份" @change="queryAsinSummaryData">
-                  <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
+                  <el-option v-for="item in asinSummaryMonthOption" :key="item.id" :label="item.label" :value="item.label" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -159,7 +159,7 @@
 
               <el-form-item label="月份">
                 <el-select v-model="asinDetailQueryForm.month" placeholder="请选择月份" @change="queryAsinDetailData">
-                  <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
+                  <el-option v-for="item in asinDetailMonthOption" :key="item.id" :label="item.label" :value="item.label" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -293,7 +293,7 @@
 
               <el-form-item label="发放月份">
                 <el-select v-model="bonusDetailQueryForm.month" placeholder="请选择发放月份" @change="queryBonusDetailData">
-                  <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
+                  <el-option v-for="item in operationBonusMonthOption" :key="item.id" :label="item.label" :value="item.label" />
                 </el-select>
               </el-form-item>
 
@@ -416,7 +416,14 @@ import { getSeasonalCoefficientSiteList } from '~/src/api/devlocal/seasonalCoeff
 import { ROLE_BOSS_CODE } from '~/src/const/role'
 import { useAclStore } from '~/src/store/modules/acl'
 import { useUserStore } from '~/src/store/modules/user'
-import { getOperationBonusAsinDetailList, getOperationBonusAsinSummaryList, getOperationBonusDetailList } from '/@/api/devlocal/commission'
+import {
+  getAsinDetailMonthList,
+  getAsinSummaryMonthList,
+  getOperationBonusAsinDetailList,
+  getOperationBonusAsinSummaryList,
+  getOperationBonusDetailList,
+  getOperationCommissionDateList,
+} from '/@/api/devlocal/commission'
 
 defineOptions({
   name: 'CommissionOperationDetails',
@@ -424,7 +431,7 @@ defineOptions({
 
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
-
+const userSelectDisabled = ref<boolean>(true)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const imagePreviewShow = (url: string) => {
@@ -464,7 +471,7 @@ const asinSummaryTotal = ref<number>(0)
 const bonusDetailQueryForm = reactive({
   userId: -1,
   site: -1,
-  month: '2025-12',
+  month: '',
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
@@ -597,14 +604,33 @@ const fetchUserLevelList = async () => {
   asinDetailQueryForm.userId = bonusDetailQueryForm.userId
   asinSummaryQueryForm.userId = bonusDetailQueryForm.userId
 }
-// 月份筛选
-const monthOption = ref<{ id: number; label: string }[]>([])
-
-const userSelectDisabled = ref<boolean>(true)
+// ASIN汇总月份筛选
+const asinSummaryMonthOption = ref<{ id: number; label: string }[]>([])
+const fetchAsinSummaryMonthList = async () => {
+  const { data } = await getAsinSummaryMonthList()
+  asinSummaryMonthOption.value = data.map((month, index) => ({ id: index, label: month }))
+  asinSummaryQueryForm.month = data[0]
+}
+// ASIN明细月份筛选
+const asinDetailMonthOption = ref<{ id: number; label: string }[]>([])
+const fetchAsinDetailMonthList = async () => {
+  const { data } = await getAsinDetailMonthList()
+  asinDetailMonthOption.value = data.map((month, index) => ({ id: index, label: month }))
+  asinDetailQueryForm.month = data[0]
+}
+// 运营奖金明细月份筛选
+const operationBonusMonthOption = ref<{ id: number; label: string }[]>([])
+const fetchOperationBonusMonthList = async () => {
+  const { data } = await getOperationCommissionDateList()
+  bonusDetailQueryForm.month = data[0]
+  operationBonusMonthOption.value = data.map((month, index) => ({ id: index, label: month }))
+}
 onBeforeMount(async () => {
-  fetchSiteList()
-
+  await fetchSiteList()
   await fetchUserLevelList()
+  await fetchAsinSummaryMonthList()
+  await fetchAsinDetailMonthList()
+  await fetchOperationBonusMonthList()
   await queryAsinSummaryData()
 })
 </script>
