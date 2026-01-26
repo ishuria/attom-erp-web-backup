@@ -112,6 +112,7 @@ export interface IAutoMationQueryReq {
    * 规则开关状态 0关 1开
    */
   roleStatus?: number | null
+  priceChangeType?: number
 }
 
 /** 店铺自动化修改 */

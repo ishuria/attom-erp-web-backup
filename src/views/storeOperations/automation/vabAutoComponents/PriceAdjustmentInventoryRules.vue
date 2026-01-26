@@ -29,6 +29,14 @@
               <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
+          <el-form-item label="价格">
+            <el-select v-model="queryForm.priceChangeType" clearable placeholder="价格变动" @change="handleQueryData">
+              <el-option label="全部" :value="-1" />
+              <el-option label="上调" :value="0" />
+              <el-option label="持平" :value="1" />
+              <el-option label="下调" :value="2" />
+            </el-select>
+          </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
