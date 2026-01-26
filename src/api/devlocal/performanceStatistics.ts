@@ -228,7 +228,7 @@ export function updateMinimumMonthlyAssessment(params: { id: number; number: num
  */
 export function getOperationCommission(data: IGetOperationCommissionReq): Promise<IGetOperationCommissionRes> {
   return request({
-    url: `/operation/commission/summary`,
+    url: `${BASE_API}/operation/commission/summary`,
     method: 'post',
     data,
   })
