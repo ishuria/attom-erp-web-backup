@@ -37,11 +37,13 @@
       v-loading="listLoading"
       border
       :cell-style="cellStyle"
-      class="noneHoverTable"
+      class="noneHoverTable custom-table-hover"
       :data="list"
       :header-cell-style="headerCellStyle"
+      :row-class-name="tableRowClassName"
       stripe
       @cell-click="changeInput"
+      @row-click="handleRowClick"
     >
       <el-table-column fixed="left" label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')" />
       <el-table-column label="1月">
@@ -466,6 +468,17 @@ let referenceData: (number | undefined)[] = []
 let dailyCoefficientData: (number | undefined)[] = []
 const allDailyData = ref<IDailySeasonalCoefficient[]>([])
 const addVisible = ref<boolean>(false)
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const form = reactive<any>({})
 const formRef = ref<FormInstance>()
 const formRules = reactive<FormRules>({
@@ -679,6 +692,7 @@ const handleDialogOpened = () => {
   })
 }
 const viewChart = async (row: IGetSeasonalCoefficientList) => {
+  selectedRowIndex.value = row.id
   viewVisible.value = true
 
   try {
@@ -951,6 +965,7 @@ const getMonthlyActual = (month: number): number => {
 //   chartInstance?.setOption(option.value, true)
 // }
 const handleDel = async (row: IGetSeasonalCoefficientList) => {
+  selectedRowIndex.value = row.id
   $baseConfirm('确定要删除季节系数吗？', null, async () => {
     const { data } = await delSeasonalCoefficient({
       id: row.id,
