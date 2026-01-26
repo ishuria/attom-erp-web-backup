@@ -135,7 +135,9 @@
               <!-- 其他情况的正常逻辑 -->
               <template v-else>
                 <!-- entityType 是否词的不展示 -->
-                <div v-if="row.entityType !== '关键词' && row.entityType !== '否词'">{{ row.entityType }}</div>
+                <div v-if="row.entityType !== '关键词' && row.entityType !== '否词' && row.entityType !== '广告活动'">
+                  {{ row.entityType }}
+                </div>
                 <div v-if="row.keyWord">
                   <el-tag v-if="row.keyWordType" :type="getKeyWordType(row.keyWordType)">
                     {{ row.keyWordType }}
@@ -169,8 +171,8 @@
                   </span>
                   <!-- 预算 -->
                   <span v-else-if="row.changeType === '预算'">
-                    <span v-if="row.afterValue === 'false'">预算用完</span>
-                    <span v-else-if="row.afterValue === 'true'">预算恢复</span>
+                    <span v-if="row.afterValue === 'false'" style="color: var(--el-color-danger)">预算用完</span>
+                    <span v-else-if="row.afterValue === 'true'" style="color: var(--el-color-success)">预算恢复</span>
                   </span>
                   <!-- 其他类型：正常显示 -->
                   <span v-else>{{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}</span>
