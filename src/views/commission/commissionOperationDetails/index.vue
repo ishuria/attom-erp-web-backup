@@ -56,13 +56,13 @@
           <el-table-column fixed="left" label="人员" min-width="100" prop="userName" />
           <el-table-column label="总销售额" min-width="120" prop="totalSales" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalSales ? '$' + row.totalSales : '-' }}
+              {{ row.totalSales ? row.currencyIcon + row.totalSales : '-' }}
             </template>
           </el-table-column>
 
           <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalGrossProfit ? '$' + row.totalGrossProfit : '-' }}
+              {{ row.totalGrossProfit ? row.currencyIcon + row.totalGrossProfit : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="毛利率" min-width="100" prop="totalGrossProfitMargin" sortable="custom">
@@ -77,7 +77,7 @@
           </el-table-column> -->
           <el-table-column label="广告花费" min-width="120" prop="adSpend" sortable="custom">
             <template #default="{ row }">
-              {{ row.adSpend ? '$' + row.adSpend : '-' }}
+              {{ row.adSpend ? row.currencyIcon + row.adSpend : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
@@ -216,22 +216,22 @@
           <el-table-column label="站点" min-width="135" prop="site" />
           <el-table-column label="广告花费" min-width="120" prop="adSpend" sortable="custom">
             <template #default="{ row }">
-              {{ row.adSpend ? '$' + row.adSpend : '-' }}
+              {{ row.adSpend ? row.currencyIcon + row.adSpend : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="广告销售额" min-width="130" prop="adSales" sortable="custom">
             <template #default="{ row }">
-              {{ row.adSales ? '$' + row.adSales : '-' }}
+              {{ row.adSales ? row.currencyIcon + row.adSales : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="总销售额" min-width="120" prop="totalSales" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalSales ? '$' + row.totalSales : '-' }}
+              {{ row.totalSales ? row.currencyIcon + row.totalSales : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalGrossProfit ? '$' + row.totalGrossProfit : '-' }}
+              {{ row.totalGrossProfit ? row.currencyIcon + row.totalGrossProfit : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">

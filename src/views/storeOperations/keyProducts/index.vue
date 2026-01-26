@@ -57,7 +57,7 @@
       <el-table-column label="Vine数量" prop="vineCount" width="100" />
       <el-table-column label="产品定位" prop="productPosition" width="120">
         <template #default="{ row }">
-          <el-tag :type="row.productPosition === '精铺' ? 'primary' : 'warning'">
+          <el-tag :type="row.productPosition === '精铺' ? 'primary' : 'success'">
             {{ row.productPosition === '精品' ? '精品' : '精铺' }}
           </el-tag>
         </template>
