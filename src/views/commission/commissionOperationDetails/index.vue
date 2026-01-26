@@ -414,7 +414,7 @@
     </el-tabs>
 
     <!-- 考核指标详情 -->
-    <performance-indicator-details v-model="performanceIndicatorDetailsVisible" />
+    <performance-indicator-details v-model="performanceIndicatorDetailsVisible" v-model:indicator-list="indicatorList" />
 
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
@@ -430,6 +430,7 @@ import { useAclStore } from '~/src/store/modules/acl'
 import { useUserStore } from '~/src/store/modules/user'
 import {
   getAsinDetailMonthList,
+  getAsinSummaryIndicator,
   getAsinSummaryMonthList,
   getOperationBonusAsinDetailList,
   getOperationBonusAsinSummaryList,
@@ -456,6 +457,16 @@ const imagePreviewClose = () => {
 }
 // 考核指标
 const performanceIndicatorDetailsVisible = ref<boolean>(false)
+const indicatorList = ref<any[]>([])
+const fetchIndicatorList = async (id: number) => {
+  try {
+    const { data } = await getAsinSummaryIndicator({ id })
+    indicatorList.value = data || []
+  } catch (error) {
+    console.error('获取考核指标详情失败:', error)
+    $baseMessage('获取考核指标详情失败，请重试', 'error')
+  }
+}
 // ASIN明细
 const asinDetailQueryForm = reactive({
   keyWord: '',
@@ -537,7 +548,8 @@ const handleAsinDetailSizeChange = (val: number) => {
 }
 
 // ============ ASIN汇总方法 ============
-const handleAsinDetail = (row: any) => {
+const handleAsinDetail = async (row: any) => {
+  await fetchIndicatorList(row.id)
   performanceIndicatorDetailsVisible.value = true
 }
 const queryAsinSummaryData = async () => {

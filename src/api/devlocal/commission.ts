@@ -638,3 +638,14 @@ export function getOperationCommissionDateList(): Promise<{ data: string[] }> {
     method: 'get',
   })
 }
+
+/**
+ * @description 获取ASIN汇总-考核指标详情
+ */
+export function getAsinSummaryIndicator(params: { id: number }): Promise<{ data: any[] }> {
+  return request({
+    url: `${BASE_API}/operation/asin/summary/indicator`,
+    method: 'get',
+    params,
+  })
+}
