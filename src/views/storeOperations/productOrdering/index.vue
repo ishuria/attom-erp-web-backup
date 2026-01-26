@@ -360,6 +360,13 @@
             <el-input-number v-model="filterForm.outOfStockMax" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
+        <el-form-item label="推荐数量">
+          <div class="flex">
+            <el-input-number v-model="filterForm.recommendCountMin" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="filterForm.recommendCountMax" :min="0" placeholder="最大值" style="flex: 1" />
+          </div>
+        </el-form-item>
         <el-form-item label="最晚补货">
           <div class="flex">
             <el-date-picker
@@ -570,11 +577,15 @@ const getSimpleTextContent = (row: any, item: any) => {
 
   // 百分比字段
   if (label === '月净利率') {
-    return row.monthNetProfitMargin !== null && row.monthNetProfitMargin !== undefined ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : ''
+    return row.monthNetProfitMargin !== null && row.monthNetProfitMargin !== undefined
+      ? (row.monthNetProfitMargin * 100).toFixed(2) + '%'
+      : ''
   }
 
   if (label === 'PASIN毛利率') {
-    return row.pAsinMonthNetProfitMargin !== null && row.pAsinMonthNetProfitMargin !== undefined ? (row.pAsinMonthNetProfitMargin * 100).toFixed(2) + '%' : ''
+    return row.pAsinMonthNetProfitMargin !== null && row.pAsinMonthNetProfitMargin !== undefined
+      ? (row.pAsinMonthNetProfitMargin * 100).toFixed(2) + '%'
+      : ''
   }
 
   if (label === '半年有货率') {
@@ -1047,6 +1058,8 @@ const handleResetFilter = () => {
   filterForm.maxSign = undefined
   filterForm.outOfStockMin = undefined
   filterForm.outOfStockMax = undefined
+  filterForm.recommendCountMin = undefined
+  filterForm.recommendCountMax = undefined
   latestDate.value = []
   springFestivalOrderDeadline.value = []
   filterForm.advStatus = undefined
