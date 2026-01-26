@@ -512,6 +512,8 @@ export function getOperationBonusAsinDetailList(data: {
   keyWord: string
   pageNo: number
   pageSize: number
+  orderByField: string
+  orderDirection: string
 }): Promise<{ data: { list: any[]; total: number } }> {
   return request({
     url: `${BASE_API}/operation/asin/detail`,
@@ -529,6 +531,8 @@ export function getOperationBonusAsinSummaryList(data: {
   keyWord: string
   pageNo: number
   pageSize: number
+  orderByField: string
+  orderDirection: string
 }): Promise<{ data: { list: any[]; total: number } }> {
   return request({
     url: `${BASE_API}/operation/asin/summary`,
@@ -547,6 +551,8 @@ export function getOperationBonusDetailList(data: {
   keyWord: string
   pageNo: number
   pageSize: number
+  orderByField: string
+  orderDirection: string
 }): Promise<{ data: { list: any[]; total: number; totalPrice: number } }> {
   return request({
     url: `${BASE_API}/operation/commission/detail`,
@@ -608,7 +614,7 @@ export function updateOperationCommissionCoefficient(data: {
  */
 export function getAsinSummaryMonthList(): Promise<{ data: string[] }> {
   return request({
-    url: `${BASE_API}/operation/asin/summary`,
+    url: `${BASE_API}/operation/asin/summary/month`,
     method: 'get',
   })
 }

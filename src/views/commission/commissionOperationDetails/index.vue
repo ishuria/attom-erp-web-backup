@@ -47,77 +47,85 @@
           border
           :cell-style="{ textAlign: 'center' }"
           :data="asinSummaryList"
+          :default-sort="{ prop: 'adSpend', order: 'descending' }"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
+          @sort-change="handleAsinSummarySortChange"
         >
-          <el-table-column label="月份" min-width="100" prop="month" />
-          <el-table-column label="人员" min-width="100" prop="userName" />
-          <el-table-column label="广告花费" min-width="120" prop="adSpend">
-            <template #default="{ row }">
-              {{ row.adSpend ? '$' + row.adSpend : '-' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="广告销售额" min-width="130" prop="adSales">
-            <template #default="{ row }">
-              {{ row.adSales ? '$' + row.adSales : '-' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="总销售额" min-width="120" prop="totalSales">
+          <el-table-column fixed="left" label="月份" min-width="100" prop="month" />
+          <el-table-column fixed="left" label="人员" min-width="100" prop="userName" />
+          <el-table-column label="总销售额" min-width="120" prop="totalSales" sortable="custom">
             <template #default="{ row }">
               {{ row.totalSales ? '$' + row.totalSales : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit">
+
+          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
               {{ row.totalGrossProfit ? '$' + row.totalGrossProfit : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="ACOS" min-width="100" prop="acos">
+          <el-table-column label="毛利率" min-width="100" prop="totalGrossProfitMargin" sortable="custom">
+            <template #default="{ row }">
+              {{ row.totalGrossProfitMargin ? row.totalGrossProfitMargin + '%' : '-' }}
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="广告销售额" min-width="130" prop="adSales" sortable="custom">
+            <template #default="{ row }">
+              {{ row.adSales ? '$' + row.adSales : '-' }}
+            </template>
+          </el-table-column> -->
+          <el-table-column label="广告花费" min-width="120" prop="adSpend" sortable="custom">
+            <template #default="{ row }">
+              {{ row.adSpend ? '$' + row.adSpend : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
             <template #default="{ row }">
               {{ row.acos ? row.acos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="TACOS" min-width="100" prop="tacos">
+          <el-table-column label="TACOS" min-width="100" prop="tacos" sortable="custom">
             <template #default="{ row }">
               {{ row.tacos ? row.tacos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="广告销售占比" min-width="140" prop="adSalesRatio">
+          <el-table-column label="广告销售占比" min-width="140" prop="adSalesRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.adSalesRatio ? row.adSalesRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总库存" min-width="100" prop="totalInventory" />
-          <el-table-column label="冗余库存" min-width="120" prop="redundantInventory" />
-          <el-table-column label="冗余库存占比" min-width="150" prop="redundantInventoryRatio">
+          <el-table-column label="总库存" min-width="100" prop="totalInventory" sortable="custom" />
+          <el-table-column label="冗余库存" min-width="120" prop="redundantInventory" sortable="custom" />
+          <el-table-column label="冗余库存占比" min-width="150" prop="redundantInventoryRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.redundantInventoryRatio ? row.redundantInventoryRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="低动销库存" min-width="130" prop="lowTurnoverInventory" />
-          <el-table-column label="低动销占比" min-width="120" prop="lowTurnoverRatio">
+          <el-table-column label="低动销库存" min-width="130" prop="lowTurnoverInventory" sortable="custom" />
+          <el-table-column label="低动销占比" min-width="120" prop="lowTurnoverRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.lowTurnoverRatio ? row.lowTurnoverRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="高库龄库存" min-width="130" prop="highAgeInventory" />
-          <el-table-column label="高库龄占比" min-width="120" prop="highAgeRatio">
+          <el-table-column label="高库龄库存" min-width="130" prop="highAgeInventory" sortable="custom" />
+          <el-table-column label="高库龄占比" min-width="120" prop="highAgeRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.highAgeRatio ? row.highAgeRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="未发库存" min-width="100" prop="unsentInventory" />
-          <el-table-column label="未发库存占比" min-width="140" prop="unsentInventoryRatio">
+          <el-table-column label="未发库存" min-width="110" prop="unsentInventory" sortable="custom" />
+          <el-table-column label="未发库存占比" min-width="140" prop="unsentInventoryRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.unsentInventoryRatio ? row.unsentInventoryRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="不可售产品销量占比" min-width="180" prop="unsaleableProductSalesRatio">
+          <el-table-column label="不可售产品销量占比" min-width="180" prop="unsaleableProductSalesRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.unsaleableProductSalesRatio ? row.unsaleableProductSalesRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="考核指标不达标调整" min-width="180" prop="kpiUnqualifiedAdjustment">
+          <el-table-column label="考核指标不达标调整" min-width="180" prop="kpiUnqualifiedAdjustment" sortable="custom">
             <template #default="{ row }">
               {{ row.kpiUnqualifiedAdjustment ? row.kpiUnqualifiedAdjustment + '%' : '-' }}
             </template>
@@ -186,11 +194,13 @@
           border
           :cell-style="{ textAlign: 'center' }"
           :data="asinDetailList"
+          :default-sort="{ prop: 'adSpend', order: 'descending' }"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
+          @sort-change="handleAsinDetailSortChange"
         >
-          <el-table-column label="月份" min-width="100" prop="reportDate" />
-          <el-table-column label="人员" min-width="100" prop="userName" />
+          <el-table-column fixed="left" label="月份" min-width="100" prop="reportDate" />
+          <el-table-column fixed="left" label="人员" min-width="100" prop="userName" />
           <el-table-column label="图片" min-width="100" prop="imageUrl">
             <template #default="{ row }">
               <el-image
@@ -204,48 +214,48 @@
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
           <el-table-column label="站点" min-width="135" prop="site" />
-          <el-table-column label="广告花费" min-width="120" prop="adSpend">
+          <el-table-column label="广告花费" min-width="120" prop="adSpend" sortable="custom">
             <template #default="{ row }">
               {{ row.adSpend ? '$' + row.adSpend : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="广告销售额" min-width="130" prop="adSales">
+          <el-table-column label="广告销售额" min-width="130" prop="adSales" sortable="custom">
             <template #default="{ row }">
               {{ row.adSales ? '$' + row.adSales : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总销售额" min-width="120" prop="totalSales">
+          <el-table-column label="总销售额" min-width="120" prop="totalSales" sortable="custom">
             <template #default="{ row }">
               {{ row.totalSales ? '$' + row.totalSales : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit">
+          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
               {{ row.totalGrossProfit ? '$' + row.totalGrossProfit : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="ACOS" min-width="100" prop="acos">
+          <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
             <template #default="{ row }">
               {{ row.acos ? row.acos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="TACOS" min-width="100" prop="tacos">
+          <el-table-column label="TACOS" min-width="100" prop="tacos" sortable="custom">
             <template #default="{ row }">
               {{ row.tacos ? row.tacos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="广告销售占比" min-width="140" prop="adSalesRatio">
+          <el-table-column label="广告销售占比" min-width="140" prop="adSalesRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.adSalesRatio ? row.adSalesRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总可售天数" min-width="130" prop="totalSellableDays" />
-          <el-table-column label="冗余库存" min-width="120" prop="redundantInventory" />
-          <el-table-column label="低动销" min-width="100" prop="lowTurnoverQty" />
-          <el-table-column label="总库存" min-width="100" prop="totalInventory" />
-          <el-table-column label="高库龄库存" min-width="130" prop="oldAgeInventory" />
-          <el-table-column label="未发库存" min-width="100" prop="unshippedInventory" />
-          <el-table-column label="不可售" min-width="100" prop="unsellableStatusQty">
+          <el-table-column label="总可售天数" min-width="130" prop="totalSellableDays" sortable="custom" />
+          <el-table-column label="冗余库存" min-width="120" prop="redundantInventory" sortable="custom" />
+          <el-table-column label="低动销" min-width="100" prop="lowTurnoverQty" sortable="custom" />
+          <el-table-column label="总库存" min-width="100" prop="totalInventory" sortable="custom" />
+          <el-table-column label="高库龄库存" min-width="130" prop="oldAgeInventory" sortable="custom" />
+          <el-table-column label="未发库存" min-width="100" prop="unshippedInventory" sortable="custom" />
+          <el-table-column label="不可售" min-width="100" prop="unsellableStatusQty" sortable="custom">
             <template #default="{ row }">
               <vab-icon
                 v-if="row.unsellableStatusQty === 0"
@@ -328,11 +338,13 @@
           border
           :cell-style="{ textAlign: 'center' }"
           :data="bonusDetailList"
+          :default-sort="{ prop: 'price', order: 'descending' }"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
+          @sort-change="handleBonusDetailSortChange"
         >
-          <el-table-column label="月份" min-width="100" prop="month" />
-          <el-table-column label="人员" min-width="100" prop="userName" />
+          <el-table-column fixed="left" label="月份" min-width="100" prop="month" />
+          <el-table-column fixed="left" label="人员" min-width="100" prop="userName" />
           <el-table-column label="图片" min-width="100" prop="imgUrl">
             <template #default="{ row }">
               <el-image
@@ -346,43 +358,43 @@
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
           <el-table-column label="站点" min-width="100" prop="site" />
-          <el-table-column label="提成" min-width="100" prop="price">
+          <el-table-column label="提成" min-width="100" prop="price" sortable="custom">
             <template #default="{ row }">
               {{ row.price ? '$' + row.price : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="实际提成比例" min-width="140" prop="actualProportion">
+          <el-table-column label="实际提成比例" min-width="140" prop="actualProportion" sortable="custom">
             <template #default="{ row }">
               {{ row.actualProportion ? row.actualProportion + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="职级提成比例" min-width="140" prop="originProportion">
+          <el-table-column label="职级提成比例" min-width="140" prop="originProportion" sortable="custom">
             <template #default="{ row }">
               {{ row.originProportion ? row.originProportion + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="指标不达标调整" min-width="180" prop="adjustProportion">
+          <el-table-column label="指标不达标调整" min-width="180" prop="adjustProportion" sortable="custom">
             <template #default="{ row }">
               {{ row.adjustProportion !== undefined ? row.adjustProportion + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="净利润" min-width="120" prop="profitGross">
+          <el-table-column label="净利润" min-width="120" prop="profitGross" sortable="custom">
             <template #default="{ row }">
               {{ row.profitGross ? '$' + row.profitGross : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="销售额" min-width="100" prop="totalSalesAmount">
+          <el-table-column label="销售额" min-width="100" prop="totalSalesAmount" sortable="custom">
             <template #default="{ row }">
               {{ row.totalSalesAmount ? '$' + row.totalSalesAmount : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="净利率" min-width="100" prop="netProfitMargin">
+          <el-table-column label="净利率" min-width="100" prop="netProfitMargin" sortable="custom">
             <template #default="{ row }">
               {{ row.netProfitMargin ? row.netProfitMargin + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="汇率" min-width="100" prop="avgRate" />
-          <el-table-column label="老品净利润" min-width="120" prop="oldProfitGross">
+          <el-table-column label="汇率" min-width="100" prop="avgRate" sortable="custom" />
+          <el-table-column label="老品净利润" min-width="120" prop="oldProfitGross" sortable="custom">
             <template #default="{ row }">
               {{ row.oldProfitGross ? '$' + row.oldProfitGross : '-' }}
             </template>
@@ -452,6 +464,8 @@ const asinDetailQueryForm = reactive({
   userId: -1,
   site: -1,
   month: '',
+  orderByField: 'adSpend',
+  orderDirection: 'descending',
 })
 const asinDetailList = ref<any[]>([])
 const asinDetailTotal = ref<number>(0)
@@ -463,6 +477,8 @@ const asinSummaryQueryForm = reactive({
   pageSize: 20,
   userId: -1,
   month: '',
+  orderByField: 'adSpend',
+  orderDirection: 'descending',
 })
 const asinSummaryList = ref<any[]>([])
 const asinSummaryTotal = ref<number>(0)
@@ -475,6 +491,8 @@ const bonusDetailQueryForm = reactive({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  orderByField: 'price',
+  orderDirection: 'descending',
 })
 const bonusDetailList = ref<any[]>([])
 const bonusDetailTotal = ref<number>(0)
@@ -493,7 +511,20 @@ const queryAsinDetailData = async () => {
     listLoading.value = false
   }
 }
-
+const handleAsinDetailSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  asinDetailQueryForm.orderByField = prop
+  // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (asinDetailQueryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (asinDetailQueryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  }
+  asinDetailQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryAsinDetailData()
+}
 const handleAsinDetailCurrentChange = (val: number) => {
   asinDetailQueryForm.pageNo = val
   queryAsinDetailData()
@@ -522,7 +553,20 @@ const queryAsinSummaryData = async () => {
     listLoading.value = false
   }
 }
-
+const handleAsinSummarySortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  asinSummaryQueryForm.orderByField = prop
+  // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (asinSummaryQueryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (asinSummaryQueryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  }
+  asinSummaryQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryAsinSummaryData()
+}
 const handleAsinSummaryCurrentChange = (val: number) => {
   asinSummaryQueryForm.pageNo = val
   queryAsinSummaryData()
@@ -549,7 +593,20 @@ const queryBonusDetailData = async () => {
     listLoading.value = false
   }
 }
-
+const handleBonusDetailSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  bonusDetailQueryForm.orderByField = prop
+  // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (bonusDetailQueryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (bonusDetailQueryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  }
+  bonusDetailQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryBonusDetailData()
+}
 const handleBonusDetailCurrentChange = (val: number) => {
   bonusDetailQueryForm.pageNo = val
   queryBonusDetailData()
