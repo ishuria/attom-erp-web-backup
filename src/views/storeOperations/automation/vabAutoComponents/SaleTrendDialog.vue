@@ -97,9 +97,13 @@ const saleData = computed(() => {
   return filteredTrendData.value.map((item) => item.salesVolume)
 })
 
-// 客单价数据
-const unitPriceData = computed(() => {
-  return filteredTrendData.value.map((item) => item.unitPrice)
+// 原价数据
+const priceData = computed(() => {
+  return filteredTrendData.value.map((item) => item.price)
+})
+// 折后价数据
+const landedPriceData = computed(() => {
+  return filteredTrendData.value.map((item) => item.landedPrice)
 })
 
 // 初始化图表
@@ -123,8 +127,10 @@ const updateChart = () => {
         params.forEach((item: any) => {
           if (item.seriesName === '销量') {
             result += `销量: ${item.value}<br/>`
-          } else if (item.seriesName === '客单价') {
-            result += `客单价: ${item.value}<br/>`
+          } else if (item.seriesName === '原价') {
+            result += `原价: ${item.value}<br/>`
+          } else if (item.seriesName === '折后价') {
+            result += `折后价: ${item.value}<br/>`
           }
         })
         return result
@@ -175,7 +181,7 @@ const updateChart = () => {
       {
         show: true,
         type: 'value',
-        name: '客单价',
+        name: '价格',
         position: 'right',
         nameTextStyle: {
           fontSize: 14,
@@ -195,7 +201,7 @@ const updateChart = () => {
         barMinHeight: 1.5,
         yAxisIndex: 0,
         itemStyle: {
-          color: '#409eff',
+          color: '#409EFF',
         },
         emphasis: {
           itemStyle: {
@@ -204,22 +210,41 @@ const updateChart = () => {
         },
       },
       {
-        name: '客单价',
+        name: '折后价',
         type: 'line',
-        data: unitPriceData.value,
+        data: landedPriceData.value,
         yAxisIndex: 1,
         smooth: true,
         symbol: 'circle',
         symbolSize: 6,
         lineStyle: {
-          color: '#ff4d4f',
+          color: '#67C23A',
           width: 2,
         },
         itemStyle: {
-          color: '#ff4d4f',
+          color: '#67C23A',
         },
         emphasis: {
           focus: 'series',
+        },
+      },
+      {
+        name: '原价',
+        type: 'line',
+        data: priceData.value,
+        yAxisIndex: 1,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#F56C6C',
+          width: 2,
+        },
+        itemStyle: {
+          color: '#F56C6C',
+        },
+        emphasis: {
+          focus: '#F56C6C',
         },
       },
     ],

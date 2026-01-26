@@ -277,7 +277,8 @@ export interface IOperationStockRulesSiteParams {
 export interface SaleTrendDataItem {
   date: string // 日期，如 '2024-01-01'
   salesVolume: number // 销量
-  unitPrice: number // 客单价
+  price: number // 原价
+  landedPrice: number // 折后价
 }
 
 // 获取销量趋势请求参数

@@ -367,7 +367,12 @@
       <el-table-column label="销量趋势" width="120">
         <template #default="{ row }">
           <div class="custom-bar">
-            <vab-echarts-chart-bar-with-line :line-data="row.unitPriceList || []" :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
+            <vab-echarts-chart-bar-with-line
+              :landed-price-data="row.landedPriceList || []"
+              :price-data="row.priceList || []"
+              :x-axis-data="xAxis"
+              :y-axis-data="row.saleVolumeList"
+            />
           </div>
         </template>
       </el-table-column>

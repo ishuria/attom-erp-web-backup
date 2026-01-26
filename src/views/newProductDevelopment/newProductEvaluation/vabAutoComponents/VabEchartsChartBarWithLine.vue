@@ -19,7 +19,11 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  lineData: {
+  priceData: {
+    type: Array,
+    default: () => [],
+  },
+  landedPriceData: {
     type: Array,
     default: () => [],
   },
@@ -82,7 +86,7 @@ const option = reactive<any>({
     {
       show: false,
       type: 'value',
-      name: '客单价',
+      name: '价格',
       position: 'right',
     },
   ],
@@ -100,23 +104,44 @@ const option = reactive<any>({
           opacity: 0.5,
         },
       },
+      itemStyle: {
+        color: '#409EFF',
+      },
     },
     {
-      name: '客单价',
+      name: '折扣价',
       type: 'line',
-      data: props.lineData,
+      data: props.landedPriceData,
       yAxisIndex: 1,
       smooth: true,
       symbol: 'none',
       lineStyle: {
-        color: '#ff4d4f',
+        color: '#67C23A',
         width: 2,
       },
       itemStyle: {
-        color: '#ff4d4f',
+        color: '#67C23A',
       },
       emphasis: {
         focus: 'series',
+      },
+    },
+    {
+      name: '原价',
+      type: 'line',
+      data: props.priceData,
+      yAxisIndex: 1,
+      smooth: true,
+      symbol: 'none',
+      lineStyle: {
+        color: '#F56C6C',
+        width: 2,
+      },
+      itemStyle: {
+        color: '#F56C6C',
+      },
+      emphasis: {
+        focus: '#F56C6C',
       },
     },
   ],
@@ -125,14 +150,7 @@ const option = reactive<any>({
 // 监听数据变化
 watchEffect(() => {
   option.series[0].data = props.yAxisData
-  option.series[1].data = props.lineData
+  option.series[2].data = props.priceData
+  option.series[1].data = props.landedPriceData
 })
-
-watch(
-  theme.value,
-  () => {
-    option.color = [theme.value.color, '#ff4d4f']
-  },
-  { immediate: true }
-)
 </script>
