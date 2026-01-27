@@ -24,7 +24,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select v-model="asinSummaryQueryForm.currency" clearable placeholder="请选择币种" @change="queryAsinSummaryData">
+                <el-select v-model="asinSummaryQueryForm.currency" clearable placeholder="请选择币种" @change="changeAsinSummaryHandler">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -177,7 +177,7 @@
               </el-form-item>
 
               <el-form-item label="币种">
-                <el-select v-model="asinDetailQueryForm.currency" clearable placeholder="请选择币种" @change="queryAsinDetailData">
+                <el-select v-model="asinDetailQueryForm.currency" clearable placeholder="请选择币种" @change="changeAsinDetailHandler">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -434,22 +434,26 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
-import { getFrontPageProductManagerSelectOption } from '~/src/api/devlocal/frontPage'
-import { getCurrencyList } from '~/src/api/devlocal/productPerformance'
-import { getSeasonalCoefficientSiteList } from '~/src/api/devlocal/seasonalCoefficient'
-import { ROLE_BOSS_CODE } from '~/src/const/role'
-import { useAclStore } from '~/src/store/modules/acl'
-import { useUserStore } from '~/src/store/modules/user'
-import { formatAmount } from '~/src/utils/convertToCamelCase'
 import {
   getAsinDetailMonthList,
   getAsinSummaryIndicator,
   getAsinSummaryMonthList,
+  getCurrencyOperationAsinDetail,
+  getCurrencyOperationAsinSummary,
   getOperationBonusAsinDetailList,
   getOperationBonusAsinSummaryList,
   getOperationBonusDetailList,
   getOperationCommissionDateList,
+  updateCurrencyOperationAsinDetail,
+  updateCurrencyOperationAsinSummary,
 } from '/@/api/devlocal/commission'
+import { getFrontPageProductManagerSelectOption } from '/@/api/devlocal/frontPage'
+import { getCurrencyList } from '/@/api/devlocal/productPerformance'
+import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { ROLE_BOSS_CODE } from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
+import { useUserStore } from '/@/store/modules/user'
+import { formatAmount } from '/@/utils/convertToCamelCase'
 
 defineOptions({
   name: 'CommissionOperationDetails',
@@ -580,6 +584,23 @@ const queryAsinSummaryData = async () => {
     listLoading.value = false
   }
 }
+
+// AINS汇总-修改币种
+const changeAsinSummaryHandler = async (row: any) => {
+  const { data } = await updateCurrencyOperationAsinSummary({
+    currency: asinSummaryQueryForm.currency!,
+  })
+  if (data) {
+    queryAsinSummaryData()
+  }
+}
+
+// ASIN汇总-获取币种
+const fetchAsinSummaryCurrency = async () => {
+  const { data } = await getCurrencyOperationAsinSummary()
+  asinSummaryQueryForm.currency = data
+}
+
 const handleAsinSummarySortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
   asinSummaryQueryForm.orderByField = prop
@@ -620,6 +641,23 @@ const queryBonusDetailData = async () => {
     listLoading.value = false
   }
 }
+
+// ASIN明细-修改币种
+const changeAsinDetailHandler = async (row: any) => {
+  const { data } = await updateCurrencyOperationAsinDetail({
+    currency: asinDetailQueryForm.currency!,
+  })
+  if (data) {
+    queryAsinDetailData()
+  }
+}
+
+// ASIN明细-获取币种
+const fetchAsinDetailCurrency = async () => {
+  const { data } = await getCurrencyOperationAsinDetail()
+  asinDetailQueryForm.currency = data
+}
+
 const handleBonusDetailSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
   bonusDetailQueryForm.orderByField = prop
@@ -646,13 +684,15 @@ const handleBonusDetailSizeChange = (val: number) => {
 }
 
 // ============ Tab切换 ============
-const handleTabClick = (tab: TabsPaneContext) => {
+const handleTabClick = async (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
-    queryAsinSummaryData()
+    await fetchAsinSummaryCurrency()
+    await queryAsinSummaryData()
   } else if (tab.props.name === 1) {
-    queryAsinDetailData()
+    await fetchAsinDetailCurrency()
+    await queryAsinDetailData()
   } else if (tab.props.name === 2) {
-    queryBonusDetailData()
+    await queryBonusDetailData()
   }
 }
 // 当前角色名

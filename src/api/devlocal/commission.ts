@@ -649,3 +649,45 @@ export function getAsinSummaryIndicator(params: { id: number }): Promise<{ data:
     params,
   })
 }
+
+/**
+ * @description 运营ASIN汇总-修改币种
+ */
+export function updateCurrencyOperationAsinSummary(params: { currency: number }): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/asin/summary/currency/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * @description 运营ASIN汇总-获取币种
+ */
+export function getCurrencyOperationAsinSummary(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/operation/asin/summary/currency`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 运营ASIN明细-修改币种
+ */
+export function updateCurrencyOperationAsinDetail(params: { currency: number }): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/asin/detail/currency/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * @description 运营ASIN明细-获取币种
+ */
+export function getCurrencyOperationAsinDetail(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/operation/asin/detail/currency`,
+    method: 'get',
+  })
+}

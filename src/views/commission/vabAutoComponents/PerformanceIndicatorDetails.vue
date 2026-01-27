@@ -17,6 +17,11 @@
           {{ row.stepValue !== undefined ? row.stepValue + '%' : '-' }}
         </template>
       </el-table-column>
+      <el-table-column label="不达标档位计数" min-width="150" prop="count">
+        <template #default="{ row }">
+          {{ row.count !== undefined ? row.count : '-' }}
+        </template>
+      </el-table-column>
       <el-table-column label="每个不达标档位调整比例" min-width="200" prop="deductionRatio">
         <template #default="{ row }">
           {{ row.deductionRatio !== undefined ? -row.deductionRatio + '%' : '-' }}
