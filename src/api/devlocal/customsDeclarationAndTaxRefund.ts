@@ -1085,6 +1085,18 @@ export const taxRefundCifPriceUpdate = (data: any): Promise<IBooleanRes> => {
     data,
   })
 }
+/**
+ * 退税批次-批量修改CIF售价
+ * @param data { ids: number[] }
+ * @returns
+ */
+export const taxRefundCifPriceBatchUpdate = (data: { ids: number[] }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/update/cif`,
+    method: 'post',
+    data,
+  })
+}
 
 /**
  * 退税报关资料上传

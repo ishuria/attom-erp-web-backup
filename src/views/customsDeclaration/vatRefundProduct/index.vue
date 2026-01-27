@@ -11,6 +11,7 @@
             <!-- <el-button :loading="exportLoading" type="primary" @click="handleExportATM">埃托姆开票导出</el-button> -->
             <el-button type="primary" @click="invoiceMatchExportVisible = true">发票匹配导出</el-button>
             <el-button :loading="exportLoading" type="primary" @click="handleExportCustomsDeclaration">已报关数据导出</el-button>
+            <el-button type="primary" @click="handleUpdateCifPriceBatch">批量更新CIF售价</el-button>
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
               <el-date-picker
                 :key="datePickerKey"
@@ -121,6 +122,7 @@
           :summary-method="handleSummaryMethod"
           @cell-click="cellClick"
           @row-click="handleRowClick"
+          @selection-change="setSelectRows"
           @sort-change="handleSortChange"
         >
           <el-table-column fixed="left" label="selection" type="selection" width="60" />
@@ -582,6 +584,7 @@ import {
   checkTaxRefundInvoiceExport,
   deleteTaxRefundMatch,
   getTaxRefundList,
+  taxRefundCifPriceBatchUpdate,
   taxRefundCifPriceUpdate,
   taxRefundInvoiceBeforeCheck,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
@@ -1078,7 +1081,27 @@ const handleCifPriceUpdate = async () => {
     cifUpdateLoading.value = false
   }
 }
+const selectedRows = ref<IGetTaxRefundBatchDetailList[]>([])
+const setSelectRows = (value: IGetTaxRefundBatchDetailList[]) => {
+  selectedRows.value = value
+}
+// 批量修改CIF售价
+const handleUpdateCifPriceBatch = async () => {
+  // 如果勾选的行中有CIF售价是空的，那么返回
+  const hasCIFNull = list.value.some((item: IGetTaxRefundBatchDetailList) => item.cifPrice === undefined || item.cifPrice === null)
+  if (hasCIFNull) {
+    $baseMessage('勾选的行中存在CIF售价为空的数据，无法进行批量更新！', 'error')
+    return
+  }
 
+  const { data } = await taxRefundCifPriceBatchUpdate({
+    ids: selectedRows.value.map((item: IGetTaxRefundBatchDetailList) => item.id!),
+  })
+  if (data) {
+    $baseMessage('批量修改CIF售价成功！', 'success')
+    fetchData()
+  }
+}
 const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (['报关单出口日期'].includes(data.column.label)) {
     return 'header-cell'
