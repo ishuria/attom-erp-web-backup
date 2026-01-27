@@ -180,14 +180,14 @@
       </el-table-column>
       <el-table-column label="月销量" min-width="100" prop="monthSalesVolume" />
       <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
-      <el-table-column label="管理奖金比例" min-width="100" v-if="managerBonusVisible">
+      <el-table-column v-if="managerBonusVisible" label="管理奖金比例" min-width="100">
         <template #default="{ row }">
           <el-text v-if="row.managerProportion >= 0">
             {{ row.managerProportion ? row.managerProportion + '%' : '' }}
           </el-text>
         </template>
       </el-table-column>
-      <el-table-column label="管理奖金" min-width="100" prop="managerBonus"  v-if="managerBonusVisible"/>
+      <el-table-column v-if="managerBonusVisible" label="管理奖金" min-width="100" prop="managerBonus" />
       <template #empty>
         <el-empty class="vab-data-empty" />
       </template>
@@ -213,7 +213,7 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
-import { ROLE_BOSS_CODE,ROLE_PRODUCTMANNAGERLEAD_CODE,ROLE_GRAPHICDESIGNLEAD_CODE } from '~/src/const/role'
+import { ROLE_BOSS_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE } from '~/src/const/role'
 import { useUserStore } from '~/src/store/modules/user'
 import {
   getCommissionDetailDevelopList,
@@ -579,6 +579,10 @@ const onlineOption = ref<{ id: number; label: string }[]>([
     label: '全部',
   },
   {
+    id: 2,
+    label: '新品(上线360天以内)',
+  },
+  {
     id: 1,
     label: '已上线',
   },
@@ -610,10 +614,11 @@ onBeforeMount(async () => {
   // fetchDevelopRoleList()
   await developQueryData()
 
-  if (currentRoleCode === ROLE_BOSS_CODE
-    || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
-    || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
-  ){
+  if (
+    currentRoleCode === ROLE_BOSS_CODE ||
+    currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
+    currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
+  ) {
     managerBonusVisible.value = true
   }
 })
