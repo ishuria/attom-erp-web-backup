@@ -70,6 +70,12 @@
               {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
             </template>
           </el-table-column>
+          <el-table-column label="利润报表销售额" min-width="150" prop="totalGrossProfitSalesAmount" sortable="custom">
+            <template #default="{ row }">
+              {{ row.totalGrossProfitSalesAmount ? row.currencyIcon + formatAmount(row.totalGrossProfitSalesAmount) : '-' }}
+            </template>
+          </el-table-column>
+
           <el-table-column label="毛利率" min-width="100" prop="totalGrossProfitMargin" sortable="custom">
             <template #default="{ row }">
               {{ row.totalGrossProfitMargin ? row.totalGrossProfitMargin + '%' : '-' }}
@@ -243,6 +249,11 @@
           <el-table-column label="总毛利润" min-width="130" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
               {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="利润报表销售额" min-width="130" prop="totalSalesAmount" sortable="custom">
+            <template #default="{ row }">
+              {{ row.totalSalesAmount ? row.currencyIcon + formatAmount(row.totalSalesAmount) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
