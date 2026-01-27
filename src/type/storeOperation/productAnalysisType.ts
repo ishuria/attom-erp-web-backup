@@ -564,6 +564,7 @@ export interface ISPAdsTableReq {
   exactSearch?: number
   orderByField?: string
   orderDirection?: string
+  categoryType?: number
 }
 export interface ISPAdsPieReq {
   startDate: string

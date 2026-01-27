@@ -356,6 +356,7 @@ const fetchTableData = async () => {
       exactSearch: queryForm.exactSearch || 0,
       orderByField: queryForm.orderByField,
       orderDirection: queryForm.orderDirection,
+      categoryType: selectedPieCategory.value ? pieNameToType(selectedPieCategory.value) : undefined,
     })
 
     if (data && data.list) {
@@ -688,6 +689,32 @@ const updateChart2 = () => {
 const handleChangeSelect = () => {
   updatePieChartDisplay()
 }
+const selectedPieCategory = ref<string | null>(null)
+
+const pieNameToType = (name: string): number | undefined => {
+  const map: Record<string, number> = {
+    高ACOS: 1,
+    低ACOS: 2,
+    高点击不出单: 3,
+    低点击不出单: 4,
+  }
+  return map[name]
+}
+const bindChart1Click = () => {
+  if (!chartInstance1) return
+
+  chartInstance1.off('click')
+
+  chartInstance1.on('click', (params: any) => {
+    const clickedName = params?.data?.name as string | undefined
+    if (!clickedName) return
+
+    selectedPieCategory.value = selectedPieCategory.value === clickedName ? null : clickedName
+
+    queryForm.pageNo = 1
+    fetchTableData()
+  })
+}
 // onBeforeMount 中不再需要处理数据，现在在获取数据后通过 updatePieChartDisplay 处理
 // 初始化图表
 onMounted(() => {
@@ -700,6 +727,7 @@ onMounted(() => {
     })
     chartObserver1.observe(chartContainer1.value)
     initChart1()
+    bindChart1Click()
   }
   if (chartContainer2.value) {
     chartInstance2 = echarts.init(chartContainer2.value)
@@ -742,6 +770,12 @@ const getCategoryColor = (value: any) => {
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
+
+  // 默认样式
+  const baseStyle: CSSProperties = {
+    textAlign: 'center',
+  }
+
   if (label === '客户搜索词') {
     return {
       textAlign: 'left',
@@ -764,28 +798,28 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       }
     }
   } else if (label === '点击率(我们/大盘)') {
-    if (data.row.clickThruRate >= data.row.marketClickThruRate) {
-      return {
-        textAlign: 'center',
-        color: 'var(--el-color-success)',
-      }
-    } else {
-      return {
-        textAlign: 'center',
-        color: 'var(--el-color-danger)',
-      }
+    const { clickThruRate, marketClickThruRate } = data.row
+
+    // 没有大盘参考值 → 黑色
+    if (marketClickThruRate == null) {
+      return baseStyle
+    }
+
+    return {
+      ...baseStyle,
+      color: clickThruRate >= marketClickThruRate ? 'var(--el-color-success)' : 'var(--el-color-danger)',
     }
   } else if (label === '转化率(我们/大盘)') {
-    if (data.row.conversionRate >= data.row.marketConversionRate) {
-      return {
-        textAlign: 'center',
-        color: 'var(--el-color-success)',
-      }
-    } else {
-      return {
-        textAlign: 'center',
-        color: 'var(--el-color-danger)',
-      }
+    const { conversionRate, marketConversionRate } = data.row
+
+    // 没有大盘参考值 → 黑色
+    if (marketConversionRate == null) {
+      return baseStyle
+    }
+
+    return {
+      ...baseStyle,
+      color: conversionRate >= marketConversionRate ? 'var(--el-color-success)' : 'var(--el-color-danger)',
     }
   }
   return {
