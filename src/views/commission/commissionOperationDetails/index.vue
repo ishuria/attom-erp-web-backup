@@ -23,6 +23,11 @@
                   <el-option v-for="item in asinSummaryMonthOption" :key="item.id" :label="item.label" :value="item.label" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="币种">
+                <el-select v-model="asinSummaryQueryForm.currency" clearable placeholder="请选择币种" @change="queryAsinSummaryData">
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
@@ -60,7 +65,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="总毛利润" min-width="140" prop="totalGrossProfit" sortable="custom">
+          <el-table-column label="利润报表毛利" min-width="150" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
               {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
             </template>
@@ -168,6 +173,12 @@
               <el-form-item label="月份">
                 <el-select v-model="asinDetailQueryForm.month" placeholder="请选择月份" @change="queryAsinDetailData">
                   <el-option v-for="item in asinDetailMonthOption" :key="item.id" :label="item.label" :value="item.label" />
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="币种">
+                <el-select v-model="asinDetailQueryForm.currency" clearable placeholder="请选择币种" @change="queryAsinDetailData">
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -360,7 +371,7 @@
           <el-table-column label="站点" min-width="125" prop="site" />
           <el-table-column label="提成" min-width="100" prop="price" sortable="custom">
             <template #default="{ row }">
-              {{ row.price ? '$' + row.price : '-' }}
+              {{ row.price ? '¥' + row.price : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="实际提成比例" min-width="150" prop="actualProportion" sortable="custom">
@@ -424,6 +435,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
 import { getFrontPageProductManagerSelectOption } from '~/src/api/devlocal/frontPage'
+import { getCurrencyList } from '~/src/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '~/src/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE } from '~/src/const/role'
 import { useAclStore } from '~/src/store/modules/acl'
@@ -478,6 +490,7 @@ const asinDetailQueryForm = reactive({
   month: '',
   orderByField: 'adSpend',
   orderDirection: 'descending',
+  currency: -1,
 })
 const asinDetailList = ref<any[]>([])
 const asinDetailTotal = ref<number>(0)
@@ -491,6 +504,7 @@ const asinSummaryQueryForm = reactive({
   month: '',
   orderByField: 'adSpend',
   orderDirection: 'descending',
+  currency: -1,
 })
 const asinSummaryList = ref<any[]>([])
 const asinSummaryTotal = ref<number>(0)
@@ -695,8 +709,16 @@ const fetchOperationBonusMonthList = async () => {
   bonusDetailQueryForm.month = data[0]
   operationBonusMonthOption.value = data.map((month, index) => ({ id: index, label: month }))
 }
+// 币种筛选
+const currencyList = ref<{ id: number; label: string }[]>([])
+const fetchCurrencyList = async () => {
+  const { data } = await getCurrencyList()
+  currencyList.value = data
+  currencyList.value.unshift({ id: -1, label: '原币种' })
+}
 onBeforeMount(async () => {
   await fetchSiteList()
+  await fetchCurrencyList()
   await fetchUserLevelList()
   await fetchAsinSummaryMonthList()
   await fetchAsinDetailMonthList()
