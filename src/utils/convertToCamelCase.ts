@@ -12,3 +12,10 @@ export const convertToCamelCase = (str: any) => {
   }
   return capitalizedParts.join('')
 }
+
+export const formatAmount = (value: number | string) => {
+  if (value === null || value === undefined || value === '') return '-'
+  const num = Number(value)
+  if (isNaN(num)) return '-'
+  return num.toLocaleString()
+}

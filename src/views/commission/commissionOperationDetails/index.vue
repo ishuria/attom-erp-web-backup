@@ -54,15 +54,15 @@
         >
           <el-table-column fixed="left" label="月份" min-width="100" prop="month" />
           <el-table-column fixed="left" label="人员" min-width="100" prop="userName" />
-          <el-table-column label="总销售额" min-width="120" prop="totalSales" sortable="custom">
+          <el-table-column label="总销售额" min-width="140" prop="totalSales" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalSales ? row.currencyIcon + row.totalSales : '-' }}
+              {{ row.totalSales ? row.currencyIcon + formatAmount(row.totalSales) : '-' }}
             </template>
           </el-table-column>
 
-          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit" sortable="custom">
+          <el-table-column label="总毛利润" min-width="140" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalGrossProfit ? row.currencyIcon + row.totalGrossProfit : '-' }}
+              {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="毛利率" min-width="100" prop="totalGrossProfitMargin" sortable="custom">
@@ -75,9 +75,9 @@
               {{ row.adSales ? '$' + row.adSales : '-' }}
             </template>
           </el-table-column> -->
-          <el-table-column label="广告花费" min-width="120" prop="adSpend" sortable="custom">
+          <el-table-column label="广告花费" min-width="140" prop="adSpend" sortable="custom">
             <template #default="{ row }">
-              {{ row.adSpend ? row.currencyIcon + row.adSpend : '-' }}
+              {{ row.adSpend ? row.currencyIcon + formatAmount(row.adSpend) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
@@ -85,12 +85,12 @@
               {{ row.acos ? row.acos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="TACOS" min-width="100" prop="tacos" sortable="custom">
+          <el-table-column label="TACOS" min-width="110" prop="tacos" sortable="custom">
             <template #default="{ row }">
               {{ row.tacos ? row.tacos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="广告销售占比" min-width="140" prop="adSalesRatio" sortable="custom">
+          <el-table-column label="广告销售占比" min-width="150" prop="adSalesRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.adSalesRatio ? row.adSalesRatio + '%' : '-' }}
             </template>
@@ -103,29 +103,29 @@
             </template>
           </el-table-column>
           <el-table-column label="低动销库存" min-width="130" prop="lowTurnoverInventory" sortable="custom" />
-          <el-table-column label="低动销占比" min-width="120" prop="lowTurnoverRatio" sortable="custom">
+          <el-table-column label="低动销占比" min-width="130" prop="lowTurnoverRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.lowTurnoverRatio ? row.lowTurnoverRatio + '%' : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="高库龄库存" min-width="130" prop="highAgeInventory" sortable="custom" />
-          <el-table-column label="高库龄占比" min-width="120" prop="highAgeRatio" sortable="custom">
+          <el-table-column label="高库龄占比" min-width="130" prop="highAgeRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.highAgeRatio ? row.highAgeRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="未发库存" min-width="110" prop="unsentInventory" sortable="custom" />
-          <el-table-column label="未发库存占比" min-width="140" prop="unsentInventoryRatio" sortable="custom">
+          <el-table-column label="未发库存" min-width="120" prop="unsentInventory" sortable="custom" />
+          <el-table-column label="未发库存占比" min-width="150" prop="unsentInventoryRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.unsentInventoryRatio ? row.unsentInventoryRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="不可售产品销量占比" min-width="180" prop="unsaleableProductSalesRatio" sortable="custom">
+          <el-table-column label="不可售产品销量占比" min-width="190" prop="unsaleableProductSalesRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.unsaleableProductSalesRatio ? row.unsaleableProductSalesRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="考核指标不达标调整" min-width="180" prop="kpiUnqualifiedAdjustment" sortable="custom">
+          <el-table-column label="考核指标不达标调整" min-width="190" prop="kpiUnqualifiedAdjustment" sortable="custom">
             <template #default="{ row }">
               {{ row.kpiUnqualifiedAdjustment ? row.kpiUnqualifiedAdjustment + '%' : '-' }}
             </template>
@@ -214,24 +214,24 @@
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
           <el-table-column label="站点" min-width="135" prop="site" />
-          <el-table-column label="广告花费" min-width="120" prop="adSpend" sortable="custom">
+          <el-table-column label="广告花费" min-width="130" prop="adSpend" sortable="custom">
             <template #default="{ row }">
-              {{ row.adSpend ? row.currencyIcon + row.adSpend : '-' }}
+              {{ row.adSpend ? row.currencyIcon + formatAmount(row.adSpend) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="广告销售额" min-width="130" prop="adSales" sortable="custom">
             <template #default="{ row }">
-              {{ row.adSales ? row.currencyIcon + row.adSales : '-' }}
+              {{ row.adSales ? row.currencyIcon + formatAmount(row.adSales) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="总销售额" min-width="120" prop="totalSales" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalSales ? row.currencyIcon + row.totalSales : '-' }}
+              {{ row.totalSales ? row.currencyIcon + formatAmount(row.totalSales) : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit" sortable="custom">
+          <el-table-column label="总毛利润" min-width="130" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalGrossProfit ? row.currencyIcon + row.totalGrossProfit : '-' }}
+              {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
@@ -239,12 +239,12 @@
               {{ row.acos ? row.acos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="TACOS" min-width="100" prop="tacos" sortable="custom">
+          <el-table-column label="TACOS" min-width="110" prop="tacos" sortable="custom">
             <template #default="{ row }">
               {{ row.tacos ? row.tacos + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="广告销售占比" min-width="140" prop="adSalesRatio" sortable="custom">
+          <el-table-column label="广告销售占比" min-width="150" prop="adSalesRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.adSalesRatio ? row.adSalesRatio + '%' : '-' }}
             </template>
@@ -254,7 +254,7 @@
           <el-table-column label="低动销" min-width="100" prop="lowTurnoverQty" sortable="custom" />
           <el-table-column label="总库存" min-width="100" prop="totalInventory" sortable="custom" />
           <el-table-column label="高库龄库存" min-width="130" prop="oldAgeInventory" sortable="custom" />
-          <el-table-column label="未发库存" min-width="100" prop="unshippedInventory" sortable="custom" />
+          <el-table-column label="未发库存" min-width="120" prop="unshippedInventory" sortable="custom" />
           <el-table-column label="不可售" min-width="100" prop="unsellableStatusQty" sortable="custom">
             <template #default="{ row }">
               <vab-icon
@@ -357,18 +357,18 @@
             </template>
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
-          <el-table-column label="站点" min-width="100" prop="site" />
+          <el-table-column label="站点" min-width="125" prop="site" />
           <el-table-column label="提成" min-width="100" prop="price" sortable="custom">
             <template #default="{ row }">
               {{ row.price ? '$' + row.price : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="实际提成比例" min-width="140" prop="actualProportion" sortable="custom">
+          <el-table-column label="实际提成比例" min-width="150" prop="actualProportion" sortable="custom">
             <template #default="{ row }">
               {{ row.actualProportion ? row.actualProportion + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="职级提成比例" min-width="140" prop="originProportion" sortable="custom">
+          <el-table-column label="职级提成比例" min-width="150" prop="originProportion" sortable="custom">
             <template #default="{ row }">
               {{ row.originProportion ? row.originProportion + '%' : '-' }}
             </template>
@@ -394,11 +394,11 @@
             </template>
           </el-table-column>
           <el-table-column label="汇率" min-width="100" prop="avgRate" sortable="custom" />
-          <el-table-column label="老品净利润" min-width="120" prop="oldProfitGross" sortable="custom">
+          <!-- <el-table-column label="老品净利润" min-width="120" prop="oldProfitGross" sortable="custom">
             <template #default="{ row }">
               {{ row.oldProfitGross ? '$' + row.oldProfitGross : '-' }}
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -428,6 +428,7 @@ import { getSeasonalCoefficientSiteList } from '~/src/api/devlocal/seasonalCoeff
 import { ROLE_BOSS_CODE } from '~/src/const/role'
 import { useAclStore } from '~/src/store/modules/acl'
 import { useUserStore } from '~/src/store/modules/user'
+import { formatAmount } from '~/src/utils/convertToCamelCase'
 import {
   getAsinDetailMonthList,
   getAsinSummaryIndicator,
