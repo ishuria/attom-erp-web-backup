@@ -8,6 +8,7 @@ import type {
   IGetAdjustDetail,
   IGetAdjustDetailReq,
   IGetAdjustDetailRes,
+  IGetArtDesignTaskStatistics,
   IGetAssessmentListReq,
   IGetAssessmentListRes,
   IGetOperationCommissionReq,
@@ -229,6 +230,22 @@ export function updateMinimumMonthlyAssessment(params: { id: number; number: num
 export function getOperationCommission(data: IGetOperationCommissionReq): Promise<IGetOperationCommissionRes> {
   return request({
     url: `${BASE_API}/operation/commission/summary`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 首页-美工任务统计
+ * @param data
+ * @returns
+ */
+export function getArtDesignTaskStatistics(data: {
+  userId: number
+  startMonth: string
+  endMonth: string
+}): Promise<{ data: IGetArtDesignTaskStatistics[] }> {
+  return request({
+    url: `${BASE_API}/artdesign/performance/query`,
     method: 'post',
     data,
   })

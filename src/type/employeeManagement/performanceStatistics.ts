@@ -357,3 +357,17 @@ export interface IGetOperationCommission {
   /** 月份 */
   month?: string
 }
+
+export interface IGetArtDesignTaskStatistics {
+  month: string
+  userName: string
+  newProductTaskCount: number
+  oldProductTaskCount: number
+  tempTaskCount: number
+  designTaskCount: number
+  newProductOnTimeRate: number
+  oldProductOnTimeRate: number
+  tempTaskOnTimeRate: number
+  designTaskOnTimeRate: number
+  totalTaskCount: number
+}

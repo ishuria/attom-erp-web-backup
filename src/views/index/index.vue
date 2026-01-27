@@ -417,6 +417,10 @@
           </template>
         </personal-bonus-card>
       </el-col>
+      <!-- 美工任务统计 -->
+      <!-- <el-col :lg="20" :md="24" :sm="24" :xl="20" :xs="24">
+        <art-design-dashboard />
+      </el-col> -->
     </el-row>
 
     <el-row class="row-spacing" :gutter="20">

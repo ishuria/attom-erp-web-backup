@@ -391,12 +391,12 @@
           </el-table-column>
           <el-table-column label="净利润" min-width="120" prop="profitGross" sortable="custom">
             <template #default="{ row }">
-              {{ row.profitGross ? '$' + row.profitGross : '-' }}
+              {{ row.profitGross ? row.currencyIcon + formatAmount(row.profitGross) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="销售额" min-width="100" prop="totalSalesAmount" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalSalesAmount ? '$' + row.totalSalesAmount : '-' }}
+              {{ row.totalSalesAmount ? row.currencyIcon + formatAmount(row.totalSalesAmount) : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="净利率" min-width="100" prop="netProfitMargin" sortable="custom">
