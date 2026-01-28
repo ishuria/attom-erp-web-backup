@@ -295,7 +295,7 @@
             一条龙质检图片拍摄
           </el-button>
         </div>
-        
+
         <el-form-item label="基础图片" style="margin-bottom: 50px" validate-position="right">
           <template #label>
             基础图片
@@ -629,7 +629,7 @@ const startOneStopPhotoSession = () => {
 // 处理照片上传事件
 const handlePhotoUploaded = (data: { type: number; sort: number; imgData: any }) => {
   const { type, sort, imgData } = data
-  
+
   // 根据类型更新对应的列表
   switch (type) {
     case 0: {
