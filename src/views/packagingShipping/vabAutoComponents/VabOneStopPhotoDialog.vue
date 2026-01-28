@@ -97,6 +97,7 @@ interface Props {
   componentDetailImgList: any[]
   finishedImgList: any[]
   otherImgList: any[]
+  initialType?: number // 初始定位的类型：0-基础图片 1-零件细节 2-成品组装 3-其他图片
 }
 
 interface Emits {
@@ -210,8 +211,17 @@ const initPhotoSession = () => {
   requiredPhotos.value.push(...buildTypeItems(2, '成品组装图', '展示产品组装后的图片，多角度拍摄', props.finishedImgList))
   requiredPhotos.value.push(...buildTypeItems(3, '其他图片', '其他需要记录的图片', props.otherImgList))
 
-  const firstEmptyIndex = requiredPhotos.value.findIndex((item) => !item.hasImage)
-  currentPhotoIndex.value = firstEmptyIndex >= 0 ? firstEmptyIndex : 0
+  // 如果指定了 initialType，优先定位到该类型的第一个未完成项（通常是新增项）
+  if (props.initialType != null) {
+    const initialTypeIndex = requiredPhotos.value.findIndex(
+      (item) => item.type === props.initialType && !item.hasImage
+    )
+    currentPhotoIndex.value = initialTypeIndex >= 0 ? initialTypeIndex : 0
+  } else {
+    // 否则找到第一个没有图片的项
+    const firstEmptyIndex = requiredPhotos.value.findIndex((item) => !item.hasImage)
+    currentPhotoIndex.value = firstEmptyIndex >= 0 ? firstEmptyIndex : 0
+  }
 
   currentPhotoPreview.value = ''
   currentPhotoFile.value = null

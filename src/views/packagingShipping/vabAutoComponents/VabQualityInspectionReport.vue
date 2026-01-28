@@ -471,6 +471,7 @@
       :base-picture-img-list="basePictureImgList"
       :component-detail-img-list="componentDetailImgList"
       :finished-img-list="finishedImgList"
+      :initial-type="oneStopPhotoInitialType"
       :other-img-list="otherImgList"
       :report-id="reportId"
       @photo-uploaded="handlePhotoUploaded"
@@ -536,6 +537,7 @@ const handleUpdateData = (val: boolean) => {
 const precautionsVisible = ref<boolean>(false)
 // 一条龙拍摄相关
 const oneStopPhotoVisible = ref<boolean>(false)
+const oneStopPhotoInitialType = ref<number | undefined>(undefined)
 const componentList = ref<IComponentList[]>([])
 const reportDetailList = ref<ReportDetailList[]>([])
 const poOption = ref<string[]>([])
@@ -625,6 +627,13 @@ const showPrecautions = () => {
 const startOneStopPhotoSession = () => {
   oneStopPhotoVisible.value = true
 }
+
+// 监听对话框关闭，重置 initialType
+watch(oneStopPhotoVisible, (val) => {
+  if (!val) {
+    oneStopPhotoInitialType.value = undefined
+  }
+})
 
 // 处理照片上传事件
 const handlePhotoUploaded = (data: { type: number; sort: number; imgData: any }) => {
@@ -877,6 +886,13 @@ const showBaseUploadDialog = (sort: number) => {
 
 // 打开上传图片弹窗
 const showUploadDialog = (type: number, index: number) => {
+  // 其他图片使用连拍对话框
+  if (type === 3) {
+    oneStopPhotoInitialType.value = 3 // 设置初始类型为其他图片
+    oneStopPhotoVisible.value = true
+    return
+  }
+
   imageUploadVisible.value = true
   imageUploadType.value = type
   if (type === 1) {
@@ -887,10 +903,6 @@ const showUploadDialog = (type: number, index: number) => {
   } else if (type === 2) {
     // 成品组装图片：sort 依次递增，计算当前最大 sort + 1
     const maxSort = finishedImgList.value.length > 0 ? Math.max(...finishedImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
-    imageUploadIndex.value = maxSort + 1
-  } else if (type === 3) {
-    // 其他图片：sort 依次递增，计算当前最大 sort + 1
-    const maxSort = otherImgList.value.length > 0 ? Math.max(...otherImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
     imageUploadIndex.value = maxSort + 1
   } else {
     // 基础图片：使用传入的 index（即 sort）
