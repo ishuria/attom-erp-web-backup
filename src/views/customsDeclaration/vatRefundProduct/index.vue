@@ -1093,14 +1093,15 @@ const handleUpdateCifPriceBatch = async () => {
     $baseMessage('勾选的行中存在CIF售价为空的数据，无法进行批量更新！', 'error')
     return
   }
-
-  const { data } = await taxRefundCifPriceBatchUpdate({
-    ids: selectedRows.value.map((item: IGetTaxRefundBatchDetailList) => item.id!),
+  $baseConfirm('确定要批量修改CIF售价吗？', null, async () => {
+    const { data } = await taxRefundCifPriceBatchUpdate({
+      ids: selectedRows.value.map((item: IGetTaxRefundBatchDetailList) => item.id!),
+    })
+    if (data) {
+      $baseMessage('批量修改CIF售价成功！', 'success')
+      fetchData()
+    }
   })
-  if (data) {
-    $baseMessage('批量修改CIF售价成功！', 'success')
-    fetchData()
-  }
 }
 const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (['报关单出口日期'].includes(data.column.label)) {
