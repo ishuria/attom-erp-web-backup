@@ -124,8 +124,8 @@ const handleInvoicingTaxChange = async (value: number) => {
   } else {
     taxVisible.value = true
   }
-  if (form.supplier) {
-    handleTaxDisabled(form.supplier)
+  if (form.suppliser) {
+    handleTaxDisabled(form.suppliser)
   }
 }
 const invoicingNumList = [

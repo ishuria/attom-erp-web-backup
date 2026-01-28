@@ -4,13 +4,7 @@
       <vab-query-form-left-panel :span="20">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item label="发票匹配状态">
-            <el-select
-              v-model="queryForm.customsDeclarationStatus"
-              clearable
-              placeholder="发票状态筛选"
-              style="width: 150px"
-              @change="$emit('query')"
-            >
+            <el-select v-model="queryForm.status" clearable placeholder="发票状态筛选" style="width: 150px" @change="$emit('query')">
               <el-option label="全部" :value="-1" />
               <el-option label="已匹配" :value="1" />
               <el-option label="未匹配" :value="0" />
@@ -39,28 +33,27 @@
     <el-table
       v-loading="loading"
       border
-      :cell-class-name="clearPadding"
       :cell-style="cellStyle"
       class="noneHoverTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
+      :span-method="objectSpanMethod"
       @selection-change="setSelectRows"
     >
       <el-table-column label="发票号码" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" prop="invoiceNumber" />
-      <el-table-column
-        v-if="showActions"
-        label="发票供应商"
-        :min-width="flexColumnWidth(list, '发票供应商', 'invoiceSupplier')"
-        prop="invoiceSupplier"
-      />
-      <el-table-column label="发票状态" min-width="100" prop="invoiceStatus" />
-      <el-table-column label="匹配金额" />
+      <el-table-column label="发票供应商" :min-width="flexColumnWidth(list, '发票供应商', 'invoiceSupplier')" prop="invoiceSupplier" />
+      <el-table-column label="发票状态" min-width="100" prop="status">
+        <template #default="{ row }">
+          <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '已匹配' : '未匹配' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="匹配金额" min-width="100" prop="matchAmount" />
       <el-table-column label="发票金额" min-width="100" prop="includingTaxPrice" />
-      <el-table-column label="匹配数量" />
+      <el-table-column label="匹配数量" min-width="100" prop="matchCount" />
       <el-table-column label="开票数量" min-width="100" prop="invoiceCount" />
-      <el-table-column v-if="showActions" label="开票品名" min-width="100" prop="invoiceName" />
+      <el-table-column label="开票品名" min-width="100" prop="invoiceName" />
       <el-table-column label="发票单位" min-width="100" prop="invoiceUnit" />
-      <el-table-column label="匹配PO" min-width="100" prop="matchPo" />
+      <el-table-column label="匹配PO" min-width="100" prop="po" />
       <el-table-column
         label="SKU/品名"
         :min-width="Math.max(flexColumnWidth(list, 'SKU/品名', 'productName'), flexColumnWidth(list, 'SKU/品名', 'sku'))"
@@ -88,11 +81,7 @@
           <div v-html="row.customsDeclarationUnit"></div>
         </template>
       </el-table-column>
-      <el-table-column v-if="showActions" align="center" label="操作" width="120">
-        <template #default="{ row }">
-          <el-button text type="danger" @click="$emit('delete-match', row)">删除匹配</el-button>
-        </template>
-      </el-table-column>
+
       <template #empty>
         <el-empty class="vab-data-empty" />
       </template>
@@ -104,7 +93,6 @@
       @current-change="$emit('page-change', $event)"
       @size-change="$emit('size-change', $event)"
     />
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
@@ -121,68 +109,62 @@ defineOptions({
 const props = defineProps<{
   list: any[]
   loading: boolean
-  showButtons: boolean
-  showActions: boolean
+
   queryForm: Record<string, any>
   total: number
-  totalPrice: number
 }>()
 const emit = defineEmits(['export', 'import', 'match', 'delete-match', 'query', 'page-change', 'size-change', 'obtain-id-list'])
 
-const imagePreviewVisible = ref<boolean>(false)
-const imagePreviewList = ref<string[]>([])
 const selectRowsData = ref<IAiTuoMuItem[]>([])
 
-const imagePreviewShow = (url: string) => {
-  imagePreviewVisible.value = true
-  imagePreviewList.value = []
-  imagePreviewList.value.push(url)
-}
-
-const imagePreviewClose = () => {
-  imagePreviewVisible.value = false
-}
-const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.column.label === 'SKU图片' || data.column.label === '零件图片') {
-    return 'clear-padding'
-  }
-  return ''
-}
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   const row = data.row
   const style: CSSProperties = {
-    textAlign: ['selection', 'PO', '采购日期', 'PO零件单位', '发票单位', '报关单位'].includes(label) ? 'center' : 'left',
-  }
-
-  if (label === '开票品名' && row.invoiceName !== row.customsDeclarationName) {
-    style.color = 'var(--el-color-danger)'
-  }
-
-  if (label === '发票供应商' && row.invoiceSupplier !== row.suppliser) {
-    style.color = 'var(--el-color-danger)'
+    textAlign: ['PO', '发票金额', '开票数量', '发票单位', '报关单位'].includes(label) ? 'center' : 'left',
   }
 
   return style
 }
+// col合并方法
+const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
+  if (
+    columnIndex === 0 ||
+    columnIndex === 1 ||
+    columnIndex === 2 ||
+    columnIndex === 3 ||
+    columnIndex === 4 ||
+    columnIndex === 5 ||
+    columnIndex === 6 ||
+    columnIndex === 7 ||
+    columnIndex === 8
+  ) {
+    // 获取当前row的零件id
+    const id = row.id
+    // 默认不跨行
+    let rowspan = 1
+    // 遍历后端返回的数据
+    for (let i = rowIndex + 1; i < props.list.length; i++) {
+      // 如果零件id一样需要合并
+      if (props.list[i].id === id) {
+        rowspan++
+      } else {
+        break
+      }
+    }
+    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+    if (rowIndex === 0 || props.list[rowIndex - 1].id !== id) {
+      return { rowspan, colspan: 1 }
+    } else {
+      return { rowspan: 0, colspan: 0 }
+    }
+  }
+}
+
 const setSelectRows = (value: IAiTuoMuItem[]) => {
   selectRowsData.value = value
   emit('obtain-id-list', selectRowsData.value)
 }
-const totalCustomsDeclarationCount = computed<number>(() => {
-  return selectRowsData.value.reduce((total: number, item: IAiTuoMuItem) => {
-    const count = Number(item.customsDeclarationCount) || 0
-    return total + count // 累加每个 item.customsDeclarationCount
-  }, 0) // 初始值为 0
-})
-// 总重
-const totalTaxIncludedPrice = computed<number>(() => {
-  const total = selectRowsData.value.reduce((sum: number, item: IAiTuoMuItem) => {
-    const price = Number(item.taxIncludedPrice) || 0
-    return sum + price
-  }, 0)
-  return Number(total)
-})
 </script>
 
 <style lang="scss" scoped>

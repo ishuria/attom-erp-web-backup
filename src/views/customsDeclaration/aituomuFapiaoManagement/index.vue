@@ -36,20 +36,13 @@
       </el-tab-pane>
       <el-tab-pane label="发票" :name="2">
         <ai-tuo-mu-invoice-table
-          :list="list"
+          :list="invoiceList"
           :loading="listLoading"
-          :query-form="queryForm"
-          :showActions="false"
-          :showButtons="true"
+          :query-form="invoiceQueryForm"
           :total="total"
-          :totalPrice="totalPrice"
-          @export="atmExportVisible = true"
-          @import="importVisible = true"
-          @match="checkMatch"
-          @obtain-id-list="handleAiTuoMuTableData"
-          @page-change="handleCurrentChange"
-          @query="queryData"
-          @size-change="handleSizeChange"
+          @page-change="handleInvoiceCurrentChange"
+          @query="queryInvoiceData"
+          @size-change="handleInvoiceSizeChange"
         />
       </el-tab-pane>
     </el-tabs>
@@ -84,7 +77,7 @@
 
 <script lang="ts" setup>
 import { TabsPaneContext } from 'element-plus'
-import { aiTuoMuInvoiceMatchDelete, getAiTuoMuList } from '/@/api/devlocal/aiTuoMu'
+import { aiTuoMuInvoiceMatchDelete, getAiTuoMuList, queryAiTuoMuInvoiceList } from '/@/api/devlocal/aiTuoMu'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { IAiTuoMuItem, IAiTuoMuListReq } from '/@/type/aiTuoMu/aiTuoMuList'
 
@@ -103,7 +96,14 @@ const queryForm = reactive<IAiTuoMuListReq>({
   customsDeclarationStatus: -1,
   purchaseDate: undefined,
 })
+const invoiceQueryForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 100,
+  status: 1,
+})
 const list = ref<IAiTuoMuItem[]>([])
+const invoiceList = ref<any[]>([])
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const totalPrice = ref<number>(0)
@@ -115,8 +115,12 @@ const selectChildIdList = ref<number[]>([])
 
 const handleTabChange = (tab: TabsPaneContext) => {
   activeName.value = Number(tab.props.name)
-  queryForm.status = activeName.value
-  queryData()
+  if (activeName.value === 2) {
+    queryInvoiceData()
+  } else {
+    queryForm.status = activeName.value
+    queryData()
+  }
 }
 const deleteMatch = (row: any) => {
   $baseConfirm('确定要删除匹配吗？', null, async () => {
@@ -173,10 +177,30 @@ const handleSizeChange = (val: number) => {
   queryForm.pageSize = val
   fetchData()
 }
+const handleInvoiceCurrentChange = (val: number) => {
+  invoiceQueryForm.pageNo = val
+  fetchInvoiceData()
+}
+const handleInvoiceSizeChange = (val: number) => {
+  invoiceQueryForm.pageNo = 1
+  invoiceQueryForm.pageSize = val
+  fetchInvoiceData()
+}
+const queryInvoiceData = () => {
+  invoiceQueryForm.pageNo = 1
+  fetchInvoiceData()
+}
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getAiTuoMuList(queryForm)
   list.value = data.list
+  total.value = data.total
+  totalPrice.value = data.totalPrice
+  listLoading.value = false
+}
+const fetchInvoiceData = async () => {
+  const { data } = await queryAiTuoMuInvoiceList(invoiceQueryForm)
+  invoiceList.value = data.list
   total.value = data.total
   totalPrice.value = data.totalPrice
   listLoading.value = false
@@ -190,7 +214,11 @@ const handleAiTuoMuTableData = (data: IAiTuoMuItem[]) => {
 }
 
 onBeforeMount(() => {
-  fetchData()
+  if (activeName.value === 2) {
+    fetchInvoiceData()
+  } else {
+    fetchData()
+  }
 })
 </script>
 

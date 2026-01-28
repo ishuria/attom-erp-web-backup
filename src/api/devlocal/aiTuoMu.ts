@@ -25,6 +25,16 @@ export function getAiTuoMuList(data: IAiTuoMuListReq): Promise<IAiTuoMuList> {
     data,
   })
 }
+/**
+ * @description 埃托姆-发票列表
+ */
+export function queryAiTuoMuInvoiceList(data: any): Promise<IAiTuoMuList> {
+  return request({
+    url: `${BASE_API}/aituomu/invoice/query`,
+    method: 'post',
+    data,
+  })
+}
 
 /**
  * 埃托姆-发票导入上传
