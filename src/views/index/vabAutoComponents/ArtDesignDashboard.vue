@@ -14,9 +14,9 @@
         />
       </div>
     </template>
-    <el-table border :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="360" show-summary>
-      <el-table-column align="center" label="月份" prop="month" width="100" />
-      <el-table-column align="center" label="姓名" min-width="120" prop="bonusType" />
+    <el-table border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="360">
+      <el-table-column label="月份" prop="month" sortable width="100" />
+      <el-table-column label="姓名" min-width="120" prop="userName" />
       <el-table-column label="新品任务数" min-width="110" prop="newProductTaskCount" sortable />
       <el-table-column label="老品任务数" min-width="110" prop="oldProductTaskCount" sortable />
       <el-table-column label="临时任务数" min-width="110" prop="tempTaskCount" sortable />
@@ -106,6 +106,9 @@ const fetchData = async () => {
   list.value = data
   loading.value = false
 }
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>

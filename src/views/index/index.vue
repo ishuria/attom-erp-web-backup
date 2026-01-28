@@ -157,10 +157,14 @@
       </template>
     </el-row>
     <!-- 第二层 -->
-    <el-row v-if="ableProductManagerViewCard || true" class="row-spacing" :gutter="20">
+    <el-row class="row-spacing" :gutter="20">
       <!-- 激励政策 - 放在第二行开头 -->
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <incentive-policy-card />
+      </el-col>
+      <!-- 美工任务统计 -->
+      <el-col v-if="ableViewArtDesignDashboardCard" :lg="20" :md="24" :sm="24" :xl="20" :xs="24">
+        <art-design-dashboard />
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="7" :md="24" :sm="24" :xl="7" :xs="24">
         <monthly-product-profit-table :list="profitList">
@@ -417,10 +421,6 @@
           </template>
         </personal-bonus-card>
       </el-col>
-      <!-- 美工任务统计 -->
-      <!-- <el-col :lg="20" :md="24" :sm="24" :xl="20" :xs="24">
-        <art-design-dashboard />
-      </el-col> -->
     </el-row>
 
     <el-row class="row-spacing" :gutter="20">
@@ -576,7 +576,7 @@ const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
-
+const ableViewArtDesignDashboardCard = currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
