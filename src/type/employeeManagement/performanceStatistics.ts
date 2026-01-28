@@ -21,6 +21,7 @@ export interface IGetProductManagerAssessmentList {
   oemFinish?: number
   status?: number
   userId: number
+  noAssessment?: number
 }
 
 export interface IUpdateProductManagerAssessmentReq {
@@ -336,10 +337,23 @@ export interface IGetOperationCommission {
   newSixAvgCommission?: number
   /** 过去6个月产品提成 */
   sixAvgCommissionPrice?: number
-  /** 提成比例 */
+  /** 职级提成比例 */
   proportion?: number
+  /** 实际提成比例 */
+  actualProportion?: number
+  /** 考核不达标比例 */
+  adjustProportion?: number
+  /** * 广告花费 */
+  adSpend?: number
+  /** * 广告销售额 */
+  adSales?: number
+  /** * 总销售额 */
+  totalSales?: number
+  /** * 总毛利润 */
+  totalGrossProfit?: number
   /** 提成金额（预留） */
   commissionPrice?: number
+  currencyIcon?: string
   /** 职级id */
   levelId?: number
   /** 职级名称 */

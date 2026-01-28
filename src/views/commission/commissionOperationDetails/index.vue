@@ -59,6 +59,26 @@
         >
           <el-table-column fixed="left" label="月份" min-width="100" prop="month" />
           <el-table-column fixed="left" label="人员" min-width="100" prop="userName" />
+          <el-table-column label="提成" min-width="150" prop="commissionPrice">
+            <template #default="{ row }">
+              {{ row.commissionPrice ? '￥' + formatAmount(row.commissionPrice) : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="实际提成比例" min-width="150" prop="actualProportion">
+            <template #default="{ row }">
+              {{ row.actualProportion ? row.actualProportion + '%' : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="职级提成比例" min-width="150" prop="proportion">
+            <template #default="{ row }">
+              {{ row.proportion ? row.proportion + '%' : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="考核指标不达标调整" min-width="190" prop="kpiUnqualifiedAdjustment" sortable="custom">
+            <template #default="{ row }">
+              {{ row.kpiUnqualifiedAdjustment ? row.kpiUnqualifiedAdjustment + '%' : '-' }}
+            </template>
+          </el-table-column>
           <el-table-column label="总销售额" min-width="140" prop="totalSales" sortable="custom">
             <template #default="{ row }">
               {{ row.totalSales ? row.currencyIcon + formatAmount(row.totalSales) : '-' }}
@@ -134,11 +154,6 @@
           <el-table-column label="不可售产品销量占比" min-width="190" prop="unsaleableProductSalesRatio" sortable="custom">
             <template #default="{ row }">
               {{ row.unsaleableProductSalesRatio ? row.unsaleableProductSalesRatio + '%' : '-' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="考核指标不达标调整" min-width="190" prop="kpiUnqualifiedAdjustment" sortable="custom">
-            <template #default="{ row }">
-              {{ row.kpiUnqualifiedAdjustment ? row.kpiUnqualifiedAdjustment + '%' : '-' }}
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" min-width="100">

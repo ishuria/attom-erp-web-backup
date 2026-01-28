@@ -723,9 +723,39 @@
             <el-table-column label="角色" min-width="130" prop="roleName" />
             <el-table-column label="过去6个月月均产品提成" min-width="155" prop="sixAvgCommissionPrice" />
             <el-table-column label="过去6个月月均上线1年内新品提成" min-width="190" prop="newSixAvgCommissionPrice" />
-            <el-table-column label="提成比例" min-width="100">
+            <el-table-column label="广告花费" min-width="190" prop="adSpend">
               <template #default="scope">
-                <span>{{ scope.row.proportion }}%</span>
+                <span>{{ scope.row.adSpend ? scope.row.currencyIcon + formatAmount(scope.row.adSpend) : '-' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="广告销售额" min-width="190" prop="adSales">
+              <template #default="scope">
+                <span>{{ scope.row.adSales ? scope.row.currencyIcon + formatAmount(scope.row.adSales) : '-' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="总销售额" min-width="190" prop="totalSales">
+              <template #default="scope">
+                <span>{{ scope.row.totalSales ? scope.row.currencyIcon + formatAmount(scope.row.totalSales) : '-' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="总毛利润" min-width="190" prop="totalGrossProfit">
+              <template #default="scope">
+                <span>{{ scope.row.totalGrossProfit ? scope.row.currencyIcon + formatAmount(scope.row.totalGrossProfit) : '-' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="职级提成比例" min-width="100">
+              <template #default="scope">
+                <span>{{ scope.row.proportion ? scope.row.proportion + '%' : '-' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="实际提成比例" min-width="100">
+              <template #default="scope">
+                <span>{{ scope.row.actualProportion ? scope.row.actualProportion + '%' : '-' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="考核不达标比例" min-width="100">
+              <template #default="scope">
+                <span>{{ scope.row.adjustProportion ? scope.row.adjustProportion + '%' : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column label="运营奖金" min-width="130" prop="commissionPrice" />
@@ -902,6 +932,7 @@ import {
   IGetUserAttendanceManagementList,
 } from '/@/type/employeeManagement/performanceStatistics'
 import { IGetArtDesignTaskList } from '/@/type/listingTask/imageTaskType'
+import { formatAmount } from '/@/utils/convertToCamelCase'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
