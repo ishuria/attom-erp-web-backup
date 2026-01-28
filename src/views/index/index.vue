@@ -163,7 +163,7 @@
         <incentive-policy-card />
       </el-col>
       <!-- 美工任务统计 -->
-      <el-col v-if="ableViewArtDesignDashboardCard" :lg="20" :md="24" :sm="24" :xl="20" :xs="24">
+      <el-col v-if="ableViewArtDesignDashboardCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
         <art-design-dashboard />
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="7" :md="24" :sm="24" :xl="7" :xs="24">
@@ -576,7 +576,8 @@ const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
-const ableViewArtDesignDashboardCard = currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
+const ableViewArtDesignDashboardCard =
+  currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
