@@ -12,6 +12,7 @@ declare module 'vue' {
     AddPanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/AddPanel.vue')['default']
     AdjustDetailDialog: typeof import('./../../../src/views/employeeManagement/vabAutoComponents/AdjustDetailDialog.vue')['default']
     AiTuoMuInvoiceImport: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceImport.vue')['default']
+    AiTuoMuInvoiceTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceTable.vue')['default']
     AiTuoMuTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuTable.vue')['default']
     AlignSegmented: typeof import('./../../../src/views/login/vabAutoComponents/AlignSegmented.vue')['default']
     ArtDesignDashboard: typeof import('./../../../src/views/index/vabAutoComponents/ArtDesignDashboard.vue')['default']

@@ -34,6 +34,24 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="发票" :name="2">
+        <ai-tuo-mu-invoice-table
+          :list="list"
+          :loading="listLoading"
+          :query-form="queryForm"
+          :showActions="false"
+          :showButtons="true"
+          :total="total"
+          :totalPrice="totalPrice"
+          @export="atmExportVisible = true"
+          @import="importVisible = true"
+          @match="checkMatch"
+          @obtain-id-list="handleAiTuoMuTableData"
+          @page-change="handleCurrentChange"
+          @query="queryData"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
     </el-tabs>
     <!-- 发票导入 -->
     <ai-tuo-mu-invoice-import
