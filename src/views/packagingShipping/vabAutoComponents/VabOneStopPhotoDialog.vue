@@ -127,11 +127,11 @@ const isUploading = ref(false)
 const currentPhotoInfo = computed(() => requiredPhotos.value[currentPhotoIndex.value])
 
 /** -----------------------------
- * 连拍模式：其他图片(type=3) + 新增(isAdd)
+ * 连拍模式：零件细节(type=1) + 成品组装图(type=2) + 其他图片(type=3) + 新增(isAdd)
  * ----------------------------- */
 const isBurstMode = computed(() => {
   const info = currentPhotoInfo.value
-  return !!(info && info.type === 3 && info.isAdd)
+  return !!(info && (info.type === 1 || info.type === 2 || info.type === 3) && info.isAdd)
 })
 
 /** -----------------------------

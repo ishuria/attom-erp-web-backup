@@ -72,10 +72,13 @@
         fixed="left"
         label="客户搜索词"
         prop="customerSearchTerm"
-        :width="flexColumnWidth(list, '客户搜索词', 'customerSearchTerm')"
+        :width="flexColumnWidth(list, '客户搜索词', 'customerSearchTerm', 50)"
       >
         <template #default="{ row }">
-          <el-link type="primary">{{ row.customerSearchTerm }}</el-link>
+          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.customerSearchTerm)">
+            <el-link :href="row.searchTermUrl" target="_blank" type="primary">{{ row.customerSearchTerm }}</el-link>
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="展示量" prop="impressions" sortable="custom" width="100" />
@@ -127,6 +130,7 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import { highLowMap, pieSelectLabelMap, pieSelectMap, pieSelectOption } from '../constantOption'
 import {
   queryCurrencySymbolBySite,
@@ -836,6 +840,21 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 
   .el-table {
     flex: 1;
+  }
+}
+.copySku {
+  display: inline-block;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  &:hover {
+    color: var(--el-color-primary);
+  }
+  .el-link {
+    display: inline-block;
+    margin-right: 3px;
+    vertical-align: middle;
   }
 }
 </style>

@@ -886,28 +886,16 @@ const showBaseUploadDialog = (sort: number) => {
 
 // 打开上传图片弹窗
 const showUploadDialog = (type: number, index: number) => {
-  // 其他图片使用连拍对话框
-  if (type === 3) {
-    oneStopPhotoInitialType.value = 3 // 设置初始类型为其他图片
+  // 零件细节、成品组装图、其他图片使用一条龙拍摄对话框
+  if (type === 1 || type === 2 || type === 3) {
+    oneStopPhotoInitialType.value = type // 设置初始类型
     oneStopPhotoVisible.value = true
     return
   }
 
   imageUploadVisible.value = true
   imageUploadType.value = type
-  if (type === 1) {
-    // 零件细节图片：sort 依次递增，计算当前最大 sort + 1
-    const maxSort =
-      componentDetailImgList.value.length > 0 ? Math.max(...componentDetailImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
-    imageUploadIndex.value = maxSort + 1
-  } else if (type === 2) {
-    // 成品组装图片：sort 依次递增，计算当前最大 sort + 1
-    const maxSort = finishedImgList.value.length > 0 ? Math.max(...finishedImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
-    imageUploadIndex.value = maxSort + 1
-  } else {
-    // 基础图片：使用传入的 index（即 sort）
-    imageUploadIndex.value = index
-  }
+  imageUploadIndex.value = index
 }
 const validate = async () => {
   try {
