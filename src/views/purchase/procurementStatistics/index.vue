@@ -2,185 +2,42 @@
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="供应商" :name="0">
-        <vab-query-form>
-          <vab-query-form-left-panel :span="4">
-            <el-date-picker
-              v-model="date"
-              :clearable="false"
-              :disabled-date="(time: Date) => time.getTime() > Date.now()"
-              type="daterange"
-              @change="queryData"
-            />
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="20">
-            <el-form inline :model="queryForm" @submit.prevent>
-              <el-form-item>
-                <el-input
-                  v-model="queryForm.keyWord"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="queryData"
-                  @keydown.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table v-loading="listLoading" border :data="list" stripe>
-          <el-table-column label="供应商" prop="supplierName" />
-          <el-table-column label="总采购金额(￥)" prop="totalPurchaseAmount" />
-          <el-table-column label="操作">
-            <template #default="{ row }">
-              <el-link type="primary" underline="never" @click="showProductDetail(row)">产品明细</el-link>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
-        <vab-pagination
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
+        <supplier-tab
+          v-model:date="date"
+          v-model:listLoading="listLoading"
+          :list="list"
+          :query-form="queryForm"
           :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
+          @handle-current-change="handleCurrentChange"
+          @handle-size-change="handleSizeChange"
+          @on-show-product-detail="showProductDetail"
+          @query-data="queryData"
         />
       </el-tab-pane>
-      <el-tab-pane label="产品" :name="1">
-        <vab-query-form>
-          <vab-query-form-left-panel :span="4">
-            <el-date-picker
-              v-model="productDate"
-              :clearable="false"
-              :disabled-date="(time: Date) => time.getTime() > Date.now()"
-              type="daterange"
-              @change="queryProductData"
-            />
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="20">
-            <el-form inline :model="productQueryForm" @submit.prevent>
-              <el-form-item label="">
-                <el-select v-model="productQueryForm.type" placeholder="请选择类型" @change="queryProductData">
-                  <el-option label="全部类型" :value="-1" />
-                  <el-option label="零件" :value="0" />
-                  <el-option label="耗材" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model="productQueryForm.keyWord"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="queryProductData"
-                  @keydown.enter="queryProductData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryProductData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table v-loading="listLoading" border :data="productList" stripe>
-          <el-table-column label="零件图片" prop="amount" width="91">
-            <template #default="{ row }">
-              <el-image
-                :src="row.componentImgUrl"
-                style="width: 65px; height: 65px; display: block"
-                @click="showImagePreview(row.componentImgUrl)"
-              >
-                <template #error><el-icon /></template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="零件ID" prop="id" />
-          <el-table-column label="零件名" :min-width="flexColumnWidth(productList, '零件名', 'componentName')" prop="componentName" />
-          <el-table-column align="center" label="类型" prop="type">
-            <template #default="{ row }">
-              <el-tag :type="row.type === 0 ? 'success' : 'warning'">
-                {{ row.type === 0 ? '零件' : '耗材' }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="零件采购总额(￥)" min-width="120" prop="componentPurchaseAmount" />
-          <el-table-column
-            label="供应商"
-            :min-width="calculateBrColumnWidth(productList, (row: any) => row._supplierName)"
-            prop="supplierName"
-          >
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_supplierName" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row._supplierNameFull }}</div>
-                </template>
-                <span v-html="row._supplierName"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="采购总额(￥)" min-width="110" prop="totalPurchaseAmount">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_totalPurchaseAmount" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row._totalPurchaseAmountFull }}</div>
-                </template>
-                <span v-html="row._totalPurchaseAmount"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="采购总数" min-width="100" prop="purchaseCount">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_purchaseCount" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row._purchaseCountFull }}</div>
-                </template>
-                <span v-html="row._purchaseCount"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="单位" prop="unit">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_unit" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row._unitFull }}</div>
-                </template>
-                <span v-html="row._unit"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" :min-width="calculateBrColumnWidth(productList, (row: any) => row._sku)" prop="sku">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row._skuFull }}</div>
-                </template>
-                <span v-html="row._sku"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" prop="productManagerName">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_productManagerName" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row._productManagerNameFull }}</div>
-                </template>
-                <span v-html="row._productManagerName"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
-        <vab-pagination
-          :current-page="productQueryForm.pageNo"
-          :page-size="productQueryForm.pageSize"
+      <el-tab-pane label="零件" :name="1">
+        <component-tab
+          v-model:date="componentDate"
+          v-model:listLoading="listLoading"
+          :list="componentList"
+          :query-form="componentQueryForm"
+          :total="componentTotal"
+          @handle-current-change="handleComponentCurrentChange"
+          @handle-size-change="handleComponentSizeChange"
+          @on-show-image-preview="showImagePreview"
+          @query-data="queryComponentData"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="产品" :name="2">
+        <product-tab
+          v-model:date="productDate"
+          v-model:listLoading="listLoading"
+          :list="productList"
+          :query-form="productQueryForm"
+          :site-list="siteList"
           :total="productTotal"
-          @current-change="handleProductCurrentChange"
-          @size-change="handleProductSizeChange"
+          @handle-current-change="handleProductCurrentChange"
+          @handle-size-change="handleProductSizeChange"
+          @query-data="queryProductData"
         />
       </el-tab-pane>
     </el-tabs>
@@ -196,23 +53,26 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
 import { TabsPaneContext } from 'element-plus'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { getPurchaseStatisticsProductList, getPurchaseStatisticsSupplierList } from '/@/api/devlocal/purchaseStatistics'
 import {
   IGetPurchaseStatisticsProductItem,
+  IGetPurchaseStatisticsProductListReq,
   IGetPurchaseStatisticsSupplierItem,
   IGetPurchaseStatisticsSupplierListReq,
 } from '/@/type/purchase/statistics'
 import { getThisYearStringTime } from '/@/utils/dateUtils'
-import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
+import { processField } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProcurementStatistics',
 })
 
+// 产品明细
 const detailVisible = ref<boolean>(false)
 const detailId = ref<number>(0)
+// 图片预览
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () => {
@@ -222,7 +82,11 @@ const showImagePreview = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = [url]
 }
+// 供应商日期
 const date = ref<[string, string]>(getThisYearStringTime())
+// 零件日期
+const componentDate = ref<[string, string]>(getThisYearStringTime())
+// 产品日期
 const productDate = ref<[string, string]>(getThisYearStringTime())
 const listLoading = ref<boolean>(false)
 const activeName = ref<number>(0)
@@ -233,7 +97,7 @@ const queryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
   startDate: '',
   endDate: '',
 })
-const productQueryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
+const componentQueryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
@@ -241,12 +105,21 @@ const productQueryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
   endDate: '',
   type: -1,
 })
-
+const productQueryForm = reactive<IGetPurchaseStatisticsProductListReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  startDate: '',
+  endDate: '',
+  sites: [],
+  siteAggregate: 0,
+})
 const list = ref<IGetPurchaseStatisticsSupplierItem[]>([])
-const productList = ref<IGetPurchaseStatisticsProductItem[]>([])
+const componentList = ref<IGetPurchaseStatisticsProductItem[]>([])
+const productList = ref<IGetPurchaseStatisticsSupplierItem[]>([])
 const total = ref<number>(0)
+const componentTotal = ref<number>(0)
 const productTotal = ref<number>(0)
-
 const handleCurrentChange = (val: number) => {
   queryForm.pageNo = val
   fetchData()
@@ -261,14 +134,19 @@ const queryData = () => {
   fetchData()
 }
 
-// 监听日期变化，确保数据及时更新
-watch(
-  () => date.value,
-  () => {
-    queryData()
-  },
-  { deep: true }
-)
+const handleComponentCurrentChange = (val: number) => {
+  componentQueryForm.pageNo = val
+  fetchComponentData()
+}
+const handleComponentSizeChange = (val: number) => {
+  componentQueryForm.pageNo = 1
+  componentQueryForm.pageSize = val
+  fetchComponentData()
+}
+const queryComponentData = () => {
+  componentQueryForm.pageNo = 1
+  fetchComponentData()
+}
 const handleProductCurrentChange = (val: number) => {
   productQueryForm.pageNo = val
   fetchProductData()
@@ -283,19 +161,13 @@ const queryProductData = () => {
   fetchProductData()
 }
 
-// 监听产品日期变化，确保数据及时更新
-watch(
-  () => productDate.value,
-  () => {
-    queryProductData()
-  },
-  { deep: true }
-)
 const handleTabClick = (tab: TabsPaneContext) => {
   activeName.value = Number(tab.props.name)
   if (activeName.value === 0) {
     queryData()
-  } else {
+  } else if (activeName.value === 1) {
+    queryComponentData()
+  } else if (activeName.value === 2) {
     queryProductData()
   }
 }
@@ -315,14 +187,14 @@ const fetchData = async () => {
   listLoading.value = false
 }
 
-const fetchProductData = async () => {
+const fetchComponentData = async () => {
   listLoading.value = true
-  productQueryForm.startDate = productDate.value[0]
-  productQueryForm.endDate = productDate.value[1]
-  const { data } = await getPurchaseStatisticsProductList(productQueryForm)
-  productTotal.value = data.total
-  productList.value = data.list
-  productList.value.forEach((item) => {
+  componentQueryForm.startDate = componentDate.value[0]
+  componentQueryForm.endDate = componentDate.value[1]
+  const { data } = await getPurchaseStatisticsProductList(componentQueryForm)
+  componentTotal.value = data.total
+  componentList.value = data.list
+  componentList.value.forEach((item) => {
     processField(item, 'supplierName', 3)
     processField(item, 'totalPurchaseAmount', 3)
     processField(item, 'purchaseCount', 3)
@@ -332,9 +204,24 @@ const fetchProductData = async () => {
   })
   listLoading.value = false
 }
-
+const fetchProductData = async () => {
+  listLoading.value = true
+  // productQueryForm.startDate = productDate.value[0]
+  // productQueryForm.endDate = productDate.value[1]
+  // const { data } = await getPurchaseStatisticsSupplierList(productQueryForm)
+  // productTotal.value = data.total
+  // productList.value = data.list
+  listLoading.value = false
+}
+const siteList = ref<{ id: number; label: string }[]>([])
+// 获取站点信息
+const fetchSiteData = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+}
 onBeforeMount(() => {
   fetchData()
+  fetchSiteData()
 })
 </script>
 
@@ -351,44 +238,6 @@ onBeforeMount(() => {
 
       &__nav-wrap {
         border-radius: var(--el-border-radius-base);
-      }
-
-      .el-tab-pane {
-        display: flex;
-        flex-direction: column;
-        height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
-
-        .vab-query-form {
-          .left-panel {
-            margin-bottom: 5px !important;
-          }
-          .el-form {
-            .el-form-item:first-child {
-              margin-bottom: 5px !important;
-
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
-              }
-            }
-            .el-form-item:last-child {
-              margin-bottom: 5px !important;
-            }
-          }
-        }
-
-        .el-table {
-          flex: 1;
-          .clear-padding {
-            padding-top: 0px !important;
-            padding-bottom: 0px !important;
-            .cell {
-              padding-right: 0px !important;
-              padding-left: 0px !important;
-            }
-          }
-        }
       }
     }
   }

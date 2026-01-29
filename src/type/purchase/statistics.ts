@@ -6,6 +6,15 @@ export interface IGetPurchaseStatisticsSupplierListReq {
   endDate: string
   type?: number
 }
+export interface IGetPurchaseStatisticsProductListReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  startDate: string
+  endDate: string
+  sites: number[]
+  siteAggregate: number
+}
 export interface IGetPurchaseStatisticsProductDetailListReq {
   keyWord: string
   pageNo: number

@@ -44,7 +44,7 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleUpdatePaid">标记已付</el-button>
-            <el-button type="success" @click="handleUpdateAllPaid">已付全部</el-button>
+            <el-button :loading="allPaidLoading" type="success" @click="handleUpdateAllPaid">已付全部</el-button>
             <el-button type="primary" @click="showStatistics(1)">付款统计</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
@@ -200,14 +200,19 @@ const handleUpdatePaid = async () => {
     fetchData()
   }
 }
+const allPaidLoading = ref<boolean>(false)
 const handleUpdateAllPaid = async () => {
   $baseConfirm('确定要付款全部吗？', null, async () => {
-    const { data } = await updateFreightCheckAllPaid()
-    if (data) {
-      $baseMessage('头程运费已付全部成功！', 'success')
-      fetchData()
-    } else {
+    try {
+      const { data } = await updateFreightCheckAllPaid()
+      if (data) {
+        $baseMessage('头程运费已付全部成功！', 'success')
+        fetchData()
+      }
+    } catch (error) {
       $baseMessage('头程运费已付全部失败！', 'error')
+    } finally {
+      allPaidLoading.value = false
     }
   })
 }
