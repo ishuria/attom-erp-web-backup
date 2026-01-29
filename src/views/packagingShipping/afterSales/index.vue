@@ -743,6 +743,131 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="汇总" :name="-1">
+        <vab-query-form>
+          <vab-query-form-right-panel :span="24">
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          border
+          :cell-class-name="pendingCellClassName"
+          :cell-style="pendingCellStyle"
+          class="noneHoveTable custom-table-hover"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          :row-class-name="tableRowClassName"
+          stripe
+          @cell-click="contactedInputChange"
+          @row-click="handleRowClick"
+        >
+          <el-table-column label="反馈日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="订货日期" min-width="115" prop="orderTime">
+            <template #default="{ row }">
+              {{ row.orderTime ? row.orderTime.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)">
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品图片" width="82">
+            <template #header>
+              产品
+              <br />
+              图片
+            </template>
+            <template #default="{ row }">
+              <el-image
+                fit="fill"
+                :src="row.skuImageUrl"
+                style="display: block; width: 100%; height: 100%"
+                @click="showPreviewImage(row.skuImageUrl)"
+              >
+                <template #error>
+                  <el-icon />
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+            <template #default="{ row }">
+              {{ row.sku }}
+              <br />
+              {{ row.productName }}
+            </template>
+          </el-table-column>
+          <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="供应商" prop="suppliser" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)">
+            <template #default="{ row }">
+              <span v-html="row.suppliser"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="PO总数" prop="purchaseSkuNumber" />
+          <el-table-column label="好" prop="goodCount" />
+          <el-table-column label="多" prop="manyCount" />
+          <el-table-column label="留样" prop="keepSampleCount" />
+          <el-table-column label="缺" prop="lackCount" />
+          <el-table-column label="坏" prop="badCount" />
+          <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
+          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <div class="multi-line-ellipsis" v-html="row.remark"></div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="售后日志" min-width="200" prop="salesLog">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
     </el-tabs>
     <!-- 移动到已联系 -->
     <vab-dialog v-model="moveVisible" title="已联系" width="23%" @close="closeMove">
@@ -1144,6 +1269,9 @@ const pendingCellStyle = (data: { row: any; column: any; rowIndex: number; colum
       textAlign: 'center' as const,
     }
   }
+  return {
+    textAlign: 'left' as const,
+  }
 }
 // 前四个tab去掉padding和颜色显示
 const pendingCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
@@ -1202,11 +1330,14 @@ const contactedCellStyle = (data: { row: any; column: any; rowIndex: number; col
   }
 }
 // 采购申请cellStyle
-const afterSalesLogCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
+const afterSalesLogCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.columnIndex !== 9) {
     return {
-      textAlign: 'center' as const,
+      textAlign: 'center',
     }
+  }
+  return {
+    textAlign: 'left',
   }
 }
 
