@@ -1930,6 +1930,8 @@ const fetchColumn = async () => {
         'monthOrderSales',
         'availableRate',
         'estimateNextMonthStorageFee',
+        'newArrivalDay',
+        'pAsinMonthNetProfit',
       ].includes(item.prop)
     ) {
       item.sortable = true
