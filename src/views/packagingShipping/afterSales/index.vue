@@ -834,6 +834,8 @@
           <el-table-column label="留样" prop="keepSampleCount" />
           <el-table-column label="缺" prop="lackCount" />
           <el-table-column label="坏" prop="badCount" />
+          <el-table-column label="总发货" prop="sendCount" />
+          <el-table-column label="总订货" prop="orderCount" />
           <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
           <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
