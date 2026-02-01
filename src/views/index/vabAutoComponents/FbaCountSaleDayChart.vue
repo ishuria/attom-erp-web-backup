@@ -1,5 +1,5 @@
 <template>
-  <vab-card :body-style="{ height: '522px' }" class="fba-count-sale-day-chart-card" skeleton>
+  <vab-card :body-style="{ height: '422px' }" class="fba-count-sale-day-chart-card" skeleton>
     <template #header>
       <vab-icon icon="align-top" />
       剩余FBA库存数

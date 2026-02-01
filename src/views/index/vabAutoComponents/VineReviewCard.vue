@@ -1,5 +1,5 @@
 <template>
-  <vab-card :body-style="{ height: '522px' }" class="low-volume-product-storage-fees-card" skeleton>
+  <vab-card :body-style="{ height: '422px' }" class="low-volume-product-storage-fees-card" skeleton>
     <template #header>
       <vab-icon icon="align-top" />
       做Vine回评追踪

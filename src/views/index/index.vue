@@ -215,6 +215,15 @@
           </template>
         </attendance-overview-card>
       </el-col>
+      <el-col v-if="currentRoleCode !== ROLE_BOSS_CODE" :lg="4" :md="24" :sm="24" :xl="4" :xs="24">
+        <personal-bonus-card  :data="personalBonusData" :loading="personalBonusLoading">
+          <template #select>
+            <el-select v-model="selectPersonalBonusMonth" placeholder="月份" style="max-width: 5em" @change="fetchPersonalBonus">
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </personal-bonus-card>
+      </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank1List" :my-name="myName" name="超额完成数" :show-commission="true" :show-medal="true" title="超额完成排行">
           <template #select>
@@ -233,9 +242,6 @@
           </template>
         </rank>
       </el-col>
-      <!-- <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank title="上月提成排行" :list="rank2List" name="提成" :my-name="myName" />
-      </el-col> -->
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank3List" :my-name="myName" name="新品提成" title="新品提成排行(上线1年以内)">
           <template #select>
@@ -263,7 +269,7 @@
     <!-- 第五层 -->
     <el-row v-if="ableProductManagerViewCard || ableViewTop30ProductSaleCard" class="row-spacing" :gutter="20">
       <!-- 产品经理绩效历史 -->
-      <el-col v-if="ableProductManagerViewCard" :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <performance-history :list="historyList">
           <template #select>
             <el-select v-model="userId" placeholder="人员" style="max-width: 5em" @change="fetchData">
@@ -274,7 +280,7 @@
         </performance-history>
       </el-col>
       <!-- 产品经理绩效汇总 -->
-      <el-col v-if="ableViewPerformanceSummaryCard" :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
+      <el-col v-if="ableViewPerformanceSummaryCard" :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <performance-summary :data-map="performanceSummaryDataMap" :selected-metric="selectedPerformanceMetric">
           <template #select>
             <el-date-picker
@@ -290,7 +296,12 @@
           </template>
         </performance-summary>
       </el-col>
-      <el-col v-if="ableProductManagerViewCard" :lg="9" :md="24" :sm="24" :xl="9" :xs="24">
+      <!-- 做Vine回评追踪 -->
+      <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+        <vine-review-card :user-list="userList" />
+      </el-col>
+      <!-- 利润分预览 -->
+      <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <profit-share-preview-card
           :list="profitSharePreviewList"
           :loading="profitSharePreviewLoading"
@@ -310,7 +321,7 @@
           </template>
         </profit-share-preview-card>
       </el-col>
-      <!-- 职级提成 -->
+      <!-- 产品经理职级提成 -->
       <el-col v-if="ableProductManagerLeadViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <job-level-commission-table :list="jobLevelCommissionList">
           <template #select>
@@ -319,6 +330,10 @@
             </el-select>
           </template>
         </job-level-commission-table>
+      </el-col>
+
+      <el-col v-if="ableViewLowVolumeProductStorageFeeCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+        <fba-count-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
       </el-col>
     </el-row>
     <el-row v-if="ableBossViewCard" class="row-spacing" :gutter="20">
@@ -412,25 +427,10 @@
           </template>
         </low-volume-product-storage-fees>
       </el-col>
-      <el-col :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
-        <personal-bonus-card :data="personalBonusData" :loading="personalBonusLoading">
-          <template #select>
-            <el-select v-model="selectPersonalBonusMonth" placeholder="月份" style="max-width: 5em" @change="fetchPersonalBonus">
-              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </personal-bonus-card>
-      </el-col>
+     
     </el-row>
 
-    <el-row class="row-spacing" :gutter="20">
-      <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
-        <vine-review-card :user-list="userList" />
-      </el-col>
-      <el-col v-if="ableViewLowVolumeProductStorageFeeCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
-        <fba-count-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
-      </el-col>
-    </el-row>
+   
 
     <history-assessment-records
       v-model="historyVisible"
