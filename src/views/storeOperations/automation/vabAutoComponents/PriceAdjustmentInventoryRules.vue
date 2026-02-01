@@ -63,7 +63,7 @@
       :cell-class-name="clearPadding"
       :cell-style="cellStyle"
       :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
+      :header-cell-style="headerCellStyle"
       stripe
       @cell-click="handleCellClick"
       @selection-change="operationStockSelectionChangeHandler"
@@ -147,8 +147,19 @@
           <span>{{ row.adjustmentDay }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="提高价格（满足全部条件）">
-        <el-table-column label="剩余可售天数≤" min-width="130" prop="improveDays">
+      <el-table-column
+        class-name="group-split-left group-split-left--improve"
+        header-class-name="group-split-left group-split-left--improve"
+        label="提高价格（满足全部条件）"
+        prop="improveDays"
+      >
+        <el-table-column
+          class-name="group-split-left group-split-left--improve"
+          header-class-name="group-split-left group-split-left--improve"
+          label="剩余可售天数≤"
+          min-width="130"
+          prop="improveDays"
+        >
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -219,8 +230,19 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="降低价格条件组1（满足全部条件）">
-        <el-table-column label="断货天数≤" min-width="100" prop="reduceOutStockDays">
+      <el-table-column
+        class-name="group-split-left group-split-left--reduce1"
+        header-class-name="group-split-left group-split-left--reduce1"
+        label="降低价格条件组1（满足全部条件）"
+        prop="reduceOutStockDays"
+      >
+        <el-table-column
+          class-name="group-split-left group-split-left--reduce1"
+          header-class-name="group-split-left group-split-left--reduce1"
+          label="断货天数≤"
+          min-width="100"
+          prop="reduceOutStockDays"
+        >
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -328,8 +350,19 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="降低价格条件组2">
-        <el-table-column label="Rating≤" min-width="110" prop="reduceRatingLow">
+      <el-table-column
+        class-name="group-split-left group-split-left--reduce1"
+        header-class-name="group-split-left group-split-left--reduce1"
+        label="降低价格条件组2"
+        prop="reduceRatingLow"
+      >
+        <el-table-column
+          class-name="group-split-left group-split-left--reduce1"
+          header-class-name="group-split-left group-split-left--reduce1"
+          label="Rating≤"
+          min-width="110"
+          prop="reduceRatingLow"
+        >
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -349,7 +382,13 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="系统最新操作日期" prop="operationDate" width="115">
+      <el-table-column
+        class-name="group-split-left group-split-left--reduce2"
+        header-class-name="group-split-left group-split-left--reduce2"
+        label="系统最新操作日期"
+        prop="operationDate"
+        width="115"
+      >
         <template #header>
           系统最新
           <br />
@@ -561,6 +600,35 @@ const updateBatch = () => {
   }
   batchUpdateVisible.value = true
 }
+const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const prop = data.column?.property
+
+  if (['improveDays', 'improveOutStockDays', 'improveRatingHeight'].includes(prop)) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-primary-light-9)',
+      color: 'var(--el-color-primary)',
+      fontWeight: 600,
+    }
+  }
+  if (['reduceDays', 'reduceOutStockDays', 'reduceAvailableInventory', 'reduceSalesTotalStock', 'reduceTransitDays'].includes(prop)) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-warning-light-9)',
+      color: 'var(--el-color-warning)',
+      fontWeight: 600,
+    }
+  }
+  if (['reduceRatingLow'].includes(prop)) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-success-light-9)',
+      color: 'var(--el-color-success)',
+      fontWeight: 600,
+    }
+  }
+  return { textAlign: 'center' }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -588,5 +656,20 @@ const updateBatch = () => {
 .custom-bar {
   width: 100%;
   height: 50px;
+}
+/* 每组左侧分割线：表头 + body */
+:deep(.group-split-left) {
+  border-left: 3px solid var(--el-border-color) !important;
+}
+
+/* 也可以做成不同组不同颜色的分割线，更醒目 */
+:deep(.group-split-left--improve) {
+  border-left-color: var(--el-border-color) !important;
+}
+:deep(.group-split-left--reduce1) {
+  border-left-color: var(--el-border-color) !important;
+}
+:deep(.group-split-left--reduce2) {
+  border-left-color: var(--el-border-color) !important;
 }
 </style>
