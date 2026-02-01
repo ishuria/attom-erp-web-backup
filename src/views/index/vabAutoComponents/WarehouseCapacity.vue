@@ -16,6 +16,12 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  ROLE_BOSS_CODE,
+  ROLE_LOGISTISCSPECIALIST_CODE,
+  ROLE_WAREHOUSEMANNAGERlEAD_CODE,
+} from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { IWarehouseCapacityItem } from '/@/type/index/frontPage'
 
@@ -34,7 +40,18 @@ const props = withDefaults(
 const emit = defineEmits(['update'])
 
 const settingsStore = useSettingsStore()
+const aclStore = useAclStore()
 const { theme } = storeToRefs(settingsStore)
+
+// 获取当前用户角色
+const currentRoleCode = aclStore.getRole[0]
+
+// 判断是否为 BOSS 角色（可以看到全部5条曲线）
+const isBoss = currentRoleCode === ROLE_BOSS_CODE
+
+// 判断是否为仓库主管或物流管理（只能看到前3条曲线）
+const isWarehouseOrSupplyChain =
+  currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE || currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE
 
 // 显示类型：数量或体积
 const displayType = ref<'quantity' | 'volume'>('quantity')
@@ -76,9 +93,9 @@ const option = reactive<any>({
         }
       })
 
-      // FBA在途分组
+      // FBA在途分组（仅BOSS可见）
       const fbaInTransitHtml =
-        fbaInTransitItems.length > 0
+        isBoss && fbaInTransitItems.length > 0
           ? `
         <div style="background: #fff; padding: 3px 8px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); margin-bottom: 5px;">
           <div style="display: flex; justify-content: space-between; color: #333; font-size: 13px">
@@ -118,9 +135,9 @@ const option = reactive<any>({
       `
           : ''
 
-      // FBA可售分组
+      // FBA可售分组（仅BOSS可见）
       const fbaAvailableHtml =
-        fbaAvailableItems.length > 0
+        isBoss && fbaAvailableItems.length > 0
           ? `
         <div style="background: #fff; padding: 3px 8px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); margin-bottom: 5px;">
           <div style="display: flex; justify-content: space-between; color: #333; font-size: 13px">
@@ -321,8 +338,16 @@ const categoryConfig = {
 const initChartConfig = () => {
   const config = categoryConfig[displayType.value]
   option.yAxis.name = config.yAxisName
-  option.legend.data = config.series.map((s) => s.name)
-  option.series = config.series
+
+  // 根据角色过滤要显示的系列
+  let visibleSeries = config.series
+  if (isWarehouseOrSupplyChain && !isBoss) {
+    // 仓库主管和物流管理只能看到前3条曲线
+    visibleSeries = config.series.slice(0, 3)
+  }
+
+  option.legend.data = visibleSeries.map((s) => s.name)
+  option.series = visibleSeries
 }
 
 // 切换显示类型
@@ -343,45 +368,59 @@ const updateChartData = () => {
     option.series[1].data = props.data.map((item) => item.pendingPackQuantity || 0)
     option.series[2].data = props.data.map((item) => item.packedQuantity || 0)
 
-    // FBA在途数量 - 计算总值并保存站点详情
-    option.series[3].data = props.data.map((item) => {
-      const totalValue = item.fbaInTransitQuantity?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
-      return {
-        value: totalValue,
-        siteDetails: item.fbaInTransitQuantity || [],
+    // 只有 BOSS 才能看到 FBA 数据
+    if (isBoss) {
+      // FBA在途数量 - 计算总值并保存站点详情
+      if (option.series[3]) {
+        option.series[3].data = props.data.map((item) => {
+          const totalValue = item.fbaInTransitQuantity?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
+          return {
+            value: totalValue,
+            siteDetails: item.fbaInTransitQuantity || [],
+          }
+        })
       }
-    })
 
-    // FBA可售数量 - 计算总值并保存站点详情
-    option.series[4].data = props.data.map((item) => {
-      const totalValue = item.fbaAvailableQuantity?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
-      return {
-        value: totalValue,
-        siteDetails: item.fbaAvailableQuantity || [],
+      // FBA可售数量 - 计算总值并保存站点详情
+      if (option.series[4]) {
+        option.series[4].data = props.data.map((item) => {
+          const totalValue = item.fbaAvailableQuantity?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
+          return {
+            value: totalValue,
+            siteDetails: item.fbaAvailableQuantity || [],
+          }
+        })
       }
-    })
+    }
   } else {
     option.series[0].data = props.data.map((item) => item.notArrivedVolume || 0)
     option.series[1].data = props.data.map((item) => item.pendingPackVolume || 0)
     option.series[2].data = props.data.map((item) => item.packedVolume || 0)
 
-    // FBA在途体积 - 计算总值并保存站点详情
-    option.series[3].data = props.data.map((item) => {
-      const totalValue = item.fbaInTransitVolume?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
-      return {
-        value: totalValue,
-        siteDetails: item.fbaInTransitVolume || [],
+    // 只有 BOSS 才能看到 FBA 数据
+    if (isBoss) {
+      // FBA在途体积 - 计算总值并保存站点详情
+      if (option.series[3]) {
+        option.series[3].data = props.data.map((item) => {
+          const totalValue = item.fbaInTransitVolume?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
+          return {
+            value: totalValue,
+            siteDetails: item.fbaInTransitVolume || [],
+          }
+        })
       }
-    })
 
-    // FBA可售体积 - 计算总值并保存站点详情
-    option.series[4].data = props.data.map((item) => {
-      const totalValue = item.fbaAvailableVolume?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
-      return {
-        value: totalValue,
-        siteDetails: item.fbaAvailableVolume || [],
+      // FBA可售体积 - 计算总值并保存站点详情
+      if (option.series[4]) {
+        option.series[4].data = props.data.map((item) => {
+          const totalValue = item.fbaAvailableVolume?.reduce((sum, siteData) => sum + (siteData.value || 0), 0) || 0
+          return {
+            value: totalValue,
+            siteDetails: item.fbaAvailableVolume || [],
+          }
+        })
       }
-    })
+    }
   }
 }
 

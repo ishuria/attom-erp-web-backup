@@ -336,9 +336,9 @@
         <fba-count-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
       </el-col>
     </el-row>
-    <el-row v-if="ableBossViewCard" class="row-spacing" :gutter="20">
+    <el-row  class="row-spacing" :gutter="20">
       <!-- 库存货值统计 -->
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col v-if="ableBossViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <inventory-products-total-value :data="inventoryProductsTotalValueList">
           <template #select>
             <el-date-picker
@@ -355,7 +355,7 @@
         </inventory-products-total-value>
       </el-col>
       <!-- 仓库容量 -->
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col v-if="ableViewWarehouseCapacityCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <warehouse-capacity :data="warehouseCapacityList">
           <template #select>
             <el-date-picker
@@ -367,7 +367,7 @@
               value-format="YYYY-MM-DD"
               @change="handleWarehouseCapacityDateRangeChange"
             />
-            <el-button type="primary" @click="updateWarehouseCapacity">更新</el-button>
+            <el-button v-if="ableBossViewCard" type="primary" @click="updateWarehouseCapacity">更新</el-button>
           </template>
         </warehouse-capacity>
       </el-col>
@@ -497,6 +497,7 @@ import {
   ROLE_GRAPHICDESIGNER_CODE,
   ROLE_GRAPHICDESIGNLEAD_CODE,
   ROLE_INDUSTRIAL_DESIGN_CODE,
+  ROLE_LOGISTISCSPECIALIST_CODE,
   ROLE_PACKAGER_CODE,
   ROLE_PRODUCTMANAGER_CODE,
   ROLE_PRODUCTMANNAGERLEAD_CODE,
@@ -578,6 +579,7 @@ const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE &&
 const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewArtDesignDashboardCard =
   currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
+const ableViewWarehouseCapacityCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE || currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
@@ -1479,6 +1481,8 @@ onBeforeMount(async () => {
   if (ableBossViewCard) {
     fetchOperateUserList()
     fetchInventoryProductsTotalValue()
+  }
+  if (ableViewWarehouseCapacityCard) {
     fetchWarehouseCapacity()
   }
   if (ableViewDestroyValueCard) {
