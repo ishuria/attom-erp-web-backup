@@ -43,7 +43,7 @@
       <el-tab-pane label="待付款" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="handleUpdatePaid">标记已付</el-button>
+            <el-button :loading="paidLoading" type="primary" @click="handleUpdatePaid">标记已付</el-button>
             <el-button :loading="allPaidLoading" type="success" @click="handleUpdateAllPaid">已付全部</el-button>
             <el-button type="primary" @click="showStatistics(1)">付款统计</el-button>
           </vab-query-form-left-panel>
@@ -186,6 +186,7 @@ const exportRecord = async () => {
     exportLoading.value = false
   }
 }
+const paidLoading = ref<boolean>(false)
 const handleUpdatePaid = async () => {
   const selectedRows = freightTableRef.value?.getSelectedRows?.()
   // console.log(selectedRows)
@@ -194,20 +195,46 @@ const handleUpdatePaid = async () => {
     return
   }
   const ids = selectedRows.map((item: IFreightCheckItem) => item.id)
-  const { data } = await updateFreightCheckPaid(ids)
-  if (data) {
-    $baseMessage('头程运费已付款成功！', 'success')
-    fetchData()
+  try {
+    paidLoading.value = true
+    const { data, msg } = await updateFreightCheckPaid(ids)
+    if (data) {
+      $baseMessage('头程运费已付款成功！', 'success')
+      fetchData()
+    } else {
+      ElMessageBox.confirm(msg, '系统提示', {
+        confirmButtonText: '确定',
+        showCancelButton: false,
+        showClose: false,
+        type: 'warning',
+        customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
+      })
+      paidLoading.value = false
+    }
+  } catch (error) {
+    $baseMessage('头程运费付款失败！', 'error')
+  } finally {
+    paidLoading.value = false
   }
 }
 const allPaidLoading = ref<boolean>(false)
 const handleUpdateAllPaid = async () => {
   $baseConfirm('确定要付款全部吗？', null, async () => {
     try {
-      const { data } = await updateFreightCheckAllPaid()
+      allPaidLoading.value = true
+      const { data, msg } = await updateFreightCheckAllPaid()
       if (data) {
         $baseMessage('头程运费已付全部成功！', 'success')
         fetchData()
+      } else {
+        ElMessageBox.confirm(msg, '系统提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          showClose: false,
+          type: 'warning',
+          customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
+        })
+        allPaidLoading.value = false
       }
     } catch (error) {
       $baseMessage('头程运费已付全部失败！', 'error')

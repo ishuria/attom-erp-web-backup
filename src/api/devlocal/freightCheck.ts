@@ -79,7 +79,7 @@ export function approvedFreightCheck(): Promise<{ data: boolean }> {
  * @param data
  * @returns
  */
-export function updateFreightCheckPaid(data: { ids: number[] }): Promise<{ data: boolean }> {
+export function updateFreightCheckPaid(data: { ids: number[] }): Promise<{ data: boolean; msg: string }> {
   return request({
     url: `${BASE_API}/freight/check/update/paid`,
     method: 'post',
@@ -90,7 +90,7 @@ export function updateFreightCheckPaid(data: { ids: number[] }): Promise<{ data:
  * 更新为已付款（全部）
  * @returns
  */
-export function updateFreightCheckAllPaid(): Promise<{ data: boolean }> {
+export function updateFreightCheckAllPaid(): Promise<{ data: boolean; msg: string }> {
   return request({
     url: `${BASE_API}/freight/check/update/all/paid`,
     method: 'post',
