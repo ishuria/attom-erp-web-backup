@@ -143,6 +143,7 @@ declare module 'vue' {
     PageHeader: typeof import('./../../../src/views/index/vabAutoComponents/PageHeader.vue')['default']
     ParameterSettingsDialog: typeof import('./../../../src/views/employeeManagement/vabAutoComponents/ParameterSettingsDialog.vue')['default']
     Pending2: typeof import('./../../../src/views/index/vabAutoComponents/Pending2.vue')['default']
+    PendingNewInspectionTable: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/PendingNewInspectionTable.vue')['default']
     PerformanceHistory: typeof import('./../../../src/views/index/vabAutoComponents/PerformanceHistory.vue')['default']
     PerformanceIndicatorDetails: typeof import('./../../../src/views/commission/vabAutoComponents/PerformanceIndicatorDetails.vue')['default']
     PerformanceSummary: typeof import('./../../../src/views/index/vabAutoComponents/PerformanceSummary.vue')['default']

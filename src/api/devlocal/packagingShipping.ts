@@ -221,6 +221,18 @@ export function getPackageAllTaskList(params: IGetPackageTaskListQuery): Promise
     params,
   })
 }
+/**
+ * 打包任务-待新品质检
+ * @param params 查询参数
+ * @returns
+ */
+export function getPackageAllTaskNewInspectionList(params: IGetPackageTaskListQuery): Promise<IGetPackageTaskListResp> {
+  return request({
+    url: `${BASE_API}/package/task/pending/new/inspection/list`,
+    method: 'get',
+    params,
+  })
+}
 
 // 开始任务-初始人员数据获取
 export function getStartTaskList(): Promise<IGetStartTaskListResp> {

@@ -561,6 +561,57 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="待新品质检" :name="-1">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item label="站点" prop="site">
+                <el-select v-model="pendingNewInspectionForm.site" clearable placeholder="全部" @change="queryPendingNewInspectionData">
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="pendingNewInspectionForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="pendingNewInspectionForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryPendingNewInspectionData"
+                  @keyup.enter="queryPendingNewInspectionData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  :icon="Search"
+                  :loading="listLoading"
+                  native-type="submit"
+                  type="primary"
+                  @click="queryPendingNewInspectionData"
+                />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <pending-new-inspection-table
+          :data="pendingNewInspectionList"
+          :loading="listLoading"
+          :row-class-name="tableRowClassName"
+          @image-preview="showPreviewImage"
+          @show-new-inspection-report="showNewInspectionReport"
+        />
+        <vab-pagination
+          :current-page="pendingNewInspectionForm.pageNo"
+          :page-size="pendingNewInspectionForm.pageSize"
+          :total="pendingNewInspectionTotal"
+          @current-change="handlePendingNewInspectionCurrentChange"
+          @size-change="handlePendingNewInspectionSizeChange"
+        />
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 零件清单 -->
@@ -1016,6 +1067,7 @@ import {
   getFreeList,
   getGoOffWorkList,
   getPackageAllTaskList,
+  getPackageAllTaskNewInspectionList,
   getPackageComponentList,
   getPackageSiteList,
   getPackageTaskIsSplit,
@@ -1878,6 +1930,36 @@ const fetchTaskingData = async () => {
     listLoading.value = false
   }
 }
+const pendingNewInspectionForm = reactive<any>({
+  keyWord: '',
+  site: undefined,
+  pageNo: 1,
+  pageSize: 20,
+})
+const pendingNewInspectionList = ref<any>([])
+const pendingNewInspectionTotal = ref<number>(0)
+const fetchPendingNewInspectionData = async () => {
+  listLoading.value = true
+  const { data } = await getPackageAllTaskNewInspectionList(pendingNewInspectionForm)
+  if (data) {
+    pendingNewInspectionTotal.value = data.total!
+    pendingNewInspectionList.value = data.list
+  }
+  listLoading.value = false
+}
+const handlePendingNewInspectionSizeChange = (value: number) => {
+  pendingNewInspectionForm.pageNo = 1
+  pendingNewInspectionForm.pageSize = value
+  fetchPendingNewInspectionData()
+}
+const handlePendingNewInspectionCurrentChange = (value: number) => {
+  pendingNewInspectionForm.pageNo = value
+  fetchPendingNewInspectionData()
+}
+const queryPendingNewInspectionData = () => {
+  pendingNewInspectionForm.pageNo = 1
+  fetchPendingNewInspectionData()
+}
 const allTaskForm = reactive<any>({
   keyWord: '',
   site: undefined,
@@ -1910,6 +1992,7 @@ const fetchAllTaskData = async () => {
     listLoading.value = false
   }
 }
+
 const handleTabClick = (tab: TabsPaneContext) => {
   list.value = []
   // selectRows.value = []
@@ -1926,12 +2009,14 @@ const handleTabClick = (tab: TabsPaneContext) => {
       pageSize: 20,
     },
   })
-  if (queryForm.status !== 5 && activeName.value !== 7) {
+  if (queryForm.status !== 5 && activeName.value !== 7 && activeName.value !== -1) {
     fetchData()
   } else if (queryForm.status === 5) {
     fetchTaskingData()
   } else if (activeName.value === 7) {
     fetchAllTaskData()
+  } else if (activeName.value === -1) {
+    fetchPendingNewInspectionData()
   }
 }
 // 表头样式
@@ -2082,12 +2167,14 @@ onBeforeMount(() => {
     queryForm.pageSize = Number(pageSize)
     allTaskForm.pageSize = Number(pageSize)
   }
-  if (queryForm.status !== 5 && activeName.value !== 7) {
+  if (queryForm.status !== 5 && activeName.value !== 7 && activeName.value !== -1) {
     fetchData()
   } else if (queryForm.status === 5) {
     fetchTaskingData()
   } else if (activeName.value === 7) {
     fetchAllTaskData()
+  } else if (activeName.value === -1) {
+    fetchPendingNewInspectionData()
   }
   getSiteList()
 })
