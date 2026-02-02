@@ -422,7 +422,7 @@
                   <div>提成净利润=当月净利润-(1+x%)*max(0, 认领时上一个该月的利润)</div>
 
                   <div>
-                    {{ row.currencyIcon + formatAmount(row.profitGross) }} = {{ row.currencyIcon }}{{ row.totalGrossProfit }} - (1+
+                    {{ row.currencyIcon + formatAmount(row.profitGross) }} = {{ row.currencyIcon }}{{ row.profitMargin }} - (1+
                     {{ row.promptProportion }}%) * max(0, {{ row.currencyIcon }}{{ row.oldProfitGross }})
                   </div>
                 </template>
