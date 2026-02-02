@@ -433,26 +433,26 @@ const autoUploadPending = async () => {
   if (!isBurstMode.value) return
 
   const info = currentPhotoInfo.value
-  if (!info || info.type !== 3 || !info.isAdd) return
+  if (!info || !info.isAdd) return
 
   try {
     isUploading.value = true
 
     // sort 起点（用缓存避免重复）
-    let nextSort = getNextSortSafe(3)
+    let nextSort = getNextSortSafe(info.type)
 
     for (let i = 0; i < pendingFiles.value.length; i++) {
       const file = pendingFiles.value[i]
-      const data = await uploadOneFile(file, 3, nextSort)
+      const data = await uploadOneFile(file, info.type, nextSort)
 
       if (!data) {
         $baseMessage(`第 ${i + 1} 张上传失败`, 'error')
         return
       }
 
-      emit('photoUploaded', { type: 3, sort: nextSort, imgData: data })
+      emit('photoUploaded', { type: info.type, sort: nextSort, imgData: data })
       nextSort++
-      localNextSort.value[3] = nextSort
+      localNextSort.value[info.type] = nextSort
     }
 
     $baseMessage('上传成功', 'success')
