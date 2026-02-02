@@ -84,9 +84,9 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
-import { updateBulkGoodsStatusByProgressId } from '~/src/api/devlocal/progress'
 import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
+import { updateBulkGoodsStatusByProgressId } from '/@/api/devlocal/progress'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import { _setStepNo } from '/@/utils/stepNoState'

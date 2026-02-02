@@ -195,9 +195,6 @@
       </el-col>
     </el-row>
 
-    <!-- 第三层
-      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-      </el-col> -->
     <!-- 第四层 -->
     <el-row v-if="ableViewAttendanceOverviewCard" class="row-spacing" :gutter="20">
       <el-col v-if="ableViewAttendanceOverviewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
@@ -216,7 +213,7 @@
         </attendance-overview-card>
       </el-col>
       <el-col v-if="currentRoleCode !== ROLE_BOSS_CODE" :lg="4" :md="24" :sm="24" :xl="4" :xs="24">
-        <personal-bonus-card  :data="personalBonusData" :loading="personalBonusLoading">
+        <personal-bonus-card :data="personalBonusData" :loading="personalBonusLoading">
           <template #select>
             <el-select v-model="selectPersonalBonusMonth" placeholder="月份" style="max-width: 5em" @change="fetchPersonalBonus">
               <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
@@ -336,7 +333,7 @@
         <fba-count-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
       </el-col>
     </el-row>
-    <el-row  class="row-spacing" :gutter="20">
+    <el-row class="row-spacing" :gutter="20">
       <!-- 库存货值统计 -->
       <el-col v-if="ableBossViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <inventory-products-total-value :data="inventoryProductsTotalValueList">
@@ -427,10 +424,11 @@
           </template>
         </low-volume-product-storage-fees>
       </el-col>
-     
+      <!-- 美工任务统计 -->
+      <el-col v-if="ableBossViewCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
+        <art-design-dashboard />
+      </el-col>
     </el-row>
-
-   
 
     <history-assessment-records
       v-model="historyVisible"
@@ -577,9 +575,11 @@ const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
-const ableViewArtDesignDashboardCard =
-  currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
-const ableViewWarehouseCapacityCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE || currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE
+const ableViewArtDesignDashboardCard = currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
+const ableViewWarehouseCapacityCard =
+  currentRoleCode === ROLE_BOSS_CODE ||
+  currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE ||
+  currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
