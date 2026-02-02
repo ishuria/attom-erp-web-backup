@@ -101,6 +101,7 @@ const invoiceQueryForm = reactive<any>({
   pageNo: 1,
   pageSize: 100,
   status: 1,
+  notEqual: 0,
 })
 const list = ref<IAiTuoMuItem[]>([])
 const invoiceList = ref<any[]>([])
@@ -199,6 +200,7 @@ const fetchData = async () => {
   listLoading.value = false
 }
 const fetchInvoiceData = async () => {
+  listLoading.value = true
   const { data } = await queryAiTuoMuInvoiceList(invoiceQueryForm)
   invoiceList.value = data.list
   total.value = data.total

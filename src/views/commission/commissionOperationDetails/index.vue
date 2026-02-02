@@ -50,7 +50,7 @@
         <el-table
           v-loading="listLoading"
           border
-          :cell-style="{ textAlign: 'center' }"
+          :cell-style="cellStyle"
           :data="asinSummaryList"
           :default-sort="{ prop: 'adSpend', order: 'descending' }"
           :header-cell-style="{ textAlign: 'center' }"
@@ -90,7 +90,7 @@
               {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="利润报表销售额" min-width="150" prop="totalGrossProfitSalesAmount" sortable="custom">
+          <el-table-column label="利润报表销售额" min-width="160" prop="totalGrossProfitSalesAmount" sortable="custom">
             <template #default="{ row }">
               {{ row.totalGrossProfitSalesAmount ? row.currencyIcon + formatAmount(row.totalGrossProfitSalesAmount) : '-' }}
             </template>
@@ -266,7 +266,7 @@
               {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="利润报表销售额" min-width="130" prop="totalSalesAmount" sortable="custom">
+          <el-table-column label="利润报表销售额" min-width="160" prop="totalSalesAmount" sortable="custom">
             <template #default="{ row }">
               {{ row.totalSalesAmount ? row.currencyIcon + formatAmount(row.totalSalesAmount) : '-' }}
             </template>
@@ -460,6 +460,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
+import { CSSProperties } from 'vue'
 import {
   getAsinDetailMonthList,
   getAsinSummaryIndicator,
@@ -651,7 +652,75 @@ const handleAsinSummarySizeChange = (val: number) => {
   asinSummaryQueryForm.pageNo = 1
   queryAsinSummaryData()
 }
-
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  const flag = data.row.flag || {}
+  if (label === 'ACOS') {
+    if (flag.acosFlag) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else if (label === 'TACOS') {
+    if (flag.tacosFlag) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else if (label === '广告销售占比') {
+    if (flag.adSalesRatioFlag) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else if (label === '冗余库存占比') {
+    if (flag.redundantInventoryRatioFlag) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else if (label === '低动销占比') {
+    if (flag.lowTurnoverRatioFlag) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else {
+    return {
+      textAlign: 'center',
+    }
+  }
+}
 // ============ 运营奖金明细方法 ============
 const queryBonusDetailData = async () => {
   listLoading.value = true

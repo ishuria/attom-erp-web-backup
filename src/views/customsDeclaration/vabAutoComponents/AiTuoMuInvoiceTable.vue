@@ -10,6 +10,11 @@
               <el-option label="未匹配" :value="0" />
             </el-select>
           </el-form-item>
+          <el-form-item>
+            <div class="filter-group">
+              <el-checkbox v-model="queryForm.notEqual" :false-value="0" :true-value="1" @change="$emit('query')">未配平</el-checkbox>
+            </div>
+          </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
 
@@ -40,6 +45,7 @@
       :span-method="objectSpanMethod"
       @selection-change="setSelectRows"
     >
+      <el-table-column label="匹配日期" prop="matchDate" />
       <el-table-column label="发票号码" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" prop="invoiceNumber" />
       <el-table-column label="发票供应商" :min-width="flexColumnWidth(list, '发票供应商', 'invoiceSupplier')" prop="invoiceSupplier" />
       <el-table-column label="发票状态" min-width="100" prop="status">
@@ -224,6 +230,27 @@ const setSelectRows = (value: IAiTuoMuItem[]) => {
     .el-statistic__content {
       margin-top: 2px;
       font-size: 18px;
+    }
+  }
+}
+// 筛选条件组样式
+.filter-group {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  padding: 1px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f1f3f4;
+  }
+
+  :deep(.el-checkbox) {
+    margin-right: 12px;
+
+    &:last-child {
+      margin-right: 0;
     }
   }
 }
