@@ -417,7 +417,34 @@
           </el-table-column>
           <el-table-column label="净利润" min-width="120" prop="profitGross" sortable="custom">
             <template #default="{ row }">
-              {{ row.profitGross ? row.currencyIcon + formatAmount(row.profitGross) : '-' }}
+              <el-popover v-if="row.oldProfitGross !== null" effect="dark" placement="top" trigger="hover" width="auto">
+                <template #default>
+                  <div>提成净利润=当月净利润-(1+x%)*max(0, 认领时上一个该月的利润)</div>
+
+                  <div>
+                    {{ row.currencyIcon + formatAmount(row.profitGross) }} = {{ row.currencyIcon }}{{ row.totalGrossProfit }} - (1+
+                    {{ row.promptProportion }}%) * max(0, {{ row.currencyIcon }}{{ row.oldProfitGross }})
+                  </div>
+                </template>
+                <template #reference>
+                  <span class="questionIcon">
+                    <span>{{ row.currencyIcon + formatAmount(row.profitGross) }}</span>
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </span>
+                </template>
+              </el-popover>
+              <div v-else>{{ row.profitGross ? row.currencyIcon + formatAmount(row.profitGross) : '-' }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="老品认领" min-width="100">
+            <template #default="{ row }">
+              <vab-icon
+                v-if="row.oldProfitGross !== null"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
             </template>
           </el-table-column>
           <el-table-column label="销售额" min-width="100" prop="totalSalesAmount" sortable="custom">
@@ -458,7 +485,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { QuestionFilled, Search } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
 import {
@@ -899,6 +926,16 @@ onBeforeMount(async () => {
         }
       }
     }
+  }
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+    color: var(--el-color-primary);
   }
 }
 </style>
