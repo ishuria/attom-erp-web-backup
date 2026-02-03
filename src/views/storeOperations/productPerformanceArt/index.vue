@@ -247,9 +247,10 @@
                 <el-checkbox v-model="row.stopProductStatus" disabled :false-value="0" :true-value="1" />
               </span>
               <span v-if="item.label === '运营分类'">
-                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="">
+                <!-- <el-select v-model="row.operationTypeId" disabled style="min-width: 100%">
                   <el-option v-for="a in row.operationTypeList" :key="a.id" :label="a.label" :value="a.id" />
-                </el-select>
+                </el-select> -->
+                {{ row.operationTypeList.find((a: any) => a.id === row.operationTypeId)?.label }}
               </span>
 
               <span v-if="item.label === 'VOC满意度'">
@@ -1171,6 +1172,7 @@ const handleSizeChange = (value: number) => {
 const fetchCurrencyList = async () => {
   const { data } = await getCurrencyList()
   currencyList.value = data
+  currencyList.value.unshift({ id: -1, label: '原币种' })
 }
 
 const fetchSiteList = async () => {
@@ -1193,6 +1195,9 @@ const fetchData = async () => {
       item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers))
       processField(item, 'developName', 2)
     })
+  } else {
+    total.value = 0
+    list.value = []
   }
   listLoading.value = false
 }
