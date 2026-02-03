@@ -204,7 +204,6 @@ const fetchInvoiceData = async () => {
   const { data } = await queryAiTuoMuInvoiceList(invoiceQueryForm)
   invoiceList.value = data.list
   total.value = data.total
-  totalPrice.value = data.totalPrice
   listLoading.value = false
 }
 
