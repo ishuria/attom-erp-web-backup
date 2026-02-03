@@ -490,6 +490,8 @@ const label1Set = new Set([
   '预计下月仓储费',
   '盈亏售价',
   '30毛利售价',
+  'B2B销售额',
+  '当前实际售价',
 ])
 const label2Set = new Set([
   '试算毛利',
@@ -518,6 +520,8 @@ const label1Map = new Map([
   ['预计下月仓储费', 'estimateNextMonthStorageFee'],
   ['盈亏售价', 'profitLossSellingPrice'],
   ['30毛利售价', 'grossSellingPrice'],
+  ['B2B销售额', 'currentB2bSalesPrice'],
+  ['当前实际售价', 'landedPrice'],
 ])
 const label2Map = new Map([
   ['试算毛利', 'grossProfit'],
