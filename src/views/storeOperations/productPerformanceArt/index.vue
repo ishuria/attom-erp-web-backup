@@ -940,6 +940,7 @@ const columns = ref<any>([
     prop: 'newArrivalDay',
     checked: true,
     minWidth: 90,
+    sortable: true,
   },
   {
     label: '停产',
