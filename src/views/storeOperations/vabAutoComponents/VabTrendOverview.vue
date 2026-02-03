@@ -306,7 +306,7 @@ const groups = trendOverviewGroups
 // name -> prop (根据 ITrendOverview 接口，与 constantOption.ts 中的 trendOverviewColumns 对应)
 const nameMapProp: Record<string, IDataProp> = trendOverviewNameMapProp as Record<string, IDataProp>
 
-const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week' | 'month'): any[] => {
+const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week' | 'month' | 'day'): any[] => {
   const groupedData: Record<string, number> = {}
   const spendData: Record<string, number> = {} // ∑广告花费
   const amountData: Record<string, number> = {} // ∑销售额(订单)
@@ -328,8 +328,12 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
   const getTimeKey = (date: string): string => {
     if (groupBy === 'week') {
       return getWeekOfYear(date) // 获取 "YYYY-Wxx"
+    } else if (groupBy === 'month') {
+      return date.slice(0, 7) // 提取 "YYYY-MM"
+    } else {
+      // day: 返回完整日期
+      return date
     }
-    return date.slice(0, 7) // 提取 "YYYY-MM"
   }
 
   data.forEach((item) => {
@@ -525,11 +529,11 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
           groupedData[timeKey] = 0
         }
         const value = item[type] ?? 0
-        // 预计下月仓储费和库存需要计算平均值
-        if (type === 'estimatedStorageCostNextMonth' || type === 'stock') {
+        // 预计下月仓储费、库存和季节系数需要计算平均值
+        if (type === 'estimatedStorageCostNextMonth' || type === 'stock' || type === 'seasonalCoefficient') {
           groupedData[timeKey] += value
           // 计数
-          if (!countData[timeKey]) {
+          if (countData[timeKey] === undefined || countData[timeKey] === null) {
             countData[timeKey] = 0
           }
           countData[timeKey]++
@@ -545,8 +549,13 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
 
   return Object.keys(groupedData).map((timeKey) => {
     let value = groupedData[timeKey]
-    // 预计下月仓储费和库存需要计算平均值
-    if ((type === 'estimatedStorageCostNextMonth' || type === 'stock') && countData[timeKey] && countData[timeKey] > 0) {
+    // 预计下月仓储费、库存和季节系数需要计算平均值
+    if (
+      (type === 'estimatedStorageCostNextMonth' || type === 'stock' || type === 'seasonalCoefficient') &&
+      countData[timeKey] !== undefined &&
+      countData[timeKey] !== null &&
+      countData[timeKey] > 0
+    ) {
       value = formatNumber(value / countData[timeKey])
     }
     return {
@@ -563,6 +572,7 @@ const formatNumber = (value: number): number => {
 // 格式化卡片值（根据字段类型格式化）
 const formatCardValue = (fieldName: string, value: number | null): string => {
   if (value == null) return ''
+
   const groupName = getGroup(fieldName)
   if (groupName === 'price1' || groupName === 'price2') {
     // 金额类型，使用动态币种符号，保留两位小数
@@ -570,8 +580,11 @@ const formatCardValue = (fieldName: string, value: number | null): string => {
   } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
     // 百分比类型，保留两位小数
     return `${value.toFixed(2)}%`
+  } else if (groupName === 'decimal8') {
+    // 小数类型，保留两位小数
+    return value.toFixed(2)
   } else {
-    // 整数类型，保留两位小数
+    // 整数类型（包括小类排名、大类排名、库存等），不保留小数
     return value.toFixed(0)
   }
 }
@@ -586,8 +599,11 @@ const formatCompareValue = (fieldName: string, value: number | null): string => 
   } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
     // 百分比类型，保留两位小数
     return `${value.toFixed(2)}%`
+  } else if (groupName === 'decimal8') {
+    // 小数类型，保留两位小数
+    return value.toFixed(2)
   } else {
-    // 整数类型，保留两位小数
+    // 整数类型（包括小类排名、大类排名、库存等），不保留小数
     return value.toFixed(0)
   }
 }
@@ -1905,7 +1921,20 @@ function updateYAxisIndex() {
     })
   })
 }
-type IDataGroup = 'price1' | 'price2' | 'percent1' | 'percent2' | 'percent3' | 'int1' | 'int2' | 'int3' | 'int4' | 'int5' | 'int6' | 'int7'
+type IDataGroup =
+  | 'price1'
+  | 'price2'
+  | 'percent1'
+  | 'percent2'
+  | 'percent3'
+  | 'int1'
+  | 'int2'
+  | 'int3'
+  | 'int4'
+  | 'int5'
+  | 'int6'
+  | 'int7'
+  | 'decimal8'
 
 const getYAxisFormat = (groupName: string) => {
   if (groupName === 'price1' || groupName === 'price2') {

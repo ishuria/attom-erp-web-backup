@@ -363,6 +363,8 @@ export interface ITrendOverview {
   pageViewsTotal?: number
   /** 币种 */
   currencyIcon?: string
+  /** 季节系数 */
+  seasonalCoefficient?: number
 }
 export interface IGetExpenseCompositionRes {
   data: {

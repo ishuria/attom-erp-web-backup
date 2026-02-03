@@ -745,6 +745,7 @@ export const trendOverviewCardConfig = [
 
 export const trendOverviewDropdownItems = [
   { label: '销量(订单)', disabled: false },
+  { label: '季节系数', disabled: false },
   { label: '销售额(订单)', disabled: false },
   { label: '广告花费', disabled: false },
   { label: '净利润(订单)', disabled: false },
@@ -790,10 +791,12 @@ export const trendOverviewGroups = {
   int5: ['大类排名'],
   int6: ['广告展现量'],
   int7: ['退货量'],
+  decimal8: ['季节系数'],
 }
 
 export const trendOverviewNameMapProp: Record<string, string> = {
   '销量(订单)': 'volume',
+  季节系数: 'seasonalCoefficient',
   '销售额(订单)': 'amount',
   广告销售额: 'adSalesAmount',
   自然销售额: 'organicSalesAmount',
@@ -865,3 +868,4 @@ export type IDataProp =
   | 'returnGoodsCount'
   | 'totalSalesAmount'
   | 'grossProfit'
+  | 'seasonalCoefficient'

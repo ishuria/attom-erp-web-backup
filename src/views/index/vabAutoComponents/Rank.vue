@@ -102,7 +102,10 @@ const option = reactive<any>({
               // 限制不小于0，最小是 +0%
               const commissionPercent = Math.max(0, item.commissionPercent)
               // 正数增加+号
-              const displayPercent = commissionPercent > 0 ? `+${commissionPercent}` : '+0'
+              let displayPercent = commissionPercent > 0 ? `+${commissionPercent}` : '+0'
+              if (item.noAssessment !== null && item.noAssessment === 1) {
+                displayPercent = '+0'
+              }
               return `${value} {commission|(提成 ${displayPercent}%)}`
             }
           }

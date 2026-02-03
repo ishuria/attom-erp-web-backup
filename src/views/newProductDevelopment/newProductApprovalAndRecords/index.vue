@@ -238,14 +238,14 @@
           @row-click="handleRowClick"
           @sort-change="handleSortChange"
         >
-          <el-table-column label="PO发布日期" min-width="115" prop="releaseDate">
-            <template #default="{ row }">
-              <span>{{ row.releaseDate ? formatDate(new Date(row.releaseDate)) : '' }}</span>
-            </template>
-          </el-table-column>
           <el-table-column label="planPo发布日期" min-width="115" prop="poCreateTime">
             <template #default="{ row }">
               <span>{{ row.poCreateTime ? formatDate(new Date(row.poCreateTime)) : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="PO发布日期" min-width="115" prop="releaseDate">
+            <template #default="{ row }">
+              <span>{{ row.releaseDate ? formatDate(new Date(row.releaseDate)) : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="提交日期" min-width="115" prop="createTime">
