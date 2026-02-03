@@ -127,7 +127,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   const label = data.column.label
   const row = data.row
   const style: CSSProperties = {
-    textAlign: ['PO', '发票金额', '开票数量', '发票单位', '报关单位'].includes(label) ? 'center' : 'left',
+    textAlign: ['发票状态', '匹配金额', '发票金额', '开票数量', '匹配数量', '发票单位', '报关单位'].includes(label) ? 'center' : 'left',
   }
 
   return style
