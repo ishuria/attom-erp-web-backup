@@ -271,6 +271,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
+          <el-table-column label="任务类型" min-width="100" prop="type" />
           <el-table-column label="站点" min-width="140" prop="siteName" />
           <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
