@@ -454,17 +454,18 @@ export function getFrontPageVineReviewCard(params: { userId: number }): Promise<
   })
 }
 /**
- * 首页-剩余FBA库存数
- * @param params { userId: number, site: number }
+ * 首页-剩余FBA库存数（单日期）
+ * @param params { userId: number, site: number, startDate: string, endDate: string }
  * @returns IGetFrontPageFbaCountSaleDayChartRes[]
  */
-export function getFrontPageFbaCountSaleDayChart(params: {
+export function getFrontPageFbaCountSaleDayChart(data: {
   userId: number
   site: number
+  dates: string[]
 }): Promise<{ data: IGetFrontPageFbaCountSaleDayChartRes[] }> {
   return request({
     url: `${BASE_API}/front_page/fba/count/chart`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }

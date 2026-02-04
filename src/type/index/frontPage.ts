@@ -327,6 +327,11 @@ export interface IGetFrontPagePersonalBonusItem {
 }
 
 export interface IGetFrontPageFbaCountSaleDayChartRes {
+  [date: string]: IFbaCountSaleDayItem[]
+}
+
+// 单个日期的数据项
+export interface IFbaCountSaleDayItem {
   saleDayRange: string
   fbaCount: number
 }

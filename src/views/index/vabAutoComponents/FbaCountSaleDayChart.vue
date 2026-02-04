@@ -4,6 +4,7 @@
       <vab-icon icon="align-top" />
       剩余FBA库存数
       <div class="right-select">
+        <el-date-picker v-model="selectedDates" placeholder="选择日期" type="dates" @change="fetchData" />
         <el-select v-model="userId" placeholder="人员" style="max-width: 5em" @change="fetchData">
           <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
@@ -22,28 +23,37 @@ defineOptions({
   name: 'FbaCountSaleDayChart',
 })
 
+import { formatDateToString } from '~/src/utils/dateUtils'
 import { getFrontPageFbaCountSaleDayChart } from '/@/api/devlocal/frontPage'
 import { useSettingsStore } from '/@/store/modules/settings'
-import type { IGetFrontPageFbaCountSaleDayChartRes } from '/@/type/index/frontPage'
 
 const props = defineProps<{
   userList: { id: number; label: string }[]
   siteList: { id: number; label: string }[]
 }>()
 
+// 默认选中今天
+const selectedDates = ref<string[]>([formatDateToString(new Date())])
 const userId = ref<number>(-1)
 const site = ref<number>(-1)
 const settingsStore = useSettingsStore()
 const loading = ref(false)
 const { theme } = storeToRefs(settingsStore)
-const list = ref<IGetFrontPageFbaCountSaleDayChartRes[]>([])
+
+// 预定义的颜色系列
+const colorPalette = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc']
 
 const option = reactive<any>({
   grid: {
-    top: 30,
+    top: 60,
     right: 30,
     bottom: 50,
-    left: 60,
+    left: 70,
+  },
+  legend: {
+    show: true,
+    top: 10,
+    type: 'scroll',
   },
   tooltip: {
     trigger: 'axis',
@@ -51,8 +61,12 @@ const option = reactive<any>({
       type: 'line',
     },
     formatter: (params: any) => {
-      const param = params[0]
-      return `${param.name}<br/>${param.seriesName}: ${param.value}`
+      if (!params || params.length === 0) return ''
+      let result = `${params[0].name}<br/>`
+      params.forEach((param: any) => {
+        result += `${param.marker} ${param.seriesName}: ${param.value}<br/>`
+      })
+      return result
     },
   },
   xAxis: {
@@ -118,19 +132,70 @@ const option = reactive<any>({
 })
 
 const fetchData = async () => {
+  if (!selectedDates.value || selectedDates.value.length === 0) {
+    return
+  }
+
   loading.value = true
   try {
-    const { data } = await getFrontPageFbaCountSaleDayChart({ userId: userId.value, site: site.value })
-    list.value = data || []
+    const { data } = await getFrontPageFbaCountSaleDayChart({
+      userId: userId.value,
+      site: site.value,
+      dates: selectedDates.value.map((date) => formatDateToString(new Date(date))),
+    })
 
-    // 更新图表数据
-    option.xAxis.data = list.value.map((item) => item.saleDayRange)
-    option.series[0].data = list.value.map((item) => item.fbaCount)
+    // 获取 X 轴数据（后端已排序好，直接取第一个日期的数据即可）
+    const dates = Object.keys(data)
+    if (dates.length === 0) return
+    const firstDateData = data[dates[0] as keyof typeof data] as any
+    const xAxisData = firstDateData.map((item: any) => item.saleDayRange)
+
+    // 更新 X 轴
+    option.xAxis.data = xAxisData
+
+    // 构建多条折线数据
+    const series: any[] = []
+    const legendData: string[] = []
+
+    dates.forEach((date, index) => {
+      const dateData = data[date as keyof typeof data] as any
+      if (!Array.isArray(dateData)) return
+
+      legendData.push(date)
+
+      // 构建该日期的数据
+      const seriesData = dateData.map((item: any) => item.fbaCount)
+
+      const color = colorPalette[index % colorPalette.length]
+
+      series.push({
+        name: date,
+        type: 'line',
+        data: seriesData,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          width: 2,
+          color: color,
+        },
+        itemStyle: {
+          color: color,
+        },
+        areaStyle: {
+          opacity: 0.1,
+          color: color,
+        },
+      })
+    })
+
+    option.series = series
+    option.legend.data = legendData
   } catch (error) {
     console.error('获取FBA库存数据失败:', error)
-    list.value = []
     option.xAxis.data = []
-    option.series[0].data = []
+    option.series = []
+    option.legend.data = []
   } finally {
     loading.value = false
   }
@@ -140,27 +205,6 @@ const fetchData = async () => {
 watch(
   () => theme.value.color,
   (color) => {
-    option.series[0].lineStyle.color = color
-    option.series[0].itemStyle = {
-      color: color,
-    }
-    option.series[0].areaStyle.color = {
-      type: 'linear',
-      x: 0,
-      y: 0,
-      x2: 0,
-      y2: 1,
-      colorStops: [
-        {
-          offset: 0,
-          color: color,
-        },
-        {
-          offset: 1,
-          color: 'rgba(255, 255, 255, 0)',
-        },
-      ],
-    }
     option.tooltip.borderColor = color
   },
   { immediate: true }
