@@ -338,6 +338,19 @@
                 </el-select>
               </el-form-item>
 
+              <el-form-item>
+                <div class="filter-group">
+                  <el-checkbox
+                    v-model="bonusDetailQueryForm.oldProductClaim"
+                    :false-value="0"
+                    :true-value="1"
+                    @change="queryBonusDetailData"
+                  >
+                    老品认领
+                  </el-checkbox>
+                </div>
+              </el-form-item>
+
               <el-form-item label="发放月份">
                 <el-select v-model="bonusDetailQueryForm.month" placeholder="请选择发放月份" @change="queryBonusDetailData">
                   <el-option v-for="item in operationBonusMonthOption" :key="item.id" :label="item.label" :value="item.label" />
@@ -577,6 +590,7 @@ const bonusDetailQueryForm = reactive({
   pageSize: 20,
   orderByField: 'price',
   orderDirection: 'descending',
+  oldProductClaim: 0,
 })
 const bonusDetailList = ref<any[]>([])
 const bonusDetailTotal = ref<number>(0)
@@ -936,6 +950,28 @@ onBeforeMount(async () => {
   .el-icon {
     margin-left: 3px;
     color: var(--el-color-primary);
+  }
+}
+// 筛选条件组样式
+.filter-group {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  padding: 1px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  // background: #f1f3f4;
+
+  &:hover {
+    background: #f1f3f4;
+  }
+
+  :deep(.el-checkbox) {
+    margin-right: 12px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 </style>
