@@ -79,18 +79,18 @@
               {{ row.kpiUnqualifiedAdjustment ? row.kpiUnqualifiedAdjustment + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总销售额" min-width="140" prop="totalSales" sortable="custom">
+          <el-table-column label="总销售额" min-width="140" prop="totalSales" sortable>
             <template #default="{ row }">
               {{ row.totalSales ? row.currencyIcon + formatAmount(row.totalSales) : '-' }}
             </template>
           </el-table-column>
 
-          <el-table-column label="利润报表毛利" min-width="150" prop="totalGrossProfit" sortable="custom">
+          <el-table-column label="利润报表毛利" min-width="150" prop="totalGrossProfit" sortable>
             <template #default="{ row }">
               {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="利润报表销售额" min-width="160" prop="totalGrossProfitSalesAmount" sortable="custom">
+          <el-table-column label="利润报表销售额" min-width="160" prop="totalGrossProfitSalesAmount" sortable>
             <template #default="{ row }">
               {{ row.totalGrossProfitSalesAmount ? row.currencyIcon + formatAmount(row.totalGrossProfitSalesAmount) : '-' }}
             </template>
@@ -106,7 +106,7 @@
               {{ row.adSales ? '$' + row.adSales : '-' }}
             </template>
           </el-table-column> -->
-          <el-table-column label="广告花费" min-width="140" prop="adSpend" sortable="custom">
+          <el-table-column label="广告花费" min-width="140" prop="adSpend" sortable>
             <template #default="{ row }">
               {{ row.adSpend ? row.currencyIcon + formatAmount(row.adSpend) : '-' }}
             </template>
