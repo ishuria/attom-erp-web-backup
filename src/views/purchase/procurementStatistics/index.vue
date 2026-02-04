@@ -37,6 +37,7 @@
           :total="productTotal"
           @handle-current-change="handleProductCurrentChange"
           @handle-size-change="handleProductSizeChange"
+          @on-show-image-preview="showImagePreview"
           @query-data="queryProductData"
         />
       </el-tab-pane>
@@ -55,10 +56,15 @@
 <script lang="ts" setup>
 import { TabsPaneContext } from 'element-plus'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
-import { getPurchaseStatisticsProductList, getPurchaseStatisticsSupplierList } from '/@/api/devlocal/purchaseStatistics'
+import {
+  getPurchaseStatisticsProductList,
+  getPurchaseStatisticsSkuList,
+  getPurchaseStatisticsSupplierList,
+} from '/@/api/devlocal/purchaseStatistics'
 import {
   IGetPurchaseStatisticsProductItem,
   IGetPurchaseStatisticsProductListReq,
+  IGetPurchaseStatisticsSkuItem,
   IGetPurchaseStatisticsSupplierItem,
   IGetPurchaseStatisticsSupplierListReq,
 } from '/@/type/purchase/statistics'
@@ -111,12 +117,12 @@ const productQueryForm = reactive<IGetPurchaseStatisticsProductListReq>({
   pageSize: 20,
   startDate: '',
   endDate: '',
-  sites: [],
-  siteAggregate: 0,
+  siteList: [],
+  siteAgg: 0,
 })
 const list = ref<IGetPurchaseStatisticsSupplierItem[]>([])
 const componentList = ref<IGetPurchaseStatisticsProductItem[]>([])
-const productList = ref<IGetPurchaseStatisticsSupplierItem[]>([])
+const productList = ref<IGetPurchaseStatisticsSkuItem[]>([])
 const total = ref<number>(0)
 const componentTotal = ref<number>(0)
 const productTotal = ref<number>(0)
@@ -206,11 +212,11 @@ const fetchComponentData = async () => {
 }
 const fetchProductData = async () => {
   listLoading.value = true
-  // productQueryForm.startDate = productDate.value[0]
-  // productQueryForm.endDate = productDate.value[1]
-  // const { data } = await getPurchaseStatisticsSupplierList(productQueryForm)
-  // productTotal.value = data.total
-  // productList.value = data.list
+  productQueryForm.startDate = productDate.value[0]
+  productQueryForm.endDate = productDate.value[1]
+  const { data } = await getPurchaseStatisticsSkuList(productQueryForm)
+  productTotal.value = data.total
+  productList.value = data.list
   listLoading.value = false
 }
 const siteList = ref<{ id: number; label: string }[]>([])

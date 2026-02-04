@@ -14,7 +14,7 @@
           </el-form-item>
           <el-form-item label="站点">
             <el-select
-              v-model="queryForm.sites"
+              v-model="queryForm.siteList"
               class="multiple-select"
               clearable
               collapse-tags
@@ -31,8 +31,10 @@
               <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="站点聚合">
-            <el-checkbox v-model="queryForm.siteAggregate" :false-value="0" :true-value="1" />
+          <el-form-item>
+            <div class="filter-group">
+              <el-checkbox v-model="queryForm.siteAgg" :false-value="0" :true-value="1" @change="queryData">站点聚合</el-checkbox>
+            </div>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -49,7 +51,7 @@
     </vab-query-form>
     <el-table v-loading="listLoading" border :data="list" stripe>
       <el-table-column type="selection" width="38" />
-      <el-table-column label="SKU" prop="sku">
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
         <template #default="{ row }">
           <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
             {{ row.sku }}
@@ -61,7 +63,7 @@
       </el-table-column>
       <el-table-column label="图片" width="82">
         <template #default="{ row }">
-          <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showImagePreview(row.skuImageUrl)">
+          <el-image :src="row.skuImgUrl" style="width: 100%; height: 100%" @click="showImagePreview(row.skuImgUrl)">
             <template #error>
               <el-icon />
             </template>
@@ -70,12 +72,12 @@
       </el-table-column>
       <el-table-column label="站点" prop="siteName" />
       <el-table-column label="采购量柱状图" />
-      <el-table-column label="SKU采购总套数" />
-      <el-table-column label="SKU采购总额" />
-      <el-table-column label="SKU采购平均值" />
-      <el-table-column label="主体供应商" />
-      <el-table-column label="SKU零件数量" />
-      <el-table-column label="产品经理" />
+      <el-table-column label="SKU采购总套数" prop="totalPurchaseCount" />
+      <el-table-column label="SKU采购总额" prop="totalPurchaseAmount" />
+      <el-table-column label="SKU采购平均值" prop="avgMonthlyPurchaseAmount" />
+      <el-table-column label="主体供应商" prop="mainSupplierName" :width="flexColumnWidth(list, '主体供应商', 'mainSupplierName')" />
+      <el-table-column label="SKU零件数量" prop="componentCount" />
+      <el-table-column label="产品经理" prop="productManagerName" />
 
       <template #empty>
         <el-empty class="vab-data-empty" />
@@ -94,7 +96,8 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
 import { CheckboxValueType } from 'element-plus'
-import { IGetPurchaseStatisticsProductListReq, IGetPurchaseStatisticsSupplierItem } from '/@/type/purchase/statistics'
+import { flexColumnWidth } from '~/src/utils/tableColum'
+import { IGetPurchaseStatisticsProductListReq, IGetPurchaseStatisticsSkuItem } from '/@/type/purchase/statistics'
 import handleClipboard from '/@/utils/clipboard'
 
 defineOptions({
@@ -102,7 +105,7 @@ defineOptions({
 })
 
 const props = defineProps<{
-  list: IGetPurchaseStatisticsSupplierItem[]
+  list: IGetPurchaseStatisticsSkuItem[]
   total: number
   queryForm: IGetPurchaseStatisticsProductListReq
   siteList: { id: number; label: string }[]
@@ -121,11 +124,11 @@ const indeterminate = ref<boolean>(false)
 const handleCheckAll = (val: CheckboxValueType) => {
   indeterminate.value = false
   if (val) {
-    props.queryForm.sites = props.siteList.map((_) => _.id)
+    props.queryForm.siteList = props.siteList.map((_) => _.id)
     // 全选的时候获取数据
     queryData()
   } else {
-    props.queryForm.sites = []
+    props.queryForm.siteList = []
     // 取消全选获取数据
     queryData()
   }
@@ -173,6 +176,27 @@ const showImagePreview = (url: string) => {
   }
   .el-table {
     flex: 1;
+  }
+}
+// 筛选条件组样式
+.filter-group {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  padding: 1px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f1f3f4;
+  }
+
+  :deep(.el-checkbox) {
+    margin-right: 12px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 </style>

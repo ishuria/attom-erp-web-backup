@@ -4,7 +4,9 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import {
   IGetPurchaseStatisticsProductDetailListReq,
+  IGetPurchaseStatisticsProductListReq,
   IGetPurchaseStatisticsProductListRes,
+  IGetPurchaseStatisticsSkuListRes,
   IGetPurchaseStatisticsSupplierListReq,
   IGetPurchaseStatisticsSupplierListRes,
 } from '/@/type/purchase/statistics'
@@ -34,6 +36,19 @@ export function getPurchaseStatisticsProductList(
 ): Promise<IGetPurchaseStatisticsProductListRes> {
   return request({
     url: `${BASE_API}/purchase/statistics/product/info`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 采购统计-产品
+ * @param data
+ * @returns
+ */
+export function getPurchaseStatisticsSkuList(data: IGetPurchaseStatisticsProductListReq): Promise<IGetPurchaseStatisticsSkuListRes> {
+  return request({
+    url: `${BASE_API}/purchase/statistics/sku/info`,
     method: 'post',
     data,
   })
