@@ -24,6 +24,19 @@
         </template>
       </el-table-column>
 
+      <!-- 可认领 -->
+      <el-table-column v-else-if="column.key === 'isClaimable'" :label="column.label" :prop="column.prop" :width="column.width">
+        <template #default="{ row }">
+          <el-checkbox
+            v-model="row.isClaimable"
+            class="custom-checkbox"
+            :false-value="0"
+            :true-value="1"
+            @change="handleIsClaimableChange(row)"
+          />
+        </template>
+      </el-table-column>
+
       <!-- 发货日期 -->
       <el-table-column v-else-if="column.key === 'sendDate'" :label="column.label" :prop="column.prop" :width="column.width">
         <template #default="{ row }">
@@ -241,6 +254,7 @@
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import { computed } from 'vue'
+import { updateIsClaimable } from '~/src/api/devlocal/packagingShipping'
 import PackingTaskPermission from '/@/permissions/packingTask'
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
@@ -351,6 +365,15 @@ const handleDelete = (row: any) => {
   emit('deleteTask', row)
 }
 
+// 修改可认领
+const handleIsClaimableChange = async (row: any) => {
+  const { data } = await updateIsClaimable({ id: row.id, isClaimable: row.isClaimable })
+  if (data) {
+    $baseMessage('修改可认领成功！', 'success')
+  } else {
+    $baseMessage('修改可认领失败！', 'error')
+  }
+}
 // 图片取消padding
 const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   // 使用 label 来判断，因为 Element Plus 的 column 对象可能没有 key 属性

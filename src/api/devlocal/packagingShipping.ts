@@ -631,7 +631,16 @@ export function checkInMork(params: { userIds: string }): Promise<{ data: boolea
     params,
   })
 }
-
+/**
+ * @description 打包任务-可认领修改
+ */
+export function updateIsClaimable(params: { id: number; isClaimable: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/task/isClaimable/update`,
+    method: 'post',
+    params,
+  })
+}
 // ------------------------------------------- 工时合并 --------------------------------------------
 
 /**
