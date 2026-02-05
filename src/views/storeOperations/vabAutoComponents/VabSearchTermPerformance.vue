@@ -2,6 +2,38 @@
   <div class="vab-search-term-performance">
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
+        <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+          <template #reference>
+            <el-button>
+              <vab-icon icon="settings-line" />
+            </el-button>
+          </template>
+          <vab-draggable
+            v-model="columns"
+            :animation="600"
+            filter=".non-draggable"
+            handle=".handle"
+            :on-end="handleEnd"
+            :on-move="handleMove"
+          >
+            <div
+              v-for="item in columns"
+              :key="item.label"
+              :class="{ 'non-draggable': item.disableCheck }"
+              style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+            >
+              <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+              <span style="flex: 1">{{ item.label }}</span>
+              <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                <vab-icon icon="eye-line" />
+              </span>
+              <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                <vab-icon v-show="item.checked" icon="eye-line" />
+              </span>
+            </div>
+          </vab-draggable>
+        </el-popover>
         <el-form inline @submit.prevent>
           <el-form-item>
             <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -22,94 +54,42 @@
       @sort-change="handleSortChange"
     >
       <el-table-column
-        fixed="left"
-        label="搜索关键词"
-        min-width="110"
-        prop="searchQuery"
-        :width="flexColumnWidth(list, '搜索关键词', 'searchQuery')"
-      />
-
-      <el-table-column label="搜索关键词评分" min-width="110" prop="searchQueryScore" />
-      <el-table-column label="关键词搜索量" min-width="130" prop="searchQueryVolume" sortable="custom" />
-      <el-table-column
-        class-name="group-split-left group-split-left--improve"
-        header-class-name="group-split-left group-split-left--improve"
-        label="展现"
+        v-for="(item, index) in baseColumns"
+        :key="item.prop || index"
+        :class-name="handleClassName(item)"
+        :fixed="item.isFixed"
+        :header-class-name="handleHeaderClassName(item)"
+        :label="item.label"
+        :min-width="handleWidth(item)"
+        :prop="item.prop"
+        :sortable="item.sortable ? 'custom' : false"
       >
-        <el-table-column
-          class-name="group-split-left group-split-left--improve"
-          header-class-name="group-split-left group-split-left--improve"
-          label="关键词总曝光量"
-          min-width="100"
-          prop="totalQueryImpressionCount"
-          sortable="custom"
-        />
-        <el-table-column label="商品曝光量" min-width="130" prop="asinImpressionCount" sortable="custom" />
-        <el-table-column label="商品曝光占比（%）" min-width="130" prop="asinImpressionShare" sortable="custom" />
+        <template #default="{ row }">
+          {{ row[item.prop] }}
+        </template>
       </el-table-column>
       <el-table-column
+        v-for="(group, gIdx) in groupedColumns"
+        :key="group.label || gIdx"
         class-name="group-split-left group-split-left--improve"
         header-class-name="group-split-left group-split-left--improve"
-        label="点击"
+        :label="group.label"
       >
         <el-table-column
-          class-name="group-split-left group-split-left--improve"
-          header-class-name="group-split-left group-split-left--improve"
-          label="关键词总点击量"
-          min-width="100"
-          prop="totalClickCount"
-          sortable="custom"
-        />
-        <el-table-column label="总点击率（%）" min-width="110" prop="totalClickRate" />
-        <el-table-column label="商品点击量" min-width="130" prop="asinClickCount" sortable="custom" />
-        <el-table-column label="商品点击占比（%）" min-width="120" prop="asinClickShare" />
-        <el-table-column label="关键词中位点击价（金额）" min-width="140" prop="totalMedianClickPrice" />
-        <el-table-column label="商品中位点击价（金额）" min-width="140" prop="asinMedianClickPrice" />
-        <el-table-column label="当日达点击量" min-width="120" prop="totalSameDayShippingClickCount" />
-        <el-table-column label="次日达点击量" min-width="120" prop="totalOneDayShippingClickCount" />
-        <el-table-column label="两日达点击量" min-width="120" prop="totalTwoDayShippingClickCount" />
-      </el-table-column>
-      <el-table-column
-        class-name="group-split-left group-split-left--improve"
-        header-class-name="group-split-left group-split-left--improve"
-        label="加购物车"
-      >
-        <el-table-column
-          class-name="group-split-left group-split-left--improve"
-          header-class-name="group-split-left group-split-left--improve"
-          label="关键词总加购量"
-          min-width="100"
-          prop="totalCartAddCount"
-        />
-        <el-table-column label="总加购率（%）" min-width="100" prop="totalCartAddRate" />
-        <el-table-column label="商品加购量" min-width="110" prop="asinCartAddCount" />
-        <el-table-column label="商品加购占比（%）" min-width="120" prop="asinCartAddShare" />
-        <el-table-column label="关键词中位加购价（金额）" min-width="140" prop="totalMedianCartAddPrice" />
-        <el-table-column label="商品中位加购价（金额）" min-width="140" prop="asinMedianCartAddPrice" />
-        <el-table-column label="当日达加购量" min-width="120" prop="totalSameDayShippingCartAddCount" />
-        <el-table-column label="次日达加购量" min-width="120" prop="totalOneDayShippingCartAddCount" />
-        <el-table-column label="两日达加购量" min-width="120" prop="totalTwoDayShippingCartAddCount" />
-      </el-table-column>
-      <el-table-column
-        class-name="group-split-left group-split-left--improve"
-        header-class-name="group-split-left group-split-left--improve"
-        label="购买量"
-      >
-        <el-table-column
-          class-name="group-split-left group-split-left--improve"
-          header-class-name="group-split-left group-split-left--improve"
-          label="关键词总购买量"
-          min-width="100"
-          prop="totalPurchaseCount"
-        />
-        <el-table-column label="总购买率（%）" min-width="110" prop="totalPurchaseRate" />
-        <el-table-column label="商品购买量" min-width="110" prop="asinPurchaseCount" />
-        <el-table-column label="商品购买占比（%）" min-width="120" prop="asinPurchaseShare" />
-        <el-table-column label="关键词中位购买价（金额）" min-width="140" prop="totalMedianPurchasePrice" />
-        <el-table-column label="商品中位购买价（金额）" min-width="140" prop="asinMedianPurchasePrice" />
-        <el-table-column label="当日达购买量" min-width="120" prop="totalSameDayShippingPurchaseCount" />
-        <el-table-column label="次日达购买量" min-width="120" prop="totalOneDayShippingPurchaseCount" />
-        <el-table-column label="两日达购买量" min-width="120" prop="totalTwoDayShippingPurchaseCount" />
+          v-for="(item, cIdx) in group.children"
+          :key="item.prop || cIdx"
+          :class-name="handleClassName(item)"
+          :header-class-name="handleHeaderClassName(item)"
+          :label="item.label"
+          :min-width="handleWidth(item)"
+          :prop="item.prop"
+          :sortable="item.sortable ? 'custom' : false"
+          :width="item.width"
+        >
+          <template #default="{ row }">
+            {{ row[item.prop] }}
+          </template>
+        </el-table-column>
       </el-table-column>
 
       <template #empty>
@@ -129,6 +109,8 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { CSSProperties, reactive, ref, watch } from 'vue'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
+import { IGetOperationColumnList } from '~/src/type/storeOperation/productPerformanceType'
 import { getSearchTermPerformance } from '/@/api/devlocal/productAnalysis'
 import type { IGetSearchTermPerformance } from '/@/type/storeOperation/productAnalysisType'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -155,6 +137,106 @@ const queryForm = reactive({
   orderDirection: '',
 })
 const total = ref<number>(0)
+const columns = ref<any>([])
+// 1) 给每个 prop 指定所属分组（不在这里的就是“非分组基础列”）
+const groupByProp: Record<string, '' | '展现' | '点击' | '加购物车' | '购买量'> = {
+  // 展现
+  totalQueryImpressionCount: '展现',
+  asinImpressionCount: '展现',
+  asinImpressionShare: '展现',
+
+  // 点击
+  totalClickCount: '点击',
+  totalClickRate: '点击',
+  asinClickCount: '点击',
+  asinClickShare: '点击',
+  totalMedianClickPrice: '点击',
+  asinMedianClickPrice: '点击',
+  totalSameDayShippingClickCount: '点击',
+  totalOneDayShippingClickCount: '点击',
+  totalTwoDayShippingClickCount: '点击',
+
+  // 加购物车
+  totalCartAddCount: '加购物车',
+  totalCartAddRate: '加购物车',
+  asinCartAddCount: '加购物车',
+  asinCartAddShare: '加购物车',
+  totalMedianCartAddPrice: '加购物车',
+  asinMedianCartAddPrice: '加购物车',
+  totalSameDayShippingCartAddCount: '加购物车',
+  totalOneDayShippingCartAddCount: '加购物车',
+  totalTwoDayShippingCartAddCount: '加购物车',
+
+  // 购买量
+  totalPurchaseCount: '购买量',
+  totalPurchaseRate: '购买量',
+  asinPurchaseCount: '购买量',
+  asinPurchaseShare: '购买量',
+  totalMedianPurchasePrice: '购买量',
+  asinMedianPurchasePrice: '购买量',
+  totalSameDayShippingPurchaseCount: '购买量',
+  totalOneDayShippingPurchaseCount: '购买量',
+  totalTwoDayShippingPurchaseCount: '购买量',
+}
+
+// 2) 当前勾选出来的可见列（保持 columns 当前排序）
+const visibleColumns = computed(() => columns.value.filter((c: any) => !!c.checked))
+
+// 3) 非分组基础列：搜索关键词/评分/搜索量等
+const baseColumns = computed(() => visibleColumns.value.filter((c: any) => !c.group))
+
+// 4) 分组列：按固定顺序输出父表头（展现/点击/加购物车/购买量）
+const groupOrder: Array<'展现' | '点击' | '加购物车' | '购买量'> = ['展现', '点击', '加购物车', '购买量']
+
+const groupedColumns = computed(() => {
+  const map = new Map<string, any[]>()
+
+  // 按 visibleColumns 的顺序塞入（所以“组内顺序”就是你拖拽后的顺序）
+  visibleColumns.value
+    .filter((c: any) => c.group)
+    .forEach((c: any) => {
+      if (!map.has(c.group)) map.set(c.group, [])
+      map.get(c.group)!.push(c)
+    })
+
+  return groupOrder
+    .filter((g) => map.has(g))
+    .map((g) => ({
+      label: g,
+      children: map.get(g)!,
+    }))
+})
+// 处理列是否隐藏
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: IGetOperationColumnList, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
   if (queryForm.orderByField === prop) {
@@ -318,11 +400,58 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
+const splitProps = ['totalQueryImpressionCount', 'totalClickCount', 'totalCartAddCount', 'totalPurchaseCount']
 
+const handleClassName = (item: any) => (splitProps.includes(item.prop) ? 'group-split-left group-split-left--improve' : '')
+const handleHeaderClassName = (item: any) => (splitProps.includes(item.prop) ? 'group-split-left group-split-left--improve' : '')
+// 计算并缓存列宽
+const handleWidth = (item: any) => {
+  let width: string | number
+  switch (item.label) {
+    case '搜索关键词': {
+      width = flexColumnWidth(list.value, '搜索关键词', 'searchQuery')
+      break
+    }
+    default: {
+      width = item.minWidth
+      break
+    }
+  }
+  return width
+}
+
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 18 })
+  columns.value = data
+  columns.value.forEach((item: IGetOperationColumnList) => {
+    item.minWidth = item.width
+
+    // 新增：写入所属分组
+    ;(item as any).group = groupByProp[(item as any).prop] || ''
+
+    if (
+      [
+        'searchQueryVolume',
+        'totalQueryImpressionCount',
+        'asinImpressionCount',
+        'asinImpressionShare',
+        'totalClickCount',
+        'asinClickCount',
+      ].includes((item as any).prop)
+    ) {
+      ;(item as any).sortable = true
+    }
+
+    if (['searchQuery'].includes((item as any).prop)) {
+      ;(item as any).isFixed = 'left'
+    }
+  })
+}
 watch(
   () => [props.asin, props.siteId, props.selectDateRange],
   () => {
     queryForm.pageNo = 1
+    fetchColumn()
     fetchData()
   },
   { immediate: true, deep: true }
@@ -345,5 +474,23 @@ watch(
 }
 :deep(.group-split-left--line) {
   border-left-color: var(--el-border-color) !important;
+}
+.handle {
+  cursor: grab;
+}
+.disabled-handle {
+  cursor: not-allowed;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 </style>
