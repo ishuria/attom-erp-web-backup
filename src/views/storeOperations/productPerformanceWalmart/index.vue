@@ -821,6 +821,7 @@ const fetchDevelopUserList = async () => {
   const { data } = await getDevelopUserList()
   developUserList.value = data
   developUserList.value.unshift({ id: -1, label: '全部' })
+  developUserList.value.push({ id: -2, label: '离职人员' })
 }
 const fetchUser = async () => {
   const { data } = await getUserAmazonOperation()
