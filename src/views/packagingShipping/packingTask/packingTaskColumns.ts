@@ -65,7 +65,7 @@ export const packingTaskColumns: PackingTaskColumn[] = [
     key: 'isClaimable',
     label: '可认领',
     prop: 'isClaimable',
-    width: 100,
+    width: 90,
     visibleInTabs: [7, 1, 5, 2, 3, 4, 0],
   },
   {
