@@ -926,6 +926,11 @@ const handleReleaseOrder = async (formData: any) => {
     $baseMessage('请选择SKU', 'warning')
     return
   }
+  // 先判断是否有可认领数量
+  if (formData.totalClaimCount > 0) {
+    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
+    return
+  }
   if (!formData.number) {
     $baseMessage('请填写订货数量', 'warning')
     return
@@ -975,11 +980,6 @@ const handleSwitchSku = async (sku: string) => {
 }
 // 打开发布订货
 const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
-  // 先判断是否有可认领数量
-  if (row.totalClaimCount > 0) {
-    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
-    return
-  }
   currentRowId.value = row.id
   copyRow = row
 
