@@ -62,6 +62,13 @@ export const packingTaskColumns: PackingTaskColumn[] = [
     visibleInTabs: [7, 1, 5, 2, 3, 4, 0],
   },
   {
+    key: 'isClaimable',
+    label: '可认领',
+    prop: 'isClaimable',
+    width: 100,
+    visibleInTabs: [7, 1, 5, 2, 3, 4, 0],
+  },
+  {
     key: 'signDay',
     label: '已签收天数',
     prop: 'signDay',
