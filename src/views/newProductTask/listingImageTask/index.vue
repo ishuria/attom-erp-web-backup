@@ -1273,7 +1273,7 @@ import {
 import { getProductPositionList } from '/@/api/devlocal/orderProcess'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
+import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
 import ListingPermission from '/@/permissions/listing'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
@@ -1305,6 +1305,7 @@ const handleDeadlineExtensionApplication = (row: IGetArtDesignTaskList) => {
   deadlineExtensionApplicationVisible.value = true
   deadlineExtensionApplicationListingTaskId.value = row.id!
 }
+const isBoss = currentRoleCode === ROLE_BOSS_CODE
 // 检查用户是否有权限完成任务
 const canFinishTask = (row: any) => {
   if (!userName) return false
@@ -1325,7 +1326,7 @@ const canFinishTask = (row: any) => {
   const publishers = row.publisherPersonName?.split(',').map((name: string) => name.trim()) || []
   const isPublisher = publishers.includes(userName)
 
-  return isProductManager || isProductDesign || isSupervisor || isPublisher
+  return isProductManager || isProductDesign || isSupervisor || isPublisher || isBoss
 }
 
 // // 检查用户是否有权限完成该任务
