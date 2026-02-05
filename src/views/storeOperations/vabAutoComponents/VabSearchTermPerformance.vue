@@ -17,7 +17,7 @@
       border
       :cell-style="cellStyle"
       :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
+      :header-cell-style="headerCellStyle"
       stripe
       @sort-change="handleSortChange"
     >
@@ -28,38 +28,90 @@
         prop="searchQuery"
         :width="flexColumnWidth(list, '搜索关键词', 'searchQuery')"
       />
+
       <el-table-column label="搜索关键词评分" min-width="110" prop="searchQueryScore" />
       <el-table-column label="关键词搜索量" min-width="130" prop="searchQueryVolume" sortable="custom" />
-      <el-table-column label="关键词总曝光量" min-width="100" prop="totalQueryImpressionCount" sortable="custom" />
-      <el-table-column label="商品曝光量" min-width="130" prop="asinImpressionCount" sortable="custom" />
-      <el-table-column label="商品曝光占比（%）" min-width="130" prop="asinImpressionShare" sortable="custom" />
-      <el-table-column label="关键词总点击量" min-width="100" prop="totalClickCount" sortable="custom" />
-      <el-table-column label="总点击率（%）" min-width="110" prop="totalClickRate" />
-      <el-table-column label="商品点击量" min-width="130" prop="asinClickCount" sortable="custom" />
-      <el-table-column label="商品点击占比（%）" min-width="120" prop="asinClickShare" />
-      <el-table-column label="关键词中位点击价（金额）" min-width="140" prop="totalMedianClickPrice" />
-      <el-table-column label="商品中位点击价（金额）" min-width="140" prop="asinMedianClickPrice" />
-      <el-table-column label="当日达点击量" min-width="120" prop="totalSameDayShippingClickCount" />
-      <el-table-column label="次日达点击量" min-width="120" prop="totalOneDayShippingClickCount" />
-      <el-table-column label="两日达点击量" min-width="120" prop="totalTwoDayShippingClickCount" />
-      <el-table-column label="关键词总加购量" min-width="100" prop="totalCartAddCount" />
-      <el-table-column label="总加购率（%）" min-width="100" prop="totalCartAddRate" />
-      <el-table-column label="商品加购量" min-width="110" prop="asinCartAddCount" />
-      <el-table-column label="商品加购占比（%）" min-width="120" prop="asinCartAddShare" />
-      <el-table-column label="关键词中位加购价（金额）" min-width="140" prop="totalMedianCartAddPrice" />
-      <el-table-column label="商品中位加购价（金额）" min-width="140" prop="asinMedianCartAddPrice" />
-      <el-table-column label="当日达加购量" min-width="120" prop="totalSameDayShippingCartAddCount" />
-      <el-table-column label="次日达加购量" min-width="120" prop="totalOneDayShippingCartAddCount" />
-      <el-table-column label="两日达加购量" min-width="120" prop="totalTwoDayShippingCartAddCount" />
-      <el-table-column label="关键词总购买量" min-width="100" prop="totalPurchaseCount" />
-      <el-table-column label="总购买率（%）" min-width="110" prop="totalPurchaseRate" />
-      <el-table-column label="商品购买量" min-width="110" prop="asinPurchaseCount" />
-      <el-table-column label="商品购买占比（%）" min-width="120" prop="asinPurchaseShare" />
-      <el-table-column label="关键词中位购买价（金额）" min-width="140" prop="totalMedianPurchasePrice" />
-      <el-table-column label="商品中位购买价（金额）" min-width="140" prop="asinMedianPurchasePrice" />
-      <el-table-column label="当日达购买量" min-width="120" prop="totalSameDayShippingPurchaseCount" />
-      <el-table-column label="次日达购买量" min-width="120" prop="totalOneDayShippingPurchaseCount" />
-      <el-table-column label="两日达购买量" min-width="120" prop="totalTwoDayShippingPurchaseCount" />
+      <el-table-column
+        class-name="group-split-left group-split-left--improve"
+        header-class-name="group-split-left group-split-left--improve"
+        label="展现"
+      >
+        <el-table-column
+          class-name="group-split-left group-split-left--improve"
+          header-class-name="group-split-left group-split-left--improve"
+          label="关键词总曝光量"
+          min-width="100"
+          prop="totalQueryImpressionCount"
+          sortable="custom"
+        />
+        <el-table-column label="商品曝光量" min-width="130" prop="asinImpressionCount" sortable="custom" />
+        <el-table-column label="商品曝光占比（%）" min-width="130" prop="asinImpressionShare" sortable="custom" />
+      </el-table-column>
+      <el-table-column
+        class-name="group-split-left group-split-left--improve"
+        header-class-name="group-split-left group-split-left--improve"
+        label="点击"
+      >
+        <el-table-column
+          class-name="group-split-left group-split-left--improve"
+          header-class-name="group-split-left group-split-left--improve"
+          label="关键词总点击量"
+          min-width="100"
+          prop="totalClickCount"
+          sortable="custom"
+        />
+        <el-table-column label="总点击率（%）" min-width="110" prop="totalClickRate" />
+        <el-table-column label="商品点击量" min-width="130" prop="asinClickCount" sortable="custom" />
+        <el-table-column label="商品点击占比（%）" min-width="120" prop="asinClickShare" />
+        <el-table-column label="关键词中位点击价（金额）" min-width="140" prop="totalMedianClickPrice" />
+        <el-table-column label="商品中位点击价（金额）" min-width="140" prop="asinMedianClickPrice" />
+        <el-table-column label="当日达点击量" min-width="120" prop="totalSameDayShippingClickCount" />
+        <el-table-column label="次日达点击量" min-width="120" prop="totalOneDayShippingClickCount" />
+        <el-table-column label="两日达点击量" min-width="120" prop="totalTwoDayShippingClickCount" />
+      </el-table-column>
+      <el-table-column
+        class-name="group-split-left group-split-left--improve"
+        header-class-name="group-split-left group-split-left--improve"
+        label="加购物车"
+      >
+        <el-table-column
+          class-name="group-split-left group-split-left--improve"
+          header-class-name="group-split-left group-split-left--improve"
+          label="关键词总加购量"
+          min-width="100"
+          prop="totalCartAddCount"
+        />
+        <el-table-column label="总加购率（%）" min-width="100" prop="totalCartAddRate" />
+        <el-table-column label="商品加购量" min-width="110" prop="asinCartAddCount" />
+        <el-table-column label="商品加购占比（%）" min-width="120" prop="asinCartAddShare" />
+        <el-table-column label="关键词中位加购价（金额）" min-width="140" prop="totalMedianCartAddPrice" />
+        <el-table-column label="商品中位加购价（金额）" min-width="140" prop="asinMedianCartAddPrice" />
+        <el-table-column label="当日达加购量" min-width="120" prop="totalSameDayShippingCartAddCount" />
+        <el-table-column label="次日达加购量" min-width="120" prop="totalOneDayShippingCartAddCount" />
+        <el-table-column label="两日达加购量" min-width="120" prop="totalTwoDayShippingCartAddCount" />
+      </el-table-column>
+      <el-table-column
+        class-name="group-split-left group-split-left--improve"
+        header-class-name="group-split-left group-split-left--improve"
+        label="购买量"
+      >
+        <el-table-column
+          class-name="group-split-left group-split-left--improve"
+          header-class-name="group-split-left group-split-left--improve"
+          label="关键词总购买量"
+          min-width="100"
+          prop="totalPurchaseCount"
+        />
+        <el-table-column label="总购买率（%）" min-width="110" prop="totalPurchaseRate" />
+        <el-table-column label="商品购买量" min-width="110" prop="asinPurchaseCount" />
+        <el-table-column label="商品购买占比（%）" min-width="120" prop="asinPurchaseShare" />
+        <el-table-column label="关键词中位购买价（金额）" min-width="140" prop="totalMedianPurchasePrice" />
+        <el-table-column label="商品中位购买价（金额）" min-width="140" prop="asinMedianPurchasePrice" />
+        <el-table-column label="当日达购买量" min-width="120" prop="totalSameDayShippingPurchaseCount" />
+        <el-table-column label="次日达购买量" min-width="120" prop="totalOneDayShippingPurchaseCount" />
+        <el-table-column label="两日达购买量" min-width="120" prop="totalTwoDayShippingPurchaseCount" />
+      </el-table-column>
+
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -166,6 +218,93 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     textAlign: 'center',
   }
 }
+
+const headerGroupMap: Record<string, { bg: string; color: string; props: string[] }> = {
+  展现: {
+    bg: 'var(--el-color-primary-light-9)',
+    color: 'var(--el-color-primary)',
+    props: ['totalQueryImpressionCount', 'asinImpressionCount', 'asinImpressionShare'],
+  },
+  点击: {
+    bg: 'var(--el-color-warning-light-9)',
+    color: 'var(--el-color-warning)',
+    props: [
+      'totalClickCount',
+      'totalClickRate',
+      'asinClickCount',
+      'asinClickShare',
+      'totalMedianClickPrice',
+      'asinMedianClickPrice',
+      'totalSameDayShippingClickCount',
+      'totalOneDayShippingClickCount',
+      'totalTwoDayShippingClickCount',
+    ],
+  },
+  加购物车: {
+    bg: 'var(--el-color-success-light-9)',
+    color: 'var(--el-color-success)',
+    props: [
+      'totalCartAddCount',
+      'totalCartAddRate',
+      'asinCartAddCount',
+      'asinCartAddShare',
+      'totalMedianCartAddPrice',
+      'asinMedianCartAddPrice',
+      'totalSameDayShippingCartAddCount',
+      'totalOneDayShippingCartAddCount',
+      'totalTwoDayShippingCartAddCount',
+    ],
+  },
+  购买量: {
+    bg: 'var(--el-color-danger-light-9)',
+    color: 'var(--el-color-danger)',
+    props: [
+      'totalPurchaseCount',
+      'totalPurchaseRate',
+      'asinPurchaseCount',
+      'asinPurchaseShare',
+      'totalMedianPurchasePrice',
+      'asinMedianPurchasePrice',
+      'totalSameDayShippingPurchaseCount',
+      'totalOneDayShippingPurchaseCount',
+      'totalTwoDayShippingPurchaseCount',
+    ],
+  },
+}
+const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const prop = data.column?.property
+  const label = data.column?.label
+
+  // 遍历分组配置
+  for (const groupLabel in headerGroupMap) {
+    const group = headerGroupMap[groupLabel]
+
+    // 命中父表头（展现 / 点击 / 加购物车 / 购买量）
+    if (label === groupLabel) {
+      return {
+        textAlign: 'center',
+        backgroundColor: group.bg,
+        color: group.color,
+        fontWeight: 600,
+      }
+    }
+
+    // 命中子列
+    if (prop && group.props.includes(prop)) {
+      return {
+        textAlign: 'center',
+        backgroundColor: group.bg,
+        color: group.color,
+        fontWeight: 600,
+      }
+    }
+  }
+
+  // 默认样式
+  return {
+    textAlign: 'center',
+  }
+}
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
@@ -199,5 +338,12 @@ watch(
   .el-table {
     flex: 1;
   }
+}
+/* 每组左侧分割线：表头 + body */
+:deep(.group-split-left) {
+  border-left: 3px solid var(--el-border-color) !important;
+}
+:deep(.group-split-left--line) {
+  border-left-color: var(--el-border-color) !important;
 }
 </style>
