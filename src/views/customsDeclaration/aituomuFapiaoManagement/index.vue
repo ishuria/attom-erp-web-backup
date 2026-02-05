@@ -146,6 +146,13 @@ const handleExportATM = async () => {
     }).then(() => {
       exportLoading.value = false
     })
+
+    await downloadFilePD('/taxRefund/invoice/export/detail', {
+      fromDate: date.value[0],
+      toDate: date.value[1],
+    }).then(() => {
+      exportLoading.value = false
+    })
   } else {
     $baseMessage('请选择日期', 'error')
   }
