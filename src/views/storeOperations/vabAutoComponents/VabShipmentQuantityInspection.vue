@@ -1,23 +1,16 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="发货数检查">
-      <el-table
-        border
-        :cell-style="{ textAlign: 'center' }"
-        class="noneHoverTable"
-        :data="list"
-        :header-cell-style="{ textAlign: 'center' }"
-        @selection-change="setSelectedList"
-      >
-        <el-table-column type="selection" />
-        <el-table-column label="站点" prop="siteName" />
-        <el-table-column label="发货计划" prop="shippingPlanDate" />
-        <el-table-column align="left" label="渠道" prop="channelName" :width="flexColumnWidth(list, '渠道', 'channelName')" />
+    <vab-dialog v-model="visible" title="发货数检查" width="60%">
+      <el-table border class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }" @selection-change="setSelectedList">
+        <el-table-column align="center" type="selection" />
+        <el-table-column align="center" label="站点" min-width="135" prop="siteName" />
+        <el-table-column align="center" label="发货计划" min-width="120" prop="shippingPlanDate" />
+        <el-table-column align="left" label="渠道" prop="channelName" :width="flexColumnWidth(list, '渠道', 'channelName', 30)" />
         <el-table-column align="left" label="备注" prop="channelRemark" :width="flexColumnWidth(list, '备注', 'channelRemark')" />
-        <el-table-column label="产品数量" prop="productCount" />
-        <el-table-column label="重量" prop="weight" />
-        <el-table-column label="体积" prop="volume" />
-        <el-table-column label="箱数" prop="encasementCount" />
+        <el-table-column align="center" label="产品数量" min-width="100" prop="productCount" />
+        <el-table-column align="center" label="重量" prop="weight" />
+        <el-table-column align="center" label="体积" prop="volume" />
+        <el-table-column align="center" label="箱数" prop="encasementCount" />
       </el-table>
       <template #footer>
         <el-button @click="visible = false">取消</el-button>
