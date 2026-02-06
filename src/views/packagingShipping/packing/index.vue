@@ -682,7 +682,7 @@
     </vab-dialog>
 
     <!-- 发货计划渠道配置弹窗 -->
-    <vab-shipping-plan-channel-dialog v-model="shippingPlanChannelVisible"  />
+    <vab-shipping-plan-channel-dialog v-model="shippingPlanChannelVisible" />
   </div>
 </template>
 
@@ -746,7 +746,6 @@ const showQuantityCheck = () => {
 
 // 发货计划渠道管理
 const shippingPlanChannelVisible = ref<boolean>(false)
-
 
 // 订货总数查看展示
 const viewOrderVisible = ref<boolean>(false)
@@ -988,6 +987,7 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
     queryForm.shipmentDataSort = column.order === 'ascending' ? 0 : 1
     queryForm.grossWeightSort = undefined
     queryForm.createTimeSort = undefined
+    queryForm.totalVolumeSort = undefined
   } else if (prop === 'grossWeight') {
     if (!order) {
       if (queryForm.grossWeightSort === 0) {
@@ -999,6 +999,7 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
     queryForm.grossWeightSort = column.order === 'ascending' ? 0 : 1
     queryForm.shipmentDataSort = undefined
     queryForm.createTimeSort = undefined
+    queryForm.totalVolumeSort = undefined
   } else if (prop === 'createTime') {
     if (!order) {
       if (queryForm.createTimeSort === 0) {
@@ -1010,6 +1011,19 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
     queryForm.createTimeSort = column.order === 'ascending' ? 0 : 1
     queryForm.grossWeightSort = undefined
     queryForm.shipmentDataSort = undefined
+    queryForm.totalVolumeSort = undefined
+  } else if (prop === 'totalVolume') {
+    if (!order) {
+      if (queryForm.totalVolumeSort === 0) {
+        column.order = 'descending'
+      } else if (queryForm.totalVolumeSort === 1) {
+        column.order = 'ascending'
+      }
+    }
+    queryForm.totalVolumeSort = column.order === 'ascending' ? 0 : 1
+    queryForm.grossWeightSort = undefined
+    queryForm.shipmentDataSort = undefined
+    queryForm.createTimeSort = undefined
   }
   queryData()
 }
@@ -1811,7 +1825,7 @@ const fetchColumn = async () => {
   columns.value = data
   columns.value.forEach((item: any) => {
     item.minWidth = item.width
-    if (['shipmentPlanDate', 'createTime', 'grossWeight'].includes(item.prop)) {
+    if (['shipmentPlanDate', 'createTime', 'grossWeight', 'totalVolume'].includes(item.prop)) {
       item.sortable = true
     }
   })

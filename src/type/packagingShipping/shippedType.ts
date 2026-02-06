@@ -26,6 +26,7 @@ export interface IGetEncasementListReq {
   shipmentDataSort?: number //发货计划排序 0升序 1降序
   grossWeightSort?: number //毛重排序 0升序 1降序
   createTimeSort?: number
+  totalVolumeSort?: number
   site?: number
   filters?: string[] // 筛选条件数组
 }
