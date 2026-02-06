@@ -80,7 +80,7 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="[imagePreviewUrl]" @close="imagePreviewClose" />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewUrl" @close="imagePreviewClose" />
   </vab-card>
 </template>
 
@@ -121,10 +121,23 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
 }
 
 const imagePreviewVisible = ref(false)
-const imagePreviewUrl = ref('')
+const imagePreviewUrl = ref([''])
 const imagePreviewShow = (url: string) => {
-  imagePreviewVisible.value = true
-  imagePreviewUrl.value = url
+  // 需要对url做处理 https://m.media-amazon.com/images/I/71uZi8MxJiL._SL75_.jpg 需要去掉url的_SL75_
+  const processedUrl = url.replace('_SL75_', '')
+
+  // 预加载图片
+  const img = new Image()
+  img.onload = () => {
+    imagePreviewVisible.value = true
+    imagePreviewUrl.value = [processedUrl]
+  }
+  img.onerror = () => {
+    // 如果大图加载失败，回退到原图
+    imagePreviewVisible.value = true
+    imagePreviewUrl.value = [url]
+  }
+  img.src = processedUrl
 }
 
 const imagePreviewClose = () => {
