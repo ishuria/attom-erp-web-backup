@@ -330,7 +330,7 @@
       </el-col>
 
       <el-col v-if="ableViewLowVolumeProductStorageFeeCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
-        <fba-count-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
+        <fba-count-sale-day-chart :site-list="fbaSiteList" :user-list="fbaCountUserList" />
       </el-col>
     </el-row>
     <el-row class="row-spacing" :gutter="20">
@@ -1437,10 +1437,14 @@ const fetchProfitSharePreview = async () => {
   profitSharePreviewLoading.value = false
 }
 const siteList = ref<{ id: number; label: string }[]>([])
+const fbaSiteList = ref<{ id: number; label: string }[]>([])
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
   siteList.value.unshift({ id: -1, label: '全部' })
+  const siteIds = [0, 1, 2, 3, 15]
+  fbaSiteList.value = data.filter((item) => siteIds.includes(item.id))
+  fbaSiteList.value.unshift({ id: -1, label: '全部' })
 }
 onBeforeMount(async () => {
   if (ableViewPerformanceSummaryCard) {

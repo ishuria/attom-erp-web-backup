@@ -31,7 +31,6 @@ const props = defineProps<{
   userList: { id: number; label: string }[]
   siteList: { id: number; label: string }[]
 }>()
-
 // 默认选中今天
 const selectedDates = ref<string[]>([formatDateToString(new Date())])
 const userId = ref<number>(-1)
