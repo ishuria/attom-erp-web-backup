@@ -82,7 +82,19 @@
         </div>
       </el-form-item>
       <el-form-item label="运营分类筛选">
-        <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类" />
+        <div style="display: flex; gap: 10px; width: 100%">
+          <el-select
+            v-model="filterForm.operationUserId"
+            placeholder="请选择运营人员"
+            style="width: 5em"
+            @change="handleGetOperationTypeById"
+          >
+            <el-option v-for="item in operationUserList" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+          <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类" style="flex: 1">
+            <el-option v-for="item in operationTypeList" :key="item.id" :label="item.typeName" :value="item.id" />
+          </el-select>
+        </div>
       </el-form-item>
       <el-form-item label="广告">
         <el-select v-model="filterForm.advStatus" placeholder="请选择广告状态">
@@ -115,6 +127,8 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
+import { getFrontPageProductManagerSelectOption, getOperationTypeUserList } from '~/src/api/devlocal/frontPage'
+import { useUserStore } from '~/src/store/modules/user'
 import { adStatusOption } from '../constantOption'
 
 defineOptions({
@@ -130,10 +144,25 @@ const props = defineProps<{
 watchEffect(() => {
   dflag.value = props.filterVisible
 })
-
+const myName = useUserStore().getUsername
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const fetchOperationUserList = async () => {
+  const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
+  operationUserList.value = data
+  filterForm.operationUserId = data.find((item) => item.label.includes(myName))?.id || -1
+  handleGetOperationTypeById(filterForm.operationUserId)
+}
+const operationTypeList = ref<{ id: number; typeName: string }[]>([])
+const handleGetOperationTypeById = async (id: number) => {
+  const { data } = await getOperationTypeUserList({ userId: id })
+  operationTypeList.value = data
+}
 watch(
   () => props.filterVisible,
   (newVal) => {
+    if (newVal) {
+      fetchOperationUserList()
+    }
     if (newVal && props.savedFilterData) {
       const savedData = { ...props.savedFilterData }
 
@@ -208,6 +237,7 @@ const filterForm = reactive<any>({
   warehouseAge: null,
   availableRateMin: null,
   availableRateMax: null,
+  operationUserId: null,
 })
 const filterFormRef = ref<FormInstance>()
 const handleConfirmFilter = () => {

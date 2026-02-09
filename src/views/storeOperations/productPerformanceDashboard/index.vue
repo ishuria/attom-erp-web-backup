@@ -910,6 +910,7 @@ const handleConfirmFilter = async (filterForm: any) => {
       'fbaMax',
       'estimateNextMonthStorageFeeMin',
       'estimateNextMonthStorageFeeMax',
+      'operationTypeId',
     ]
 
     numberFields.forEach((field) => {

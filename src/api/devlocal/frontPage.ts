@@ -154,6 +154,19 @@ export function getFrontPageProductManagerSelectOption(params: { type: number })
   })
 }
 /**
+ * 运营分类-用户列表
+ * @param params { userId: number }
+ * @returns { data: { id: number; label: string }[] }
+ */
+export function getOperationTypeUserList(params: { userId: number }): Promise<{ data: { id: number; typeName: string }[] }> {
+  return request({
+    url: `${BASE_API}/operation/type/user/list`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
  * 首页-排行超额完成
  * @returns
  */
