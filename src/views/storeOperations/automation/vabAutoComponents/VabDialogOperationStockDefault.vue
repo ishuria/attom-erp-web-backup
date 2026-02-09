@@ -69,6 +69,19 @@
               <span>{{ row.amplitudeDay }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="调整价格后出单数>=" prop="improveNewPriceOrdersGte">
+            <template #default="{ row, $index }">
+              <div class="none">
+                <el-input
+                  v-model="row.improveNewPriceOrdersGte"
+                  type="number"
+                  @blur="handleCellBlur($event, row, $index)"
+                  @keyup.enter="handleCellBlur($event, row, $index)"
+                />
+              </div>
+              <span>{{ row.improveNewPriceOrdersGte }}</span>
+            </template>
+          </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -116,6 +129,13 @@
                 ，
                 <el-input v-model="form.maxGrossProfitMargin" class="formula-input" />
                 %毛利)
+              </div>
+            </el-form-item>
+            <el-form-item>
+              <div class="formula-line">
+                最优价格 =
+                <el-input v-model="form.optimalPriceGrossMargin" class="formula-input" />
+                %毛利
               </div>
             </el-form-item>
           </el-card>
@@ -222,6 +242,8 @@ const form = ref<IOperationStockDefaultParams>({
   minAddPrice: undefined,
   maxDecodePrice: undefined,
   reduceAvailableInventory: undefined,
+  /** 最优价格毛利率 */
+  optimalPriceGrossMargin: undefined,
 })
 
 watch(defaultVisible, async () => {
@@ -245,6 +267,7 @@ watch(defaultVisible, async () => {
     form.value.minAddPrice = data.minAddPrice
     form.value.maxDecodePrice = data.maxDecodePrice
     form.value.reduceAvailableInventory = data.reduceAvailableInventory
+    form.value.optimalPriceGrossMargin = data.optimalPriceGrossMargin
     queryOperationStockSite()
   }
 })

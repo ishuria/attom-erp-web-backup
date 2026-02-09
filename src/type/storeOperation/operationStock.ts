@@ -148,6 +148,8 @@ export interface IOperationStockDefaultParams {
   minAddPrice?: number
   maxDecodePrice?: number
   reduceAvailableInventory?: number
+  /** 最优价格毛利率 */
+  optimalPriceGrossMargin?: number
 }
 
 export interface IOperationStockLogRules {

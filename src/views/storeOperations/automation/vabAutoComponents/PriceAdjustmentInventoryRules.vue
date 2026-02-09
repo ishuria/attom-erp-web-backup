@@ -131,6 +131,23 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="最优价" min-width="100" prop="bestPrice">
+        <template #default="{ row, $index }">
+          <div class="none">
+            <el-input
+              v-model="row.bestPrice"
+              type="number"
+              @blur="handleCellBlur($event, row, $index)"
+              @keyup.enter="handleCellBlur($event, row, $index)"
+            />
+          </div>
+          <span>
+            {{ row.bestPrice }}
+            <br />
+            {{ row.bestGrossProfitMargin }}%
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="调价幅度" min-width="100" prop="adjustmentRange">
         <template #default="scope">{{ scope.row.currencyIcon }} {{ scope.row.adjustmentRange }}</template>
       </el-table-column>
@@ -147,6 +164,19 @@
           <span>{{ row.adjustmentDay }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="调整后的价格出单数>=" min-width="110" prop="improveNewPriceOrdersGte">
+        <template #default="{ row, $index }">
+          <div class="none">
+            <el-input
+              v-model="row.improveNewPriceOrdersGte"
+              type="number"
+              @blur="handleCellBlur($event, row, $index)"
+              @keyup.enter="handleCellBlur($event, row, $index)"
+            />
+          </div>
+          <span>{{ row.improveNewPriceOrdersGte }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         class-name="group-split-left group-split-left--improve"
         header-class-name="group-split-left group-split-left--improve"
@@ -157,7 +187,7 @@
           class-name="group-split-left group-split-left--improve"
           header-class-name="group-split-left group-split-left--improve"
           label="剩余可售天数≤"
-          min-width="130"
+          min-width="135"
           prop="improveDays"
         >
           <template #default="{ row, $index }">
