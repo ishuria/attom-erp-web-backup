@@ -11,7 +11,7 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="queryForm.keyWord"
+                  v-model.trim="queryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="queryData"
@@ -81,9 +81,9 @@
               <el-link type="primary" underline="never" @click="showFreightFee(row)">退税运费</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showDetail(row)">明细</el-link>
-                  <!--   https://applink.feishu.cn/client/todo/detail?guid=27bf6430-7fe3-4ade-a2d1-46319bc8ff73&suite_entity_num=t111570           -->
-<!--              <span style="margin: 0 5px"></span>-->
-<!--              <el-link underline="never" @click="showContractValidate(row)">采购合同校验</el-link>-->
+              <!--   https://applink.feishu.cn/client/todo/detail?guid=27bf6430-7fe3-4ade-a2d1-46319bc8ff73&suite_entity_num=t111570           -->
+              <!--              <span style="margin: 0 5px"></span>-->
+              <!--              <el-link underline="never" @click="showContractValidate(row)">采购合同校验</el-link>-->
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showInvoiceCollection(row)">发票归集</el-link>
               <span style="margin: 0 5px"></span>
@@ -114,7 +114,7 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="queryForm.keyWord"
+                  v-model.trim="queryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="queryData"

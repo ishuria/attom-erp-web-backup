@@ -44,7 +44,7 @@
           <el-form-item>
             <el-switch v-model="showCurrentValue" active-text="显示当前值" inactive-text="隐藏当前值" style="margin-right: 12px" />
             <el-input
-              v-model="queryForm.keyWord"
+              v-model.trim="queryForm.keyWord"
               clearable
               placeholder="请输入搜索关键词"
               @input="handleQueryData"

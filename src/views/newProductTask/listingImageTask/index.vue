@@ -34,7 +34,7 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="queryForm.keyword"
+                  v-model.trim="queryForm.keyword"
                   class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
@@ -286,7 +286,7 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="queryForm.keyword"
+                  v-model.trim="queryForm.keyword"
                   class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
@@ -526,7 +526,7 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="queryForm.keyword"
+                  v-model.trim="queryForm.keyword"
                   class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
@@ -763,7 +763,7 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="queryForm.keyword"
+                  v-model.trim="queryForm.keyword"
                   class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"

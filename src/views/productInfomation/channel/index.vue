@@ -8,37 +8,51 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table 
-      border 
-      :cell-class-name="clearPadding" 
-      class="noneHoverTable" :data="list" 
-      :header-cell-style="{ textAlign: 'center' }" stripe
+    <el-table
+      border
+      :cell-class-name="clearPadding"
+      class="noneHoverTable"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
       @selection-change="setSelectedRows"
     >
-      <el-table-column align="center" fixed="left" type="selection" width="50"/>
+      <el-table-column align="center" fixed="left" type="selection" width="50" />
       <el-table-column fixed="left" label="图片" prop="" width="75">
         <template #default="{ row }">
-          <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.skuImgUrl)">
-            <template #error><el-icon/></template>
+          <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+            <template #error><el-icon /></template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))">
+      <el-table-column
+        label="SKU"
+        prop="sku"
+        :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
+      >
         <template #default="{ row }">
-          <span>{{ row.sku }}</span><br /><span>{{ row.productDesc }}</span>
+          <span>{{ row.sku }}</span>
+          <br />
+          <span>{{ row.productDesc }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="重量" min-width="90" prop="weight"/>
-      <el-table-column label="货物类别" prop="merchandiseName" :width="flexColumnWidth(list, '货物类别', 'merchandiseName')"/>
-      <el-table-column 
+      <el-table-column align="center" label="重量" min-width="90" prop="weight" />
+      <el-table-column label="货物类别" prop="merchandiseName" :width="flexColumnWidth(list, '货物类别', 'merchandiseName')" />
+      <el-table-column
         v-for="(item, index) in option"
         :key="index"
         :label="item.siteName"
@@ -47,14 +61,14 @@
       />
       <el-table-column align="center" fixed="right" label="操作" width="90">
         <template #default="{ row }">
-          <el-link type="primary" underline='never' @click="handleModify(row)">修改</el-link>
+          <el-link type="primary" underline="never" @click="handleModify(row)">修改</el-link>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"/>
+        <el-empty class="vab-data-empty" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -63,20 +77,11 @@
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 修改 -->
-    <vab-dialog
-      v-model="modifyVisible"
-      :title="`${isBatch ? '批量' : ''}修改货物类别`"
-      width="25%"
-    >
+    <vab-dialog v-model="modifyVisible" :title="`${isBatch ? '批量' : ''}修改货物类别`" width="25%">
       <el-form ref="modifyFormRef" label-position="top" :model="modifyForm">
         <el-form-item label="类别" prop="typeId">
           <el-select v-model="modifyForm.typeId" placeholder="请选择类别" @change="handleGetTypeChannel">
-            <el-option 
-              v-for="item in merchandiseTypeList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+            <el-option v-for="item in merchandiseTypeList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -90,12 +95,7 @@
       </template>
     </vab-dialog>
     <!-- 货物类别 -->
-    <vab-dialog
-      v-model="categorySetUpVisible"
-      title="货物类别设定"
-      top="5%"
-      width="40%"
-    >
+    <vab-dialog v-model="categorySetUpVisible" title="货物类别设定" top="5%" width="40%">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="handleShowAdd">新增分类</el-button>
@@ -104,26 +104,32 @@
         <vab-query-form-right-panel>
           <el-form inline :model="setUpQueryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model="setUpQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="setUpQueryData" @keyup.enter="setUpQueryData" />
+              <el-input
+                v-model="setUpQueryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="setUpQueryData"
+                @keyup.enter="setUpQueryData"
+              />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="setUpListLoading" type="primary" @click="setUpQueryData"/>
+              <el-button :icon="Search" :loading="setUpListLoading" type="primary" @click="setUpQueryData" />
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table border class="noneHoverTable" :data="setUpList" max-height="800" stripe @selection-change="setSelectedSetUpRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column label="分类" min-width="150" prop="merchandiseName"/>
-        <el-table-column label="站点" min-width="130" prop="siteName"/>
-        <el-table-column label="渠道" min-width="280" prop="channel"/>
+        <el-table-column label="分类" min-width="150" prop="merchandiseName" />
+        <el-table-column label="站点" min-width="130" prop="siteName" />
+        <el-table-column label="渠道" min-width="280" prop="channel" />
         <el-table-column align="center" label="操作" width="80">
           <template #default="{ row }">
-            <el-link type="primary" underline='never' @click="handleModifySetUp(row)">修改</el-link>
+            <el-link type="primary" underline="never" @click="handleModifySetUp(row)">修改</el-link>
           </template>
         </el-table-column>
       </el-table>
-      <vab-pagination 
+      <vab-pagination
         :current-page="setUpQueryForm.pageNo"
         :page-size="setUpQueryForm.pageSize"
         :total="setUpTotal"
@@ -133,12 +139,7 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 新增 -->
-    <vab-dialog
-      v-model="addVisible"
-      title="新增分类"
-      width="20%"
-      @close="closeAddDialog"
-    >
+    <vab-dialog v-model="addVisible" title="新增分类" width="20%" @close="closeAddDialog">
       <el-form ref="addFormRef" label-position="top" :model="addForm" :rules="addFormRules">
         <el-form-item label="分类" prop="merchandiseName">
           <el-input v-model="addForm.merchandiseName" />
@@ -150,11 +151,7 @@
       </template>
     </vab-dialog>
     <!-- 货物类别设定里的修改 -->
-    <vab-dialog
-      v-model="setUpModifyVisible"
-      :title="`${setUpBatch ? '批量' : ''}修改渠道`"
-      width="20%"
-    >
+    <vab-dialog v-model="setUpModifyVisible" :title="`${setUpBatch ? '批量' : ''}修改渠道`" width="20%">
       <el-form label-position="top" :model="setUpModifyForm">
         <el-form-item label="渠道">
           <el-select v-model="setUpModifyForm.channelId" filterable placeholder="请选择渠道">
@@ -173,12 +170,28 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { addMerchandise, getFreightForwarderQuery, getMerchandiseList, getMerchandiseTypeChannel, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateMerchandiseTypeBatch, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
-import type { IGetMerchandiseList, IGetMerchandiseListReq, IGetMerchandiseTypeList, IGetSkuShippingChannelList } from '/@/type/productInformation/channelType'
+import {
+  addMerchandise,
+  getFreightForwarderQuery,
+  getMerchandiseList,
+  getMerchandiseTypeChannel,
+  getMerchandiseTypeList,
+  getSkuShippingChannelList,
+  updateBatchSkuShippingChannelMerchandise,
+  updateMerchandise,
+  updateMerchandiseTypeBatch,
+  updateSkuShippingChannelMerchandise,
+} from '/@/api/devlocal/productInformation'
+import type {
+  IGetMerchandiseList,
+  IGetMerchandiseListReq,
+  IGetMerchandiseTypeList,
+  IGetSkuShippingChannelList,
+} from '/@/type/productInformation/channelType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'Channel'
+  name: 'Channel',
 })
 const router = useRouter()
 const route = useRoute()
@@ -193,12 +206,12 @@ const imagePreviewList = ref<string[]>([])
 const queryForm = reactive<IGetMerchandiseListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const setUpQueryForm = reactive<IGetMerchandiseListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 // 判断是批量修改还是单个修改
 const isBatch = ref<boolean>(false)
@@ -248,7 +261,7 @@ const handleConfirmModify = async () => {
       const ids = selectedRows.value.map((item) => item.id).join(',')
       const { data } = await updateBatchSkuShippingChannelMerchandise({
         ids,
-        merchandiseId: modifyForm.typeId
+        merchandiseId: modifyForm.typeId,
       })
       if (data) {
         $baseMessage('批量修改货物类别成功！', 'success')
@@ -262,7 +275,7 @@ const handleConfirmModify = async () => {
   } else {
     const { data } = await updateSkuShippingChannelMerchandise({
       id: _id.value,
-      merchandiseId: modifyForm.typeId
+      merchandiseId: modifyForm.typeId,
     })
     if (data) {
       $baseMessage('修改货物类别成功！', 'success')
@@ -276,7 +289,7 @@ const handleConfirmAdd = async () => {
   addFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       const { data } = await addMerchandise({
-        merchandiseName: addForm.merchandiseName
+        merchandiseName: addForm.merchandiseName,
       })
       if (data) {
         $baseMessage('新增成功！', 'success')
@@ -312,7 +325,7 @@ const handleUpdateModifySetUp = async () => {
   } else {
     const { data } = await updateMerchandise({
       id: _id.value,
-      channelId: setUpModifyForm.channelId
+      channelId: setUpModifyForm.channelId,
     })
     if (data) {
       $baseMessage('修改渠道成功! ', 'success')
@@ -321,7 +334,6 @@ const handleUpdateModifySetUp = async () => {
       await fetchData()
     }
   }
-  
 }
 const handleShowAdd = async () => {
   addVisible.value = true
@@ -370,8 +382,8 @@ const handleCurrentChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: value,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -386,8 +398,8 @@ const handleSizeChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: value
-    }
+      pageSize: value,
+    },
   })
   fetchData()
 }
@@ -400,10 +412,10 @@ const queryData = () => {
   queryForm.pageNo = 1
   router.push({
     query: {
-     ...route.query,
+      ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -411,7 +423,7 @@ const setUpQueryData = () => {
   setUpQueryForm.pageNo = 1
   fetchSetUpData()
 }
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.columnIndex === 1) {
     return 'clear-padding'
   }

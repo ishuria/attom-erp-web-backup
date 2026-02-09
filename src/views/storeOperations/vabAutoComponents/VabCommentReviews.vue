@@ -164,7 +164,13 @@
       <div style="position: absolute; top: 0px; right: -9px">
         <el-form inline>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="loading" type="primary" @click="queryData" />

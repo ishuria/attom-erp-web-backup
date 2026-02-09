@@ -1,29 +1,38 @@
 <template>
   <!-- 分类编码设定 -->
   <div>
-    <vab-dialog
-      v-model="visible"
-      title="分类编码设定"
-      top="5vh"
-      width="40%"
-    >
+    <vab-dialog v-model="visible" title="分类编码设定" top="5vh" width="40%">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="addVisible = true">新增</el-button>
         </vab-query-form-left-panel>
-        <vab-query-form-right-panel >
+        <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+              <el-input
+                v-model.trim="queryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="queryData"
+                @keydown.enter="queryData"
+              />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+              <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table border :cell-style="{ cursor: 'pointer' }" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="70vh" stripe @cell-click="cellClick">
-        <el-table-column label="分类名" prop="typeName" >
+      <el-table
+        border
+        :cell-style="{ cursor: 'pointer' }"
+        :data="list"
+        :header-cell-style="{ textAlign: 'center' }"
+        max-height="70vh"
+        stripe
+        @cell-click="cellClick"
+      >
+        <el-table-column label="分类名" prop="typeName">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.typeName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -31,7 +40,7 @@
             <span>{{ row.typeName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="税收分类编码" prop="encodingCode" >
+        <el-table-column label="税收分类编码" prop="encodingCode">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.encodingCode" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -45,7 +54,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <vab-pagination 
+      <vab-pagination
         :current-page="queryForm.pageNo"
         :page-size="queryForm.pageSize"
         :total="total"
@@ -75,12 +84,17 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
-import { addComponentEncoding, delComponentEncoding, getComponentEncodingList, updateComponentEncoding } from '/@/api/devlocal/productInformation'
+import {
+  addComponentEncoding,
+  delComponentEncoding,
+  getComponentEncodingList,
+  updateComponentEncoding,
+} from '/@/api/devlocal/productInformation'
 import { IGetComponentEncodingList } from '/@/type/productInformation/skuInformationType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: 'VabClassificationCodeSettings'
+  name: 'VabClassificationCodeSettings',
 })
 const props = defineProps<{
   modelValue: boolean
@@ -94,17 +108,20 @@ const visible = computed({
   },
   set(val) {
     emits('update:modelValue', val)
-  }
+  },
 })
-watch(() => props.modelValue, (val) => {
-  if (val) {
-    fetchData()
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) {
+      fetchData()
+    }
   }
-})
+)
 const queryForm = reactive({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const total = ref(0)
 const list = ref<IGetComponentEncodingList[]>([])
@@ -113,15 +130,11 @@ const addVisible = ref(false)
 const addFormRef = ref<FormInstance>()
 const addForm = reactive({
   typeEncodingName: '',
-  encodingCode: ''
+  encodingCode: '',
 })
 const addFormRules = reactive({
-  typeEncodingName: [
-    { required: true, message: '请输入分类名', trigger: 'blur' }
-  ],
-  encodingCode: [
-    { required: true, message: '请输入税收分类编码', trigger: 'blur' }
-  ]
+  typeEncodingName: [{ required: true, message: '请输入分类名', trigger: 'blur' }],
+  encodingCode: [{ required: true, message: '请输入税收分类编码', trigger: 'blur' }],
 })
 let copyRow: any
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
@@ -159,7 +172,7 @@ const clickCancel = async (event: Event, value: any) => {
     await updateComponentEncoding({
       id: value.id,
       taxationEncoding: value.encodingCode,
-      typeName: value.typeName
+      typeName: value.typeName,
     })
   }
 }
@@ -172,10 +185,10 @@ const handleConfirmAdd = async () => {
     if (isValid) {
       const { data } = await addComponentEncoding({
         typeEncodingName: addForm.typeEncodingName,
-        encodingCode: addForm.encodingCode
+        encodingCode: addForm.encodingCode,
       })
       if (data) {
-        $baseMessage("添加分类编码成功！", 'success')
+        $baseMessage('添加分类编码成功！', 'success')
         addVisible.value = false
         addFormRef.value?.resetFields()
         fetchData()
@@ -184,14 +197,14 @@ const handleConfirmAdd = async () => {
   })
 }
 const handleDel = async (row: any, index: number) => {
-  $baseConfirm("确定要删除此项分类编码吗？", null, async () => {
+  $baseConfirm('确定要删除此项分类编码吗？', null, async () => {
     const { data } = await delComponentEncoding({
-      id: row.id
+      id: row.id,
     })
     if (data) {
-      $baseMessage("删除分类编码成功！", 'success')
+      $baseMessage('删除分类编码成功！', 'success')
       list.value.splice(index, 1)
-      total.value --
+      total.value--
     }
   })
 }
