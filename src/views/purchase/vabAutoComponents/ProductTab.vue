@@ -36,6 +36,9 @@
               <el-checkbox v-model="queryForm.siteAgg" :false-value="0" :true-value="1" @change="queryData">站点聚合</el-checkbox>
             </div>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary">统计采购量</el-button>
+          </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -49,7 +52,7 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="listLoading" border :data="list" stripe>
+    <el-table v-loading="listLoading" border :cell-class-name="clearPadding" class="product-table" :data="list" stripe>
       <el-table-column type="selection" width="38" />
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
         <template #default="{ row }">
@@ -96,9 +99,9 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
 import { CheckboxValueType } from 'element-plus'
-import { flexColumnWidth } from '~/src/utils/tableColum'
 import { IGetPurchaseStatisticsProductListReq, IGetPurchaseStatisticsSkuItem } from '/@/type/purchase/statistics'
 import handleClipboard from '/@/utils/clipboard'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProductTab',
@@ -132,6 +135,12 @@ const handleCheckAll = (val: CheckboxValueType) => {
     // 取消全选获取数据
     queryData()
   }
+}
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
 }
 const queryData = () => {
   emit('query-data')
@@ -198,5 +207,13 @@ const showImagePreview = (url: string) => {
       margin-right: 0;
     }
   }
+}
+.product-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.product-table :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
 }
 </style>

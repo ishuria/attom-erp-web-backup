@@ -11,11 +11,11 @@
     stripe
   >
     <el-table-column label="PO" prop="po" />
-    <el-table-column label="站点" prop="sendSite">
+    <!-- <el-table-column label="站点" prop="sendSite">
       <template #default="{ row }">
         <el-tag size="default" :style="getSiteTagStyle(row.sendSite)">{{ row.sendSite }}</el-tag>
       </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column label="产品图片" prop="skuImageUrl" width="100px">
       <template #default="{ row }">
         <el-image

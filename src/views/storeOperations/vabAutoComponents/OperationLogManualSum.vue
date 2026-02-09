@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="visible" title="人工日志汇总" top="8vh" width="60%">
+  <vab-dialog v-model="visible" title="日志汇总" top="8vh" width="60%">
     <vab-query-form>
       <vab-query-form-left-panel :span="18">
         <el-form inline :model="queryForm">
@@ -24,6 +24,11 @@
               value-format="YYYY-MM-DD"
               @change="dateRangeChange"
             />
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="queryForm.type" collapse-tags collapse-tags-tooltip multiple style="min-width: 160px" @change="queryData">
+              <el-option v-for="item in filterOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -87,8 +92,19 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="日期" min-width="120" prop="date" />
-      <!-- <el-table-column align="center" label="类型" min-width="100" prop="type">手动输入</el-table-column> -->
-      <el-table-column label="内容" min-width="300" prop="content" />
+      <el-table-column align="center" label="类型" min-width="100" prop="type">
+        <template #default="{ row }">
+          <el-tag v-if="row.type === 0" type="primary">手动输入</el-tag>
+          <el-tag v-else type="success">系统抓取</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="内容" min-width="300" prop="content">
+        <template #default="{ row }">
+          <el-link class="content-link" type="primary">
+            <span class="content-text">{{ row.content }}</span>
+          </el-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="运营" min-width="100" prop="operationUserName" />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
@@ -139,8 +155,12 @@ const queryForm = reactive({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
+  type: [0],
 })
-
+const filterOptions = [
+  { label: '手动输入', value: 0 },
+  { label: '系统抓取', value: 1 },
+]
 // 图片预览
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewUrl = ref<string>('')
@@ -271,5 +291,14 @@ watch(visible, (newVal) => {
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+.content-link {
+  display: block;
+  width: 100%;
+
+  .content-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 }
 </style>
