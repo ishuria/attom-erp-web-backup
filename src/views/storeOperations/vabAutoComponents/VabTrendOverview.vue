@@ -124,7 +124,7 @@
         <el-table-column label="内容" min-width="170" prop="content">
           <template #default="{ row }">
             <!-- 系统抓取(type=1)时的解析展示 -->
-            <div v-if="row.type === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
+            <div v-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
             <!-- 其他情况保持原有逻辑 -->
             <div v-else-if="row.content">
               <el-link class="content-link" type="primary">
@@ -2387,6 +2387,7 @@ const handleOperationLogClick = async (date: string) => {
     // 将接口返回的数据映射到组件需要的格式
     operationLogDetailList.value = data.list.map((item: IGetOperationLog) => ({
       ...item,
+      rawType: item.type,
       type: typeMap[item.type] || '未知',
     }))
     operationLogDialogVisible.value = true

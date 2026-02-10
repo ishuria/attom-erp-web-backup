@@ -55,7 +55,7 @@
       <el-table-column label="内容" min-width="170">
         <template #default="{ row }">
           <!-- 系统抓取(type=1)时的解析展示 -->
-          <div v-if="row.type === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
+          <div v-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
           <!-- 其他情况保持原有逻辑 -->
           <div v-else-if="row.content">
             <el-link class="content-link" type="primary" @click="handleContentClick(row)">
@@ -259,11 +259,7 @@ const parseSystemContent = (content: string) => {
 const isPriceIncreased = (before: string, after: string): boolean | null => {
   const extractNumber = (price: string) => {
     // 移除所有货币符号和千分位逗号，提取数字
-    return parseFloat(
-      price
-        .replace(/C\$|MX\$|R\$|JP¥|ر\.س|د\.إ/g, '')
-        .replace(/[£$€¥₹₽₩₺złkr,]/g, '')
-    )
+    return parseFloat(price.replace(/C\$|MX\$|R\$|JP¥|ر\.س|د\.إ/g, '').replace(/[£$€¥₹₽₩₺złkr,]/g, ''))
   }
 
   const beforeNum = extractNumber(before)
@@ -365,6 +361,7 @@ const fetchOperationLog = async () => {
     logData.value = data.list.map((item: IGetOperationLog) => ({
       ...item, // 保留后端所有字段
       date: item.date,
+      rawType: item.type,
       type: typeMap[item.type] || '未知', // 显示用的类型文字
     }))
     total.value = data.total
