@@ -264,7 +264,7 @@
       </el-col>
     </el-row>
     <!-- 第五层 -->
-    <el-row v-if="ableProductManagerViewCard || ableViewTop30ProductSaleCard" class="row-spacing" :gutter="20">
+    <el-row class="row-spacing" :gutter="20">
       <!-- 产品经理绩效历史 -->
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <performance-history :list="historyList">

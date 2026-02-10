@@ -4,6 +4,10 @@
       <vab-icon icon="align-top" />
       剩余FBA库存数
       <div class="right-select">
+        <el-select v-model="type" style="max-width: 5em" @change="handleChangeType">
+          <el-option label="库存天数" :value="0" />
+          <el-option label="库存天数含在途" :value="1" />
+        </el-select>
         <el-date-picker v-model="selectedDates" placeholder="选择日期" type="dates" @change="fetchData" />
         <el-select v-model="userId" placeholder="人员" style="max-width: 5em" @change="fetchData">
           <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
@@ -14,7 +18,7 @@
         </el-select>
       </div>
     </template>
-    <vab-chart :loading="loading" :option="option" />
+    <vab-chart :key="chartKey" :loading="loading" :option="option" />
   </vab-card>
 </template>
 
@@ -23,14 +27,15 @@ defineOptions({
   name: 'FbaCountSaleDayChart',
 })
 
-import { formatDateToString } from '~/src/utils/dateUtils'
 import { getFrontPageFbaCountSaleDayChart } from '/@/api/devlocal/frontPage'
 import { useSettingsStore } from '/@/store/modules/settings'
+import { formatDateToString } from '/@/utils/dateUtils'
 
 const props = defineProps<{
   userList: { id: number; label: string }[]
   siteList: { id: number; label: string }[]
 }>()
+const type = ref<number>(0)
 // 默认选中今天
 const selectedDates = ref<string[]>([formatDateToString(new Date())])
 const userId = ref<number>(-1)
@@ -129,9 +134,20 @@ const option = reactive<any>({
     },
   ],
 })
-
+const chartKey = ref(0)
+const resetChart = () => {
+  option.xAxis.data = []
+  option.series = []
+  option.legend.data = []
+  chartKey.value++
+}
+const handleChangeType = () => {
+  option.xAxis.name = type.value === 0 ? '库存天数' : '库存天数含在途'
+  fetchData()
+}
 const fetchData = async () => {
-  if (!selectedDates.value || selectedDates.value.length === 0) {
+  if (!selectedDates.value?.length) {
+    resetChart()
     return
   }
 
@@ -141,16 +157,29 @@ const fetchData = async () => {
       userId: userId.value,
       site: site.value,
       dates: selectedDates.value.map((date) => formatDateToString(new Date(date))),
+      type: type.value,
     })
 
-    // 获取 X 轴数据（后端已排序好，直接取第一个日期的数据即可）
-    const dates = Object.keys(data)
-    if (dates.length === 0) return
-    const firstDateData = data[dates[0] as keyof typeof data] as any
-    const xAxisData = firstDateData.map((item: any) => item.saleDayRange)
+    // 空对象 or 非法数据
+    if (!data || Object.keys(data).length === 0) {
+      resetChart()
+      return
+    }
 
-    // 更新 X 轴
-    option.xAxis.data = xAxisData
+    // 获取 X 轴数据（后端已排序好，直接取第一个日期的数据即可）
+
+    const dates = Object.keys(data)
+    if (dates.length === 0) {
+      resetChart()
+      return
+    }
+    const firstDateData = data[dates[0] as keyof typeof data] as any[]
+    if (!Array.isArray(firstDateData) || firstDateData.length === 0) {
+      resetChart()
+      return
+    }
+
+    option.xAxis.data = firstDateData.map((i) => i.saleDayRange)
 
     // 构建多条折线数据
     const series: any[] = []
@@ -168,6 +197,7 @@ const fetchData = async () => {
       const color = colorPalette[index % colorPalette.length]
 
       series.push({
+        id: `line-${date}`,
         name: date,
         type: 'line',
         data: seriesData,
@@ -187,14 +217,17 @@ const fetchData = async () => {
         },
       })
     })
+    // 如果所有日期都被过滤掉了（全是空数组），也要清
+    if (series.length === 0) {
+      resetChart()
+      return
+    }
 
     option.series = series
     option.legend.data = legendData
-  } catch (error) {
-    console.error('获取FBA库存数据失败:', error)
-    option.xAxis.data = []
-    option.series = []
-    option.legend.data = []
+  } catch (e) {
+    console.error(e)
+    resetChart()
   } finally {
     loading.value = false
   }

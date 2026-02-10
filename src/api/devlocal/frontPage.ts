@@ -475,7 +475,8 @@ export function getFrontPageFbaCountSaleDayChart(data: {
   userId: number
   site: number
   dates: string[]
-}): Promise<{ data: IGetFrontPageFbaCountSaleDayChartRes[] }> {
+  type: number
+}): Promise<{ data: IGetFrontPageFbaCountSaleDayChartRes }> {
   return request({
     url: `${BASE_API}/front_page/fba/count/chart`,
     method: 'post',

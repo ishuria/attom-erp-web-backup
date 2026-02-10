@@ -326,9 +326,7 @@ export interface IGetFrontPagePersonalBonusItem {
   bonus: number
 }
 
-export interface IGetFrontPageFbaCountSaleDayChartRes {
-  [date: string]: IFbaCountSaleDayItem[]
-}
+export type IGetFrontPageFbaCountSaleDayChartRes = Record<string, IFbaCountSaleDayItem[]>
 
 // 单个日期的数据项
 export interface IFbaCountSaleDayItem {

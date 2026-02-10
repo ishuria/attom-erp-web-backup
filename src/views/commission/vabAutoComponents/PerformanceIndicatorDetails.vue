@@ -9,6 +9,7 @@
       </el-table-column>
       <el-table-column label="考核指标" min-width="100">
         <template #default="{ row }">
+          {{ row.indicator === 'ASOAS广告销售额占比' ? '≥' : '≤' }}
           {{ row.targetValue !== undefined ? row.targetValue + '%' : '-' }}
         </template>
       </el-table-column>
