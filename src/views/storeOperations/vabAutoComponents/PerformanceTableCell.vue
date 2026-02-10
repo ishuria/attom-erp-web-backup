@@ -47,7 +47,7 @@
       </span>
 
       <el-tag class="order-tag" effect="dark" @click.stop="$emit('showReleaseOrder', row)">订</el-tag>
-      <el-tag class="order-tag" effect="dark" type="info" @click.stop="$emit('showRemark', row)">备</el-tag>
+      <!-- <el-tag class="order-tag" effect="dark" type="info" @click.stop="$emit('showRemark', row)">备</el-tag> -->
       <el-tag class="order-tag" effect="dark" type="success" @click.stop="$emit('showOperationLog', row)">志</el-tag>
     </div>
     <!-- 状态图标 -->

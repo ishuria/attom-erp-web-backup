@@ -1,6 +1,12 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="新增操作日志" width="20%" @opened="handleDialogOpened">
+    <vab-dialog v-model="visible" title="备注和日志" width="20%" @opened="handleDialogOpened">
+      <el-input ref="inputRef" v-model="remark" class="log-input" placeholder="请输入运营备注" :rows="5" type="textarea" />
+      <div class="dialog-actions">
+        <el-button @click="visible = false">取消</el-button>
+        <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
+      </div>
+      <el-divider />
       <!-- 输入区 -->
       <el-input ref="inputRef" v-model="operationLog" class="log-input" placeholder="请输入操作日志" :rows="5" type="textarea" />
 
@@ -28,6 +34,7 @@
 
 <script lang="ts" setup>
 import { ElInput } from 'element-plus'
+import { updateRemarkAmazonOperation } from '~/src/api/devlocal/productPerformance'
 import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis'
 import { IGetOperationLog } from '/@/type/storeOperation/productAnalysisType'
 
@@ -39,6 +46,7 @@ const props = defineProps<{
   row: any
 }>()
 const visible = defineModel({ default: false })
+const remark = ref<string>('')
 const operationLog = ref<string>('')
 const inputRef = ref<InstanceType<typeof ElInput> | null>(null)
 const handleDialogOpened = () => {
@@ -70,6 +78,18 @@ const handleAdd = async () => {
     fetchHistoryLog()
   }
 }
+const confirmUpdateRemark = async () => {
+  const { data } = await updateRemarkAmazonOperation({
+    site: props.row.site,
+    asin: props.row.asin,
+    remark: remark.value,
+    type: 0,
+  })
+  if (data) {
+    $baseMessage('运营备注修改成功！', 'success')
+    props.row.operationRemark = remark.value
+  }
+}
 const list = ref<IGetOperationLog[]>([])
 const fetchHistoryLog = async () => {
   const { data } = await getOperationLog({
@@ -88,6 +108,7 @@ watch(
   (val) => {
     if (val) {
       operationLog.value = ''
+      remark.value = props.row.operationRemark || ''
       fetchHistoryLog()
     }
   }

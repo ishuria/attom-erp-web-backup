@@ -45,7 +45,7 @@
       :span-method="objectSpanMethod"
       @selection-change="setSelectRows"
     >
-      <el-table-column label="匹配日期" prop="matchDate" />
+      <el-table-column label="匹配日期" min-width="120" prop="matchDate" />
       <el-table-column label="发票号码" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" prop="invoiceNumber" />
       <el-table-column label="发票供应商" :min-width="flexColumnWidth(list, '发票供应商', 'invoiceSupplier')" prop="invoiceSupplier" />
       <el-table-column label="发票状态" min-width="100" prop="status">
@@ -127,7 +127,9 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   const label = data.column.label
   const row = data.row
   const style: CSSProperties = {
-    textAlign: ['发票状态', '匹配金额', '发票金额', '开票数量', '匹配数量', '发票单位', '报关单位'].includes(label) ? 'center' : 'left',
+    textAlign: ['匹配日期', '发票状态', '匹配金额', '发票金额', '开票数量', '匹配数量', '发票单位', '报关单位'].includes(label)
+      ? 'center'
+      : 'left',
   }
 
   return style
