@@ -40,6 +40,31 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
+                <el-popover placement="bottom-start" trigger="click" :width="300">
+                  <template #reference>
+                    <el-button :icon="Filter" :type="hasFilter ? 'warning' : 'default'">筛选</el-button>
+                  </template>
+                  <el-form label-position="top" label-width="120px" :model="filterForm">
+                    <el-form-item label="上新天数">
+                      <el-input-number v-model="filterForm.newArrivalDayMin" :min="0" placeholder="最小值" style="width: 100%" />
+                      <div style="margin: 8px 0; text-align: center">至</div>
+                      <el-input-number v-model="filterForm.newArrivalDayMax" :min="0" placeholder="最大值" style="width: 100%" />
+                    </el-form-item>
+                    <el-form-item label="状态">
+                      <el-select v-model="filterForm.status" placeholder="请选择状态" style="width: 100%" :teleported="false">
+                        <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button style="width: 100%" type="primary" @click="handleFilter">确定</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button style="width: 100%" @click="handleResetFilter">重置</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-popover>
+              </el-form-item>
+              <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: bold">今销更新时间: 2025-05-23 17:27:11</el-text>
                 <el-divider direction="vertical" />
                 <el-text style="font-weight: bold">月数据更新时间: 2025-05-23 17:27:11</el-text>
@@ -416,7 +441,7 @@
 </template>
 
 <script lang="ts" setup>
-import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
+import { Filter, QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import { dayjs, type CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
@@ -447,6 +472,39 @@ defineOptions({
   name: 'ProductPerformanceArt',
 })
 
+// 筛选表单
+const filterForm = reactive({
+  newArrivalDayMin: undefined as number | undefined,
+  newArrivalDayMax: undefined as number | undefined,
+  status: undefined as number | undefined,
+})
+// 判断是否有筛选条件
+const hasFilter = computed(() => {
+  return filterForm.newArrivalDayMin !== undefined || filterForm.newArrivalDayMax !== undefined || filterForm.status !== undefined
+})
+const statusList = [
+  { label: '停售', value: 0 },
+  { label: '正常', value: 1 },
+  // { label: '领星未同步', value: -1 },
+  // { label: '链接不完整', value: 2 },
+]
+// 重置筛选
+const handleResetFilter = () => {
+  filterForm.newArrivalDayMin = undefined
+  filterForm.newArrivalDayMax = undefined
+  filterForm.status = undefined
+  queryForm.newArrivalDayMin = undefined
+  queryForm.newArrivalDayMax = undefined
+  queryForm.status = undefined
+  queryData()
+}
+// 处理筛选
+const handleFilter = () => {
+  queryForm.newArrivalDayMin = filterForm.newArrivalDayMin
+  queryForm.newArrivalDayMax = filterForm.newArrivalDayMax
+  queryForm.status = filterForm.status
+  queryData()
+}
 const currentRoleCode = useAclStore().getRole[0]
 const disableArtDesign = computed(() => {
   return currentRoleCode !== ROLE_GRAPHICDESIGNLEAD_CODE && currentRoleCode !== ROLE_BOSS_CODE
@@ -980,6 +1038,12 @@ const columns = ref<any>([
     checked: true,
     minWidth: 140,
     sortable: true,
+  },
+  {
+    label: '剩余库存',
+    prop: 'fbaCount',
+    checked: true,
+    minWidth: 100,
   },
   {
     label: '最近入库',
