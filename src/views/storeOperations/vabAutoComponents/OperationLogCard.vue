@@ -54,7 +54,10 @@
       <el-table-column align="center" label="类型" prop="type" width="95" />
       <el-table-column label="内容" min-width="170">
         <template #default="{ row }">
-          <div v-if="row.content">
+          <!-- 系统抓取(type=1)时的解析展示 -->
+          <div v-if="row.type === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
+          <!-- 其他情况保持原有逻辑 -->
+          <div v-else-if="row.content">
             <el-link class="content-link" type="primary" @click="handleContentClick(row)">
               <span class="content-text">{{ row.content }}</span>
             </el-link>
@@ -88,17 +91,15 @@
                 <!-- 竞价类型：显示完整变化及箭头 -->
                 <span v-else-if="row.changeType === '竞价'" style="font-weight: bold">
                   {{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}
-                  <el-icon
+                  <span
                     v-if="
                       row.beforeValue !== undefined && row.afterValue !== undefined && isValueIncreased(row.beforeValue, row.afterValue)
                     "
                     class="arrow-up"
                   >
-                    <vab-icon icon="arrow-up-line" />
-                  </el-icon>
-                  <el-icon v-else-if="row.beforeValue !== undefined && row.afterValue !== undefined" class="arrow-down">
-                    <vab-icon icon="arrow-down-line" />
-                  </el-icon>
+                    ↑
+                  </span>
+                  <span v-else-if="row.beforeValue !== undefined && row.afterValue !== undefined" class="arrow-down">↓</span>
                 </span>
                 <!-- 预算 -->
                 <span v-else-if="row.changeType === '预算'">
@@ -206,6 +207,73 @@ const getKeyWordType = (type: string) => {
       return 'info' // 或者 'default'
   }
 }
+
+// 解析系统抓取的 content
+const parseSystemContent = (content: string) => {
+  if (!content) return ''
+
+  // 格式: [实际价涨价]£10.99->£11.99\n产品SKU 或 [原价降价]137.96->127.08\nSKU
+  // 支持多种换行符：\n, \r\n, \r
+  const lines = content.split(/\r?\n/)
+  if (lines.length === 0) return content
+
+  const firstLine = lines[0]
+  // 匹配 [标签]价格1->价格2 格式
+  // 使用非贪婪匹配，支持任意货币符号（包括多字符如 C$, MX$, R$ 等）
+  const match = firstLine.match(/(\[.*?\])?\s*(.+?)\s*(->|－>|→)\s*(.+?)\s*(?:$|\n)/)
+
+  if (match) {
+    const label = match[1] || '' // [实际价涨价]
+    const beforePrice = match[2]?.trim() // £10.99, 137.96, MX$840.49, ₺1179.70
+    const afterPrice = match[4]?.trim() // £11.99, 127.08, MX$823.17, ₺1176.89
+
+    // 验证价格格式（必须包含数字）
+    const pricePattern = /\d/
+    if (!pricePattern.test(beforePrice) || !pricePattern.test(afterPrice)) {
+      return content // 不是有效的价格格式
+    }
+
+    // 判断涨跌
+    const priceChange = isPriceIncreased(beforePrice, afterPrice)
+    if (priceChange === null) {
+      return content // 无法判断，返回原内容
+    }
+
+    const isIncrease = priceChange
+    const icon = isIncrease ? '<span class="price-arrow price-up">↑</span>' : '<span class="price-arrow price-down">↓</span>'
+
+    let result = `${label || ''}${beforePrice}-> ${afterPrice}${icon}`
+
+    // 添加产品SKU（第二行），前面加一个空格
+    if (lines[1]) {
+      result += `<br/><span class="product-sku">${lines[1]}</span>`
+    }
+
+    return result
+  }
+
+  return content
+}
+
+// 价格比较（支持多种货币符号和千分位逗号）
+const isPriceIncreased = (before: string, after: string): boolean | null => {
+  const extractNumber = (price: string) => {
+    // 移除所有货币符号和千分位逗号，提取数字
+    return parseFloat(
+      price
+        .replace(/C\$|MX\$|R\$|JP¥|ر\.س|د\.إ/g, '')
+        .replace(/[£$€¥₹₽₩₺złkr,]/g, '')
+    )
+  }
+
+  const beforeNum = extractNumber(before)
+  const afterNum = extractNumber(after)
+
+  if (isNaN(beforeNum) || isNaN(afterNum)) return null
+
+  return afterNum > beforeNum
+}
+
 const keyWord = ref<string>('')
 // 判断值是否增加（用于箭头方向）
 const isValueIncreased = (beforeValue: any, afterValue: any): boolean => {
@@ -297,7 +365,7 @@ const fetchOperationLog = async () => {
     logData.value = data.list.map((item: IGetOperationLog) => ({
       ...item, // 保留后端所有字段
       date: item.date,
-      type: typeMap[item.type] || '未知',
+      type: typeMap[item.type] || '未知', // 显示用的类型文字
     }))
     total.value = data.total
   } catch (error) {
@@ -498,6 +566,27 @@ const handleContentClick = (row: LogItem) => {
 
   .campaign-name {
     color: #909399;
+  }
+
+  .parsed-content {
+    :deep(.price-arrow) {
+      display: inline-block;
+      margin: 0 4px;
+      font-size: 16px;
+      font-weight: bold;
+
+      &.price-up {
+        color: var(--el-color-danger);
+      }
+
+      &.price-down {
+        color: var(--el-color-success);
+      }
+    }
+
+    :deep(.product-sku) {
+      color: #909399;
+    }
   }
 }
 </style>
