@@ -488,6 +488,82 @@
           @size-change="handleBonusDetailSizeChange"
         />
       </el-tab-pane>
+
+      <!-- 老品利润 -->
+      <el-tab-pane label="老品利润" :name="3">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="18">
+            <el-form inline>
+              <el-form-item label="月份范围">
+                <el-date-picker
+                  v-model="oldProductProfitMonthRange"
+                  end-placeholder="结束月份"
+                  format="YYYY-MM"
+                  range-separator="至"
+                  start-placeholder="开始月份"
+                  type="monthrange"
+                  value-format="YYYY-MM"
+                  @change="handleOldProductProfitMonthChange"
+                />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="6">
+            <el-form inline :model="oldProductProfitQueryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="oldProductProfitQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryOldProductProfitData"
+                  @keyup.enter="queryOldProductProfitData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryOldProductProfitData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="oldProductProfitList"
+          :header-cell-style="{ textAlign: 'center' }"
+          :span-method="objectSpanMethod"
+          stripe
+        >
+          <el-table-column label="认领日期" min-width="120" prop="createTime">
+            <template #default="{ row }">
+              {{ row.createTime ? formatDate(new Date(row.createTime)) : '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="图片" min-width="100" prop="imgUrl">
+            <template #default="{ row }">
+              <el-image v-if="row.imgUrl" :src="row.imgUrl" style="width: 75px; height: 75px" @click="imagePreviewShow(row.imgUrl)" />
+            </template>
+          </el-table-column>
+          <el-table-column label="ASIN" min-width="140" prop="asin" />
+          <el-table-column label="站点" min-width="125" prop="siteName" />
+          <el-table-column label="月份" min-width="100" prop="month" />
+          <el-table-column label="利润" min-width="120" prop="profit">
+            <template #default="{ row }">
+              {{ row.profit }}
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="oldProductProfitQueryForm.pageNo"
+          :page-size="oldProductProfitQueryForm.pageSize"
+          :total="oldProductProfitTotal"
+          @current-change="handleOldProductProfitCurrentChange"
+          @size-change="handleOldProductProfitSizeChange"
+        />
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 考核指标详情 -->
@@ -507,6 +583,7 @@ import {
   getAsinSummaryMonthList,
   getCurrencyOperationAsinDetail,
   getCurrencyOperationAsinSummary,
+  getOldProductProfitHistoryList,
   getOperationBonusAsinDetailList,
   getOperationBonusAsinSummaryList,
   getOperationBonusDetailList,
@@ -521,6 +598,7 @@ import { ROLE_BOSS_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import { formatAmount } from '/@/utils/convertToCamelCase'
+import { formatDate } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'CommissionOperationDetails',
@@ -594,6 +672,18 @@ const bonusDetailQueryForm = reactive({
 })
 const bonusDetailList = ref<any[]>([])
 const bonusDetailTotal = ref<number>(0)
+
+// 老品利润
+const oldProductProfitMonthRange = ref<[string, string] | null>(null)
+const oldProductProfitQueryForm = reactive({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 50,
+  startMonth: '',
+  endMonth: '',
+})
+const oldProductProfitList = ref<any[]>([])
+const oldProductProfitTotal = ref<number>(0)
 
 // ============ ASIN明细方法 ============
 const queryAsinDetailData = async () => {
@@ -819,6 +909,66 @@ const handleBonusDetailSizeChange = (val: number) => {
   queryBonusDetailData()
 }
 
+// ============ 老品利润方法 ============
+const handleOldProductProfitMonthChange = (value: [string, string] | null) => {
+  if (value) {
+    oldProductProfitQueryForm.startMonth = value[0]
+    oldProductProfitQueryForm.endMonth = value[1]
+  } else {
+    oldProductProfitQueryForm.startMonth = ''
+    oldProductProfitQueryForm.endMonth = ''
+  }
+  queryOldProductProfitData()
+}
+
+const queryOldProductProfitData = async () => {
+  listLoading.value = true
+  try {
+    const { data } = await getOldProductProfitHistoryList(oldProductProfitQueryForm)
+    oldProductProfitList.value = data.list || []
+    oldProductProfitTotal.value = data.total || 0
+  } catch (error) {
+    console.error('查询老品利润失败:', error)
+    $baseMessage('查询失败，请重试', 'error')
+  } finally {
+    listLoading.value = false
+  }
+}
+
+const handleOldProductProfitCurrentChange = (val: number) => {
+  oldProductProfitQueryForm.pageNo = val
+  queryOldProductProfitData()
+}
+
+const handleOldProductProfitSizeChange = (val: number) => {
+  oldProductProfitQueryForm.pageSize = val
+  oldProductProfitQueryForm.pageNo = 1
+  queryOldProductProfitData()
+}
+// col合并方法
+const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
+  if (columnIndex === 1 || columnIndex === 2) {
+    // 获取当前row的零件id
+    const asinId = row.asinId
+    // 默认不跨行
+    let rowspan = 1
+    // 遍历后端返回的数据
+    for (let i = rowIndex + 1; i < oldProductProfitList.value.length; i++) {
+      // 如果零件id一样需要合并
+      if (oldProductProfitList.value[i].asinId === asinId) {
+        rowspan++
+      } else {
+        break
+      }
+    }
+    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+    if (rowIndex === 0 || oldProductProfitList.value[rowIndex - 1].asinId !== asinId) {
+      return { rowspan, colspan: 1 }
+    } else {
+      return { rowspan: 0, colspan: 0 }
+    }
+  }
+}
 // ============ Tab切换 ============
 const handleTabClick = async (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
@@ -829,6 +979,8 @@ const handleTabClick = async (tab: TabsPaneContext) => {
     await queryAsinDetailData()
   } else if (tab.props.name === 2) {
     await queryBonusDetailData()
+  } else if (tab.props.name === 3) {
+    await queryOldProductProfitData()
   }
 }
 // 当前角色名

@@ -560,7 +560,22 @@ export function getOperationBonusDetailList(data: {
     data,
   })
 }
-
+/**
+ * @description 运营奖金-老品利润历史列表
+ */
+export function getOldProductProfitHistoryList(params: {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  startMonth: string
+  endMonth: string
+}): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/distribution/old/profit/history/list`,
+    method: 'get',
+    params,
+  })
+}
 /**
  * @description 获取老品提成比例
  */
