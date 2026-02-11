@@ -569,6 +569,7 @@ export function getOldProductProfitHistoryList(params: {
   pageSize: number
   startMonth: string
   endMonth: string
+  userId: number
 }): Promise<{ data: { list: any[]; total: number } }> {
   return request({
     url: `${BASE_API}/distribution/old/profit/history/list`,

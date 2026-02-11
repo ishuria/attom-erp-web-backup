@@ -506,6 +506,11 @@
                   @change="handleOldProductProfitMonthChange"
                 />
               </el-form-item>
+              <el-form-item label="人员">
+                <el-select v-model="oldProductProfitQueryForm.userId" filterable placeholder="全部" @change="queryOldProductProfitData">
+                  <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
@@ -545,6 +550,7 @@
             </template>
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
+          <el-table-column label="运营负责人" min-width="125" prop="operationUserName" />
           <el-table-column label="站点" min-width="125" prop="siteName" />
           <el-table-column label="月份" min-width="100" prop="month" />
           <el-table-column label="利润" min-width="120" prop="profit">
@@ -681,6 +687,7 @@ const oldProductProfitQueryForm = reactive({
   pageSize: 50,
   startMonth: '',
   endMonth: '',
+  userId: -1,
 })
 const oldProductProfitList = ref<any[]>([])
 const oldProductProfitTotal = ref<number>(0)
@@ -947,7 +954,7 @@ const handleOldProductProfitSizeChange = (val: number) => {
 }
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  if (columnIndex === 1 || columnIndex === 2) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3) {
     // 获取当前row的零件id
     const asinId = row.asinId
     // 默认不跨行
@@ -1015,6 +1022,7 @@ const fetchUserLevelList = async () => {
 
   asinDetailQueryForm.userId = bonusDetailQueryForm.userId
   asinSummaryQueryForm.userId = bonusDetailQueryForm.userId
+  oldProductProfitQueryForm.userId = bonusDetailQueryForm.userId
 }
 // ASIN汇总月份筛选
 const asinSummaryMonthOption = ref<{ id: number; label: string }[]>([])

@@ -60,7 +60,7 @@
         </el-row>
         <el-divider style="margin-top: 10px"><span style="font-size: var(--el-font-size-base)">信息完善</span></el-divider>
         <el-row justify="space-between" style="width: 100%">
-          <el-col :span="16" :xs="24">
+          <el-col :md="16" :sm="24" :xs="24">
             <el-form-item inline label="包装尺寸" prop="packingSize" style="min-width: 95%">
               <el-row class="packing-size-row">
                 <el-input
@@ -98,7 +98,7 @@
               </el-row>
             </el-form-item>
           </el-col>
-          <el-col :span="8" :xs="24">
+          <el-col :md="16" :sm="24" :xs="24">
             <el-form-item label="包装重量" prop="packageWeight" style="min-width: 100%">
               <el-input v-model.trim="qualityInspectionForm.packageWeight" placeholder="克" @change="handleUpdateInspection">
                 <template #suffix>
@@ -1341,13 +1341,13 @@ const fetchData = async () => {
   padding-bottom: 0px;
 }
 
-// 包装尺寸输入框 - 移动端优化
+// 默认：横排
 .packing-size-row {
   display: flex;
-  gap: 1%;
   align-items: center;
   width: 100%;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; // 这里建议别 wrap（横排时更稳定）
+  gap: 8px; // 建议用固定值，别用 1%
 
   .packing-size-input {
     flex: 1;
@@ -1359,18 +1359,22 @@ const fetchData = async () => {
     font-size: 1.5em;
     text-align: center;
   }
+}
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 8px;
+// <= 1200：竖排（覆盖“较大手机/小平板”）
+@media (max-width: 1024px) {
+  .packing-size-row {
+    flex-direction: column !important;
     align-items: stretch;
+    gap: 8px;
 
     .packing-size-input {
       flex: none;
       width: 100%;
+
       :deep(.el-input__inner) {
-        font-size: 16px; // 避免 iOS 自动缩小
-        min-height: 44px; // 提升移动端点击区域
+        font-size: 16px;
+        min-height: 44px;
       }
     }
 
