@@ -520,6 +520,7 @@ export interface IGetAfterSalesListResp {
   data?: {
     total: number
     list: IGetAfterSalesList[]
+    badDebtTotal: number
   }
 }
 export interface IGetAfterSalesList {

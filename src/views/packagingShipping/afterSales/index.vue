@@ -606,7 +606,35 @@
       <el-tab-pane label="坏账" :name="4">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">售后历史</el-button>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+              <el-button type="primary">售后历史</el-button>
+              <el-date-picker
+                :key="datePickerKey"
+                v-model="date"
+                :clearable="true"
+                :editable="true"
+                type="daterange"
+                value-format="YYYY-MM-DD"
+                @change="queryData"
+                @visible-change="(visible: boolean) => !visible && (datePickerKey += 1)"
+              />
+              <div
+                style="
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 8px;
+                  padding: 6px 10px;
+                  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+                  border-radius: 6px;
+                  border: 1px solid #fca5a5;
+                "
+              >
+                <span style="font-size: 15px; color: #7f1d1d">该区间坏账金额：</span>
+                <span style="font-size: 18px; font-weight: 700; color: #dc2626; font-family: 'Arial', sans-serif">
+                  ¥ {{ badDebtTotal }}
+                </span>
+              </div>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -626,6 +654,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="badDebtsCellClassName"
           :cell-style="contactedCellStyle"
@@ -966,6 +995,7 @@ import {
 } from '/@/api/devlocal/packagingShipping'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
+import { getDefaultStringTime } from '~/src/utils/dateUtils'
 
 defineOptions({
   name: 'AfterSales',
@@ -988,7 +1018,8 @@ const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 
 const total = ref<number>(0)
-
+const date = ref<[string, string]>(getDefaultStringTime())
+const datePickerKey = ref(0)
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
@@ -1107,12 +1138,16 @@ const handleTabClick = (tab: TabsPaneContext) => {
   })
   fetchData()
 }
+const badDebtTotal = ref<number>(0)
 const fetchData = async () => {
   listLoading.value = true
+  queryForm.startDate = date.value[0]
+  queryForm.endDate = date.value[1]
   const { data } = await getAfterSalesList(queryForm)
   if (data) {
     list.value = data.list
     total.value = data.total
+    badDebtTotal.value = data.badDebtTotal
     listLoading.value = false
     list.value.forEach((item: any) => {
       item.suppliser = item.suppliser.replaceAll(',', '<br>')
