@@ -149,6 +149,7 @@ const headerCellLabels = new Set([
   'VOC满意度',
   '剩余库存',
   '订单月额',
+  '订单月量',
 ])
 
 // 缓存常用样式对象，避免重复创建

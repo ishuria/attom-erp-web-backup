@@ -119,7 +119,9 @@
   <span v-else-if="item.label === '订单月量'">
     <el-tooltip content="" effect="dark" placement="top">
       <div class="questionIcon">
-        订单月量
+        订单
+        <br />
+        月量
         <el-icon><question-filled /></el-icon>
       </div>
       <template #content>

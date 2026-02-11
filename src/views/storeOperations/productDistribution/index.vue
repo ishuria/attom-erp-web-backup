@@ -27,6 +27,11 @@
             </el-select>
           </el-form-item>
           <el-form-item>
+            <div class="filter-group">
+              <el-checkbox v-model="queryForm.oldProductClaim" :false-value="0" :true-value="1" @change="queryData">老品认领</el-checkbox>
+            </div>
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary" @click="showAutoClaimSettings">自动分站点认领设定</el-button>
             <el-button
               v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"
@@ -259,6 +264,7 @@ type IQueryForm = {
   pageSize: number
   site: CheckboxValueType[]
   status: number
+  oldProductClaim: number
 }
 const queryForm = reactive<IQueryForm>({
   keyWord: '',
@@ -266,6 +272,7 @@ const queryForm = reactive<IQueryForm>({
   pageSize: 20,
   site: [],
   status: -1,
+  oldProductClaim: 0,
 })
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -490,6 +497,28 @@ onBeforeMount(() => {
         padding-right: 0;
         padding-left: 0;
       }
+    }
+  }
+}
+// 筛选条件组样式
+.filter-group {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  padding: 1px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  // background: #f1f3f4;
+
+  &:hover {
+    background: #f1f3f4;
+  }
+
+  :deep(.el-checkbox) {
+    margin-right: 12px;
+
+    &:last-child {
+      margin-right: 0;
     }
   }
 }
