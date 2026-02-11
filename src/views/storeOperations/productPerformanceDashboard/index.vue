@@ -442,6 +442,7 @@
       :classify="activeName"
       :filter-visible="filterVisible"
       :loading="filterLoading"
+      :operation-user-id="queryForm.operationUserId"
       :saved-filter-data="activeName === 0 ? queryForm : asinQueryForm"
       @update-filter="handleConfirmFilter"
       @update-visible="handleCloseFilterDialog"

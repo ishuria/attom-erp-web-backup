@@ -140,6 +140,7 @@ const props = defineProps<{
   classify: number
   loading: boolean
   savedFilterData?: any
+  operationUserId?: number
 }>()
 watchEffect(() => {
   dflag.value = props.filterVisible
@@ -149,13 +150,22 @@ const operationUserList = ref<{ id: number; label: string }[]>([])
 const fetchOperationUserList = async () => {
   const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
   operationUserList.value = data
-  filterForm.operationUserId = data.find((item) => item.label.includes(myName))?.id || -1
+  operationUserList.value.unshift({ id: -1, label: '全部' })
+  filterForm.operationUserId = props.operationUserId || -1
+
   handleGetOperationTypeById(filterForm.operationUserId)
 }
 const operationTypeList = ref<{ id: number; typeName: string }[]>([])
 const handleGetOperationTypeById = async (id: number) => {
-  const { data } = await getOperationTypeUserList({ userId: id })
-  operationTypeList.value = data
+  if (id === -1) {
+    const currentId = operationUserList.value.find((item) => item.label.includes(myName))?.id || -1
+    const { data } = await getOperationTypeUserList({ userId: currentId })
+    operationTypeList.value = data
+    return
+  } else {
+    const { data } = await getOperationTypeUserList({ userId: id })
+    operationTypeList.value = data
+  }
 }
 watch(
   () => props.filterVisible,

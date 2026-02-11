@@ -392,6 +392,11 @@
     <span v-html="row.storageAge"></span>
   </span>
 
+  <!-- 运营负责人 -->
+  <span v-else-if="item.label === '运营负责人'">
+    <div style="white-space: pre-line">{{ row.operationUserName }}</div>
+  </span>
+
   <!-- 订货# -->
   <span v-else-if="item.label === '订货#'">
     {{ row.orderCount }}
