@@ -60,35 +60,35 @@
         </el-row>
         <el-divider style="margin-top: 10px"><span style="font-size: var(--el-font-size-base)">信息完善</span></el-divider>
         <el-row justify="space-between" style="width: 100%">
-          <el-col :span="16">
+          <el-col :span="16" :xs="24">
             <el-form-item inline label="包装尺寸" prop="packingSize" style="min-width: 95%">
-              <el-row style="display: flex; gap: 1%; align-items: center; width: 100%">
+              <el-row class="packing-size-row">
                 <el-input
                   v-model.trim="qualityInspectionForm.packageLength"
+                  class="packing-size-input"
                   placeholder="长"
-                  style="flex: 1; margin-right: 0"
                   @change="handleUpdateInspection"
                 >
                   <template #suffix>
                     <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
                   </template>
                 </el-input>
-                <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+                <span class="packing-size-sep">×</span>
                 <el-input
                   v-model.trim="qualityInspectionForm.packageWidth"
+                  class="packing-size-input"
                   placeholder="宽"
-                  style="flex: 1; margin-right: 0"
                   @change="handleUpdateInspection"
                 >
                   <template #suffix>
                     <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
                   </template>
                 </el-input>
-                <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+                <span class="packing-size-sep">×</span>
                 <el-input
                   v-model.trim="qualityInspectionForm.packageHeight"
+                  class="packing-size-input"
                   placeholder="高"
-                  style="flex: 1; margin-right: 0"
                   @change="handleUpdateInspection"
                 >
                   <template #suffix>
@@ -98,7 +98,7 @@
               </el-row>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :xs="24">
             <el-form-item label="包装重量" prop="packageWeight" style="min-width: 100%">
               <el-input v-model.trim="qualityInspectionForm.packageWeight" placeholder="克" @change="handleUpdateInspection">
                 <template #suffix>
@@ -1339,5 +1339,44 @@ const fetchData = async () => {
 .el-table :deep(.clear-padding) {
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+// 包装尺寸输入框 - 移动端优化
+.packing-size-row {
+  display: flex;
+  gap: 1%;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+
+  .packing-size-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .packing-size-sep {
+    display: inline-block;
+    font-size: 1.5em;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+
+    .packing-size-input {
+      flex: none;
+      width: 100%;
+      :deep(.el-input__inner) {
+        font-size: 16px; // 避免 iOS 自动缩小
+        min-height: 44px; // 提升移动端点击区域
+      }
+    }
+
+    .packing-size-sep {
+      display: none;
+    }
+  }
 }
 </style>
