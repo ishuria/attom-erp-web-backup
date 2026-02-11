@@ -1,12 +1,14 @@
 <template>
   <div>
     <vab-dialog v-model="visible" title="备注和日志" width="20%" @opened="handleDialogOpened">
+      <div class="field-label">备注</div>
       <el-input ref="inputRef" v-model="remark" class="log-input" placeholder="请输入运营备注" :rows="5" type="textarea" />
       <div class="dialog-actions">
         <el-button @click="visible = false">取消</el-button>
         <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </div>
       <el-divider />
+      <div class="field-label">日志</div>
       <!-- 输入区 -->
       <el-input ref="inputRef" v-model="operationLog" class="log-input" placeholder="请输入操作日志" :rows="5" type="textarea" />
 
@@ -116,6 +118,13 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.field-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--el-text-color-primary);
+  margin-bottom: 8px;
+}
+
 .log-input {
   margin-bottom: 12px;
 }
