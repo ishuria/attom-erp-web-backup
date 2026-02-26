@@ -971,6 +971,8 @@ const handleSwitchSku = async (sku: string) => {
   const { data } = await getOperationOrderSku({
     id: copyRow.id!,
     sku: sku,
+    asin: copyRow.asin,
+    site: copyRow.site,
   })
 
   // 更新组件中的表单数据
@@ -1009,6 +1011,8 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
         const { data } = await getOperationOrderSku({
           id: row.id!,
           sku: selectedSku,
+          asin: row.asin,
+          site: row.site,
         })
 
         // 通过组件实例设置表单数据
