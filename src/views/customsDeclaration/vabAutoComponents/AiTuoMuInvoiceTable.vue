@@ -10,9 +10,22 @@
               <el-option label="未匹配" :value="0" />
             </el-select>
           </el-form-item>
+          <el-form-item label="匹配日期">
+            <el-date-picker
+              v-model="queryForm.matchDate"
+              end-placeholder="结束日期"
+              range-separator="至"
+              start-placeholder="开始日期"
+              type="daterange"
+              @change="$emit('query')"
+            />
+          </el-form-item>
           <el-form-item>
             <div class="filter-group">
               <el-checkbox v-model="queryForm.notEqual" :false-value="0" :true-value="1" @change="$emit('query')">未配平</el-checkbox>
+              <el-checkbox v-model="queryForm.notMatchName" :false-value="0" :true-value="1" @change="$emit('query')">
+                品名不匹配
+              </el-checkbox>
             </div>
           </el-form-item>
         </el-form>
@@ -72,17 +85,17 @@
         </template>
       </el-table-column>
       <el-table-column label="PO总含税价" min-width="120" prop="taxIncludedPrice" />
-      <el-table-column label="报关品名" min-width="100">
+      <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName">
         <template #default="{ row }">
           <div v-html="row.customsDeclarationName"></div>
         </template>
       </el-table-column>
-      <el-table-column label="报关数量" min-width="100">
+      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount">
         <template #default="{ row }">
           <div v-html="row.customsDeclarationCount"></div>
         </template>
       </el-table-column>
-      <el-table-column label="报关单位" min-width="100">
+      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit">
         <template #default="{ row }">
           <div v-html="row.customsDeclarationUnit"></div>
         </template>
@@ -116,23 +129,72 @@ const props = defineProps<{
   list: any[]
   loading: boolean
 
-  queryForm: Record<string, any>
   total: number
 }>()
+const queryForm = defineModel<Record<string, any>>('queryForm', {
+  default: () => ({ matchDate: [] }),
+})
+
 const emit = defineEmits(['export', 'import', 'match', 'delete-match', 'query', 'page-change', 'size-change', 'obtain-id-list'])
 
 const selectRowsData = ref<IAiTuoMuItem[]>([])
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const label = data.column.label
-  const row = data.row
+  const { row, column } = data
+  const prop = column.property
+
   const style: CSSProperties = {
-    textAlign: ['匹配日期', '发票状态', '匹配金额', '发票金额', '开票数量', '匹配数量', '发票单位', '报关单位'].includes(label)
+    textAlign: [
+      'matchDate',
+      'invoiceStatus',
+      'matchAmount',
+      'includingTaxPrice',
+      'invoiceQuantity',
+      'matchQuantity',
+      'invoiceUnit',
+      'customsDeclarationUnit',
+    ].includes(prop)
       ? 'center'
       : 'left',
   }
 
+  // =========================
+  // 1.匹配金额 ≠ 发票金额
+  // =========================
+  if (Math.trunc(row.matchAmount) !== Math.trunc(row.includingTaxPrice) && (prop === 'matchAmount' || prop === 'includingTaxPrice')) {
+    style.color = 'var(--el-color-danger)'
+    style.fontWeight = 600
+  }
+
+  // =========================
+  // 2.开票品名 ≠ 报关品名
+  // =========================
+  if (!isSameUnit(row.invoiceName, row.customsDeclarationName) && (prop === 'invoiceName' || prop === 'customsDeclarationName')) {
+    style.color = 'var(--el-color-danger)'
+    style.fontWeight = 600
+  }
+
+  // =========================
+  // 3.发票单位 ≠ 报关单位
+  // =========================
+  if (!isSameUnit(row.invoiceUnit, row.customsDeclarationUnit) && (prop === 'invoiceUnit' || prop === 'customsDeclarationUnit')) {
+    style.color = 'var(--el-color-danger)'
+    style.fontWeight = 600
+  }
+
   return style
+}
+const isSameUnit = (invoice: any, customs: any) => {
+  if (!invoice && !customs) return true
+  if (!invoice || !customs) return false
+
+  const list = String(customs)
+    .replace(/<br\s*\/?>/gi, '\n')
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean)
+
+  return list.every((item) => item === String(invoice).trim())
 }
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
@@ -145,7 +207,8 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
     columnIndex === 5 ||
     columnIndex === 6 ||
     columnIndex === 7 ||
-    columnIndex === 8
+    columnIndex === 8 ||
+    columnIndex === 9
   ) {
     // 获取当前row的零件id
     const id = row.id

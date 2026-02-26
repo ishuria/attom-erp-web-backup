@@ -36,9 +36,9 @@
       </el-tab-pane>
       <el-tab-pane label="发票" :name="2">
         <ai-tuo-mu-invoice-table
+          v-model:queryForm="invoiceQueryForm"
           :list="invoiceList"
           :loading="listLoading"
-          :query-form="invoiceQueryForm"
           :total="total"
           @page-change="handleInvoiceCurrentChange"
           @query="queryInvoiceData"
@@ -77,6 +77,7 @@
 
 <script lang="ts" setup>
 import { TabsPaneContext } from 'element-plus'
+import { formatDateToString } from '~/src/utils/dateUtils'
 import { aiTuoMuInvoiceMatchDelete, getAiTuoMuList, queryAiTuoMuInvoiceList } from '/@/api/devlocal/aiTuoMu'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { IAiTuoMuItem, IAiTuoMuListReq } from '/@/type/aiTuoMu/aiTuoMuList'
@@ -102,6 +103,8 @@ const invoiceQueryForm = reactive<any>({
   pageSize: 100,
   status: 1,
   notEqual: 0,
+  notMatchName: 0,
+  matchDate: ['', ''],
 })
 const list = ref<IAiTuoMuItem[]>([])
 const invoiceList = ref<any[]>([])
@@ -208,7 +211,12 @@ const fetchData = async () => {
 }
 const fetchInvoiceData = async () => {
   listLoading.value = true
-  const { data } = await queryAiTuoMuInvoiceList(invoiceQueryForm)
+  const params = {
+    ...invoiceQueryForm,
+    matchDateStart: invoiceQueryForm.matchDate?.[0] ? formatDateToString(invoiceQueryForm.matchDate?.[0]) : null,
+    matchDateEnd: invoiceQueryForm.matchDate?.[1] ? formatDateToString(invoiceQueryForm.matchDate?.[1]) : null,
+  }
+  const { data } = await queryAiTuoMuInvoiceList(params)
   invoiceList.value = data.list
   total.value = data.total
   listLoading.value = false

@@ -91,4 +91,5 @@ export interface IAiTuoMuListReq {
    * 日期时间
    */
   purchaseDate?: string[]
+  matchDate?: [string, string]
 }
