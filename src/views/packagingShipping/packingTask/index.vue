@@ -26,6 +26,11 @@
                   @change="queryAllTaskData"
                 />
               </el-form-item>
+              <el-form-item label="运营人员">
+                <el-select v-model="allTaskForm.operationUserId" clearable placeholder="全部" @change="queryAllTaskData">
+                  <el-option v-for="item in operationUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
             </el-form>
             <div class="summary-info">
               <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
@@ -1048,6 +1053,7 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { computed, ref } from 'vue'
+import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
 import { sizeOption } from '../constantOption'
 import { getColumnsForTab, type PackingTaskColumn } from './packingTaskColumns'
 import {
@@ -2151,6 +2157,11 @@ const getSiteBaseColor = (siteName: string) => {
   }
   return colorMap[siteName] ?? '#909399'
 }
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const fetchOperationUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operationUserList.value = data
+}
 onBeforeMount(() => {
   const { tab, pageNo, pageSize } = route.query
   if (tab) {
@@ -2177,6 +2188,7 @@ onBeforeMount(() => {
     fetchPendingNewInspectionData()
   }
   getSiteList()
+  fetchOperationUserList()
 })
 </script>
 
