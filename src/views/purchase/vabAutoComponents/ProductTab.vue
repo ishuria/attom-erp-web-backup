@@ -58,7 +58,15 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="listLoading" border :cell-class-name="clearPadding" class="product-table" :data="list" stripe>
+    <el-table
+      v-loading="listLoading"
+      border
+      :cell-class-name="clearPadding"
+      class="product-table"
+      :data="list"
+      stripe
+      @sort-change="handleSortChange"
+    >
       <el-table-column type="selection" width="38" />
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
         <template #default="{ row }">
@@ -83,6 +91,7 @@
       <el-table-column label="采购量柱状图" />
       <el-table-column label="SKU采购总套数" prop="totalPurchaseCount" />
       <el-table-column label="SKU采购总额" prop="totalPurchaseAmount" />
+      <el-table-column label="SKU总体积(m³)" prop="totalVolume" sortable="custom" />
       <el-table-column label="SKU采购平均值" prop="avgMonthlyPurchaseAmount" />
       <el-table-column label="主体供应商" prop="mainSupplierName" :width="flexColumnWidth(list, '主体供应商', 'mainSupplierName')" />
       <el-table-column label="SKU零件数量" prop="componentCount" />
@@ -147,6 +156,19 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
     return 'clear-padding'
   }
   return ''
+}
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  props.queryForm.orderByField = prop
+  if (!order) {
+    if (props.queryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (props.queryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  }
+  props.queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryData()
 }
 const queryData = () => {
   emit('query-data')

@@ -15,6 +15,8 @@ export interface IGetPurchaseStatisticsProductListReq {
   endDate: string
   siteList: number[]
   siteAgg: number
+  orderByField?: string
+  orderDirection?: string
 }
 export interface IGetPurchaseStatisticsProductDetailListReq {
   keyWord: string
