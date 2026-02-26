@@ -62,21 +62,24 @@
       border
       :cell-class-name="clearPadding"
       :cell-style="cellStyle"
+      class="custom-table-hover"
       :data="list"
       :header-cell-style="headerCellStyle"
+      :row-class-name="tableRowClassName"
       stripe
       @cell-click="handleCellClick"
+      @row-click="handleRowClick"
       @selection-change="operationStockSelectionChangeHandler"
     >
       <el-table-column fixed="left" type="selection" width="38" />
-      <el-table-column label="图片" width="75">
+      <el-table-column fixed="left" label="图片" prop="skuImg" width="75">
         <template #default="{ row }">
           <el-image fit="fill" :src="row.skuImg" style="display: block; width: 75px; height: 75px" @click="handleImagePreview(row.skuImg)">
             <template #error><el-icon /></template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+      <el-table-column fixed="left" label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
         <template #default="{ row }">
           <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
             {{ row.sku }}
@@ -84,8 +87,20 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(list, '站点', 'siteName')" />
+      <el-table-column fixed="left" label="站点" prop="siteName" :width="flexColumnWidth(list, '站点', 'siteName')" />
       <el-table-column label="运营" prop="operationUser" width="95" />
+      <el-table-column label="销量趋势" width="120">
+        <template #default="{ row }">
+          <div class="custom-bar">
+            <vab-echarts-chart-bar-with-line
+              :landed-price-data="row.landedPriceList || []"
+              :price-data="row.priceList || []"
+              :x-axis-data="xAxis"
+              :y-axis-data="row.saleVolumeList"
+            />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="规则开关" prop="ruleStatus" width="95">
         <template #default="{ row }">
           <el-switch
@@ -105,6 +120,7 @@
               type="number"
               @blur="handleCellBlur($event, row, $index)"
               @keyup.enter="handleCellBlur($event, row, $index)"
+              @keyup.esc="handleCellBlur($event, row, $index)"
             />
           </div>
           <span>
@@ -122,6 +138,7 @@
               type="number"
               @blur="handleCellBlur($event, row, $index)"
               @keyup.enter="handleCellBlur($event, row, $index)"
+              @keyup.esc="handleCellBlur($event, row, $index)"
             />
           </div>
           <span>
@@ -139,6 +156,7 @@
               type="number"
               @blur="handleCellBlur($event, row, $index)"
               @keyup.enter="handleCellBlur($event, row, $index)"
+              @keyup.esc="handleCellBlur($event, row, $index)"
             />
           </div>
           <span>
@@ -159,12 +177,13 @@
               type="number"
               @blur="handleCellBlur($event, row, $index)"
               @keyup.enter="handleCellBlur($event, row, $index)"
+              @keyup.esc="handleCellBlur($event, row, $index)"
             />
           </div>
           <span>{{ row.adjustmentDay }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="调整后的价格出单数>=" min-width="110" prop="improveNewPriceOrdersGte">
+      <el-table-column label="上调后的价格出单数>=" min-width="110" prop="improveNewPriceOrdersGte">
         <template #default="{ row, $index }">
           <div class="none">
             <el-input
@@ -172,6 +191,7 @@
               type="number"
               @blur="handleCellBlur($event, row, $index)"
               @keyup.enter="handleCellBlur($event, row, $index)"
+              @keyup.esc="handleCellBlur($event, row, $index)"
             />
           </div>
           <span>{{ row.improveNewPriceOrdersGte }}</span>
@@ -197,6 +217,7 @@
                 type="number"
                 @blur="handleCellBlur($event, row, $index)"
                 @keyup.enter="handleCellBlur($event, row, $index)"
+                @keyup.esc="handleCellBlur($event, row, $index)"
               />
             </div>
             <span>{{ row.improveDays }}</span>
@@ -216,6 +237,7 @@
                 type="number"
                 @blur="handleCellBlur($event, row, $index)"
                 @keyup.enter="handleCellBlur($event, row, $index)"
+                  @keyup.esc="handleCellBlur($event, row, $index)"
               />
             </div>
             <span>{{ row.improveStock }}</span>
@@ -248,6 +270,7 @@
                 type="number"
                 @blur="handleCellBlur($event, row, $index)"
                 @keyup.enter="handleCellBlur($event, row, $index)"
+                @keyup.esc="handleCellBlur($event, row, $index)"
               />
             </div>
             <span>{{ row.improveRatingHeight }}</span>
@@ -299,6 +322,7 @@
                 type="number"
                 @blur="handleCellBlur($event, row, $index)"
                 @keyup.enter="handleCellBlur($event, row, $index)"
+                @keyup.esc="handleCellBlur($event, row, $index)"
               />
             </div>
             <span>{{ row.reduceDays }}</span>
@@ -341,6 +365,7 @@
                 type="number"
                 @blur="handleCellBlur($event, row, $index)"
                 @keyup.enter="handleCellBlur($event, row, $index)"
+                @keyup.esc="handleCellBlur($event, row, $index)"
               />
             </div>
             <span>{{ row.reduceSalesTotalStock }}</span>
@@ -364,6 +389,7 @@
                 type="number"
                 @blur="handleCellBlur($event, row, $index)"
                 @keyup.enter="handleCellBlur($event, row, $index)"
+                @keyup.esc="handleCellBlur($event, row, $index)"
               />
             </div>
             <span>{{ row.reduceAvailableInventory }}</span>
@@ -400,6 +426,7 @@
                 type="number"
                 @blur="handleCellBlur($event, row, $index)"
                 @keyup.enter="handleCellBlur($event, row, $index)"
+                @keyup.esc="handleCellBlur($event, row, $index)"
               />
             </div>
             <span>{{ row.reduceRatingLow }}</span>
@@ -425,7 +452,7 @@
           操作日期
         </template>
       </el-table-column>
-      <el-table-column label="价格" min-width="100">
+      <el-table-column label="价格" min-width="100" prop="operationBeforePrice">
         <template #default="scope">
           <el-text :type="getPriceChangeType(scope.row.operationBeforePrice, scope.row.operationAfterPrice)">
             {{ scope.row.currencyIcon }}{{ scope.row.operationBeforePrice }} -> {{ scope.row.currencyIcon
@@ -433,18 +460,7 @@
           </el-text>
         </template>
       </el-table-column>
-      <el-table-column label="销量趋势" width="120">
-        <template #default="{ row }">
-          <div class="custom-bar">
-            <vab-echarts-chart-bar-with-line
-              :landed-price-data="row.landedPriceList || []"
-              :price-data="row.priceList || []"
-              :x-axis-data="xAxis"
-              :y-axis-data="row.saleVolumeList"
-            />
-          </div>
-        </template>
-      </el-table-column>
+
       <el-table-column label="操作结果" prop="operationResult" width="100">
         <template #default="{ row }">
           <el-tag :type="row.operationResult === '失败' ? 'danger' : 'success'">
@@ -630,6 +646,31 @@ const updateBatch = () => {
   }
   batchUpdateVisible.value = true
 }
+
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  const prop = column.property
+  if (
+    prop === 'skuImg' ||
+    prop === 'sku' ||
+    prop === 'siteName' ||
+    prop === 'operationUser' ||
+    prop === 'operationDate' ||
+    prop === 'operationBeforePrice' ||
+    prop === 'operationResult'
+  ) {
+    return
+  }
+
+  selectedRowIndex.value = row.id
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const prop = data.column?.property
 
@@ -701,5 +742,26 @@ const headerCellStyle = (data: { row: any; column: any; rowIndex: number; column
 }
 :deep(.group-split-left--reduce2) {
   border-left-color: var(--el-border-color) !important;
+}
+// 斑马纹样式
+:deep(.custom-table-hover) {
+  .el-table__body tr.el-table__row--striped > td.el-table__cell {
+    background-color: #fafafa !important;
+  }
+
+  // 条纹行hover时保持条纹颜色
+  .el-table__body tr.el-table__row--striped.hover-row > td.el-table__cell {
+    background-color: #fafafa !important;
+  }
+
+  // 选中行保持蓝色背景 - 优先级最高
+  .el-table__body tr.select-row > td.el-table__cell {
+    background-color: #7bddde !important;
+  }
+
+  // 选中行悬浮时也保持蓝色背景
+  .el-table__body tr.select-row.hover-row > td.el-table__cell {
+    background-color: #7bddde !important;
+  }
 }
 </style>
