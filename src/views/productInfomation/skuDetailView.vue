@@ -1785,10 +1785,6 @@ const handleDeclareCustoms = async (row: any) => {
     //选择了埃托姆
     row.declareCustomsStatus = 0
     $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
-  } else if (item.label === '云舟' && row.invoicing === 1 && row.declareCustomsStatus === 0) {
-    row.declareCustomsStatus = 1
-    $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
-    return
   } else {
     await updateProductComponent(row)
     fetchData()

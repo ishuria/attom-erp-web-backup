@@ -2979,11 +2979,7 @@ const handleCreateCustoms = (row: any) => {
     row.customsDeclarationStatus = 0
     $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
   }
-  if (item!.label === '云舟' && row.invoicing === 1 && row.customsDeclarationStatus === 0) {
-    row.customsDeclarationStatus = 1
-    $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
-    return
-  }
+
   updateCreate()
 }
 // 处理不报关
@@ -3004,11 +3000,7 @@ const handleDeclareCustoms = async (row: any) => {
   } else {
     // updateSkuComponent(row)
   }
-  if (item!.label === '云舟' && row.invoicing === 1 && row.customsDeclarationStatus === 0) {
-    row.customsDeclarationStatus = 1
-    $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
-    return
-  }
+
   try {
     const { data } = await updatePoSkuComponent(row)
     if (data === true) {
