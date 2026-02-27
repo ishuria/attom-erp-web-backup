@@ -100,35 +100,34 @@
       @sort-change="handleSortChange"
     >
       <el-table-column type="selection" width="38" />
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
+      <el-table-column
+        v-for="(item, index) in checkList"
+        :key="index"
+        :fixed="item.isFixed"
+        :label="item.label"
+        :min-width="handleWidth(item)"
+        :prop="item.prop"
+        :sortable="item.sortable ? 'custom' : false"
+        :width="item.width"
+      >
         <template #default="{ row }">
-          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-            {{ row.sku }}
-            <vab-icon icon="file-copy-2-fill" />
-          </span>
-          <br />
-          {{ row.productName }}
+          <div v-if="item.label === 'SKU'">
+            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
+              {{ row.sku }}
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+            <br />
+            {{ row.productName }}
+          </div>
+          <div v-if="item.label === '图片'">
+            <el-image :src="row.skuImgUrl" style="width: 100%; height: 100%" @click="showImagePreview(row.skuImgUrl)">
+              <template #error>
+                <el-icon />
+              </template>
+            </el-image>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="图片" prop="skuImgUrl" width="82">
-        <template #default="{ row }">
-          <el-image :src="row.skuImgUrl" style="width: 100%; height: 100%" @click="showImagePreview(row.skuImgUrl)">
-            <template #error>
-              <el-icon />
-            </template>
-          </el-image>
-        </template>
-      </el-table-column>
-      <el-table-column label="站点" prop="siteName" />
-      <el-table-column label="采购量柱状图" />
-      <el-table-column label="SKU采购总套数" prop="totalPurchaseCount" />
-      <el-table-column label="SKU采购总额" prop="totalPurchaseAmount" />
-      <el-table-column label="SKU总体积(m³)" prop="totalVolume" sortable="custom" />
-      <el-table-column label="SKU采购平均值" prop="avgMonthlyPurchaseAmount" />
-      <el-table-column label="主体供应商" prop="mainSupplierName" :width="flexColumnWidth(list, '主体供应商', 'mainSupplierName')" />
-      <el-table-column label="SKU零件数量" prop="componentCount" />
-      <el-table-column label="产品经理" prop="productManagerName" />
-
       <template #empty>
         <el-empty class="vab-data-empty" />
       </template>
@@ -161,6 +160,8 @@ const props = defineProps<{
   queryForm: IGetPurchaseStatisticsProductListReq
   siteList: { id: number; label: string }[]
 }>()
+
+const columns = defineModel<any[]>('columns', { required: true })
 const date = defineModel<[string, string]>('date', { required: true })
 const listLoading = defineModel<boolean>('listLoading', { required: true })
 const emit = defineEmits<{
@@ -184,7 +185,7 @@ const handleCheckAll = (val: CheckboxValueType) => {
     queryData()
   }
 }
-const columns = ref<any>([])
+
 const checkList = computed(() => {
   return columns.value.filter((_: any) => _.checked)
 })
@@ -204,7 +205,6 @@ const handleEnd = async () => {
       userId: item.userId,
       columnId: item.columnId,
       sort: index,
-      // label: item.label
     }
   })
   await updateSortOperationColumn(req)
@@ -218,6 +218,20 @@ const handleChecked = async (item: any) => {
     columnId: item.columnId,
     status,
   })
+}
+const handleWidth = (item: any) => {
+  switch (item.label) {
+    case 'SKU': {
+      return flexColumnWidth(props.list, 'SKU', 'sku', 60)
+    }
+    case '主体供应商': {
+      return flexColumnWidth(props.list, '主体供应商', 'mainSupplierName')
+    }
+
+    default: {
+      return item.minWidth
+    }
+  }
 }
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.column.label === '图片') {
@@ -311,5 +325,23 @@ const showImagePreview = (url: string) => {
 .product-table :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+.handle {
+  cursor: grab;
+}
+.disabled-handle {
+  cursor: not-allowed;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 </style>

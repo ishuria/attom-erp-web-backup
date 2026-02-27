@@ -29,6 +29,7 @@
       </el-tab-pane>
       <el-tab-pane label="产品" :name="2">
         <product-tab
+          v-model:columns="columns"
           v-model:date="productDate"
           v-model:listLoading="listLoading"
           :list="productList"
@@ -55,6 +56,7 @@
 
 <script lang="ts" setup>
 import { TabsPaneContext } from 'element-plus'
+import { getOperationColumnList } from '~/src/api/devlocal/productPerformance'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import {
   getPurchaseStatisticsProductList,
@@ -225,9 +227,26 @@ const fetchSiteData = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
+const columns = ref<any>([])
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 19 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+    // 设置 最小宽度
+    if (item.prop !== 'skuImgUrl') {
+      delete item.width
+    }
+    // 设置排序
+    if (['totalVolume'].includes(item.prop)) {
+      item.sortable = true
+    }
+  })
+}
 onBeforeMount(() => {
   fetchData()
   fetchSiteData()
+  fetchColumn()
 })
 </script>
 
