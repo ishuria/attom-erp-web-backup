@@ -28,7 +28,8 @@
       <el-table-column label="SKU" :min-width="flexColumnWidth(list, 'SKU', 'sku', 50)" prop="sku">
         <template #default="{ row }">
           <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-            {{ row.sku }}
+            <el-link class="sku-text" :href="row.amazonUrl" target="_blank">{{ row.sku }}</el-link>
+
             <vab-icon icon="file-copy-2-fill" />
           </span>
           <br />
@@ -176,6 +177,13 @@ onMounted(() => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+.sku-text {
+  :deep(.el-link__inner) {
+    display: inline-block;
+    margin-right: 3px;
+    vertical-align: middle;
   }
 }
 .rate-wrapper {
