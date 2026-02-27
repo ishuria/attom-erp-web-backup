@@ -16,10 +16,25 @@
               end-placeholder="结束日期"
               range-separator="至"
               start-placeholder="开始日期"
+              style="margin-right: 10px"
               type="daterange"
               @change="$emit('query')"
             />
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                padding: 0px 10px;
+                background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+                border-radius: 6px;
+                border: 1px solid #fca5a5;
+              "
+            >
+              <span style="font-size: 15px; color: #7f1d1d">该区间不一致率：</span>
+              <span style="font-size: 18px; font-weight: 700; color: #dc2626; font-family: 'Arial', sans-serif">{{ notMatchRate }} %</span>
+            </div>
           </el-form-item>
+
           <el-form-item>
             <div class="filter-group">
               <el-checkbox v-model="queryForm.notEqual" :false-value="0" :true-value="1" @change="$emit('query')">未配平</el-checkbox>
@@ -131,7 +146,7 @@ defineOptions({
 const props = defineProps<{
   list: any[]
   loading: boolean
-
+  notMatchRate: number
   total: number
 }>()
 const queryForm = defineModel<Record<string, any>>('queryForm', {
@@ -248,26 +263,26 @@ const setSelectRows = (value: IAiTuoMuItem[]) => {
   height: 100%;
 
   :deep() {
-    .vab-query-form {
-      .left-panel {
-        margin-bottom: 5px;
-      }
-      .el-form {
-        .el-form-item:first-child {
-          margin-bottom: 5px !important;
+    // .vab-query-form {
+    //   .left-panel {
+    //     margin-bottom: 5px;
+    //   }
+    //   .el-form {
+    //     .el-form-item:first-child {
+    //       margin-bottom: 5px !important;
 
-          .el-check-tag,
-          .el-form-item__label {
-            margin: 0 10px 5px 0;
-            border-radius: 99px;
-          }
-        }
+    //       .el-check-tag,
+    //       .el-form-item__label {
+    //         margin: 0 10px 5px 0;
+    //         border-radius: 99px;
+    //       }
+    //     }
 
-        .el-form-item:last-child {
-          margin-bottom: 5px !important;
-        }
-      }
-    }
+    //     .el-form-item:last-child {
+    //       margin-bottom: 5px !important;
+    //     }
+    //   }
+    // }
 
     .el-table {
       flex: 1;

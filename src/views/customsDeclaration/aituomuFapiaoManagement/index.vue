@@ -39,6 +39,7 @@
           v-model:queryForm="invoiceQueryForm"
           :list="invoiceList"
           :loading="listLoading"
+          :not-match-rate="notMatchRate"
           :total="total"
           @page-change="handleInvoiceCurrentChange"
           @query="queryInvoiceData"
@@ -210,6 +211,7 @@ const fetchData = async () => {
   totalPrice.value = data.totalPrice
   listLoading.value = false
 }
+const notMatchRate = ref<number>(0)
 const fetchInvoiceData = async () => {
   listLoading.value = true
   const params = {
@@ -220,6 +222,7 @@ const fetchInvoiceData = async () => {
   const { data } = await queryAiTuoMuInvoiceList(params)
   invoiceList.value = data.list
   total.value = data.total
+  notMatchRate.value = data.notMatchRate
   listLoading.value = false
 }
 

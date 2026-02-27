@@ -3,6 +3,7 @@ export interface IAiTuoMuList {
     total: number
     list: IAiTuoMuItem[]
     totalPrice: number
+    notMatchRate: number
   }
 }
 
