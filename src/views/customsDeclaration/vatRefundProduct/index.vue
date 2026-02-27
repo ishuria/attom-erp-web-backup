@@ -186,6 +186,9 @@
               <span v-if="item.label === '出口退税税率'">
                 {{ row.exportTaxRebateRate ? row.exportTaxRebateRate + '%' : '' }}
               </span>
+              <span v-if="item.label === '开票类型'">
+                <el-tag :type="row.invoicing === '专票' ? 'success' : 'danger'">{{ row.invoicing }}</el-tag>
+              </span>
               <span v-if="item.label === '发票匹配日期'">
                 <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
               </span>
