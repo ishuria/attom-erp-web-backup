@@ -104,6 +104,7 @@ const invoiceQueryForm = reactive<any>({
   status: 1,
   notEqual: 0,
   notMatchName: 0,
+  notMatchUnit: 0,
   matchDate: ['', ''],
 })
 const list = ref<IAiTuoMuItem[]>([])

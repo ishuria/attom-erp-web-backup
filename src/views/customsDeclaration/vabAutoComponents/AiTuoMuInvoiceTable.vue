@@ -26,6 +26,9 @@
               <el-checkbox v-model="queryForm.notMatchName" :false-value="0" :true-value="1" @change="$emit('query')">
                 品名不匹配
               </el-checkbox>
+              <el-checkbox v-model="queryForm.notMatchUnit" :false-value="0" :true-value="1" @change="$emit('query')">
+                单位不匹配
+              </el-checkbox>
             </div>
           </el-form-item>
         </el-form>
