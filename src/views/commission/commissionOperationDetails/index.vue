@@ -535,11 +535,13 @@
           border
           :cell-style="{ textAlign: 'center' }"
           :data="oldProductProfitList"
+          :default-sort="{ prop: 'createTime', order: 'descending' }"
           :header-cell-style="{ textAlign: 'center' }"
           :span-method="objectSpanMethod"
           stripe
+          @sort-change="handleSortChange"
         >
-          <el-table-column label="认领日期" min-width="120" prop="createTime">
+          <el-table-column label="认领日期" min-width="120" prop="createTime" sortable="custom">
             <template #default="{ row }">
               {{ row.createTime ? formatDate(new Date(row.createTime)) : '-' }}
             </template>
@@ -550,6 +552,7 @@
             </template>
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
+          <el-table-column label="父体ASIN" min-width="140" prop="parentAsin" sortable="custom" />
           <el-table-column label="运营负责人" min-width="125" prop="operationUserName" />
           <el-table-column label="站点" min-width="125" prop="siteName" />
           <el-table-column label="月份" min-width="100" prop="month" />
@@ -688,6 +691,8 @@ const oldProductProfitQueryForm = reactive({
   startMonth: '',
   endMonth: '',
   userId: -1,
+  orderByField: '',
+  orderDirection: 'desc',
 })
 const oldProductProfitList = ref<any[]>([])
 const oldProductProfitTotal = ref<number>(0)
@@ -952,9 +957,22 @@ const handleOldProductProfitSizeChange = (val: number) => {
   oldProductProfitQueryForm.pageNo = 1
   queryOldProductProfitData()
 }
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  oldProductProfitQueryForm.orderByField = prop
+  if (!order) {
+    if (oldProductProfitQueryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (oldProductProfitQueryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  }
+  oldProductProfitQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryOldProductProfitData()
+}
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
     // 获取当前row的零件id
     const asinId = row.asinId
     // 默认不跨行
