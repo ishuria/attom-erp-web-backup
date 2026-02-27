@@ -218,6 +218,18 @@ export function releaseBatchPlanPo(params?: IPoIds) {
     params,
   })
 }
+/**
+ * @description 检查PO是否可认领
+ * @param params poIds: string
+ * @returns boolean
+ */
+export function checkClaimableReleasePo(params: IPoIds): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/pos/release/check-claimable`,
+    method: 'get',
+    params,
+  })
+}
 // 采购计划-未达起订量
 export function updatePlanPoStatus(params?: IId) {
   return request({

@@ -709,6 +709,7 @@ import { ref } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import {
+  checkClaimableReleasePo,
   deleteAllPlanPo,
   deletePlanPo,
   deletePurchasePlanPo,
@@ -1059,9 +1060,14 @@ const handleNotBg = async () => {
     $baseMessage('您未选中任何行', 'warning', 'hey')
     return
   }
+  const ids = selectRows.value.map((item: any) => item.id).join(',')
+  const { data: res } = await checkClaimableReleasePo({ poIds: ids })
+  if (res === false) {
+    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
+    return
+  }
   try {
     notBgLoading.value = true
-    const ids = selectRows.value.map((item: any) => item.id).join(',')
     const { data } = await planPoNbgFlagHander({ ids })
     if (data === true) {
       $baseMessage('批量不报关可发布标记更新成功！', 'success', 'hey')
@@ -1112,10 +1118,15 @@ const handleAllPublishPo = async () => {
     $baseMessage('您未选中任何行', 'warning', 'hey')
     return
   }
-
+  const ids = selectRows.value.map((item: any) => item.id).join(',')
+  const { data: res } = await checkClaimableReleasePo({ poIds: ids })
+  if (res === false) {
+    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
+    return
+  }
   try {
     batchReleaseLoading.value = true
-    const ids = selectRows.value.map((item: any) => item.id).join(',')
+
     const { data } = await releaseBatchPlanPo({
       poIds: ids,
     })
@@ -1131,6 +1142,11 @@ const handleAllPublishPo = async () => {
 }
 // 发布po
 const handlePublishPo = async (row: any) => {
+  const { data: res } = await checkClaimableReleasePo({ poIds: String(row.id) })
+  if (res === false) {
+    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
+    return
+  }
   try {
     $baseConfirm('确定要发布到PO吗', null, async () => {
       const { data } = await releasePlanPo({
