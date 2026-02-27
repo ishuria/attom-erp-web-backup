@@ -1229,7 +1229,7 @@ const confirmModifyTask = async () => {
       if (data) {
         closeModifyTask()
         $baseMessage('修改任务数成功', 'success', 'hey')
-        fetchData()
+        fetchDataByStatus()
       }
     }
   })
@@ -1446,7 +1446,7 @@ const handleDeleteTask = (row: any) => {
     })
     if (data) {
       $baseMessage('删除任务成功', 'success')
-      fetchData()
+      fetchDataByStatus()
     }
   })
 }
@@ -1579,7 +1579,7 @@ const showSkuQualityList = async (taskIds: string, startTaskUserIds: string) => 
     })
     personSelectVisible.value = false
   }
-  fetchData()
+  fetchDataByStatus()
   const { data } = await getSkuQualityList({
     ids: taskIds,
   })
@@ -1659,7 +1659,7 @@ const confirmUpdateTask = async () => {
   if (data) {
     $baseMessage('修改打包任务成功', 'success')
     closeModifyDialog()
-    fetchData()
+    fetchDataByStatus()
   }
 }
 // 打包总数是否可见
@@ -1761,7 +1761,7 @@ const confirmQualityCheck = async () => {
   if (data) {
     $baseMessage('添加质检信息成功', 'success')
     packingCountVisible.value = false
-    fetchData()
+    fetchDataByStatus()
   }
 }
 // 缺的数量
@@ -1830,7 +1830,7 @@ const confirmSplitTask = async () => {
       if (data) {
         $baseMessage('拆分打包任务成功', 'success')
         closeSplitTask()
-        fetchData()
+        fetchDataByStatus()
       }
     }
   })
@@ -1856,7 +1856,7 @@ const handleSizeChange = (value: number) => {
       pageSize: queryForm.pageSize,
     },
   })
-  fetchData()
+  fetchDataByStatus()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
@@ -1867,7 +1867,7 @@ const handleCurrentChange = (value: number) => {
       pageSize: queryForm.pageSize,
     },
   })
-  fetchData()
+  fetchDataByStatus()
 }
 const queryData = () => {
   queryForm.pageNo = 1
@@ -1878,7 +1878,7 @@ const queryData = () => {
       pageSize: queryForm.pageSize,
     },
   })
-  fetchData()
+  fetchDataByStatus()
 }
 const handleTaskingSizeChange = (value: number) => {
   taskingForm.pageNo = 1
@@ -2162,6 +2162,17 @@ const fetchOperationUserList = async () => {
   const { data } = await getDistributionOptionUserList()
   operationUserList.value = data
 }
+const fetchDataByStatus = () => {
+  if (queryForm.status !== 5 && activeName.value !== 7 && activeName.value !== -1) {
+    fetchData()
+  } else if (queryForm.status === 5) {
+    fetchTaskingData()
+  } else if (activeName.value === 7) {
+    fetchAllTaskData()
+  } else if (activeName.value === -1) {
+    fetchPendingNewInspectionData()
+  }
+}
 onBeforeMount(() => {
   const { tab, pageNo, pageSize } = route.query
   if (tab) {
@@ -2178,15 +2189,7 @@ onBeforeMount(() => {
     queryForm.pageSize = Number(pageSize)
     allTaskForm.pageSize = Number(pageSize)
   }
-  if (queryForm.status !== 5 && activeName.value !== 7 && activeName.value !== -1) {
-    fetchData()
-  } else if (queryForm.status === 5) {
-    fetchTaskingData()
-  } else if (activeName.value === 7) {
-    fetchAllTaskData()
-  } else if (activeName.value === -1) {
-    fetchPendingNewInspectionData()
-  }
+  fetchDataByStatus()
   getSiteList()
   fetchOperationUserList()
 })
