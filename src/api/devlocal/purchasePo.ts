@@ -223,7 +223,7 @@ export function releaseBatchPlanPo(params?: IPoIds) {
  * @param params poIds: string
  * @returns boolean
  */
-export function checkClaimableReleasePo(params: IPoIds): Promise<IBooleanResp> {
+export function checkClaimableReleasePo(params: { sku: string }): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/pos/release/check-claimable`,
     method: 'get',

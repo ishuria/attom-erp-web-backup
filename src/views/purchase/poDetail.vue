@@ -1863,6 +1863,7 @@ import { getProductComponentPurchase, getProductComponentStore } from '/@/api/de
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import {
   addPoSKU,
+  checkClaimableReleasePo,
   createPlanPo,
   deleteComponentImg,
   deletePoSku,
@@ -3074,20 +3075,29 @@ const handleDelCreateSKU = () => {
 // 创建SKU
 const createSku = async () => {
   let flag = false
-  createPoLoading.value = true
   // 遍历data的所有
-  skuStore.data.forEach((item: any) => {
+  for (const item of skuStore.data) {
+    const sku = item.poDetailData.sku
+
+    const { data: res } = await checkClaimableReleasePo({ sku: sku! })
+
+    if (res === false) {
+      $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
+      return
+    }
+
     if (item.poDetailData.site == null) {
-      $baseMessage(`请选择${item.poDetailData.sku}的PO站点`, 'error')
-      flag = true
+      $baseMessage(`请选择${sku}的PO站点`, 'error')
       return
     }
+
     if (item.poDetailData.repositoryId == null) {
-      $baseMessage(`请选择${item.poDetailData.sku}的收货仓库`, 'error')
-      flag = true
+      $baseMessage(`请选择${sku}的收货仓库`, 'error')
       return
     }
-  })
+  }
+  createPoLoading.value = true
+
   if (!flag) {
     const createReq = skuStore.data.map((item: any) => {
       const transformedItem = {
