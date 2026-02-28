@@ -4,6 +4,7 @@ export interface IGetArtDesignTaskListReq {
   pageNo: number
   pageSize: number
   taskType?: string
+  operationUserId: number
 }
 export interface IGetArtDesignTaskListRes {
   data: {

@@ -29,6 +29,13 @@
             <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_ASSIGN] }" type="primary" @click="showAssignTask">
               任务分配
             </el-button>
+            <el-form inline>
+              <el-form-item label="运营人员">
+                <el-select v-model="queryForm.operationUserId" clearable placeholder="全部" @change="queryData">
+                  <el-option v-for="item in operationUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+            </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -1248,6 +1255,7 @@ import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
 import { columnConfigs, designTypeOption, getTaskTypeColor, splitUsernames, taskTypeOption } from '../constantOption'
 import {
   addArtDesignSelectionReasons,
@@ -1603,6 +1611,7 @@ const queryForm = reactive<IGetArtDesignTaskListReq>({
   pageSize: 20,
   status: 3,
   taskType: '',
+  operationUserId: -1,
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -2076,6 +2085,12 @@ const fetchProductPositionOption = async () => {
   const { data } = await getProductPositionList()
   productPositionOption.value = data
 }
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const fetchOperationUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operationUserList.value = data
+  operationUserList.value.unshift({ id: -1, label: '全部' })
+}
 onBeforeMount(() => {
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
@@ -2088,6 +2103,7 @@ onBeforeMount(() => {
     activeName.value = Number(tab)
     queryForm.status = activeName.value
   }
+  fetchOperationUserList()
   fetchSiteList()
   fetchUserList()
   fetchData()

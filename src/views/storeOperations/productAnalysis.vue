@@ -42,21 +42,11 @@
             </el-tab-pane>
 
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis
-                v-if="activeName === 2"
-                :select-date-range="selectDateRange"
-                :selected-site="selectedSite"
-                :sku="sku"
-              />
+              <vab-cost-analysis v-if="activeName === 2" :select-date-range="selectDateRange" :selected-site="selectedSite" :sku="sku" />
             </el-tab-pane>
 
             <el-tab-pane label="评论Reviews" :name="3">
-              <vab-comment-reviews
-                v-if="activeName === 3"
-                :asin="asin"
-                :select-date-range="selectDateRange"
-                :site="selectedSite!"
-              />
+              <vab-comment-reviews v-if="activeName === 3" :asin="asin" :select-date-range="selectDateRange" :site="selectedSite!" />
             </el-tab-pane>
 
             <el-tab-pane label="退货分析" :name="4">
@@ -259,19 +249,10 @@ defineOptions({
 const route: any = useRoute()
 const router: any = useRouter()
 const sku = ref<string>('')
-const asin = ref<string>('')  
+const asin = ref<string>('')
 const selectedSite = ref<number>()
 const selectField = ref<number>()
-watch(
-  () => route.query,
-  (query) => {
-    if (query.sku) sku.value = String(query.sku)
-    if (query.asin) asin.value = String(query.asin)
-    if (query.site) selectedSite.value = Number(query.site)
-    if (query.field) selectField.value = Number(query.field)
-  },
-  { immediate: true }
-)
+
 // 选择的维度 SKU ASIN 父体ASIN
 // 选择的日期范围 - 从 localStorage 读取或使用默认值
 const getStoredDateRange = (): [string, string] => {
@@ -451,7 +432,6 @@ const fetchSiteList = async () => {
 // 站点变化处理
 const handleSiteChange = (siteId: number | undefined) => {
   selectedSite.value = siteId
- 
 }
 
 // 获取广告活动名列表
@@ -549,7 +529,16 @@ onBeforeMount(() => {
     selectedSku.value = skuOptions.value[0]
   }
 })
-
+watch(
+  () => [route.query.sku, route.query.asin, route.query.site, route.query.field],
+  ([qSku, qAsin, qSite, qField]) => {
+    if (qSku != null) sku.value = String(qSku)
+    if (qAsin != null) asin.value = String(qAsin)
+    if (qSite != null) selectedSite.value = Number(qSite)
+    if (qField != null) selectField.value = Number(qField)
+  },
+  { immediate: true }
+)
 // 监听 store 数据变化
 watch(
   () => skuOptionsStore.data.sku,
@@ -596,14 +585,9 @@ watch(
   { immediate: true }
 )
 watch(
-  () => [
-    selectedSite.value,
-    selectField.value,
-    asin.value,
-    sku.value
-  ],
+  () => [selectedSite.value, selectField.value, asin.value, sku.value],
   () => {
-    if (!selectedSite.value) return
+    if (selectedSite.value === undefined) return
     fetchCampaignNameList()
   },
   { immediate: true }
