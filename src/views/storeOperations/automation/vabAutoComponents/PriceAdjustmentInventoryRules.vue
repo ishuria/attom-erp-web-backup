@@ -166,6 +166,11 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="散点图">
+        <template #default="{ row }">
+          <el-button circle :icon="Histogram" type="primary" @click="handlePriceProfitScatterClick(row)" />
+        </template>
+      </el-table-column>
       <el-table-column label="调价幅度" min-width="100" prop="adjustmentRange">
         <template #default="scope">{{ scope.row.currencyIcon }} {{ scope.row.adjustmentRange }}</template>
       </el-table-column>
@@ -498,11 +503,14 @@
 
     <!-- 销量趋势弹窗 -->
     <sale-trend-dialog v-model:visible="saleTrendVisible" :site="currentRowData?.site" :sku="currentRowData?.sku" />
+
+    <!-- 价格利润散点图 -->
+    <price-profit-scatter-chart v-model="priceProfitScatterVisible" :site="currentRowData?.site" :sku="currentRowData?.sku" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Histogram, Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { type IAutoMationItem, IAutoMationQueryReq } from '/@/type/storeOperation/autoMation'
@@ -529,6 +537,7 @@ const indeterminate = defineModel<boolean>('indeterminate', { default: false })
 const showCurrentValue = ref<boolean>(true)
 const xAxis = ref<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30])
 const saleTrendVisible = ref<boolean>(false)
+const priceProfitScatterVisible = ref<boolean>(false)
 // 当前行数据（用于销量趋势弹窗）
 const currentRowData = ref<any>(null)
 const emit = defineEmits<{
@@ -576,7 +585,12 @@ const handleCellBlur = (event: any, row: IOperationStocksItem, index: number) =>
   }
   emit('cell-blur', event, row, index)
 }
+const handlePriceProfitScatterClick = (row: IAutoMationItem) => {
+  // 保存当前行数据用于弹窗显示
+  currentRowData.value = row
 
+  priceProfitScatterVisible.value = true
+}
 const handleCellClick = (row: IAutoMationItem, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '销量趋势') {
     // 保存当前行数据用于弹窗显示

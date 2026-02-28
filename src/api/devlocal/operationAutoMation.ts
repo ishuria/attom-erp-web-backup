@@ -1,5 +1,6 @@
 import { BASE_API } from '/@/api/devlocal/api'
 import {
+  GetPriceProfitScatterResponse,
   GetSaleTrendParams,
   GetSaleTrendResponse,
   IAutoMationDefaultPramsRules,
@@ -202,6 +203,19 @@ export function updateOperationStockRulesParams(data: IOperationStockRulesSitePa
 export function getSaleTrend(params: GetSaleTrendParams): Promise<GetSaleTrendResponse> {
   return request({
     url: `${BASE_API}/operation/stock/auto/rules/sale/trend`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * @description 获取价格利润散点
+ * @param params 请求参数
+ * @returns Promise<GetSaleTrendResponse>
+ */
+export function getPriceProfitScatter(params: GetSaleTrendParams): Promise<GetPriceProfitScatterResponse> {
+  return request({
+    url: `${BASE_API}/operation/rules/price/profit/scatter`,
     method: 'get',
     params,
   })

@@ -158,6 +158,7 @@ declare module 'vue' {
     PortalHeader: typeof import('./../../../src/views/portal/vabAutoComponents/PortalHeader.vue')['default']
     PoTable: typeof import('./../../../src/views/purchase/vabAutoComponents/PoTable.vue')['default']
     PriceAdjustmentInventoryRules: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/PriceAdjustmentInventoryRules.vue')['default']
+    PriceProfitScatterChart: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/PriceProfitScatterChart.vue')['default']
     ProductInfoCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/ProductInfoCard.vue')['default']
     ProductStatisticsDetail: typeof import('./../../../src/views/purchase/vabAutoComponents/productStatisticsDetail.vue')['default']
     ProductTab: typeof import('./../../../src/views/purchase/vabAutoComponents/ProductTab.vue')['default']

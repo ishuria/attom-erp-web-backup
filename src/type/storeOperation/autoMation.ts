@@ -293,3 +293,14 @@ export interface GetSaleTrendParams {
 export interface GetSaleTrendResponse {
   data: SaleTrendDataItem[]
 }
+
+// 获取销量趋势响应
+export interface GetPriceProfitScatterResponse {
+  data: PriceProfitScatterItem[]
+}
+// 销量趋势数据项
+export interface PriceProfitScatterItem {
+  price: number
+  avgProfitPerOrder: number
+  dailyAvgVolume: number
+}
