@@ -94,6 +94,11 @@
             <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-number-row">{{ item.invoiceMatchDate }}</div>
           </template>
         </el-table-column>
+        <el-table-column label="发票类型" min-width="100" prop="invoicing">
+          <template #default="{ row }">
+            <el-tag :type="row.invoicing === '专票' ? 'success' : 'danger'">{{ row.invoicing }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="发票代码" min-width="100">
           <template #default="{ row }">
             <div v-if="Array.isArray(row.matchInvoiceRecord)">
@@ -332,14 +337,14 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
   if (queryForm.orderByField === prop) {
     // 如果点击的是当前排序列
-  if (!order) {
+    if (!order) {
       // 取消排序时，切换排序方向
-    if (queryForm.orderDirection === 'asc') {
-      column.order = 'descending'
-    } else if (queryForm.orderDirection === 'desc') {
-      column.order = 'ascending'
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
     }
-  }
   } else {
     // 如果点击的是不同的列，默认设置为降序
     column.order = 'descending'
