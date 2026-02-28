@@ -66,9 +66,9 @@
         :fixed="item.isFixed"
         :header-class-name="handleHeaderClassName(item)"
         :label="item.label"
-        :min-width="handleWidth(item)"
+        :min-width="item.minWidth"
         :prop="item.prop"
-        :sortable="item.sortable ? 'custom' : false"
+        :sortable="'custom'"
       >
         <template #default="{ row }">
           {{ row[item.prop] }}
@@ -87,9 +87,9 @@
           :class-name="handleClassName(item)"
           :header-class-name="handleHeaderClassName(item)"
           :label="item.label"
-          :min-width="handleWidth(item)"
+          :min-width="item.minWidth"
           :prop="item.prop"
-          :sortable="item.sortable ? 'custom' : false"
+          :sortable="'custom'"
           :width="item.width"
         >
           <template #default="{ row }">
@@ -119,7 +119,6 @@ import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationC
 import { IGetOperationColumnList } from '~/src/type/storeOperation/productPerformanceType'
 import { getSearchTermPerformance } from '/@/api/devlocal/productAnalysis'
 import type { IGetSearchTermPerformance } from '/@/type/storeOperation/productAnalysisType'
-import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'VabSearchTermPerformance',
@@ -410,21 +409,6 @@ const splitProps = ['totalQueryImpressionCount', 'totalClickCount', 'totalCartAd
 
 const handleClassName = (item: any) => (splitProps.includes(item.prop) ? 'group-split-left group-split-left--improve' : '')
 const handleHeaderClassName = (item: any) => (splitProps.includes(item.prop) ? 'group-split-left group-split-left--improve' : '')
-// 计算并缓存列宽
-const handleWidth = (item: any) => {
-  let width: string | number
-  switch (item.label) {
-    case '搜索关键词': {
-      width = flexColumnWidth(list.value, '搜索关键词', 'searchQuery')
-      break
-    }
-    default: {
-      width = item.minWidth
-      break
-    }
-  }
-  return width
-}
 
 const fetchColumn = async () => {
   const { data } = await getOperationColumnList({ type: 18 })
