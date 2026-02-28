@@ -6,6 +6,7 @@
           :list="list"
           :loading="listLoading"
           :query-form="queryForm"
+          :show-invoice="true"
           :showActions="false"
           :showButtons="true"
           :total="total"
@@ -17,6 +18,7 @@
           @page-change="handleCurrentChange"
           @query="queryData"
           @size-change="handleSizeChange"
+          @update-status="handleUpdateStatus"
         />
       </el-tab-pane>
       <el-tab-pane label="已匹配" :name="1">
@@ -24,6 +26,7 @@
           :list="list"
           :loading="listLoading"
           :query-form="queryForm"
+          :show-invoice="true"
           :showActions="true"
           :showButtons="false"
           :total="total"
@@ -34,7 +37,23 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="发票" :name="2">
+      <el-tab-pane label="无法开票" :name="2">
+        <ai-tuo-mu-table
+          :list="list"
+          :loading="listLoading"
+          :query-form="queryForm"
+          :show-invoice="false"
+          :showActions="false"
+          :showButtons="false"
+          :total="total"
+          :totalPrice="totalPrice"
+          @delete-match="deleteMatch"
+          @page-change="handleCurrentChange"
+          @query="queryData"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="发票" :name="3">
         <ai-tuo-mu-invoice-table
           v-model:queryForm="invoiceQueryForm"
           :list="invoiceList"
@@ -79,7 +98,7 @@
 <script lang="ts" setup>
 import { TabsPaneContext } from 'element-plus'
 import { formatDateToString } from '~/src/utils/dateUtils'
-import { aiTuoMuInvoiceMatchDelete, getAiTuoMuList, queryAiTuoMuInvoiceList } from '/@/api/devlocal/aiTuoMu'
+import { aiTuoMuInvoiceMatchDelete, aiTuoMuUpdateStatus, getAiTuoMuList, queryAiTuoMuInvoiceList } from '/@/api/devlocal/aiTuoMu'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { IAiTuoMuItem, IAiTuoMuListReq } from '/@/type/aiTuoMu/aiTuoMuList'
 
@@ -121,7 +140,7 @@ const selectChildIdList = ref<number[]>([])
 
 const handleTabChange = (tab: TabsPaneContext) => {
   activeName.value = Number(tab.props.name)
-  if (activeName.value === 2) {
+  if (activeName.value === 3) {
     queryInvoiceData()
   } else {
     queryForm.status = activeName.value
@@ -140,7 +159,19 @@ const deleteMatch = (row: any) => {
     }
   })
 }
-
+const handleUpdateStatus = async () => {
+  if (selectChildIdList.value.length === 0) {
+    $baseMessage('请选择无法开票的零件！！', 'error')
+    return
+  }
+  $baseConfirm('确定要修改为无法开票吗？', null, async () => {
+    const { data } = await aiTuoMuUpdateStatus({ ids: selectChildIdList.value })
+    if (data) {
+      $baseMessage('修改为无法开票成功！', 'success')
+      queryData()
+    }
+  })
+}
 // 埃托姆发票导出
 const handleExportATM = async () => {
   exportLoading.value = true
@@ -234,7 +265,7 @@ const handleAiTuoMuTableData = (data: IAiTuoMuItem[]) => {
 }
 
 onBeforeMount(() => {
-  if (activeName.value === 2) {
+  if (activeName.value === 3) {
     fetchInvoiceData()
   } else {
     fetchData()

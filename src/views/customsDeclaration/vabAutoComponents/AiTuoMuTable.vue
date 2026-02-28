@@ -6,6 +6,7 @@
           <el-button type="primary" @click="$emit('export')">催票文件导出</el-button>
           <el-button type="primary" @click="$emit('import')">发票导入</el-button>
           <el-button type="success" @click="$emit('match')">发票匹配</el-button>
+          <el-button type="danger" @click="$emit('update-status')">无法开票</el-button>
         </template>
         <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
           <el-date-picker
@@ -177,18 +178,23 @@
           <div v-html="row.componentCount"></div>
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" min-width="100" prop="invoiceCode" />
-      <el-table-column label="发票号码" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" prop="invoiceNumber" />
-      <el-table-column v-if="showActions" label="开票品名" min-width="100" prop="invoiceName" />
+      <el-table-column v-if="showInvoice" label="发票代码" min-width="100" prop="invoiceCode" />
       <el-table-column
-        v-if="showActions"
+        v-if="showInvoice"
+        label="发票号码"
+        :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')"
+        prop="invoiceNumber"
+      />
+      <el-table-column v-if="showActions && showInvoice" label="开票品名" min-width="100" prop="invoiceName" />
+      <el-table-column
+        v-if="showActions && showInvoice"
         label="发票供应商"
         :min-width="flexColumnWidth(list, '发票供应商', 'invoiceSupplier')"
         prop="invoiceSupplier"
       />
-      <el-table-column label="开票数量" min-width="100" prop="invoiceCount" />
-      <el-table-column label="发票单位" min-width="100" prop="invoiceUnit" />
-      <el-table-column label="发票金额" min-width="100" prop="includingTaxPrice" />
+      <el-table-column v-if="showInvoice" label="开票数量" min-width="100" prop="invoiceCount" />
+      <el-table-column v-if="showInvoice" label="发票单位" min-width="100" prop="invoiceUnit" />
+      <el-table-column v-if="showInvoice" label="发票金额" min-width="100" prop="includingTaxPrice" />
       <el-table-column v-if="showActions" align="center" label="操作" width="120">
         <template #default="{ row }">
           <el-button text type="danger" @click="$emit('delete-match', row)">删除匹配</el-button>
@@ -224,11 +230,22 @@ const props = defineProps<{
   loading: boolean
   showButtons: boolean
   showActions: boolean
+  showInvoice: boolean
   queryForm: Record<string, any>
   total: number
   totalPrice: number
 }>()
-const emit = defineEmits(['export', 'import', 'match', 'delete-match', 'query', 'page-change', 'size-change', 'obtain-id-list'])
+const emit = defineEmits([
+  'export',
+  'import',
+  'match',
+  'delete-match',
+  'query',
+  'page-change',
+  'size-change',
+  'obtain-id-list',
+  'update-status',
+])
 
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])

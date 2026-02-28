@@ -140,3 +140,15 @@ export const aiTuoMuInvoiceMatchDelete = (data: IAiTuoMuMatchDeleteReq): Promise
     data,
   })
 }
+/**
+ * 埃托姆-更新无法开票
+ * @param data
+ * @returns
+ */
+export const aiTuoMuUpdateStatus = (data: { ids: number[] }): Promise<IAiTuoMuBoolean> => {
+  return request({
+    url: `${BASE_API}/aituomu/update/status`,
+    method: 'post',
+    data,
+  })
+}
