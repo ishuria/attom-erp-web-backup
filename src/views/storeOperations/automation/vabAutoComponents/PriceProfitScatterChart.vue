@@ -121,10 +121,23 @@ const points = ref<ScatterPoint[]>([])
 
 let chart: echarts.ECharts | null = null
 
-function calcSymbolSize(dailyAvgVolume: number) {
-  // 把日均销量映射到像素：12~50左右（增加最小尺寸便于点击）
-  const v = Math.max(0, Number(dailyAvgVolume) || 0)
-  return 12 + Math.log10(v + 1) * 15
+function makeSymbolSizer(list: ScatterPoint[], minSize = 20, maxSize = 70, gamma = 0.6) {
+  const vols = list.map((p) => Math.max(0, Number(p.dailyAvgVolume) || 0))
+  const vMin = Math.min(...vols)
+  const vMax = Math.max(...vols)
+
+  return (dailyAvgVolume: number) => {
+    const v = Math.max(0, Number(dailyAvgVolume) || 0)
+    if (vMax === vMin) return (minSize + maxSize) / 2
+
+    // 0~1
+    const t = (v - vMin) / (vMax - vMin)
+
+    // gamma < 1：放大低值差异；gamma > 1：放大高值差异
+    const eased = Math.pow(t, gamma)
+
+    return minSize + eased * (maxSize - minSize)
+  }
 }
 
 function buildOption(list: ScatterPoint[]): echarts.EChartsOption {
@@ -133,7 +146,7 @@ function buildOption(list: ScatterPoint[]): echarts.EChartsOption {
     value: [p.avgProfitPerOrder, p.price, p.dailyAvgVolume], // [x,y,size]
     ...p,
   }))
-
+  const sizeFn = makeSymbolSizer(list, 20, 70, 0.6)
   return {
     grid: { left: 60, right: 30, top: 30, bottom: 55 },
     tooltip: {
@@ -179,7 +192,8 @@ function buildOption(list: ScatterPoint[]): echarts.EChartsOption {
       {
         type: 'scatter',
         data,
-        symbolSize: (val: any) => calcSymbolSize(val[2]),
+
+        symbolSize: (val: any) => sizeFn(val[2]),
         cursor: 'pointer',
         zlevel: 1,
         emphasis: {
