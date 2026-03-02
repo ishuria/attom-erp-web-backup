@@ -113,6 +113,7 @@ const priceAdjustmentInventoryRulesQueryForm = reactive<IAutoMationQueryReq>({
   sites: [],
   operationUserId: -1,
   priceChangeType: -1,
+  ruleStatus: -1,
 })
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])

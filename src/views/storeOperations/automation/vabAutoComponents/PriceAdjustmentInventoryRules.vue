@@ -37,6 +37,13 @@
               <el-option label="下调" :value="2" />
             </el-select>
           </el-form-item>
+          <el-form-item label="规则开关">
+            <el-select v-model="queryForm.ruleStatus" clearable placeholder="规则开关" @change="handleQueryData">
+              <el-option label="全部" :value="-1" />
+              <el-option label="开启" :value="1" />
+              <el-option label="关闭" :value="0" />
+            </el-select>
+          </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -110,6 +117,35 @@
             style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
             @change="handleRoleStatusChange(row)"
           />
+        </template>
+      </el-table-column>
+      <el-table-column
+        class-name="group-split-left group-split-left--reduce2"
+        header-class-name="group-split-left group-split-left--reduce2"
+        label="系统最新操作日期"
+        prop="operationDate"
+        width="115"
+      >
+        <template #header>
+          系统最新
+          <br />
+          操作日期
+        </template>
+      </el-table-column>
+      <el-table-column label="价格" min-width="100" prop="operationBeforePrice">
+        <template #default="scope">
+          <el-text :type="getPriceChangeType(scope.row.operationBeforePrice, scope.row.operationAfterPrice)">
+            {{ scope.row.currencyIcon }}{{ scope.row.operationBeforePrice }} -> {{ scope.row.currencyIcon
+            }}{{ scope.row.operationAfterPrice }}
+          </el-text>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作结果" prop="operationResult" width="100">
+        <template #default="{ row }">
+          <el-tag :type="row.operationResult === '失败' ? 'danger' : 'success'">
+            {{ row.operationResult }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="最低价" min-width="100" prop="minPrice">
@@ -444,35 +480,7 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column
-        class-name="group-split-left group-split-left--reduce2"
-        header-class-name="group-split-left group-split-left--reduce2"
-        label="系统最新操作日期"
-        prop="operationDate"
-        width="115"
-      >
-        <template #header>
-          系统最新
-          <br />
-          操作日期
-        </template>
-      </el-table-column>
-      <el-table-column label="价格" min-width="100" prop="operationBeforePrice">
-        <template #default="scope">
-          <el-text :type="getPriceChangeType(scope.row.operationBeforePrice, scope.row.operationAfterPrice)">
-            {{ scope.row.currencyIcon }}{{ scope.row.operationBeforePrice }} -> {{ scope.row.currencyIcon
-            }}{{ scope.row.operationAfterPrice }}
-          </el-text>
-        </template>
-      </el-table-column>
 
-      <el-table-column label="操作结果" prop="operationResult" width="100">
-        <template #default="{ row }">
-          <el-tag :type="row.operationResult === '失败' ? 'danger' : 'success'">
-            {{ row.operationResult }}
-          </el-tag>
-        </template>
-      </el-table-column>
       <el-table-column label="操作">
         <template #default="{ row }">
           <el-link type="primary" underline="never" @click="handlerSysLog(row)">系统操作日志</el-link>

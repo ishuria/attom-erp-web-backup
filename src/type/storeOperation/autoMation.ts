@@ -112,6 +112,10 @@ export interface IAutoMationQueryReq {
    * 规则开关状态 0关 1开
    */
   roleStatus?: number | null
+  /**
+   * 规则开关状态 -1全部 0关 1开
+   */
+  ruleStatus?: number
   priceChangeType?: number
 }
 
