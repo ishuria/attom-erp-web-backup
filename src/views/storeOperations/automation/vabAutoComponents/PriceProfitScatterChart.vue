@@ -121,22 +121,23 @@ const points = ref<ScatterPoint[]>([])
 
 let chart: echarts.ECharts | null = null
 
-function makeSymbolSizer(list: ScatterPoint[], minSize = 20, maxSize = 70, gamma = 0.6) {
+function makeSymbolSizer(list: ScatterPoint[], minSize = 20, maxSize = 80) {
   const vols = list.map((p) => Math.max(0, Number(p.dailyAvgVolume) || 0))
   const vMin = Math.min(...vols)
   const vMax = Math.max(...vols)
 
-  return (dailyAvgVolume: number) => {
-    const v = Math.max(0, Number(dailyAvgVolume) || 0)
+  const sqrtMin = Math.sqrt(vMin)
+  const sqrtMax = Math.sqrt(vMax)
+
+  return (volume: number) => {
+    const v = Math.max(0, Number(volume) || 0)
+
     if (vMax === vMin) return (minSize + maxSize) / 2
 
-    // 0~1
-    const t = (v - vMin) / (vMax - vMin)
+    // 对 sqrt(volume) 做归一化
+    const t = (Math.sqrt(v) - sqrtMin) / (sqrtMax - sqrtMin)
 
-    // gamma < 1：放大低值差异；gamma > 1：放大高值差异
-    const eased = Math.pow(t, gamma)
-
-    return minSize + eased * (maxSize - minSize)
+    return minSize + t * (maxSize - minSize)
   }
 }
 
@@ -146,7 +147,7 @@ function buildOption(list: ScatterPoint[]): echarts.EChartsOption {
     value: [p.avgProfitPerOrder, p.price, p.dailyAvgVolume], // [x,y,size]
     ...p,
   }))
-  const sizeFn = makeSymbolSizer(list, 20, 70, 0.6)
+  const sizeFn = makeSymbolSizer(list, 20, 80)
   return {
     grid: { left: 60, right: 30, top: 30, bottom: 55 },
     tooltip: {
