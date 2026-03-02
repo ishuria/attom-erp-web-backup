@@ -106,6 +106,7 @@
             </template>
           </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
+          <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
               {{ row.finishDate ? formatDate(new Date(row.finishDate)) : '' }}
@@ -358,6 +359,8 @@
             </template>
           </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
+          <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
+
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
               {{ row.finishDate ? formatDate(new Date(row.finishDate)) : '' }}
@@ -598,6 +601,7 @@
             </template>
           </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
+          <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
               {{ row.finishDate ? formatDate(new Date(row.finishDate)) : '' }}
@@ -835,6 +839,7 @@
             </template>
           </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
+          <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
               {{ row.finishDate ? formatDate(new Date(row.finishDate)) : '' }}
