@@ -17,51 +17,63 @@
         <div style="position: relative">
           <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
             <el-tab-pane label="趋势总览" :name="0">
-              <vab-trend-overview
-                v-if="activeName === 0"
-                :asin="asin"
-                :compare-type="compareType"
-                :select-date-range="selectDateRange"
-                :select-field="selectField"
-                :selected-site="selectedSite"
-                :selected-sku="selectedSku"
-              />
+              <keep-alive>
+                <vab-trend-overview
+                  v-if="activeName === 0"
+                  :asin="asin"
+                  :compare-type="compareType"
+                  :select-date-range="selectDateRange"
+                  :select-field="selectField"
+                  :selected-site="selectedSite"
+                  :selected-sku="selectedSku"
+                />
+              </keep-alive>
             </el-tab-pane>
 
             <el-tab-pane label="SP广告饼图" :name="1">
-              <vab-ad-pie-tab
-                v-if="activeName === 1"
-                :asin="asin"
-                :campaign-name="selectedCampaignName"
-                :select-date-range="selectDateRange"
-                :select-field="selectField"
-                :site-id="selectedSite"
-                :skip-no-data="skipNoData"
-                :sku="sku"
-              />
+              <keep-alive>
+                <vab-ad-pie-tab
+                  v-if="activeName === 1"
+                  :asin="asin"
+                  :campaign-name="selectedCampaignName"
+                  :select-date-range="selectDateRange"
+                  :select-field="selectField"
+                  :site-id="selectedSite"
+                  :skip-no-data="skipNoData"
+                  :sku="sku"
+                />
+              </keep-alive>
             </el-tab-pane>
 
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis v-if="activeName === 2" :select-date-range="selectDateRange" :selected-site="selectedSite" :sku="sku" />
+              <keep-alive>
+                <vab-cost-analysis v-if="activeName === 2" :select-date-range="selectDateRange" :selected-site="selectedSite" :sku="sku" />
+              </keep-alive>
             </el-tab-pane>
 
             <el-tab-pane label="评论Reviews" :name="3">
-              <vab-comment-reviews v-if="activeName === 3" :asin="asin" :select-date-range="selectDateRange" :site="selectedSite!" />
+              <keep-alive>
+                <vab-comment-reviews v-if="activeName === 3" :asin="asin" :select-date-range="selectDateRange" :site="selectedSite!" />
+              </keep-alive>
             </el-tab-pane>
 
             <el-tab-pane label="退货分析" :name="4">
-              <vab-return-analysis v-if="activeName === 4" />
+              <keep-alive>
+                <vab-return-analysis v-if="activeName === 4" />
+              </keep-alive>
             </el-tab-pane>
 
             <el-tab-pane label="竞品" :name="5" />
 
             <el-tab-pane label="搜索词表现" :name="6">
-              <vab-search-term-performance
-                v-if="activeName === 6"
-                :asin="asin"
-                :select-date-range="selectDateRange"
-                :site-id="selectedSite"
-              />
+              <keep-alive>
+                <vab-search-term-performance
+                  v-if="activeName === 6"
+                  :asin="asin"
+                  :select-date-range="selectDateRange"
+                  :site-id="selectedSite"
+                />
+              </keep-alive>
             </el-tab-pane>
           </el-tabs>
           <!-- tab右边的选项 -->
