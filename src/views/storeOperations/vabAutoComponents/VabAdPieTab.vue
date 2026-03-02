@@ -49,7 +49,7 @@
     <div style="text-align: right">
       <el-form inline :model="queryForm" @submit.prevent>
         <el-form-item>
-          <el-checkbox v-model="queryForm.exactSearch" :false-value="0" :true-value="1">精准搜索</el-checkbox>
+          <el-checkbox v-model="queryForm.exactSearch" :false-value="0" :true-value="1" @change="queryData">精准搜索</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />

@@ -37,7 +37,7 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">统计采购量</el-button>
+            <el-button type="primary" @click="handleOpenLingChart">统计采购量</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -126,6 +126,9 @@
               </template>
             </el-image>
           </div>
+          <div v-if="item.label === '站点'" style="white-space: pre-line">
+            {{ row.siteNames.replaceAll(',', '\n') }}
+          </div>
         </template>
       </el-table-column>
       <template #empty>
@@ -139,6 +142,9 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+
+    <!-- 统计采购量 -->
+    <purchase-quantity-line-chart v-model:date="date" v-model:visible="lineChartVisible" />
   </div>
 </template>
 
@@ -170,7 +176,7 @@ const emit = defineEmits<{
   (e: 'handle-size-change', val: number): void
   (e: 'on-show-image-preview', url: string): void
 }>()
-
+const lineChartVisible = ref<boolean>(false)
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const handleCheckAll = (val: CheckboxValueType) => {
@@ -185,7 +191,9 @@ const handleCheckAll = (val: CheckboxValueType) => {
     queryData()
   }
 }
-
+const handleOpenLingChart = () => {
+  lineChartVisible.value = true
+}
 const checkList = computed(() => {
   return columns.value.filter((_: any) => _.checked)
 })
