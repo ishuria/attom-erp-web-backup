@@ -690,12 +690,19 @@ watch(
   { immediate: false }
 )
 watch(
-  () => [props.sku, props.selectedSite, props.selectDateRange[0], props.selectDateRange[1]],
-  () => {
-    if (props.selectDateRange[0] && props.selectDateRange[1]) {
-      fetchExpenseComposition()
+  () => [props.sku, props.selectedSite, props.selectDateRange] as const,
+  ([sku, site, range], prev) => {
+    if (!sku) return
+    if (!range?.[0] || !range?.[1]) return
+
+    const prevRange = prev?.[2]
+    if (prevRange && range[0] === prevRange[0] && range[1] === prevRange[1] && sku === prev[0] && site === prev[1]) {
+      return
     }
-  }
+
+    fetchExpenseComposition()
+  },
+  { deep: false }
 )
 onBeforeMount(() => {
   fetchCostAccountingChannelData()

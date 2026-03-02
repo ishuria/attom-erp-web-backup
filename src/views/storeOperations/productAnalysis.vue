@@ -125,12 +125,16 @@
               <el-form-item>
                 <el-date-picker
                   v-model="selectDateRange"
-                  :disabled-date="(time: Date) => time.getTime() > Date.now()"
+                  :clearable="false"
+                  :disabled-date="disabledDate"
+                  :editable="false"
                   end-placeholder="结束日期"
+                  format="YYYY-MM-DD"
                   range-separator="至"
                   :shortcuts="dateShortcuts"
                   start-placeholder="开始日期"
                   type="daterange"
+                  value-format="YYYY-MM-DD"
                 />
               </el-form-item>
             </el-form>
@@ -284,7 +288,15 @@ const campaignNameList = ref<string[]>([])
 const selectedCampaignName = ref<string>('所有广告组之和')
 
 const skipNoData = ref<number>(1)
+const disabledDate = (time: Date) => {
+  // 未来日期仍然禁用
+  if (time.getTime() > Date.now()) return true
 
+  // 勾选“跳过无数据”时：禁用所有日期单元格（只能点 shortcuts）
+  if (skipNoData.value === 1) return true
+
+  return false
+}
 // 日期选择器快捷选项
 const dateShortcuts = [
   {
