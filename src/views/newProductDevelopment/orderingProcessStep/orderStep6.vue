@@ -219,6 +219,8 @@ const labelMap: Record<string, string> = {
   woodenProduct: '木制品',
   toy: '玩具',
   seasonal: '应季产品',
+  moq: '起订量',
+  fullCaseQty: '整箱数',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
@@ -334,6 +336,8 @@ const fetchData = async () => {
       woodenProduct: item.woodenProduct || 0,
       toy: item.toy || 0,
       seasonal: item.seasonal || 0,
+      moq: item.moq,
+      fullCaseQty: item.fullCaseQty,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,
       sampleRetention: item.sampleRetention,
@@ -350,9 +354,9 @@ const fetchData = async () => {
   columnsChange = columns
   exchangeList.value = initData(checkTableData.value)
   // console.log(exchangeList.value)
-  Object.keys(exchangeList.value[20]).forEach((key, index) => {
-    if (key !== 'column0' && exchangeList.value[20][key]) {
-      exchangeList.value[20][key] = exchangeList.value[20][key].split(',').map(Number)
+  Object.keys(exchangeList.value[22]).forEach((key, index) => {
+    if (key !== 'column0' && exchangeList.value[22][key]) {
+      exchangeList.value[22][key] = exchangeList.value[22][key].split(',').map(Number)
     }
   })
 }

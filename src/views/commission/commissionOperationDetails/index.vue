@@ -287,7 +287,7 @@
             </template>
           </el-table-column>
           <el-table-column label="总可售天数" min-width="130" prop="totalSellableDays" sortable="custom" />
-          <el-table-column label="冗余库存" min-width="120" prop="redundantInventory" sortable="custom" />
+          <el-table-column label="冗余库存" min-width="120" prop="redundantInventoryCount" sortable="custom" />
           <el-table-column label="低动销" min-width="100" prop="lowTurnoverQty" sortable="custom" />
           <el-table-column label="总库存" min-width="100" prop="totalInventory" sortable="custom" />
           <el-table-column label="高库龄库存" min-width="130" prop="oldAgeInventory" sortable="custom" />
