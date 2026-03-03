@@ -109,6 +109,16 @@
         <!-- 单位列 -->
         <el-table-column label="单位" prop="unit" :width="handleCalculateWidth({ label: '单位' })" />
 
+        <!-- 收货仓库列 -->
+        <el-table-column label="收货仓库" prop="repositoryName" :width="handleCalculateWidth({ label: '收货仓库' })">
+          <template #default="{ row }">
+            <span class="copySku" data-sku="row.copyContent" @click="$emit('clipboard', $event, row.copyContent)">
+              {{ row.repositoryName }}
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+          </template>
+        </el-table-column>
+
         <!-- 签收日期列 -->
         <el-table-column label="签收日期" min-width="115" prop="signDate">
           <template #default="{ row }">

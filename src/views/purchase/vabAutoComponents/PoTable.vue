@@ -107,6 +107,12 @@
           <template v-else-if="item.label === '付款记录'" #default="{ row }">
             <div class="hover-opacity" style="cursor: pointer" @click="$emit('showPaymentHistory', row)" v-html="row.paymentRecord"></div>
           </template>
+          <template v-else-if="item.label === '收货仓库'" #default="{ row }">
+            <span class="copySku" data-sku="row.copyContent" @click="handleClipboard($event, row.copyContent)">
+              {{ row.repositoryName }}
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+          </template>
         </el-table-column>
 
         <template #empty>
@@ -129,6 +135,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import PoPermission from '/@/permissions/po'
 import type { CurrencyCode } from '/@/views/purchase/constantOption'
 import { currencyMap } from '/@/views/purchase/constantOption'
