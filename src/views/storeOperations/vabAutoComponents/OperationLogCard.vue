@@ -58,7 +58,7 @@
           <div v-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
           <!-- 其他情况保持原有逻辑 -->
           <div v-else-if="row.content">
-            <el-link class="content-link" type="primary" @click="handleContentClick(row)">
+            <el-link class="content-link" type="primary" @click="handleAggregateClick(row)">
               <span class="content-text">{{ row.content }}</span>
             </el-link>
           </div>
@@ -145,11 +145,17 @@
         </el-table-column>
       </el-table>
     </vab-dialog>
+    <!-- 操作日志聚合明细展示 -->
+    <operation-log-aggregated-details
+      v-model="operationLogAggregatedDetailsVisible"
+      :detail-list="operationLogAggregatedDetailsList"
+      :detail-loading="operationLogAggregatedDetailsLoading"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis'
+import { addOperationLog, getOperationLog, getOperationLogAggregatedDetails } from '/@/api/devlocal/productAnalysis'
 import type { IGetOperationLog } from '/@/type/storeOperation/productAnalysisType'
 import { formatDateToString } from '/@/utils/dateUtils'
 
@@ -292,10 +298,6 @@ const props = withDefaults(defineProps<Props>(), {
   ],
   changeDetailConfig: () => ({}),
 })
-
-const emit = defineEmits<{
-  contentClick: [row: LogItem]
-}>()
 
 const selectedFilter = ref<number[]>([0, 1])
 const dateRange = ref<[Date, Date] | null>(null)
@@ -485,22 +487,22 @@ const handleAddRemark = async (remark: string) => {
   }
 }
 
-// 处理内容点击
-const handleContentClick = (row: LogItem) => {
-  emit('contentClick', row)
+const operationLogAggregatedDetailsList = ref<IGetOperationLog[]>([])
+const operationLogAggregatedDetailsLoading = ref<boolean>(false)
+const operationLogAggregatedDetailsVisible = ref<boolean>(false)
+const handleAggregateClick = async (row: any) => {
+  if (!row.isAggregate) return
+  operationLogAggregatedDetailsLoading.value = true
+  operationLogAggregatedDetailsVisible.value = true
+  const { data } = await getOperationLogAggregatedDetails({
+    asin: props.asin,
+    siteId: props.siteId ?? 0,
+    date: row.date,
+    aggregateType: row.aggregateType,
+  })
 
-  // 如果有配置的变化详情，显示对话框
-  if (props.changeDetailConfig && props.changeDetailConfig[row.content]) {
-    const config = props.changeDetailConfig[row.content]
-    changeDetailTitle.value = config.title
-    changeDetailType.value = config.type
-    changeDetailData.value = config.data || []
-    beforeProp.value = config.beforeProp || ''
-    afterProp.value = config.afterProp || ''
-    beforeFormatter.value = config.beforeFormatter
-    afterFormatter.value = config.afterFormatter
-    changeDetailVisible.value = true
-  }
+  operationLogAggregatedDetailsList.value = data
+  operationLogAggregatedDetailsLoading.value = false
 }
 </script>
 

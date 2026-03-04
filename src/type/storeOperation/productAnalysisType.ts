@@ -413,6 +413,16 @@ export interface IGetOperationLog {
   date: string
   type: number
   content: string
+  entityType: string
+  beforeValue: string
+  afterValue: string
+  changeType: string
+  keyWordType: string
+  keyWord: string
+  campaignName: string
+  isAggregate: boolean
+  aggregateType: string
+  aggregateCount: number
 }
 export interface IGetOperationLogManualRes {
   data: {
