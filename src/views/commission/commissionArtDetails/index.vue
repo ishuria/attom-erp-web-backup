@@ -97,8 +97,10 @@
             <template #default="{ row }">
               <el-tag v-if="row.status === '未上架'" type="info">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '结束'" type="danger">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '取消'">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="提成模式" min-width="100" prop="mold" />
@@ -277,8 +279,10 @@
             <template #default="{ row }">
               <el-tag v-if="row.status === '未上架'" type="info">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '结束'" type="danger">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '取消'">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="奖金￥" min-width="100" prop="bonus">
