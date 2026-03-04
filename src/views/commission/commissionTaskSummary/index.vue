@@ -1311,13 +1311,17 @@ const batchCancleTask = async () => {
       return
     }
     $baseConfirm('确定要取消美工图片任务吗？', null, async () => {
-      const { data } = await batchCancleCommissionTaskPicture({
-        ids: ids,
-      })
-      if (data) {
-        $baseMessage('取消成功！', 'success')
+      try {
+        const { data } = await batchCancleCommissionTaskPicture({
+          ids: ids,
+        })
+        if (data) {
+          $baseMessage('取消成功！', 'success')
+          batchBtnLoading.value = false
+          queryData()
+        }
+      } catch (error) {
         batchBtnLoading.value = false
-        queryData()
       }
     })
   } catch (error) {
