@@ -407,7 +407,11 @@ const handleCopySkuConfirm = async () => {
           needQualityInspection: copySkuForm.needQualityInspection,
         })
         if (data) {
-          $baseMessage('复制成功,美工图片任务发布成功！', 'success')
+          if (copySkuForm.listingTask === 1) {
+            $baseMessage('Sku复制成功，美工图片任务发布成功！', 'success')
+          } else {
+            $baseMessage('Sku复制成功！', 'success')
+          }
           copySkuVisible.value = false
           fetchData()
         }
