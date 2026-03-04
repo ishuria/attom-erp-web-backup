@@ -245,6 +245,7 @@
         <el-form-item label="是否需要重新拍摄详情页图片">
           <el-radio-group v-model="copySkuForm.listingTask">
             <el-radio size="large" :value="0">否</el-radio>
+            <el-radio size="large" :value="2">不确定</el-radio>
             <el-radio size="large" :value="1">是</el-radio>
           </el-radio-group>
         </el-form-item>
