@@ -8,6 +8,7 @@ import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
+  IGetOperationLog,
   IGetOperationLogManualRes,
   IGetOperationLogRes,
   IGetProductInfoRes,
@@ -414,5 +415,18 @@ export function getCommentReviews(data: IGetCommentReviewsReq): Promise<IGetComm
     url: `${BASE_API}/product/analysis/comment/reviews`,
     method: 'post',
     data,
+  })
+}
+
+export function getOperationLogAggregatedDetails(params: {
+  asin: string
+  siteId: number
+  date: string
+  aggregateType: string
+}): Promise<{ data: IGetOperationLog[] }> {
+  return request({
+    url: `${BASE_API}/product/analysis/operation/log/aggregated/details`,
+    method: 'get',
+    params,
   })
 }

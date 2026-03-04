@@ -127,11 +127,16 @@
             <div v-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
             <!-- 其他情况保持原有逻辑 -->
             <div v-else-if="row.content">
-              <el-link class="content-link" type="primary">
+              <el-link class="content-link" type="primary" @click="handleAggregateClick(row)">
                 <span class="content-text">{{ row.content }}</span>
               </el-link>
             </div>
             <div v-else>
+              <!-- 
+              （可选）entityType
+              （可选）[keyWordType] keyWord
+              （可选）变更信息（创建/状态/竞价/预算/其他）
+              （可选）campaignName -->
               <!-- 特殊情况：广告推广状态+创建，只显示"产品推广状态" -->
               <div v-if="row.entityType === '广告推广状态' && row.changeType === '创建'">产品推广状态</div>
               <div v-else-if="row.entityType === '广告组' && row.changeType === '创建'">创建广告组</div>
@@ -188,6 +193,12 @@
         </template>
       </el-table>
     </vab-dialog>
+    <!-- 操作日志聚合明细展示 -->
+    <operation-log-aggregated-details
+      v-model="operationLogAggregatedDetailsVisible"
+      :detail-list="operationLogAggregatedDetailsList"
+      :detail-loading="operationLogAggregatedDetailsLoading"
+    />
   </div>
 </template>
 
@@ -202,7 +213,12 @@ import {
   trendOverviewNameMapProp,
   type IDataProp,
 } from '../constantOption'
-import { getOperationLog, getTrendOverviewChart, getTrendOverviewTable } from '/@/api/devlocal/productAnalysis'
+import {
+  getOperationLog,
+  getOperationLogAggregatedDetails,
+  getTrendOverviewChart,
+  getTrendOverviewTable,
+} from '/@/api/devlocal/productAnalysis'
 import { ICardSummary, IGetOperationLog, ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
 import { formatDateToString, getWeekOfYear } from '/@/utils/dateUtils'
 import { trendOverviewColumns } from '/@/views/storeOperations/constantOption'
@@ -250,6 +266,23 @@ const route = useRoute()
 const currencySymbol = ref<string>('')
 const columns = ref<any>([])
 
+const operationLogAggregatedDetailsList = ref<IGetOperationLog[]>([])
+const operationLogAggregatedDetailsLoading = ref<boolean>(false)
+const operationLogAggregatedDetailsVisible = ref<boolean>(false)
+const handleAggregateClick = async (row: any) => {
+  if (!row.isAggregate) return
+  operationLogAggregatedDetailsLoading.value = true
+  operationLogAggregatedDetailsVisible.value = true
+  const { data } = await getOperationLogAggregatedDetails({
+    asin: props.asin,
+    siteId: props.selectedSite ?? 0,
+    date: row.date,
+    aggregateType: row.aggregateType,
+  })
+
+  operationLogAggregatedDetailsList.value = data
+  operationLogAggregatedDetailsLoading.value = false
+}
 // 解析系统抓取的 content
 const parseSystemContent = (content: string) => {
   if (!content) return ''

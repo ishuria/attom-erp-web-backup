@@ -236,7 +236,6 @@
             :change-detail-config="changeDetailConfig"
             :filter-options="filterShowOption"
             :site-id="selectedSite"
-            @content-click="handleShowChange"
           />
         </div>
       </el-col>

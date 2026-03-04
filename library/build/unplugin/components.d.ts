@@ -136,6 +136,7 @@ declare module 'vue' {
     MonthlyAssessmentTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyAssessmentTable.vue')['default']
     MonthlyProductProfitTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyProductProfitTable.vue')['default']
     NodePanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/NodePanel.vue')['default']
+    OperationLogAggregatedDetails: typeof import('./../../../src/views/storeOperations/vabAutoComponents/operationLogAggregatedDetails.vue')['default']
     OperationLogCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/OperationLogCard.vue')['default']
     OperationLogDialog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/OperationLogDialog.vue')['default']
     OperationLogManualSum: typeof import('./../../../src/views/storeOperations/vabAutoComponents/OperationLogManualSum.vue')['default']
