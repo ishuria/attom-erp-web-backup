@@ -4,7 +4,7 @@
     <el-button type="primary" @click="handleShowUploadDialog('merge')">PDF聚合</el-button>
 
     <vab-dialog v-model="visible" :close-on-click-modal="false" :title="title" width="30%">
-      <el-upload v-model:file-list="fileList" :auto-upload="false" drag multiple :show-file-list="true">
+      <el-upload v-model:file-list="fileList" :auto-upload="false" drag multiple :on-change="handleFileChange" :show-file-list="true">
         <el-icon class="el-icon--upload">
           <upload-filled />
         </el-icon>
@@ -27,13 +27,28 @@ defineOptions({
   name: 'Tool',
 })
 import { UploadFilled } from '@element-plus/icons-vue'
-import { invoiceImport, pdfMerge } from '~/src/api/devlocal/tool'
+import { invoiceImport, pdfMerge } from '/@/api/devlocal/tool'
 
 const visible = ref<boolean>(false)
 const fileList = ref<any[]>([])
 const loading = ref<boolean>(false)
 const type = ref<string>('')
 const title = ref<string>('')
+
+// 文件变化时按文件名升序排序
+const handleFileChange = () => {
+  // 使用 nextTick 确保文件列表已更新
+  nextTick(() => {
+    fileList.value.sort((a, b) => {
+      // 获取文件名
+      const nameA = a.name || ''
+      const nameB = b.name || ''
+      // 按文件名字母顺序升序排列
+      return nameA.localeCompare(nameB, 'zh-CN', { numeric: true })
+    })
+  })
+}
+
 const handleUpload = () => {
   // 验证文件
   if (fileList.value.length === 0) {
@@ -73,7 +88,24 @@ async function mergePdfs(fileList: any[]) {
     }
   })
   try {
-    await pdfMerge(formData)
+    const blobData = await pdfMerge(formData)
+
+    // 检查是否返回了错误（JSON或HTML）
+    if (blobData.type.includes('json') || blobData.type.includes('text/html') || blobData.type === '') {
+      const text = await blobData.text()
+      console.error('后端返回错误:', text)
+      $baseMessage(text || '合并失败，请重试', 'error')
+      return
+    }
+
+    if (blobData instanceof Blob) {
+      const url = window.URL.createObjectURL(blobData)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `pdfMerge_${Date.now()}.pdf`
+      link.click()
+      window.URL.revokeObjectURL(url)
+    }
 
     $baseMessage('PDF合并成功', 'success')
     visible.value = false // 关闭弹窗
