@@ -27,7 +27,7 @@ defineOptions({
   name: 'Tool',
 })
 import { UploadFilled } from '@element-plus/icons-vue'
-import { pdfMerge } from '~/src/api/devlocal/tool'
+import { invoiceImport, pdfMerge } from '~/src/api/devlocal/tool'
 
 const visible = ref<boolean>(false)
 const fileList = ref<any[]>([])
@@ -42,13 +42,11 @@ const handleUpload = () => {
     return
   }
 
-  loading.value = true
   if (type.value === 'merge') {
     mergePdfs(fileList.value)
   } else if (type.value === 'invoice') {
-    // invoicePdfs(fileList.value)
+    invoiceGenerate(fileList.value)
   }
-  loading.value = false
 }
 
 const handleShowUploadDialog = (t: 'merge' | 'invoice') => {
@@ -65,6 +63,7 @@ const handleShowUploadDialog = (t: 'merge' | 'invoice') => {
 }
 // 合并 PDF
 async function mergePdfs(fileList: any[]) {
+  loading.value = true
   const formData = new FormData()
 
   // 用 .raw 获取实际的 File 对象
@@ -81,6 +80,46 @@ async function mergePdfs(fileList: any[]) {
   } catch (error: any) {
     console.error('合并失败:', error)
     $baseMessage(error.response?.data?.message || '合并失败，请重试', 'error')
+  } finally {
+    loading.value = false
+  }
+}
+// 电子发票导入
+async function invoiceGenerate(fileList: any[]) {
+  loading.value = true
+  const formData = new FormData()
+
+  // 用 .raw 获取实际的 File 对象
+  fileList.forEach((file) => {
+    if (file.raw) {
+      formData.append('files', file.raw)
+    }
+  })
+  try {
+    const blobData = await invoiceImport(formData)
+
+    // 检查是否返回了错误（JSON或HTML）
+    if (blobData.type.includes('json') || blobData.type.includes('text/html') || blobData.type === '') {
+      const text = await blobData.text()
+      console.error('后端返回错误:', text)
+      $baseMessage(text || '导入失败，请重试', 'error')
+      return
+    }
+
+    if (blobData instanceof Blob) {
+      const url = window.URL.createObjectURL(blobData)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `电子发票_${Date.now()}.xlsx`
+      link.click()
+      window.URL.revokeObjectURL(url)
+    }
+
+    $baseMessage('电子发票导入成功', 'success')
+    visible.value = false // 关闭弹窗
+  } catch (error: any) {
+    console.error('电子发票导入失败:', error)
+    $baseMessage(error.response?.data?.message || '电子发票导入失败，请重试', 'error')
   } finally {
     loading.value = false
   }
