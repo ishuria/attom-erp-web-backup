@@ -725,16 +725,33 @@ const updateChartForDailyData = (dayLabels: string[], title: string = '季节系
   const dateData: [number, number][] = []
   const referenceDateData: [number, number][] = []
   const dailyDateData: [number, number][] = []
+  const dailyReferenceDateData: [number, number][] = []
 
-  allDailyData.value.forEach((item: IDailySeasonalCoefficient, index: number) => {
-    // 根据API返回的month和day生成正确的日期，添加小时避免重叠
-    const currentDate = new Date(2025, item.month - 1, item.day, 12, 0, 0)
-    const timestamp = currentDate.getTime()
+  // 如果有每日数据，使用每日数据
+  if (allDailyData.value.length > 0) {
+    allDailyData.value.forEach((item: IDailySeasonalCoefficient, index: number) => {
+      // 根据API返回的month和day生成正确的日期，添加小时避免重叠
+      const currentDate = new Date(2025, item.month - 1, item.day, 12, 0, 0)
+      const timestamp = currentDate.getTime()
 
-    dateData.push([timestamp, getMonthlyActual(item.month)])
-    referenceDateData.push([timestamp, getMonthlyReference(item.month)])
-    dailyDateData.push([timestamp, item.actual])
-  })
+      dateData.push([timestamp, getMonthlyActual(item.month)])
+      referenceDateData.push([timestamp, getMonthlyReference(item.month)])
+      dailyDateData.push([timestamp, item.actual])
+      // 添加每日系数-参考值
+      dailyReferenceDateData.push([timestamp, item.reference || 0])
+    })
+  } else {
+    // 如果没有每日数据，生成12个月的数据点（每月1号）
+    for (let month = 1; month <= 12; month++) {
+      const currentDate = new Date(2025, month - 1, 1, 12, 0, 0)
+      const timestamp = currentDate.getTime()
+
+      dateData.push([timestamp, getMonthlyActual(month)])
+      referenceDateData.push([timestamp, getMonthlyReference(month)])
+      dailyDateData.push([timestamp, 0]) // 每日系数没有值时用0
+      dailyReferenceDateData.push([timestamp, 0]) // 每日系数-参考值没有值时用0
+    }
+  }
 
   option.value = {
     legend: {
@@ -882,7 +899,7 @@ const updateChartForDailyData = (dayLabels: string[], title: string = '季节系
         },
       },
       {
-        name: '每日系数',
+        name: '每日系数-实际',
         type: 'line',
         data: dailyDateData,
         itemStyle: {
@@ -892,6 +909,20 @@ const updateChartForDailyData = (dayLabels: string[], title: string = '季节系
         symbol: 'none',
         lineStyle: {
           width: 2,
+        },
+      },
+      {
+        name: '每日系数-参考值',
+        type: 'line',
+        data: dailyReferenceDateData,
+        itemStyle: {
+          color: '#faad14',
+        },
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 2,
+          type: 'dashed',
         },
       },
     ],
@@ -907,15 +938,26 @@ const updateChartForAllData = () => {
   referenceData = []
   dailyCoefficientData = []
 
-  allDailyData.value.forEach((item: IDailySeasonalCoefficient, index: number) => {
-    dayLabels.push((index + 1).toString())
-    // 获取该月对应的实际值
-    actualData.push(getMonthlyActual(item.month))
-    // 获取该月对应的参考值
-    referenceData.push(getMonthlyReference(item.month))
-    // 添加每天的季节系数
-    dailyCoefficientData.push(item.actual)
-  })
+  // 如果没有每日数据，生成12个月的数据点（每月1号）
+  if (allDailyData.value.length === 0) {
+    for (let month = 1; month <= 12; month++) {
+      dayLabels.push(`${month}月1日`)
+      actualData.push(getMonthlyActual(month))
+      referenceData.push(getMonthlyReference(month))
+      dailyCoefficientData.push(0) // 每日系数没有值时用0
+    }
+  } else {
+    // 有每日数据时，正常处理
+    allDailyData.value.forEach((item: IDailySeasonalCoefficient, index: number) => {
+      dayLabels.push((index + 1).toString())
+      // 获取该月对应的实际值
+      actualData.push(getMonthlyActual(item.month))
+      // 获取该月对应的参考值
+      referenceData.push(getMonthlyReference(item.month))
+      // 添加每天的季节系数
+      dailyCoefficientData.push(item.actual)
+    })
+  }
 
   updateChartForDailyData(dayLabels, '全年数据')
 }

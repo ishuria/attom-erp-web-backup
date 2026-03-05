@@ -14,6 +14,10 @@ export interface IDailySeasonalCoefficient {
   month: number
   day: number
   actual: number
+  /**
+   * 每日系数-参考值
+   */
+  reference?: number
 }
 
 export interface IGetSeasonalCoefficientList {
