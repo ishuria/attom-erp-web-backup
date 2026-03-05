@@ -566,7 +566,7 @@ export function updateProductReplenParams(data: IupdateProductReplenParams) {
 /**
  * SKU质检清单-添加质检清单
  */
-export function addProductQualityInspection(data: IaddProductQualityInspection) {
+export function addProductQualityInspection(data: IaddProductQualityInspection): Promise<{ data: boolean; msg: string }> {
   return request({
     url: `${BASE_API}/product/add/quality/inspection`,
     method: 'post',
@@ -1149,7 +1149,7 @@ export function updateSkuComponentInfo(data: IUpdateSkuComponent): Promise<{ dat
  * @param data
  * @returns
  */
-export function batchAddPackingPrecautions(data: IBatchAddPackingPrecautions): Promise<{ data: boolean }> {
+export function batchAddPackingPrecautions(data: IBatchAddPackingPrecautions): Promise<{ data: boolean; msg: string }> {
   return request({
     url: `${BASE_API}/product/batch/add/quality/inspection`,
     method: 'post',

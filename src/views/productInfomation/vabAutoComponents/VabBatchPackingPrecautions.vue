@@ -6,9 +6,9 @@
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-      <el-table 
-        ref="tableRef" 
-        border 
+      <el-table
+        ref="tableRef"
+        border
         :cell-style="cellStyle"
         :data="list"
         :header-cell-style="{ 'text-align': 'center' }"
@@ -23,60 +23,54 @@
         </el-table-column>
         <el-table-column label="需质检" prop="status" width="90">
           <template #default="{ row }">
-            <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+            <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)" />
           </template>
         </el-table-column>
         <el-table-column label="需拍照" prop="isUploadImages" width="90">
           <template #default="{ row }">
-            <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+            <el-checkbox
+              v-model="row.isUploadImages"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleStatusChange(row)"
+            />
           </template>
         </el-table-column>
         <el-table-column label="站点" prop="site" width="200">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点">
-              <el-option 
-                v-for="item in siteList"
-                :key="item.id"
-                :label="item.label"
-                :value="item.id"
-              />
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </template>
         </el-table-column>
         <el-table-column label="检查类型" min-width="40">
           <template #default="{ row }">
-            <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
-              <el-option
-                v-for="item in checkTypeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+            <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%" @change="handleCheckType(row)">
+              <el-option v-for="item in checkTypeList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </template>
         </el-table-column>
         <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
           <template #default="{ row }">
-            <div  
-              class="editable-cell"
-              :class="{ 'show-border': editRow !== row }">
-              <el-input 
-                v-if="editRow === row" 
-                ref="inputRef" 
-                v-model="row.packagePrecautions" 
-                :autosize="{ minRows: 2, maxRows: 4 }" 
-                type="textarea" 
-                @blur="clickCancel($event, row)" 
-                @keyup.enter="clickCancel($event, row)" 
+            <div class="editable-cell" :class="{ 'show-border': editRow !== row }">
+              <el-input
+                v-if="editRow === row"
+                ref="inputRef"
+                v-model="row.packagePrecautions"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                type="textarea"
+                @blur="clickCancel($event, row)"
+                @keyup.enter="clickCancel($event, row)"
               />
               <div v-else-if="row.packagePrecautions" style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
-              <div v-else> - </div>
+              <div v-else>-</div>
             </div>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="130">
           <template #default="{ row, $index }">
-            <el-link type="danger" underline='never' @click="handleDelQualityInspection(row, $index)">删除</el-link>
+            <el-link type="danger" underline="never" @click="handleDelQualityInspection(row, $index)">删除</el-link>
           </template>
         </el-table-column>
         <template #empty>
@@ -92,8 +86,9 @@
 </template>
 
 <script lang="ts" setup>
-import { batchAddPackingPrecautions } from '~/src/api/devlocal/productInformation'
+import { batchAddPackingPrecautions } from '/@/api/devlocal/productInformation'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
+import { $baseAlert } from '/@/hooks'
 import { IgetProductQualityInspection } from '/@/type/productInformation/skuInformationType'
 import { checkTypeList } from '/@/views/newProductDevelopment/indexCommon'
 
@@ -114,13 +109,16 @@ const visible = computed({
     emit('update:modelValue', val)
   },
 })
-watch(() => props.modelValue, (newVal) => {
-  if (newVal) {
-    fetchSiteData()
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (newVal) {
+      fetchSiteData()
+    }
   }
-})
+)
 const list = ref<IgetProductQualityInspection[]>([])
-const siteList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const editRow = ref<IgetProductQualityInspection | null>(null)
 const inputRef = ref()
 
@@ -129,33 +127,35 @@ const handleCancel = () => {
   list.value = []
 }
 const handleConfirm = async () => {
-  // console.log(list.value)
-  // console.log(props.skuIdList)
-  const { data } = await batchAddPackingPrecautions({
+  const { data, msg } = await batchAddPackingPrecautions({
     skuIdList: props.skuIdList,
-    list: list.value
+    list: list.value,
   })
   if (data) {
-    $baseMessage('批量新增打包注意事项成功', 'success', 'hey')
+    if (msg == '') {
+      $baseMessage('批量新增打包注意事项成功', 'success', 'hey')
+    } else {
+      $baseAlert(msg)
+    }
     handleCancel()
   }
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
   const label = data.column.label
-  if  (label === '修改日期'){        
+  if (label === '修改日期') {
     return {
       color: '#999',
       cursor: 'not-allowed',
-      textAlign:'center'
-    } 
+      textAlign: 'center',
+    }
   } else if (label === '打包注意事项') {
     return {
       cursor: 'pointer',
-      textAlign: 'left'
-    } 
+      textAlign: 'left',
+    }
   } else {
     return {
-      textAlign:'center'
+      textAlign: 'center',
     }
   }
 }
@@ -170,7 +170,6 @@ const handleCheckType = async (row: any) => {
   row.status = 1
 }
 const handleAdd = async () => {
- 
   const newQualityInspection = {
     status: 1,
     checkType: 0,
@@ -181,11 +180,10 @@ const handleAdd = async () => {
     isUploadImages: 0,
     site: -1,
   }
-    list.value.push(newQualityInspection)
-  
+  list.value.push(newQualityInspection)
 }
 
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '打包注意事项') {
     editRow.value = row
 
@@ -205,9 +203,7 @@ const clickCancel = async (event: any, row: any) => {
 }
 // 删除
 const handleDelQualityInspection = async (row: any, index: number) => {
- 
-  list.value.splice(index, 1);
- 
+  list.value.splice(index, 1)
 }
 // 获取站点信息
 const fetchSiteData = async () => {
@@ -215,7 +211,7 @@ const fetchSiteData = async () => {
   siteList.value = data
   siteList.value.unshift({
     id: -1,
-    label: '全部发货站点'
+    label: '全部发货站点',
   })
 }
 </script>
@@ -230,7 +226,6 @@ const fetchSiteData = async () => {
   // }
 
   :deep(.editable-cell) {
-    
     // 统一高度的边框盒子（仅在非编辑状态下出现）
     &.show-border {
       padding: 4px;
