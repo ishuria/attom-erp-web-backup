@@ -32,6 +32,8 @@ import type {
   IGetProductAllReadyCOmponentListQuery,
   IGetSkuComponentInfo,
   IGetSkuInfoRes,
+  IQueryReplenOperationLogReq,
+  IQueryReplenOperationLogResp,
   ISkuId,
   ISubmitProductComponentQuery,
   ISubmitProductConsumableQuery,
@@ -564,13 +566,13 @@ export function updateProductReplenParams(data: IupdateProductReplenParams) {
 }
 
 /**
- * 补货设定-修改备注
+ * 补货操作日志-查询列表
  * @param data
  * @returns
  */
-export function updateReplenRemark(data: { id: number; remark: string }): Promise<{ data: boolean }> {
+export function queryReplenOperationLog(data: IQueryReplenOperationLogReq): Promise<IQueryReplenOperationLogResp> {
   return request({
-    url: `${BASE_API}/product/replen/update/remark`,
+    url: `${BASE_API}/product/replen/operationLog/list`,
     method: 'post',
     data,
   })

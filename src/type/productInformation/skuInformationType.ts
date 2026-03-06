@@ -712,6 +712,43 @@ export interface IgetProductReplenListResp {
     list: IgetProductReplenList[]
   }
 }
+// 补货操作日志 - 查询请求
+export interface IQueryReplenOperationLogReq {
+  associatedSite?: number
+  startTime?: string
+  endTime?: string
+  keyWord?: string
+  pageNo: number
+  pageSize: number
+}
+// 补货操作日志 - 列表项
+export interface IReplenOperationLogItem {
+  id: number
+  skuSiteId: number
+  skuId: number
+  skuCode: string
+  skuUrl?: string
+  productName?: string
+  siteName?: string
+  associatedSite?: number
+  beforeKindName?: string
+  afterKindName?: string
+  beforeStockpileNumberDays?: number
+  afterStockpileNumberDays?: number
+  beforeMinStockpilNumber?: number
+  afterMinStockpilNumber?: number
+  operatorId?: number
+  operatorName?: string
+  operationTime?: string
+}
+// 补货操作日志 - 查询响应
+export interface IQueryReplenOperationLogResp {
+  data: {
+    list: IReplenOperationLogItem[]
+    total: number
+  }
+}
+
 // 产品补货计算参数 - 批量修改
 export interface IupdateProductReplenParams {
   // 产品补货计ids使用,分割

@@ -31,6 +31,8 @@
               </el-form-item>
             </el-form>
           </el-popover>
+
+          <el-button type="primary" @click="operationLogVisible = true">操作日志</el-button>
         </el-space>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -60,7 +62,6 @@
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
       stripe
-      @cell-click="cellClick"
       @selection-change="setSelectRows"
       @sort-change="handleSortChange"
     >
@@ -89,7 +90,6 @@
       <el-table-column align="center" label="半年有货率" min-width="110" prop="availableRate" sortable="custom">
         <template #default="{ row }">{{ row.availableRate }}%</template>
       </el-table-column>
-      <el-table-column align="left" label="备注" min-width="110" prop="remark" />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -129,15 +129,16 @@
         <el-button type="primary" @click="handleSubmit">完成</el-button>
       </template>
     </vab-dialog>
-    <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <!-- 补货操作日志弹窗 -->
+    <replen-operation-log v-model="operationLogVisible" :site-list="siteList" @show-img="showPreviewImage" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Filter, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { getProductReplenList, updateProductReplenParams, updateReplenRemark } from '/@/api/devlocal/productInformation'
+import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { calculateBrColumnWidth } from '/@/utils/tableColum'
 
@@ -145,28 +146,6 @@ defineOptions({
   name: 'ReplenishmentSetting',
 })
 
-let _row: any
-const remarkVisible = ref<boolean>(false)
-const remark = ref<string>('')
-const handleUpdateRemark = async (val: string) => {
-  const { data } = await updateReplenRemark({ id: _row.id, remark: val })
-  if (data) {
-    _row.remark = val
-    remarkVisible.value = false
-    $baseMessage('修改备注成功！', 'success')
-  } else {
-    $baseMessage('修改备注失败！', 'error')
-  }
-}
-
-// 点击备注单元格
-const cellClick = (row: any, column: any) => {
-  if (column.property === 'remark') {
-    remarkVisible.value = true
-    remark.value = row.remark!
-    _row = row
-  }
-}
 const siteList = ref<{ id: number; label: string }[]>([])
 const queryForm = reactive<any>({
   keyWord: '',
@@ -205,6 +184,7 @@ const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
 const updateVisible = ref<boolean>(false)
+const operationLogVisible = ref<boolean>(false)
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
