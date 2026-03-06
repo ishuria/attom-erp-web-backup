@@ -564,6 +564,19 @@ export function updateProductReplenParams(data: IupdateProductReplenParams) {
 }
 
 /**
+ * 补货设定-修改备注
+ * @param data
+ * @returns
+ */
+export function updateReplenRemark(data: { id: number; remark: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/replen/update/remark`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
  * SKU质检清单-添加质检清单
  */
 export function addProductQualityInspection(data: IaddProductQualityInspection): Promise<{ data: boolean; msg: string }> {

@@ -346,6 +346,7 @@
           </template>
         </el-table-column>
       </el-table-column>
+      <el-table-column label="备注" min-width="200" prop="remark" />
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="{ row }">
           <el-link type="primary" underline="never" @click="viewChart(row)">查看</el-link>
