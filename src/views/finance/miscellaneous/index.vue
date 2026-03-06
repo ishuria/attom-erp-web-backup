@@ -11,6 +11,7 @@
           <p><el-button :loading="packageLoading" plain type="primary" @click="handlePackageDownload">Attom上海库存</el-button></p>
           <p><el-button plain type="info" @click="showShipmentVisible">Attom已发未到库存</el-button></p>
           <p><el-button plain type="warning" @click="showFbaVisible">FBA货值</el-button></p>
+          <p><el-button plain type="warning" @click="showWfsVisible">WFS货值</el-button></p>
         </el-card>
       </vab-query-form-left-panel>
     </vab-query-form>
@@ -40,6 +41,19 @@
         <el-button :loading="fbaLoading" type="primary" @click="handleFbaConfirmDialog">确认</el-button>
       </template>
     </vab-dialog>
+
+    <!-- WFS货值 -->
+    <vab-dialog v-model="wfsVisible" class="moldDialog" title="请选择日期" width="20%">
+      <el-form class="date-form" label-width="80px">
+        <el-form-item label="日期">
+          <el-date-picker v-model="wfsDate" clearable format="YYYY-MM-DD" placeholder="请选择日期" style="width: 100%" type="date" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleWfsDialog">关闭</el-button>
+        <el-button :loading="wfsLoading" type="primary" @click="handleWfsConfirmDialog">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -53,11 +67,14 @@ defineOptions({
 })
 const date = ref<Date | ''>('')
 const fbaDate = ref<Date | ''>('')
+const wfsDate = ref<Date | ''>('')
 const shipmentVisible = ref<boolean>(false)
 const fbaVisible = ref<boolean>(false)
+const wfsVisible = ref<boolean>(false)
 const shipmentLoading = ref<boolean>(false)
 const fbaLoading = ref<boolean>(false)
 const packageLoading = ref<boolean>(false)
+const wfsLoading = ref<boolean>(false)
 let fbaPollingTimer: ReturnType<typeof setInterval> | null = null
 
 // FBA货值确认 - 带轮询
@@ -150,6 +167,31 @@ const showFbaVisible = async () => {
 
 const handleFbaDialog = () => {
   fbaVisible.value = false
+}
+
+// WFS货值
+const showWfsVisible = async () => {
+  wfsDate.value = ''
+  wfsVisible.value = true
+}
+
+const handleWfsDialog = () => {
+  wfsVisible.value = false
+}
+
+const handleWfsConfirmDialog = async () => {
+  if (!wfsDate.value) {
+    $baseMessage('请选择日期', 'warning')
+    return
+  }
+  const dateStr = dayjs(wfsDate.value).format('YYYY-MM-DD')
+  wfsLoading.value = true
+  try {
+    await downloadFileP('/miscellaneous/wfs/down/shipment', { date: dateStr })
+  } finally {
+    wfsLoading.value = false
+    wfsVisible.value = false
+  }
 }
 </script>
 
