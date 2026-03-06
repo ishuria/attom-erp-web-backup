@@ -14,6 +14,9 @@
           <el-form-item>
             <el-button type="primary">参考值计算</el-button>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="operationLogVisible = true">操作日志</el-button>
+          </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -346,7 +349,6 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="备注" min-width="200" prop="remark" />
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="{ row }">
           <el-link type="primary" underline="never" @click="viewChart(row)">查看</el-link>
@@ -417,6 +419,8 @@
         <el-button type="primary" @click="handleConfirmAdd">确定</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 季节系数操作日志 -->
   </div>
 </template>
 
@@ -448,6 +452,7 @@ defineOptions({
   name: 'SeasonalCoefficient',
 })
 
+const operationLogVisible = ref<boolean>(false)
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const queryForm = reactive<IGetSeasonalCoefficientListReq>({
