@@ -8,7 +8,7 @@
               <el-option v-for="item in operationUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="站点">
+          <el-form-item v-if="!hideSiteFilter" label="站点">
             <el-select v-model="queryForm.siteId" clearable placeholder="请选择站点" style="width: 200px" @change="queryData">
               <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
@@ -25,7 +25,7 @@
               @change="dateRangeChange"
             />
           </el-form-item>
-          <el-form-item>
+          <el-form-item v-if="!hideSiteFilter">
             <el-select v-model="queryForm.type" collapse-tags collapse-tags-tooltip multiple style="min-width: 160px" @change="queryData">
               <el-option v-for="item in filterOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
@@ -130,7 +130,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import CountryFlag from 'vue-country-flag-next'
-import { getFrontPageProductManagerSelectOption } from '~/src/api/devlocal/frontPage'
+import { getFrontPageProductManagerSelectOption } from '/@/api/devlocal/frontPage'
 import { getOperationLogManualList } from '/@/api/devlocal/productAnalysis'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import type { IGetOperationLogManual } from '/@/type/storeOperation/productAnalysisType'
@@ -139,6 +139,13 @@ import handleClipboard from '/@/utils/clipboard'
 defineOptions({
   name: 'OperationLogManualSum',
 })
+
+const props = defineProps<{
+  /** 是否隐藏站点筛选（默认 false） */
+  hideSiteFilter?: boolean
+  /** 获取日志列表的 API 函数（默认使用亚马逊的） */
+  fetchLogApi?: (params: any) => Promise<{ data: { list: any[]; total: number } }>
+}>()
 
 const visible = defineModel<boolean>('visible', {
   required: true,
@@ -270,7 +277,9 @@ const fetchData = async () => {
       queryForm.startDate = dateRange.value[0]
       queryForm.endDate = dateRange.value[1]
     }
-    const { data } = await getOperationLogManualList(queryForm)
+    // 使用传入的 API 或默认的亚马逊 API
+    const apiFunc = props.fetchLogApi || getOperationLogManualList
+    const { data } = await apiFunc(queryForm)
     logList.value = data.list || []
     total.value = data.total || 0
   } catch (error) {
@@ -317,7 +326,9 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 watch(visible, (newVal) => {
   if (newVal) {
     fetchOperationUserList()
-    fetchSiteList()
+    if (!props.hideSiteFilter) {
+      fetchSiteList()
+    }
     fetchData()
   }
 })

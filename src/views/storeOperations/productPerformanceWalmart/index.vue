@@ -59,7 +59,7 @@
             <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">日志汇总</el-button>
+            <el-button type="primary" @click="showOperationLogManual">日志汇总</el-button>
           </el-form-item>
           <el-form-item>
             <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
@@ -350,6 +350,11 @@
       :fetch-history-log-api="fetchWalmartHistoryLogAdapter"
       :row="_row"
     />
+    <operation-log-manual-sum
+      v-model:visible="operationLogManualVisible"
+      :fetch-log-api="fetchWalmartLogManualAdapter"
+      :hide-site-filter="true"
+    />
   </div>
 </template>
 
@@ -372,6 +377,7 @@ import {
   getUserAmazonOperation,
   getWalmartCurrencyList,
   getWalmartOperationLog,
+  getWalmartOperationLogManual,
   getWalmartSiteList,
   hideOrShowOperationColumn,
   updateCurrencyWalmartOperation,
@@ -410,6 +416,18 @@ const fetchWalmartHistoryLogAdapter = async (row: any) => {
     id: row.id,
   })
   return { list: result.data }
+}
+
+// 日志汇总弹窗
+const operationLogManualVisible = ref<boolean>(false)
+const showOperationLogManual = () => {
+  operationLogManualVisible.value = true
+}
+
+// 沃尔玛日志汇总 API 适配器
+const fetchWalmartLogManualAdapter = async (params: any) => {
+  const result = await getWalmartOperationLogManual(params)
+  return result
 }
 
 const handleUpdateOpeType = async (row: any) => {

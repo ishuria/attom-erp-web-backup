@@ -506,6 +506,39 @@ export function addWalmartOperationLog(data: { id: number; content: string }): P
 }
 
 /**
+ * @description 沃尔玛-日志汇总
+ * @param data 查询请求参数
+ * @returns 日志汇总列表
+ */
+export function getWalmartOperationLogManual(data: {
+  userId: number
+  startDate: string
+  endDate: string
+  pageNo: number
+  pageSize: number
+  keyWord: string
+}): Promise<{
+  data: {
+    list: Array<{
+      date: string
+      skuImgUrl: string
+      sku: string
+      productDesc: string
+      content: string
+      operationUserName: string
+      flag: string
+    }>
+    total: number
+  }
+}> {
+  return request({
+    url: `${BASE_API}/walmart/manual/operation/log`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
  * 店铺运营-获取关键产品列表
  * @param data 请求参数
  * @returns 关键产品列表
