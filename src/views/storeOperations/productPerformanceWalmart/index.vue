@@ -284,6 +284,9 @@
             <br />
             <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
           </span>
+          <span v-if="item.label === '最近入库'">
+            <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
+          </span>
           <span v-if="item.label === '开发人员'">
             <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
               <template #content>
