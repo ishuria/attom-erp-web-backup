@@ -272,7 +272,7 @@
           <span v-if="item.label === '当前售价'">
             {{ row.currencyIcon + row.sellingPrice }}
           </span>
-          <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
+          <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}</span>
           <span v-if="item.label === '库龄'">
             <span v-html="row.storageAge"></span>
           </span>
@@ -871,17 +871,14 @@ const fetchData = async () => {
         <div class="storage-item">
           <span class="value1">181-270</span>
           <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})</span>
         </div>
         <div class="storage-item">
           <span class="value1">271-360</span>
           <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})</span>
         </div>
         <div class="storage-item">
           <span class="value1">361+</span>
           <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})</span>
         </div>
       </div>
     `
