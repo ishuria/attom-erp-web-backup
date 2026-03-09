@@ -272,6 +272,9 @@
           <span v-if="item.label === '当前售价'">
             {{ row.currencyIcon + row.sellingPrice }}
           </span>
+          <span v-if="item.label === '月毛利润'">
+            {{ row.currencyIcon + row.monthGrossProfit }}
+          </span>
           <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}</span>
           <span v-if="item.label === '库龄'">
             <span v-html="row.storageAge"></span>
@@ -553,6 +556,7 @@ const fetchColumn = async () => {
         'newArrivalDay',
         'esAvailableSaleDay',
         'esAvailableSaleDayTotal',
+        'monthGrossProfit',
       ].includes(item.prop)
     ) {
       item.sortable = true
