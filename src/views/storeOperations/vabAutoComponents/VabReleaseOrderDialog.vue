@@ -27,12 +27,12 @@
             <el-input-number ref="inputRef" v-model="form.number" class="number-input" :min="0" />
           </el-form-item>
 
-          <el-form-item class="split-item" label="拆分">
+          <!-- <el-form-item class="split-item" label="拆分">
             <div class="checkbox-wrapper">
               <el-checkbox v-model="form.split" disabled :false-value="0" :true-value="1" />
               <span class="checkbox-label">{{ form.split ? '是' : '否' }}</span>
             </div>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item class="moq-item" label="起订量">
             <el-input v-model="form.moq" class="info-input" disabled />
@@ -145,15 +145,11 @@ const handleConfirm = async () => {
   // 如果整箱数有效且订货数量不是整箱数的倍数，则弹出二次确认
   if (numberOfCartons > 0 && orderNumber > 0 && orderNumber % numberOfCartons !== 0) {
     try {
-      await ElMessageBox.confirm(
-        `订货数量 ${orderNumber} 不是整箱数 ${numberOfCartons} 的倍数，是否继续发布？`,
-        '提示',
-        {
-          confirmButtonText: '继续发布',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      )
+      await ElMessageBox.confirm(`订货数量 ${orderNumber} 不是整箱数 ${numberOfCartons} 的倍数，是否继续发布？`, '提示', {
+        confirmButtonText: '继续发布',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
       // 用户确认后继续发布
       emit('confirm', { ...form })
     } catch {

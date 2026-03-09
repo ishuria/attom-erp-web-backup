@@ -480,6 +480,32 @@ export function updateOperationWalmartOperateTypeList(data: { id: number; typeId
 }
 
 /**
+ * @description 查询沃尔玛操作日志历史
+ * @param data 查询请求参数
+ * @returns 操作日志列表
+ */
+export function getWalmartOperationLog(data: { id: number }): Promise<{ data: Array<{ date: string; content: string }> }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/log/query`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 新增沃尔玛操作日志
+ * @param data 新增请求参数
+ * @returns 是否成功
+ */
+export function addWalmartOperationLog(data: { id: number; content: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/log/add`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
  * 店铺运营-获取关键产品列表
  * @param data 请求参数
  * @returns 关键产品列表

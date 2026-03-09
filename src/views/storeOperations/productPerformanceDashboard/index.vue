@@ -459,7 +459,12 @@
     </vab-dialog>
     <!-- 操作日志 -->
 
-    <operation-log-dialog v-model="operationLogVisible" :row="_row" />
+    <operation-log-dialog
+      v-model="operationLogVisible"
+      :add-log-api="addLogAdapter"
+      :fetch-history-log-api="fetchHistoryLogAdapter"
+      :row="_row"
+    />
     <!-- 季节趋势 -->
     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
@@ -526,11 +531,10 @@ import type { CheckboxValueType, ElInput, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
-import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '~/src/const/role'
-import { useUserStore } from '~/src/store/modules/user'
+import { addOperationLog, getOperationLog } from '~/src/api/devlocal/productAnalysis'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
 import {
   getCurrencyASINAmazonOperation,
   getCurrencyList,
@@ -561,7 +565,9 @@ import {
   updateRemarkAmazonOperation,
   updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
+import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
+import { useUserStore } from '/@/store/modules/user'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
@@ -1019,6 +1025,34 @@ const showOperationLog = async (row: any) => {
   _row.value = row
   operationLogVisible.value = true
 }
+
+// 操作日志 API 适配器
+const addLogAdapter = async (row: any, content: string) => {
+  const result = await addOperationLog({
+    asin: row.asin,
+    siteId: row.site,
+    content,
+  })
+  return result.data
+}
+
+const fetchHistoryLogAdapter = async (row: any) => {
+  // 获取最近30天的日志
+  const endDate = new Date()
+  const startDate = new Date(Date.now() - 29 * 24 * 60 * 60 * 1000)
+
+  const result = await getOperationLog({
+    asin: row.asin,
+    siteId: row.site,
+    type: [0], // 手动输入
+    pageNo: 1,
+    pageSize: 10000,
+    startDate: dayjs(startDate).format('YYYY-MM-DD'),
+    endDate: dayjs(endDate).format('YYYY-MM-DD'),
+  })
+  return { list: result.data.list }
+}
+
 const handleDialogOpened = () => {
   const textarea = inputRef.value?.$el.querySelector('textarea') as HTMLTextAreaElement
   if (textarea) {

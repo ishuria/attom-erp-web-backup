@@ -36,9 +36,6 @@
 
 <script lang="ts" setup>
 import { ElInput } from 'element-plus'
-import { updateRemarkAmazonOperation } from '~/src/api/devlocal/productPerformance'
-import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis'
-import { IGetOperationLog } from '/@/type/storeOperation/productAnalysisType'
 
 defineOptions({
   name: 'OperationLogDialog',
@@ -46,6 +43,12 @@ defineOptions({
 
 const props = defineProps<{
   row: any
+  // 获取历史日志，返回 { list }
+  fetchHistoryLogApi: (row: any) => Promise<{ list: any[] }>
+  // 新增/保存日志，返回是否成功
+  addLogApi: (row: any, content: string) => Promise<boolean>
+  // 更新备注（可选，有些场景可能不用备注）
+  updateRemarkApi?: (row: any, remark: string) => Promise<boolean>
 }>()
 const visible = defineModel({ default: false })
 const remark = ref<string>('')
@@ -59,51 +62,31 @@ const handleDialogOpened = () => {
   }
 }
 const confirmUpdateOperationLog = async () => {
-  const { data } = await addOperationLog({
-    asin: props.row.asin,
-    siteId: props.row.site,
-    content: operationLog.value,
-  })
-  if (data) {
+  const ok = await props.addLogApi(props.row, operationLog.value)
+  if (ok) {
     $baseMessage('操作日志新增成功！', 'success')
     visible.value = false
   }
 }
 const handleAdd = async () => {
-  const { data } = await addOperationLog({
-    asin: props.row.asin,
-    siteId: props.row.site,
-    content: operationLog.value,
-  })
-  if (data) {
+  const ok = await props.addLogApi(props.row, operationLog.value)
+  if (ok) {
     $baseMessage('操作日志新增成功！', 'success')
     fetchHistoryLog()
   }
 }
 const confirmUpdateRemark = async () => {
-  const { data } = await updateRemarkAmazonOperation({
-    site: props.row.site,
-    asin: props.row.asin,
-    remark: remark.value,
-    type: 0,
-  })
-  if (data) {
+  if (!props.updateRemarkApi) return
+  const ok = await props.updateRemarkApi(props.row, remark.value)
+  if (ok) {
     $baseMessage('运营备注修改成功！', 'success')
     props.row.operationRemark = remark.value
   }
 }
-const list = ref<IGetOperationLog[]>([])
+const list = ref<any[]>([])
 const fetchHistoryLog = async () => {
-  const { data } = await getOperationLog({
-    asin: props.row.asin,
-    siteId: props.row.site,
-    type: [0],
-    pageNo: 1,
-    pageSize: 10000,
-    startDate: '',
-    endDate: '',
-  })
-  list.value = data.list
+  const { list: historyList } = await props.fetchHistoryLogApi(props.row)
+  list.value = historyList ?? []
 }
 watch(
   () => visible.value,

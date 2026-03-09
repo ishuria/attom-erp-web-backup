@@ -59,6 +59,9 @@
             <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
           </el-form-item>
           <el-form-item>
+            <el-button type="primary">日志汇总</el-button>
+          </el-form-item>
+          <el-form-item>
             <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
           </el-form-item>
         </el-form>
@@ -220,6 +223,8 @@
               <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
                 <country-flag :country="row.flag" />
               </span>
+              <el-tag class="order-tag" effect="dark" @click.stop="">订</el-tag>
+              <el-tag class="order-tag" effect="dark" type="success" @click.stop="showOperationLog(row)">志</el-tag>
             </div>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -339,6 +344,12 @@
       @update-filter="handleConfirmFilter"
       @update-visible="handleCloseFilterDialog"
     />
+    <operation-log-dialog
+      v-model="operationLogVisible"
+      :add-log-api="addWalmartLogAdapter"
+      :fetch-history-log-api="fetchWalmartHistoryLogAdapter"
+      :row="_row"
+    />
   </div>
 </template>
 
@@ -352,6 +363,7 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
 import {
+  addWalmartOperationLog,
   filterWalmartList,
   getCurrencyWalmartOperation,
   getDevelopUserList,
@@ -359,6 +371,7 @@ import {
   getOperationWalmartList,
   getUserAmazonOperation,
   getWalmartCurrencyList,
+  getWalmartOperationLog,
   getWalmartSiteList,
   hideOrShowOperationColumn,
   updateCurrencyWalmartOperation,
@@ -375,9 +388,30 @@ defineOptions({
   name: 'ProductPerformanceWalmart',
 })
 
-let _row: any
+const _row = ref<any>({})
 const remark = ref('')
+const operationLogVisible = ref<boolean>(false)
 const filterLoading = ref<boolean>(false)
+const showOperationLog = (row: any) => {
+  _row.value = row
+  operationLogVisible.value = true
+}
+// 沃尔玛操作日志 API 适配器
+const addWalmartLogAdapter = async (row: any, content: string) => {
+  const result = await addWalmartOperationLog({
+    id: row.id,
+    content,
+  })
+  return result.data
+}
+
+const fetchWalmartHistoryLogAdapter = async (row: any) => {
+  const result = await getWalmartOperationLog({
+    id: row.id,
+  })
+  return { list: result.data }
+}
+
 const handleUpdateOpeType = async (row: any) => {
   await updateOperationWalmartOperateTypeList({
     id: row.id!,
@@ -386,13 +420,13 @@ const handleUpdateOpeType = async (row: any) => {
 }
 const confirmUpdateRemark = async () => {
   const { data } = await updateRemarkWalmartOperation({
-    id: _row.id,
+    id: _row.value.id,
     remark: remark.value,
   })
   if (data) {
     $baseMessage('运营备注修改成功！', 'success')
     remarkVisible.value = false
-    _row.operationRemark = remark.value
+    _row.value.operationRemark = remark.value
   }
 }
 const handleUpdateStopStatus = async (row: any) => {
@@ -667,7 +701,7 @@ const cellClick = async (row: any, column: any) => {
   switch (label) {
     case '运营备注': {
       showRemark()
-      _row = row
+      _row.value = row
       remark.value = row.operationRemark
       break
     }
@@ -1052,6 +1086,30 @@ onBeforeMount(async () => {
 .japan-flag {
   :deep(.flag) {
     border: 1px solid #ddd;
+  }
+}
+.order-tag {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 24px !important;
+  height: 20px !important;
+  padding: 0 !important;
+  margin: -2px 0 0 0;
+  border-radius: 4px !important;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+
+  :deep(.el-tag__content) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  &:hover {
+    cursor: pointer;
   }
 }
 </style>
