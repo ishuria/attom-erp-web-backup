@@ -34,6 +34,7 @@ import type {
   IGetSkuInfoRes,
   IQueryReplenOperationLogReq,
   IQueryReplenOperationLogResp,
+  IQuerySeasonalOperationLogResp,
   ISkuId,
   ISubmitProductComponentQuery,
   ISubmitProductConsumableQuery,
@@ -573,6 +574,18 @@ export function updateProductReplenParams(data: IupdateProductReplenParams) {
 export function queryReplenOperationLog(data: IQueryReplenOperationLogReq): Promise<IQueryReplenOperationLogResp> {
   return request({
     url: `${BASE_API}/product/replen/operationLog/list`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 季节系数操作日志
+ * @param data
+ * @returns
+ */
+export function querySeasonalCoefficientOperationLog(data: IQueryReplenOperationLogReq): Promise<IQuerySeasonalOperationLogResp> {
+  return request({
+    url: `${BASE_API}/seasonal/coefficient/operationLog/list`,
     method: 'post',
     data,
   })

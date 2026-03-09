@@ -421,6 +421,7 @@
     </vab-dialog>
 
     <!-- 季节系数操作日志 -->
+    <seasonal-coefficient-operation-log v-model="operationLogVisible" :site-list="siteList" />
   </div>
 </template>
 

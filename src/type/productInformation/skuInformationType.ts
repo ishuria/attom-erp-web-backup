@@ -748,7 +748,21 @@ export interface IQueryReplenOperationLogResp {
     total: number
   }
 }
-
+// 补货操作日志 - 列表项
+export interface ISeasonalOperationLogItem {
+  kindName: string
+  siteName?: string
+  aggregatedContent: string
+  operatorName?: string
+  operationTime?: string
+}
+// 补货操作日志 - 查询响应
+export interface IQuerySeasonalOperationLogResp {
+  data: {
+    list: ISeasonalOperationLogItem[]
+    total: number
+  }
+}
 // 产品补货计算参数 - 批量修改
 export interface IupdateProductReplenParams {
   // 产品补货计ids使用,分割
