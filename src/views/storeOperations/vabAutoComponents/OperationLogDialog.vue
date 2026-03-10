@@ -5,7 +5,8 @@
       <el-input ref="inputRef" v-model="remark" class="log-input" placeholder="请输入运营备注" :rows="5" type="textarea" />
       <div class="dialog-actions">
         <el-button @click="visible = false">取消</el-button>
-        <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
+        <el-button type="success" @click="confirmUpdateRemark">保存</el-button>
+        <el-button type="primary" @click="handleConfirm">确定</el-button>
       </div>
       <el-divider />
       <div class="field-label">日志</div>
@@ -47,8 +48,8 @@ const props = defineProps<{
   fetchHistoryLogApi: (row: any) => Promise<{ list: any[] }>
   // 新增/保存日志，返回是否成功
   addLogApi: (row: any, content: string) => Promise<boolean>
-  // 更新备注（可选，有些场景可能不用备注）
-  updateRemarkApi?: (row: any, remark: string) => Promise<boolean>
+  // 更新备注
+  updateRemarkApi: (row: any, remark: string) => Promise<boolean>
 }>()
 const visible = defineModel({ default: false })
 const remark = ref<string>('')
@@ -81,6 +82,15 @@ const confirmUpdateRemark = async () => {
   if (ok) {
     $baseMessage('运营备注修改成功！', 'success')
     props.row.operationRemark = remark.value
+  }
+}
+const handleConfirm = async () => {
+  if (!props.updateRemarkApi) return
+  const ok = await props.updateRemarkApi(props.row, remark.value)
+  if (ok) {
+    $baseMessage('运营备注修改成功！', 'success')
+    props.row.operationRemark = remark.value
+    visible.value = false
   }
 }
 const list = ref<any[]>([])

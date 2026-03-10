@@ -464,6 +464,7 @@
       :add-log-api="addLogAdapter"
       :fetch-history-log-api="fetchHistoryLogAdapter"
       :row="_row"
+      :update-remark-api="updateRemarkAdapter"
     />
     <!-- 季节趋势 -->
     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
@@ -1051,6 +1052,15 @@ const fetchHistoryLogAdapter = async (row: any) => {
     endDate: dayjs(endDate).format('YYYY-MM-DD'),
   })
   return { list: result.data.list }
+}
+const updateRemarkAdapter = async (row: any, remarkContent: string) => {
+  const result = await updateRemarkAmazonOperation({
+    site: row.site,
+    asin: row.asin,
+    remark: remarkContent,
+    type: 0,
+  })
+  return result.data
 }
 
 const handleDialogOpened = () => {

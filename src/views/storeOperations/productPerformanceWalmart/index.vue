@@ -350,6 +350,7 @@
       :add-log-api="addWalmartLogAdapter"
       :fetch-history-log-api="fetchWalmartHistoryLogAdapter"
       :row="_row"
+      :update-remark-api="updateRemarkAdapter"
     />
     <!-- 日志汇总 -->
     <operation-log-manual-sum
@@ -510,6 +511,13 @@ const fetchWalmartHistoryLogAdapter = async (row: any) => {
     id: row.id,
   })
   return { list: result.data }
+}
+const updateRemarkAdapter = async (row: any, remarkContent: string) => {
+  const result = await updateRemarkWalmartOperation({
+    id: _row.value.id,
+    remark: remark.value,
+  })
+  return result.data
 }
 
 // 日志汇总弹窗
