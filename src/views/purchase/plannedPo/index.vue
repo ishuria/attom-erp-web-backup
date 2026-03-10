@@ -48,138 +48,42 @@
           <vab-query-form-right-panel>
             <!-- 列设置面板 -->
             <div class="column-settings">
-              <el-popover popper-style="max-height: 550px; overflow: auto;" :width="250">
+              <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
                 <template #reference>
                   <el-button>
                     <vab-icon icon="settings-line" />
                   </el-button>
                 </template>
-
-                <!-- 第一组：站点 -->
-                <div class="drag-group">
-                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">PO</h4>
-                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
-                    <vab-draggable
-                      v-model="poOperationColumns"
-                      :animation="200"
-                      filter=".non-draggable"
-                      :group="{ name: 'po-operation-group', pull: true, put: false }"
-                      handle=".handle"
-                      :on-end="handlePoOperationEnd"
+                <vab-draggable
+                  v-model="columns"
+                  :animation="600"
+                  filter=".non-draggable"
+                  handle=".handle"
+                  :on-end="handleEnd"
+                  :on-move="handleMove"
+                >
+                  <div
+                    v-for="item in columns"
+                    :key="item.label"
+                    :class="{ 'non-draggable': item.disableCheck }"
+                    style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                  >
+                    <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                    <span style="flex: 1">{{ item.label }}</span>
+                    <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                      <vab-icon icon="eye-line" />
+                    </span>
+                    <span
+                      v-else
+                      class="icon-hover"
+                      style="display: flex; align-items: center; cursor: pointer"
+                      @click="handleChecked(item)"
                     >
-                      <div
-                        v-for="item in poOperationColumns"
-                        :key="item.label"
-                        :class="{ 'non-draggable': item.disableCheck }"
-                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                      >
-                        <vab-icon
-                          class="handle"
-                          :class="{ 'disabled-handle': item.disableCheck }"
-                          icon="draggable"
-                          style="margin-right: 5px"
-                        />
-                        <span style="flex: 1">{{ item.label }}</span>
-                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                          <vab-icon icon="eye-line" />
-                        </span>
-                        <span
-                          v-else
-                          class="icon-hover"
-                          style="display: flex; align-items: center; cursor: pointer"
-                          @click="handleChecked(item)"
-                        >
-                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                          <vab-icon v-show="item.checked" icon="eye-line" />
-                        </span>
-                      </div>
-                    </vab-draggable>
+                      <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                      <vab-icon v-show="item.checked" icon="eye-line" />
+                    </span>
                   </div>
-                </div>
-
-                <!-- 第二组：SKU相关 -->
-                <div class="drag-group">
-                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">SKU</h4>
-                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
-                    <vab-draggable
-                      v-model="skuColumns"
-                      :animation="200"
-                      filter=".non-draggable"
-                      :group="{ name: 'sku-group', pull: true, put: false }"
-                      handle=".handle"
-                      :on-end="handleSkuEnd"
-                    >
-                      <div
-                        v-for="item in skuColumns"
-                        :key="item.label"
-                        :class="{ 'non-draggable': item.disableCheck }"
-                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                      >
-                        <vab-icon
-                          class="handle"
-                          :class="{ 'disabled-handle': item.disableCheck }"
-                          icon="draggable"
-                          style="margin-right: 5px"
-                        />
-                        <span style="flex: 1">{{ item.label }}</span>
-                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                          <vab-icon icon="eye-line" />
-                        </span>
-                        <span
-                          v-else
-                          class="icon-hover"
-                          style="display: flex; align-items: center; cursor: pointer"
-                          @click="handleChecked(item)"
-                        >
-                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                          <vab-icon v-show="item.checked" icon="eye-line" />
-                        </span>
-                      </div>
-                    </vab-draggable>
-                  </div>
-                </div>
-
-                <!-- 第三组：零件和其他信息 -->
-                <div class="drag-group">
-                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">零件</h4>
-                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
-                    <vab-draggable
-                      v-model="componentColumns"
-                      :animation="200"
-                      filter=".non-draggable"
-                      :group="{ name: 'component-group', pull: true, put: false }"
-                      handle=".handle"
-                      :on-end="handleComponentEnd"
-                    >
-                      <div
-                        v-for="item in componentColumns"
-                        :key="item.label"
-                        :class="{ 'non-draggable': item.disableCheck }"
-                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                      >
-                        <vab-icon
-                          class="handle"
-                          :class="{ 'disabled-handle': item.disableCheck }"
-                          icon="draggable"
-                          style="margin-right: 5px"
-                        />
-                        <span style="flex: 1">{{ item.label }}</span>
-                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                          <vab-icon icon="eye-line" />
-                        </span>
-                        <span
-                          v-else
-                          class="icon-hover"
-                          style="display: flex; align-items: center; cursor: pointer"
-                          @click="handleChecked(item)"
-                        >
-                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                          <vab-icon v-show="item.checked" icon="eye-line" />
-                        </span>
-                      </div>
-                    </vab-draggable>
-                  </div>
-                </div>
+                </vab-draggable>
               </el-popover>
             </div>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -261,22 +165,9 @@
               </el-dropdown>
             </template>
           </el-table-column>
-          <!-- 第一组：PO操作到站点 (支持合并单元格) -->
-          <el-table-column
-            v-for="(item, index) in poOperationColumns.filter((col: any) => col.checked)"
-            :key="item.label"
-            :label="item.label"
-            :min-width="handleCalculateWidth(item)"
-            :prop="item.prop"
-          >
-            <template v-if="item.label === '创建日期'" #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
 
-          <!-- 第二组：SKU相关 (支持合并单元格) -->
           <el-table-column
-            v-for="(item, index) in skuColumns.filter((col: any) => col.checked)"
+            v-for="(item, index) in checkList"
             :key="item.label"
             :label="item.label"
             :min-width="handleCalculateWidth(item)"
@@ -287,8 +178,11 @@
               <br />
               图片
             </template>
+            <template v-if="item.label === '创建日期'" #default="{ row }">
+              {{ row.createTime.split(' ')[0] }}
+            </template>
             <template v-if="item.label === 'SKU图片'" #default="{ row }">
-              <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
+              <el-image :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon />
                 </template>
@@ -300,16 +194,6 @@
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
-          </el-table-column>
-
-          <!-- 第三组：零件和其他信息 (不支持合并单元格) -->
-          <el-table-column
-            v-for="(item, index) in componentColumns.filter((col: any) => col.checked)"
-            :key="item.label"
-            :label="item.label"
-            :min-width="handleCalculateWidth(item)"
-            :prop="item.prop"
-          >
             <template v-if="item.label === '货币'" #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -386,138 +270,42 @@
           <vab-query-form-right-panel>
             <!-- 列设置面板 -->
             <div class="column-settings">
-              <el-popover popper-style="max-height: 550px; overflow: auto;" :width="250">
+              <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
                 <template #reference>
                   <el-button>
                     <vab-icon icon="settings-line" />
                   </el-button>
                 </template>
-
-                <!-- 第一组：站点 -->
-                <div class="drag-group">
-                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">站点</h4>
-                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
-                    <vab-draggable
-                      v-model="poOperationColumns"
-                      :animation="200"
-                      filter=".non-draggable"
-                      :group="{ name: 'po-operation-group', pull: true, put: false }"
-                      handle=".handle"
-                      :on-end="handlePoOperationEnd"
+                <vab-draggable
+                  v-model="columns"
+                  :animation="600"
+                  filter=".non-draggable"
+                  handle=".handle"
+                  :on-end="handleEnd"
+                  :on-move="handleMove"
+                >
+                  <div
+                    v-for="item in columns"
+                    :key="item.label"
+                    :class="{ 'non-draggable': item.disableCheck }"
+                    style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                  >
+                    <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                    <span style="flex: 1">{{ item.label }}</span>
+                    <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                      <vab-icon icon="eye-line" />
+                    </span>
+                    <span
+                      v-else
+                      class="icon-hover"
+                      style="display: flex; align-items: center; cursor: pointer"
+                      @click="handleChecked(item)"
                     >
-                      <div
-                        v-for="item in poOperationColumns"
-                        :key="item.label"
-                        :class="{ 'non-draggable': item.disableCheck }"
-                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                      >
-                        <vab-icon
-                          class="handle"
-                          :class="{ 'disabled-handle': item.disableCheck }"
-                          icon="draggable"
-                          style="margin-right: 5px"
-                        />
-                        <span style="flex: 1">{{ item.label }}</span>
-                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                          <vab-icon icon="eye-line" />
-                        </span>
-                        <span
-                          v-else
-                          class="icon-hover"
-                          style="display: flex; align-items: center; cursor: pointer"
-                          @click="handleChecked(item)"
-                        >
-                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                          <vab-icon v-show="item.checked" icon="eye-line" />
-                        </span>
-                      </div>
-                    </vab-draggable>
+                      <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                      <vab-icon v-show="item.checked" icon="eye-line" />
+                    </span>
                   </div>
-                </div>
-
-                <!-- 第二组：SKU相关 -->
-                <div class="drag-group">
-                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">SKU</h4>
-                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
-                    <vab-draggable
-                      v-model="skuColumns"
-                      :animation="200"
-                      filter=".non-draggable"
-                      :group="{ name: 'sku-group', pull: true, put: false }"
-                      handle=".handle"
-                      :on-end="handleSkuEnd"
-                    >
-                      <div
-                        v-for="item in skuColumns"
-                        :key="item.label"
-                        :class="{ 'non-draggable': item.disableCheck }"
-                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                      >
-                        <vab-icon
-                          class="handle"
-                          :class="{ 'disabled-handle': item.disableCheck }"
-                          icon="draggable"
-                          style="margin-right: 5px"
-                        />
-                        <span style="flex: 1">{{ item.label }}</span>
-                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                          <vab-icon icon="eye-line" />
-                        </span>
-                        <span
-                          v-else
-                          class="icon-hover"
-                          style="display: flex; align-items: center; cursor: pointer"
-                          @click="handleChecked(item)"
-                        >
-                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                          <vab-icon v-show="item.checked" icon="eye-line" />
-                        </span>
-                      </div>
-                    </vab-draggable>
-                  </div>
-                </div>
-
-                <!-- 第三组：零件和其他信息 -->
-                <div class="drag-group">
-                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">零件</h4>
-                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
-                    <vab-draggable
-                      v-model="componentColumns"
-                      :animation="200"
-                      filter=".non-draggable"
-                      :group="{ name: 'component-group', pull: true, put: false }"
-                      handle=".handle"
-                      :on-end="handleComponentEnd"
-                    >
-                      <div
-                        v-for="item in componentColumns"
-                        :key="item.label"
-                        :class="{ 'non-draggable': item.disableCheck }"
-                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                      >
-                        <vab-icon
-                          class="handle"
-                          :class="{ 'disabled-handle': item.disableCheck }"
-                          icon="draggable"
-                          style="margin-right: 5px"
-                        />
-                        <span style="flex: 1">{{ item.label }}</span>
-                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                          <vab-icon icon="eye-line" />
-                        </span>
-                        <span
-                          v-else
-                          class="icon-hover"
-                          style="display: flex; align-items: center; cursor: pointer"
-                          @click="handleChecked(item)"
-                        >
-                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                          <vab-icon v-show="item.checked" icon="eye-line" />
-                        </span>
-                      </div>
-                    </vab-draggable>
-                  </div>
-                </div>
+                </vab-draggable>
               </el-popover>
             </div>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -590,20 +378,7 @@
 
           <!-- 第一组：PO操作到站点 (支持合并单元格) -->
           <el-table-column
-            v-for="(item, index) in poOperationColumns.filter((col: any) => col.checked)"
-            :key="item.label"
-            :label="item.label"
-            :min-width="handleCalculateWidth(item)"
-            :prop="item.prop"
-          >
-            <template v-if="item.label === '创建日期'" #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-
-          <!-- 第二组：SKU相关 (支持合并单元格) -->
-          <el-table-column
-            v-for="(item, index) in skuColumns.filter((col: any) => col.checked)"
+            v-for="(item, index) in checkList"
             :key="item.label"
             :label="item.label"
             :min-width="handleCalculateWidth(item)"
@@ -614,8 +389,12 @@
               <br />
               图片
             </template>
+            <template v-if="item.label === '创建日期'" #default="{ row }">
+              {{ row.createTime.split(' ')[0] }}
+            </template>
+
             <template v-if="item.label === 'SKU图片'" #default="{ row }">
-              <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
+              <el-image :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon />
                 </template>
@@ -627,16 +406,6 @@
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
-          </el-table-column>
-
-          <!-- 第三组：零件和其他信息 (不支持合并单元格) -->
-          <el-table-column
-            v-for="(item, index) in componentColumns.filter((col: any) => col.checked)"
-            :key="item.label"
-            :label="item.label"
-            :min-width="handleCalculateWidth(item)"
-            :prop="item.prop"
-          >
             <template v-if="item.label === '货币'" #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -705,9 +474,9 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
-import { ref } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import {
   deleteAllPlanPo,
   deletePlanPo,
@@ -731,9 +500,11 @@ import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import type { CurrencyCode } from '/@/views/purchase/constantOption'
 import { currencyMap } from '/@/views/purchase/constantOption'
+
+// 懒加载 wangEditor 组件，减少初始加载时间
+const wangEditor = defineAsyncComponent(() => import('/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'))
 
 defineOptions({
   name: 'PlannedPo',
@@ -750,86 +521,42 @@ const procurementManagerOptions = ref<any>([])
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
-
-// 列配置数据 - 三组设计
-// 第一组：PO操作到站点 (支持合并单元格)
-const poOperationColumns = ref<any>([])
-
-// 第二组：SKU相关 (支持合并单元格)
-const skuColumns = ref<any>([])
-
-// 第三组：零件和其他信息 (不支持合并单元格)
-const componentColumns = ref<any>([])
-
 const deraltProcurementManager = { userId: -1, userName: '全部采购负责人' }
+
+// 列配置数据
+const columns = ref<any>([])
+const checkList = computed(() => {
+  return columns.value.filter((item: any) => item.checked)
+})
+
+// 列配置缓存
+const COLUMN_CACHE_KEY = 'plannedPo_columns'
 const fetchColumn = async () => {
-  const { data } = await getOperationColumnList({ type: 9 })
-  poOperationColumns.value = data
-  poOperationColumns.value.forEach((item: any) => {
-    item.minWidth = item.width
-  })
-  const { data: skuData } = await getOperationColumnList({ type: 10 })
-  skuColumns.value = skuData
-  skuColumns.value.forEach((item: any) => {
-    item.minWidth = item.width
-  })
-  const { data: componentData } = await getOperationColumnList({ type: 11 })
-  componentColumns.value = componentData
-  componentColumns.value.forEach((item: any) => {
-    item.minWidth = item.width
-  })
-}
-// 拖拽结束处理 - 发送请求保存列顺序
-const handlePoOperationEnd = async () => {
   try {
-    const req = poOperationColumns.value.map((item: any, index: number) => {
-      return {
-        userId: item.userId,
-        columnId: item.columnId,
-        sort: index,
-        // label: item.label
-      }
-    })
-    await updateSortOperationColumn(req)
+    // 先使用缓存的列配置
+    const cachedColumns = localStorage.getItem(COLUMN_CACHE_KEY)
+    if (cachedColumns) {
+      columns.value = JSON.parse(cachedColumns)
+      columns.value.forEach((item: any) => {
+        item.minWidth = item.width
+      })
+    }
+
+    // 后台更新最新配置
+    const { data } = await getOperationColumnList({ type: 9 })
+    if (data) {
+      columns.value = data
+      columns.value.forEach((item: any) => {
+        item.minWidth = item.width
+      })
+      // 更新缓存
+      localStorage.setItem(COLUMN_CACHE_KEY, JSON.stringify(data))
+    }
   } catch (error) {
-    console.error('保存PO操作组列顺序失败:', error)
+    console.warn('Column config load error:', error)
   }
 }
-
-const handleSkuEnd = async () => {
-  try {
-    const req = skuColumns.value.map((item: any, index: number) => {
-      return {
-        userId: item.userId,
-        columnId: item.columnId,
-        sort: index,
-        // label: item.label
-      }
-    })
-    await updateSortOperationColumn(req)
-  } catch (error) {
-    console.error('保存SKU组列顺序失败:', error)
-  }
-}
-
-const handleComponentEnd = async () => {
-  try {
-    const req = componentColumns.value.map((item: any, index: number) => {
-      return {
-        userId: item.userId,
-        columnId: item.columnId,
-        sort: index,
-        // label: item.label
-      }
-    })
-    await updateSortOperationColumn(req)
-  } catch (error) {
-    console.error('保存零件组列顺序失败:', error)
-  }
-}
-
 // 列显示/隐藏切换
-// 是否显示或隐藏列
 const handleChecked = async (item: any) => {
   item.checked = !item.checked
   const status = item.checked === true ? 1 : 0
@@ -839,24 +566,63 @@ const handleChecked = async (item: any) => {
     status,
   })
 }
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+// 列宽计算缓存
+const columnWidthCache = ref<Map<string, number>>(new Map())
+
 const handleCalculateWidth = (item: any) => {
+  const cacheKey = `${item.label}-${item.prop}-${plannedPoList.value.length}`
+
+  // 检查缓存
+  if (columnWidthCache.value.has(cacheKey)) {
+    return columnWidthCache.value.get(cacheKey)!
+  }
+
+  let width = item.minWidth
+
   switch (item.label) {
     case 'SKU': {
-      return flexColumnWidth(plannedPoList.value, 'SKU', 'sku')
+      width = flexColumnWidth(plannedPoList.value, 'SKU', 'sku')
+      break
     }
     case '零件名': {
-      return flexColumnWidth(plannedPoList.value, '零件名', 'componentName')
+      width = flexColumnWidth(plannedPoList.value, '零件名', 'componentName')
+      break
     }
     case '供应商': {
-      return flexColumnWidth(plannedPoList.value, '供应商', 'suppliser')
+      width = flexColumnWidth(plannedPoList.value, '供应商', 'suppliser')
+      break
     }
     default: {
-      return item.minWidth
+      width = item.minWidth
     }
   }
+
+  // 缓存结果
+  columnWidthCache.value.set(cacheKey, width)
+  return width
 }
 const tableRef = ref<TableInstance>()
-const tableRef2 = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 // 采购计划列表
 let plannedPoList = ref<IGetPlanPoList[]>([])
@@ -894,16 +660,26 @@ const handleCurrentChange = (value: number) => {
   })
   fetchData()
 }
+// 防抖搜索
+const searchDebounceTimer = ref<NodeJS.Timeout>()
 const queryData = () => {
-  queryForm.pageNo = 1
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize,
-    },
-  })
-  fetchData()
+  // 清除之前的定时器
+  if (searchDebounceTimer.value) {
+    clearTimeout(searchDebounceTimer.value)
+  }
+
+  // 设置新的防抖定时器
+  searchDebounceTimer.value = setTimeout(() => {
+    queryForm.pageNo = 1
+    router.push({
+      query: {
+        ...route.query,
+        pageNo: queryForm.pageNo,
+        pageSize: queryForm.pageSize,
+      },
+    })
+    fetchData()
+  }, 300) // 300ms 防抖
 }
 const getCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   const label = data.column.label
@@ -912,55 +688,78 @@ const getCellClass = (data: { row: any; column: any; rowIndex: number; columnInd
   }
   return ''
 }
-//采购计划col合并方法
+// 缓存合并单元格计算结果
+const spanCache = ref<Map<string, { rowspan: number; colspan: number }>>(new Map())
+
+// 重置缓存
+const resetSpanCache = () => {
+  spanCache.value.clear()
+}
+
+//采购计划col合并方法（优化版）
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
-  let rowspan = 1 // 默认不跨行
   const label = column.label
+  const cacheKey = `${rowIndex}-${columnIndex}-${label}`
+
+  // 检查缓存
+  if (spanCache.value.has(cacheKey)) {
+    return spanCache.value.get(cacheKey)!
+  }
+
+  let result = { rowspan: 1, colspan: 1 }
+
   if (columnIndex === 0 || label === 'PO操作' || label === '创建日期' || label === '请购人' || label === '站点') {
     const id = row.id
 
-    // 遍历后面的行，检查相同的 PO ID
-    for (let i = rowIndex + 1; i < plannedPoList.value.length; i++) {
-      if (plannedPoList.value[i].id === id) {
-        rowspan++
-      } else {
-        break
-      }
-    }
+    // 只在第一次出现时计算
+    const isFirstOccurrence = rowIndex === 0 || plannedPoList.value[rowIndex - 1].id !== id
 
-    // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
-    return rowIndex === 0 || plannedPoList.value[rowIndex - 1].id !== id ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
+    if (isFirstOccurrence) {
+      // 只计算当前PO的span
+      let rowspan = 1
+      for (let i = rowIndex + 1; i < plannedPoList.value.length; i++) {
+        if (plannedPoList.value[i].id === id) {
+          rowspan++
+        } else {
+          break
+        }
+      }
+      result = { rowspan, colspan: 1 }
+    } else {
+      result = { rowspan: 0, colspan: 0 }
+    }
   }
 
   // 合并 SKU 行
   if (label === '采购负责人' || label === 'SKU' || label === '数量' || label === 'SKU图片' || label === 'SKU操作') {
     const poSkuId = row.poSkuId
+    const isFirstOccurrence =
+      rowIndex === 0 || plannedPoList.value[rowIndex - 1].poSkuId !== poSkuId || plannedPoList.value[rowIndex - 1].id !== row.id
 
-    // 遍历后面的行，检查相同的 SKU ID
-    for (let i = rowIndex + 1; i < plannedPoList.value.length; i++) {
-      if (plannedPoList.value[i].poSkuId === poSkuId && plannedPoList.value[i].id === row.id) {
-        rowspan++
-      } else {
-        break
+    if (isFirstOccurrence) {
+      let rowspan = 1
+      for (let i = rowIndex + 1; i < plannedPoList.value.length; i++) {
+        if (plannedPoList.value[i].poSkuId === poSkuId && plannedPoList.value[i].id === row.id) {
+          rowspan++
+        } else {
+          break
+        }
       }
+      result = { rowspan, colspan: 1 }
+    } else {
+      result = { rowspan: 0, colspan: 0 }
     }
-
-    // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
-    return rowIndex === 0 || plannedPoList.value[rowIndex - 1].poSkuId !== poSkuId || plannedPoList.value[rowIndex - 1].id !== row.id
-      ? { rowspan, colspan: 1 }
-      : { rowspan: 0, colspan: 0 }
   }
 
-  // 对于其他列，默认返回不合并
-  return { rowspan: 1, colspan: 1 }
+  // 缓存结果
+  spanCache.value.set(cacheKey, result)
+  return result
 }
 
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any) => {
   selectedRowIndex.value = row.id
 }
-let previous: any = null
-let currentGroupIndex = 0 // 当前组索引
 
 const stripedRowClass = (_row: any) => {
   const { row } = _row
@@ -1146,17 +945,6 @@ const handlePublishPo = async (row: any) => {
   }
 }
 const handlePlannedPoDetail = async (row: any) => {
-  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef
-  const wrapRef = scrollBarRef.wrapRef
-  const wrapRef2 = scrollBarRef2.wrapRef
-  const plannedPoStatus = {
-    scrollTop: wrapRef.scrollTop,
-    scrollTop2: wrapRef2.scrollTop,
-  }
-
-  sessionStorage.setItem('plannedPoStatus', JSON.stringify(plannedPoStatus))
-
   const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
   const tab = handleTabs({
     ...matched.at(-1),
@@ -1189,14 +977,6 @@ const handlePlannedPoDetail = async (row: any) => {
 }
 const createLoading = ref<boolean>(false)
 const handlePlannedPoCreate = async () => {
-  // router.push({
-  //   path: '/purchase/poDetail',
-  //   query: {
-  //     title: "采购计划创建",
-  //     from: 'plannedPoCreate',
-  //     timestamp: Date.now(),
-  //   },
-  // })
   createLoading.value = true
   const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
   const tab = handleTabs({
@@ -1331,9 +1111,53 @@ const clickLogBool = (val: any) => {
   wangEditorLogVisible.value = val
 }
 
-const fetchData = async () => {
+// 本地缓存管理
+const CACHE_KEY = 'plannedPo_cache'
+const CACHE_EXPIRY = 2 * 60 * 1000 // 2分钟缓存
+
+const getCacheData = () => {
   try {
-    listLoading.value = true
+    const cached = localStorage.getItem(CACHE_KEY)
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached)
+      if (Date.now() - timestamp < CACHE_EXPIRY) {
+        return data
+      }
+    }
+  } catch (error) {
+    console.warn('Cache read error:', error)
+  }
+  return null
+}
+
+const setCacheData = (data: any) => {
+  try {
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        data,
+        timestamp: Date.now(),
+      })
+    )
+  } catch (error) {
+    console.warn('Cache write error:', error)
+  }
+}
+
+// 快速加载模式：优先显示缓存数据
+const fetchData = async (useCache = true) => {
+  try {
+    // 优先加载缓存数据（立即显示）
+    if (useCache) {
+      const cached = getCacheData()
+      if (cached && cached.list && cached.list.length > 0) {
+        plannedPoList.value = cached.list
+        total.value = cached.total
+        listLoading.value = false
+      }
+    }
+
+    // 后台请求最新数据
     const { data } = await getPlanPoList({
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
@@ -1342,21 +1166,28 @@ const fetchData = async () => {
       customsStatus: queryForm.customsStatus,
       procurementManagerId: queryForm.procurementManager.userId,
     })
+
     if (data) {
+      // 清理缓存
+      resetSpanCache()
+      columnWidthCache.value.clear()
+
       listLoading.value = false
       total.value = data.total
       plannedPoList.value = data.list
+
+      // 更新缓存
+      setCacheData(data)
     }
   } catch (error) {
     console.error(error)
+    listLoading.value = false
   }
 }
 onActivated(() => {
   tableRef.value?.doLayout()
 })
-onBeforeMount(() => {
-  fetchColumn()
-  queryProcurementManagerData()
+onBeforeMount(async () => {
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
@@ -1368,51 +1199,18 @@ onBeforeMount(() => {
     activeName.value = Number(tab)
     queryForm.status = Number(tab)
   }
-  // const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
-  // const pageNo = savedStatus.pageNo
-  // const pageSize = savedStatus.pageSize
-  // const keyWord = savedStatus.keyWord
 
-  // if (pageNo && pageSize) {
-  //   Object.assign(queryForm, {
-  //     pageNo,
-  //     pageSize,
-  //     keyWord
-  //   });
-  // }
-  // const _activeName = savedStatus.activeName
-  // if (_activeName) {
-  //   activeName.value = _activeName
-  //   queryForm.status = _activeName
-  // }
-  fetchData()
+  // 并发请求：同时加载所有初始数据
+  await Promise.all([
+    fetchColumn(),
+    queryProcurementManagerData(),
+    fetchData(true), // 使用缓存优先模式
+  ])
 })
-const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
-  if (scrollBarPosition) {
-    const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-    const wrapRef = scrollBarRef.wrapRef
-    setTimeout(() => {
-      wrapRef.scrollTop = scrollBarPosition
-    }, 40)
-  }
-}
-onMounted(() => {
-  nextTick(() => {
-    const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
-    const scrollBarPosition = savedStatus.scrollTop
-    const scrollBarPosition2 = savedStatus.scrollTop2
-    if (scrollBarPosition) {
-      setScrollPosition(scrollBarPosition, tableRef)
-    }
-    if (scrollBarPosition2) {
-      setScrollPosition(scrollBarPosition2, tableRef2)
-    }
-  })
-})
-onUnmounted(() => {
-  let length = tabsStore.getVisitedRoutes.length
-  if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {
-    sessionStorage.removeItem('plannedPoStatus')
+// 清理定时器
+onBeforeUnmount(() => {
+  if (searchDebounceTimer.value) {
+    clearTimeout(searchDebounceTimer.value)
   }
 })
 </script>
