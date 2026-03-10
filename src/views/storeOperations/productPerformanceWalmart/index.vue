@@ -223,7 +223,7 @@
               <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
                 <country-flag :country="row.flag" />
               </span>
-              <el-tag class="order-tag" effect="dark" @click.stop="">订</el-tag>
+              <el-tag class="order-tag" effect="dark" @click.stop="handleShowReleaseOrder(row)">订</el-tag>
               <el-tag class="order-tag" effect="dark" type="success" @click.stop="showOperationLog(row)">志</el-tag>
             </div>
           </span>
@@ -344,16 +344,27 @@
       @update-filter="handleConfirmFilter"
       @update-visible="handleCloseFilterDialog"
     />
+    <!-- 操作日志 加 备注 -->
     <operation-log-dialog
       v-model="operationLogVisible"
       :add-log-api="addWalmartLogAdapter"
       :fetch-history-log-api="fetchWalmartHistoryLogAdapter"
       :row="_row"
     />
+    <!-- 日志汇总 -->
     <operation-log-manual-sum
       v-model:visible="operationLogManualVisible"
       :fetch-log-api="fetchWalmartLogManualAdapter"
       :hide-site-filter="true"
+    />
+    <!-- 产品订货 -->
+    <vab-release-order-dialog
+      ref="releaseOrderDialogRef"
+      v-model="releaseOrderVisible"
+      :loading="orderListLoading"
+      :sku-list="skuList"
+      @confirm="handleReleaseOrder"
+      @image-preview="imagePreviewShow"
     />
   </div>
 </template>
@@ -365,6 +376,7 @@ import { CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
 import {
@@ -394,6 +406,88 @@ defineOptions({
   name: 'ProductPerformanceWalmart',
 })
 
+const skuList = ref<{ value: string; label: string }[]>([])
+const releaseOrderVisible = ref<boolean>(false)
+const orderListLoading = ref<boolean>(false)
+const releaseOrderDialogRef = ref()
+let skuRow: any
+// 打开发布订货
+const handleShowReleaseOrder = async (row: any) => {
+  // currentRowId.value = row.id
+  skuRow = row
+  releaseOrderVisible.value = true
+
+  if (row.sku) {
+    orderListLoading.value = true
+    // 确保skuArray 是一个没有空值的数组
+
+    skuList.value = [
+      {
+        label: row.sku,
+        value: row.sku,
+      },
+    ]
+
+    const { data } = await getOperationOrderSku({
+      id: null,
+      sku: row.sku,
+      asin: '',
+      site: row.site,
+    })
+    // 通过组件实例设置表单数据
+    if (releaseOrderDialogRef.value) {
+      releaseOrderDialogRef.value.setFormData(data)
+    }
+
+    orderListLoading.value = false
+  } else {
+    skuList.value = []
+    // 重置组件表单数据
+    if (releaseOrderDialogRef.value) {
+      releaseOrderDialogRef.value.resetForm()
+    }
+  }
+}
+// 确认发布订货
+const handleReleaseOrder = async (formData: any) => {
+  if (!formData.sku) {
+    $baseMessage('请选择SKU', 'warning')
+    return
+  }
+  // 先判断是否有可认领数量
+  if (formData.totalClaimCount > 0) {
+    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
+    return
+  }
+  if (!formData.number) {
+    $baseMessage('请填写订货数量', 'warning')
+    return
+  }
+  try {
+    // 先关闭弹窗,提升体验
+    releaseOrderVisible.value = false
+    orderListLoading.value = true
+
+    const { data } = await releaseOperationPlanPo({
+      asinId: null,
+      sku: formData.sku,
+      number: formData.number,
+      asin: undefined,
+      site: skuRow.site,
+    })
+
+    if (data) {
+      $baseMessage('发布订货成功！', 'success')
+    }
+  } catch (error) {
+    console.error('发布订货失败:', error)
+    $baseMessage('发布订货失败，请重试', 'error')
+    // 失败时重新打开弹窗
+    releaseOrderVisible.value = true
+  } finally {
+    orderListLoading.value = false
+  }
+}
 const _row = ref<any>({})
 const remark = ref('')
 const operationLogVisible = ref<boolean>(false)

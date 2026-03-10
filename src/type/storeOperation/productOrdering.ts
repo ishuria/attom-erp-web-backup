@@ -228,7 +228,7 @@ export interface IGetOperationOrderSpringFestival {
   startDate: string
 }
 export interface IReleaseOperationPlanPoReq {
-  asinId: number
+  asinId: number | null
   sku: string
   number: number
   asin?: string
