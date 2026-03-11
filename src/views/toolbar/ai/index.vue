@@ -1,0 +1,488 @@
+<template>
+  <div class="ai-prompt-container auto-height-container">
+    <vab-query-form>
+      <vab-query-form-left-panel :span="12">
+        <el-button v-if="currentRoleCode === ROLE_BOSS_CODE" :icon="Plus" type="primary" @click="handleEdit(null)">新增</el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel :span="12">
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item label="人员">
+            <el-select v-model="queryForm.userId" clearable filterable placeholder="请选择人员" @change="queryData">
+              <el-option v-for="item in userList" :key="item.userId" :label="item.userName" :value="item.userId" />
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="currentRoleCode === ROLE_BOSS_CODE" label="角色">
+            <el-select v-model="queryForm.roleId" clearable filterable placeholder="请选择角色" @change="queryData">
+              <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="提示词功能">
+            <el-input
+              v-model.trim="queryForm.functionName"
+              clearable
+              placeholder="请输入提示词功能"
+              @input="debouncedQueryData"
+              @keyup.enter="queryData"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
+            <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :cell-style="{ textAlign: 'center' }"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      :span-method="objectSpanMethod"
+      stripe
+      @cell-click="cellClick"
+    >
+      <el-table-column label="角色" prop="roleName" show-overflow-tooltip width="120" />
+      <el-table-column label="人员" prop="userName" show-overflow-tooltip width="120" />
+      <el-table-column label="提示词功能" prop="functionName" show-overflow-tooltip width="200" />
+      <el-table-column label="提示词" min-width="300" prop="prompt" show-overflow-tooltip>
+        <template #default="{ row }">
+          <el-tooltip effect="dark" placement="top">
+            <template #content>
+              <div class="prompt-tooltip">{{ row.prompt }}</div>
+            </template>
+            <div class="prompt-text">{{ row.prompt }}</div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" width="100">
+        <template #default="{ row }">
+          <el-button text type="primary" @click="handleEdit(row)">修改</el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
+    <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+
+    <!-- 新增对话框 -->
+    <el-dialog v-model="addDialogVisible" title="新增提示词" width="80%" @close="handleAddDialogClose">
+      <el-form ref="addFormRef" label-width="120px" :model="addFormData" :rules="addFormRules">
+        <el-form-item label="角色" prop="roleId">
+          <el-select v-model="addFormData.roleId" clearable filterable placeholder="请选择角色" style="width: 100%">
+            <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="提示词功能" prop="functionName">
+          <el-input v-model.trim="addFormData.functionName" clearable placeholder="请输入提示词功能" />
+        </el-form-item>
+
+        <el-form-item label="提示词" prop="prompt">
+          <div class="md-editor-container no-background-container">
+            <v-md-editor v-model="addFormData.prompt" height="400px" />
+          </div>
+        </el-form-item>
+
+        <el-form-item label="FlowID">
+          <el-input v-model.trim="addFormData.flowId" clearable placeholder="请输入FlowID（选填）" />
+        </el-form-item>
+
+        <el-form-item label="ComponentID" prop="componentId">
+          <el-input v-model.trim="addFormData.componentId" clearable placeholder="请输入ComponentID" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="addDialogVisible = false">取消</el-button>
+        <el-button :loading="submitLoading" type="primary" @click="handleAddSubmit">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 编辑提示词弹窗组件 -->
+    <prompt-editor-dialog v-model="editorDialogVisible" :current-row="currentEditRow" :role-list="roleList" @save="handleSavePrompt" />
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { Plus, Refresh, Search } from '@element-plus/icons-vue'
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+import type { FormInstance, FormRules } from 'element-plus'
+import { debounce } from 'lodash-es'
+import { addAiPrompt, getAiPromptList, updateUserPrompt } from '/@/api/devlocal/aiPrompt'
+import { getAllList } from '/@/api/devlocal/role'
+import { getPersonLevelDropdownList } from '/@/api/devlocal/user'
+import { ROLE_BOSS_CODE } from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
+import { IRoleRes } from '/@/type/role/roleType'
+
+// 初始化 v-md-editor
+VMdEditor.use(githubTheme)
+
+defineOptions({
+  name: 'AI',
+})
+
+const tableRef = ref<any>()
+const addFormRef = ref<FormInstance>()
+const list = ref<any[]>([])
+const listLoading = ref<boolean>(true)
+const total = ref<number>(0)
+const addDialogVisible = ref<boolean>(false)
+const editorDialogVisible = ref<boolean>(false)
+const submitLoading = ref<boolean>(false)
+const userList = ref<any[]>([])
+const currentRoleCode = useAclStore().getRole[0]
+
+// 当前编辑的行数据
+const currentEditRow = ref<any>(null)
+
+const queryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 20,
+  userId: null,
+  roleId: null,
+  functionName: '',
+})
+
+// 新增表单数据
+const addFormData = reactive<any>({
+  roleId: null,
+  functionName: '',
+  prompt: '',
+  flowId: '',
+  componentId: '',
+})
+
+const addFormRules = reactive<FormRules>({
+  roleId: [{ required: true, message: '请选择角色', trigger: 'change' }],
+  functionName: [{ required: true, message: '请输入提示词功能', trigger: 'blur' }],
+  prompt: [{ required: true, message: '请输入提示词内容', trigger: 'blur' }],
+  componentId: [{ required: true, message: '请输入ComponentID', trigger: 'blur' }],
+})
+
+// 防抖查询
+const debouncedQueryData = debounce(() => {
+  queryData()
+}, 500)
+
+// 获取用户列表
+const fetchUserList = async () => {
+  try {
+    const { data } = await getPersonLevelDropdownList()
+    // 将接口返回的 { id, label } 格式映射到 { userId, userName } 格式
+    userList.value =
+      data?.map((item: any) => ({
+        userId: item.id,
+        userName: item.label,
+      })) || []
+  } catch (error) {
+    console.error('获取用户列表失败:', error)
+  }
+}
+
+// 获取列表数据
+const fetchData = async () => {
+  try {
+    listLoading.value = true
+    const { data } = await getAiPromptList({
+      userId: queryForm.userId,
+      roleId: queryForm.roleId,
+      functionName: queryForm.functionName,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    })
+    if (data) {
+      list.value = data.list || []
+      total.value = data.total || 0
+    }
+  } catch (error) {
+    console.error('获取列表失败:', error)
+  } finally {
+    listLoading.value = false
+  }
+}
+
+const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
+  let rowspan = 1 // 默认不跨行
+  const label = column.label
+  if (label === '角色') {
+    const id = row.roleId
+
+    // 遍历后面的行，检查相同的 PO ID
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      if (list.value[i].roleId === id) {
+        rowspan++
+      } else {
+        break
+      }
+    }
+
+    // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
+    return rowIndex === 0 || list.value[rowIndex - 1].roleId !== id ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
+  }
+
+  // 合并 SKU 行
+  if (label === '人员') {
+    const userId = row.userId
+
+    // 遍历后面的行，检查相同的 SKU ID
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      if (list.value[i].userId === userId && list.value[i].roleId === row.roleId) {
+        rowspan++
+      } else {
+        break
+      }
+    }
+
+    // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
+    return rowIndex === 0 || list.value[rowIndex - 1].userId !== userId || list.value[rowIndex - 1].roleId !== row.roleId
+      ? { rowspan, colspan: 1 }
+      : { rowspan: 0, colspan: 0 }
+  }
+
+  // 对于其他列，默认返回不合并
+  return { rowspan: 1, colspan: 1 }
+}
+// 查询
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+
+// 重置查询表单
+const resetQueryForm = () => {
+  queryForm.pageNo = 1
+  queryForm.userId = null
+  queryForm.roleId = null
+  queryForm.functionName = ''
+  fetchData()
+}
+
+// 分页切换
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchData()
+}
+
+const handleSizeChange = (value: number) => {
+  queryForm.pageSize = value
+  queryForm.pageNo = 1
+  fetchData()
+}
+
+// 打开编辑对话框
+const handleEdit = (row: any) => {
+  if (row) {
+    // 编辑模式：打开编辑弹窗
+    currentEditRow.value = row
+    editorDialogVisible.value = true
+  } else {
+    // 新增模式：打开新增对话框
+    addDialogVisible.value = true
+  }
+}
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.label === '提示词') {
+    currentEditRow.value = row
+    editorDialogVisible.value = true
+  }
+}
+// 保存提示词（从编辑弹窗组件触发）
+const handleSavePrompt = async (data: { userId: number; componentId: string | null; prompt: string }) => {
+  try {
+    submitLoading.value = true
+    await updateUserPrompt(data)
+    $baseMessage('修改成功', 'success')
+    editorDialogVisible.value = false
+    currentEditRow.value = null
+    fetchData()
+  } catch (error) {
+    console.error('修改失败:', error)
+  } finally {
+    submitLoading.value = false
+  }
+}
+
+// 新增对话框相关方法
+const handleAddDialogClose = () => {
+  addFormRef.value?.resetFields()
+  addFormData.roleId = null
+  addFormData.functionName = ''
+  addFormData.prompt = ''
+  addFormData.flowId = ''
+  addFormData.componentId = ''
+}
+
+const handleAddSubmit = async () => {
+  try {
+    await addFormRef.value?.validate()
+    submitLoading.value = true
+
+    await addAiPrompt({
+      roleId: addFormData.roleId,
+      componentId: addFormData.componentId || null,
+      functionName: addFormData.functionName,
+      prompt: addFormData.prompt,
+      flowId: addFormData.flowId || null,
+    })
+
+    $baseMessage('新增成功', 'success')
+    addDialogVisible.value = false
+    fetchData()
+  } catch (error) {
+    console.error('新增失败:', error)
+  } finally {
+    submitLoading.value = false
+  }
+}
+// 角色列表
+const roleList = ref<IRoleRes[]>([])
+const fetchRoleList = async () => {
+  const { data } = await getAllList({ pageNo: 1, pageSize: 100, role: '' })
+  // 过滤掉状态为1的角色
+  roleList.value = data.list.filter((r) => r.status === '0' && r.roleCode !== ROLE_BOSS_CODE)
+}
+onMounted(() => {
+  fetchRoleList()
+  fetchUserList()
+  fetchData()
+})
+</script>
+
+<style lang="scss" scoped>
+.ai-prompt-container {
+  padding: 20px;
+
+  .prompt-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
+
+  .prompt-tooltip {
+    max-width: 500px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}
+
+// Markdown 编辑器样式（新增对话框用）
+.md-editor-container {
+  width: 100%;
+  :deep() {
+    .v-md-editor {
+      width: 100%;
+      height: 400px;
+      background: var(--el-color-white);
+      border: 1px solid var(--el-border-color);
+      border-radius: var(--el-border-radius-base);
+      box-shadow: none;
+      transition: var(--el-transition);
+
+      &__left-area {
+        width: 100%;
+        height: 400px;
+      }
+
+      &__left-area-toolbar {
+        height: auto;
+      }
+
+      &--fullscreen {
+        z-index: 9999;
+        border-radius: 0;
+      }
+
+      &__toolbar {
+        border-bottom: 1px solid var(--el-border-color);
+
+        &-divider:before {
+          border-left: 1px solid var(--el-border-color);
+        }
+
+        &-item {
+          color: var(--el-color-grey);
+
+          &--active,
+          &:hover {
+            color: var(--el-color-primary);
+            background: var(--el-color-primary-light-9);
+          }
+        }
+      }
+
+      &__editor-wrapper {
+        border-right: 1px solid var(--el-border-color);
+        height: calc(100% - 40px);
+      }
+
+      .v-md-textarea-editor pre,
+      .v-md-textarea-editor textarea {
+        color: var(--el-color-grey);
+        background-color: var(--el-color-white);
+      }
+
+      .github-markdown-body h1,
+      .github-markdown-body h2 {
+        border-bottom: 1px solid var(--el-border-color);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .v-md-editor {
+        &__toolbar-right,
+        &__toolbar-divider {
+          display: none;
+        }
+
+        &__main {
+          flex-direction: column !important;
+          overflow-y: auto;
+        }
+
+        &__preview-wrapper {
+          border-top: 1px solid var(--el-border-color);
+        }
+
+        &__editor-wrapper,
+        &__preview-wrapper {
+          display: flex;
+          flex-direction: column;
+          height: auto;
+          min-height: calc(var(--vh, 1vh) * 100);
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}
+
+// 确保编辑器的表单项正常显示
+:deep(.el-form-item) {
+  &.is-error {
+    .md-editor-container {
+      .v-md-editor {
+        border-color: var(--el-color-danger);
+      }
+    }
+  }
+}
+</style>

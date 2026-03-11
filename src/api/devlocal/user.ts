@@ -117,3 +117,14 @@ export function updatePersonLevel(params: { userId: number; targetUserId: number
     params,
   })
 }
+
+/**
+ * 获取人员等级下拉列表
+ * @returns { data: Array<{ id: number, label: string }> }
+ */
+export function getPersonLevelDropdownList(): Promise<{ data: Array<{ id: number; label: string }> }> {
+  return request({
+    url: `${BASE_API}/user/person/level/dropdown`,
+    method: 'get',
+  })
+}
