@@ -448,3 +448,182 @@ export interface IContractValidateTaxRefundBatch {
   id: number
   path: string
 }
+
+// VAT退税产品汇总 - 主列表
+export interface IGetTaxRefundMainListQuery {
+  keyWord?: string
+  contractNumber?: string
+  fromDate?: string
+  toDate?: string
+  orderByField?: string
+  orderDirection?: string
+  searchFields?: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetTaxRefundMainListRes {
+  data?: {
+    total?: number
+    list?: IGetTaxRefundMainList[]
+  }
+}
+
+export interface IGetTaxRefundMainList {
+  /** CIF售价 */
+  cif?: number
+  /** 匹配发票总数 */
+  matchInvoiceTotalCount?: number
+  /** 供应商名称 */
+  suppliser?: string
+  /** 零件ID */
+  componentId?: number
+  /** 报关品名 */
+  customsDeclarationName?: string
+  /** PO零件ID */
+  poComponentId?: number
+  /** PO ID */
+  poId?: number
+  /** 供应商ID */
+  suppliserId?: number
+  /** 实际退税后成本 */
+  acutalTaxCost?: number
+  /** 匹配发票金额 */
+  matchInvoicePrice?: number
+  /** RMB售价 */
+  price?: number
+  /** 含税成本 */
+  taxInclusiveCost?: number
+  /** 利润率 */
+  profitMargin?: number
+  /** 主键id */
+  id?: number
+  /** 发货日期 */
+  shipmentDate?: string
+  /** 零件名 */
+  componentName?: string
+  /** 利润 */
+  profit?: number
+  /** 匹配发票数量 */
+  matchInvoiceCount?: number
+  /** 未税价 */
+  taxRefundsCost?: number
+  /** 零件数量 */
+  count?: number
+  /** 合同号 */
+  contractNumber?: string
+  /** 报关数量 */
+  customsDeclarationCount?: number
+  /** 报关单位 */
+  customsDeclarationUnit?: string
+  /** 创建时间 */
+  createTime?: string
+  /** 运费 */
+  freightFee?: number
+  /** FOB售价 */
+  fob?: number
+  /** PO号 */
+  po?: string
+  /** 报关单出口日期 */
+  exportDate?: string
+  /** 汇率 */
+  exchangeRate?: number
+  /** 出口退税税率 */
+  exportTaxRebateRate?: number
+  /** 退税金额 */
+  taxRebate?: number
+  /** 税前成本 */
+  taxRebateCost?: number
+  /** 发票匹配日期 */
+  formattedMatchDate?: string[]
+  /** 发票代码 */
+  formattedInvoiceCode?: string[]
+  /** 发票行次 */
+  formattedInvoiceNo?: string[]
+  /** 匹配数量 */
+  formattedInvoiceCount?: string[]
+  /** 发票号码 */
+  formattedInvoiceNumber?: { invoiceNumber: string }[]
+  /** 开票类型 */
+  invoicing?: string
+  /** 备注 */
+  remarks?: string
+  /** 付款记录 */
+  payRecordList?: string
+  /** 报关单位（别名） */
+  declarationUnit?: string
+  /** SKU */
+  sku?: string
+  /** ShipmentId */
+  shipmentId?: string
+  /** 供应商税号 */
+  suppliserTaxNumber?: string
+  /** CIF售价（别名） */
+  cifPrice?: number
+  /** FOB售价（别名） */
+  fobPrice?: number
+}
+
+// VAT退税产品汇总 - 发票匹配
+export interface IGetTaxRefundMainInvoiceMatchQuery {
+  detailId: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetTaxRefundMainInvoiceMatchRes {
+  data?: {
+    total?: number
+    list?: IGetTaxRefundMainInvoiceMatchList[]
+  }
+}
+
+export interface IGetTaxRefundMainInvoiceMatchList {
+  /** 是否匹配 true 匹配 false 不匹配 */
+  matchFlag: boolean
+  /** cif价格 */
+  cifPrice?: number
+  /** 人民币售价 */
+  salePrice?: number
+  /** 发票数量 */
+  invoiceCount?: number
+  /** 合同编号 */
+  contractNumber?: string
+  /** 未开票数量 */
+  notYetInvoice?: number
+  /** 报关数量 */
+  customsDeclarationCount?: number
+  /** fob价格 */
+  fobPrice?: number
+  /** 报关单位 */
+  customsDeclarationUnit?: string
+  /** 汇率 */
+  rate?: number
+  /** 含税成本 */
+  taxInclusiveCost?: number
+  /** shipmentId */
+  shipmentId?: string
+  /** 运费 */
+  freightFee?: number
+  /** 利润率 */
+  profitMargin?: number
+  /** 唯一数据id */
+  uniqId: number
+  /** 主键id */
+  id: number
+  /** 零件名称 */
+  componentName?: string
+  /** Sku信息 */
+  sku?: string
+  /** Po号 */
+  po?: string
+}
+
+/** VAT退税产品汇总 - 发票匹配提交 */
+export interface ISubmitTaxRefundMainInvoiceMatch {
+  /** 发票明细id */
+  detailId: number
+  /** 退税产品记录id列表 */
+  taxRefundMainIds: number[]
+}

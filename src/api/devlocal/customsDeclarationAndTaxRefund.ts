@@ -58,9 +58,14 @@ import type {
   IGetTaxRefundInvoiceMatchQuery,
   IGetTaxRefundInvoiceMatchRes,
   IGetTaxRefundListQuery,
+  IGetTaxRefundMainInvoiceMatchQuery,
+  IGetTaxRefundMainInvoiceMatchRes,
+  IGetTaxRefundMainListQuery,
+  IGetTaxRefundMainListRes,
   IGetTaxRefundProfitMarginQuery,
   IGetTaxRefundProfitMarginRes,
   ISubmitTaxRefundInvoiceMatch,
+  ISubmitTaxRefundMainInvoiceMatch,
   ITaxRefundInvoiceDelete,
   ITaxRefundInvoiceRes,
   IUpdateTaxRefundBatchDate,
@@ -711,6 +716,40 @@ export const getTaxRefundList = (data: IGetTaxRefundListQuery): Promise<IGetTaxR
     data,
   })
 }
+
+/**
+ * @description VAT退税产品汇总 - 主列表查询
+ */
+export const getTaxRefundMainList = (data: IGetTaxRefundMainListQuery): Promise<IGetTaxRefundMainListRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/main/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description VAT退税产品汇总 - 发票匹配查询
+ */
+export const getTaxRefundMainInvoiceMatch = (data: IGetTaxRefundMainInvoiceMatchQuery): Promise<IGetTaxRefundMainInvoiceMatchRes> => {
+  return request({
+    url: `${BASE_API}/taxRefundMain/invoice/match`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description VAT退税产品汇总 - 发票匹配提交
+ */
+export const submitTaxRefundMainInvoiceMatch = (data: ISubmitTaxRefundMainInvoiceMatch): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/main/invoice/match/submit`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * @description 退税管理-发票文件上传
  */
