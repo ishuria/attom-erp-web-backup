@@ -7,7 +7,7 @@
       :draggable="false"
       title="新品质检报告"
       top="3vh"
-      width="50%"
+      :width="dialogWidth"
       @close="closeQualityInspection"
     >
       <el-form
@@ -20,17 +20,17 @@
       >
         <el-divider style="margin-top: 0"><span style="font-size: var(--el-font-size-base)">基础信息</span></el-divider>
         <el-row justify="space-between" style="width: 100%">
-          <el-col :span="8">
+          <el-col :md="8" :sm="12" :xs="24">
             <el-form-item label="日期" style="min-width: 95%">
               <el-input v-model="qualityInspectionForm.date" disabled />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :md="8" :sm="12" :xs="24">
             <el-form-item label="产品经理" style="min-width: 95%">
               <el-input v-model="qualityInspectionForm.productManager" disabled />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :md="8" :sm="24" :xs="24">
             <el-form-item label="PO" style="min-width: 100%">
               <el-select
                 v-model="qualityInspectionForm.poList"
@@ -47,12 +47,12 @@
           </el-col>
         </el-row>
         <el-row justify="space-between" style="width: 100%">
-          <el-col :span="8">
+          <el-col :md="8" :sm="12" :xs="24">
             <el-form-item label="SKU" prop="sku" style="min-width: 95%">
               <el-input v-model="qualityInspectionForm.sku" disabled />
             </el-form-item>
           </el-col>
-          <el-col :span="16">
+          <el-col :md="16" :sm="12" :xs="24">
             <el-form-item label="产品名称" prop="productName" style="min-width: 100%">
               <el-input v-model="qualityInspectionForm.productName" disabled />
             </el-form-item>
@@ -116,6 +116,7 @@
           </template>
           <el-button type="primary" @click="handleShareWeight">次要零件重量均摊</el-button>
         </el-form-item>
+        <div style="overflow-x: auto">
         <el-table
           border
           :cell-class-name="clearPadding"
@@ -242,12 +243,14 @@
             </template>
           </el-table-column>
         </el-table>
+        </div>
         <el-divider style="margin-top: 30px"><span style="font-size: var(--el-font-size-base)">质检结果</span></el-divider>
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="showPrecautions">修改SKU质检项</el-button>
           </vab-query-form-left-panel>
         </vab-query-form>
+        <div style="overflow-x: auto">
         <el-table
           border
           :cell-style="qualityInspectionCellStyle"
@@ -277,6 +280,7 @@
             </template>
           </el-table-column>
         </el-table>
+        </div>
       </el-form>
 
       <el-form
@@ -301,7 +305,7 @@
             基础图片
             <span style="margin-left: 4px; color: var(--el-color-danger)">*</span>
           </template>
-          <div style="display: flex; flex-wrap: wrap; gap: 40px 20px">
+          <div class="image-grid">
             <div v-for="(item, index) in basePictureImgList" :key="item.id || `base-${item.sort}`" class="image-cell">
               <!-- 有图片时显示 -->
               <div v-if="item.imgUrl" class="image-preview">
@@ -335,9 +339,9 @@
               </template>
             </el-tooltip>
           </template>
-          <div style="display: flex; flex-wrap: wrap">
+          <div class="image-grid">
             <!-- 图片预览部分 -->
-            <div v-for="(item, index) in componentDetailImgList" :key="index" class="image-cell" style="margin-right: 20px">
+            <div v-for="(item, index) in componentDetailImgList" :key="index" class="image-cell">
               <div v-if="item.imgUrl" class="image-preview">
                 <img alt="" :src="item.imgUrl" />
                 <div class="image-actions">
@@ -367,9 +371,9 @@
               </template>
             </el-tooltip>
           </template>
-          <div style="display: flex; flex-wrap: wrap">
+          <div class="image-grid">
             <!-- 图片预览部分 -->
-            <div v-for="(item, index) in finishedImgList" :key="index" class="image-cell" style="margin-right: 20px">
+            <div v-for="(item, index) in finishedImgList" :key="index" class="image-cell">
               <div v-if="item.imgUrl" class="image-preview">
                 <img alt="" :src="item.imgUrl" />
                 <div class="image-actions">
@@ -387,9 +391,9 @@
           </div>
         </el-form-item>
         <el-form-item label="其他图片">
-          <div style="display: flex; flex-wrap: wrap">
+          <div class="image-grid">
             <!-- 图片预览部分 -->
-            <div v-for="(item, index) in otherImgList" :key="index" class="image-cell" style="margin-right: 20px">
+            <div v-for="(item, index) in otherImgList" :key="index" class="image-cell">
               <div v-if="item.imgUrl" class="image-preview">
                 <img alt="" :src="item.imgUrl" />
                 <div class="image-actions">
@@ -512,6 +516,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
+const dialogWidth = computed(() => (window.innerWidth <= 768 ? '95%' : '50%'))
+
 const visible = computed({
   get() {
     return props.modelValue
@@ -1233,10 +1239,18 @@ const fetchData = async () => {
 </script>
 
 <style lang="scss" scoped>
+// 图片网格容器
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 16px;
+  align-items: flex-start;
+}
+
 // 图片样式
 .image-cell {
-  width: 135px;
-  height: 135px;
+  width: 120px;
+  height: 120px;
 
   // 有图片时的样式
   .image-preview {
@@ -1361,7 +1375,7 @@ const fetchData = async () => {
   }
 }
 
-// <= 1200：竖排（覆盖“较大手机/小平板”）
+// <= 1024：竖排（覆盖”较大手机/小平板”）
 @media (max-width: 1024px) {
   .packing-size-row {
     flex-direction: column !important;
@@ -1381,6 +1395,38 @@ const fetchData = async () => {
     .packing-size-sep {
       display: none;
     }
+  }
+}
+
+@media (max-width: 768px) {
+  // 图片缩小，每行可放更多
+  .image-cell {
+    width: 90px;
+    height: 90px;
+  }
+
+  .image-grid {
+    gap: 12px 10px;
+  }
+
+  // 图片标题字体缩小
+  .image-text {
+    .title {
+      font-size: 12px;
+    }
+    .desc {
+      font-size: 10px;
+    }
+  }
+
+  // 表格横向滚动
+  .el-table {
+    overflow-x: auto;
+  }
+
+  // checkbox 不缩放（原来 1.3x 在小屏太大）
+  .el-checkbox {
+    transform: scale(1.1);
   }
 }
 </style>
