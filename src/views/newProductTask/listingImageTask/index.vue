@@ -69,7 +69,12 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+              <el-image
+                :lazy="true"
+                :src="row.skuImgUrl"
+                style="display: block; width: 75px; height: 75px"
+                @click="imagePreviewShow(row.skuImgUrl)"
+              >
                 <template #error><el-icon /></template>
               </el-image>
             </template>
@@ -322,7 +327,12 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+              <el-image
+                :lazy="true"
+                :src="row.skuImgUrl"
+                style="display: block; width: 75px; height: 75px"
+                @click="imagePreviewShow(row.skuImgUrl)"
+              >
                 <template #error><el-icon /></template>
               </el-image>
             </template>
@@ -564,7 +574,12 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+              <el-image
+                :lazy="true"
+                :src="row.skuImgUrl"
+                style="display: block; width: 75px; height: 75px"
+                @click="imagePreviewShow(row.skuImgUrl)"
+              >
                 <template #error><el-icon /></template>
               </el-image>
             </template>
@@ -802,7 +817,12 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+              <el-image
+                :lazy="true"
+                :src="row.skuImgUrl"
+                style="display: block; width: 75px; height: 75px"
+                @click="imagePreviewShow(row.skuImgUrl)"
+              >
                 <template #error><el-icon /></template>
               </el-image>
             </template>
@@ -1613,11 +1633,26 @@ const activeName = ref<number>(3)
 const queryForm = reactive<IGetArtDesignTaskListReq>({
   keyword: '',
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 50, // 降低首屏加载数据量，从20改为50，减少分页次数
   status: 3,
   taskType: '',
   operationUserId: -1,
 })
+
+// 列宽计算缓存
+const columnWidthCache = ref<Map<string, number>>(new Map())
+
+// 优化的列宽计算函数
+const getCachedColumnWidth = (label: string, prop: string, fallback: number) => {
+  const cacheKey = `${label}_${prop}_${list.value.length}`
+  if (columnWidthCache.value.has(cacheKey)) {
+    return columnWidthCache.value.get(cacheKey)!
+  }
+
+  const width = flexColumnWidth(list.value, label, prop)
+  columnWidthCache.value.set(cacheKey, width)
+  return width
+}
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const siteList = ref<{ id: number; label: string }[]>([])
@@ -2019,16 +2054,26 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   }
   return ''
 }
+// 搜索防抖
+const searchDebounceTimer = ref<NodeJS.Timeout>()
 const queryData = () => {
-  queryForm.pageNo = 1
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize,
-    },
-  })
-  fetchData()
+  // 清除之前的定时器
+  if (searchDebounceTimer.value) {
+    clearTimeout(searchDebounceTimer.value)
+  }
+
+  // 设置新的防抖定时器
+  searchDebounceTimer.value = setTimeout(() => {
+    queryForm.pageNo = 1
+    router.push({
+      query: {
+        ...route.query,
+        pageNo: queryForm.pageNo,
+        pageSize: queryForm.pageSize,
+      },
+    })
+    fetchData()
+  }, 300) // 300ms 防抖
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
@@ -2054,25 +2099,56 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 
+// 数据后处理缓存
+const processedDataCache = ref<Map<number, any>>(new Map())
+
+// 优化后的数据获取函数
 const fetchData = async () => {
-  listLoading.value = true
-  const { data } = await getArtDesignTaskList(queryForm)
-  total.value = data.total
-  list.value = data.list
-  list.value.forEach((item) => {
-    // processField(item, 'sites', 3)
-    item._basePicture = item.basePicture?.replaceAll(',', '<br />')
-    item._productManager = item.productManager?.replaceAll(',', '<br />')
-    item._modeling = item.modeling?.replaceAll(',', '<br />')
-    item._aAdd = item.aAdd?.replaceAll(',', '<br />')
-    item._video = item.video?.replaceAll(',', '<br />')
-    item._instructionManual = item.instructionManual?.replaceAll(',', '<br />')
-    item._colorDesign = item.colorDesign?.replaceAll(',', '<br />')
-    item._productPlaneDesign = item.productPlaneDesign?.replaceAll(',', '<br />')
-    item._operation = item.operation?.replaceAll(',', '<br />')
-    item._productDesign = item.productDesign?.replaceAll(',', '<br />')
-  })
-  listLoading.value = false
+  try {
+    listLoading.value = true
+
+    // 请求数据
+    const { data } = await getArtDesignTaskList(queryForm)
+    total.value = data.total
+    list.value = data.list
+
+    // 批量处理数据（性能优化）
+    const fieldsToProcess = [
+      'basePicture',
+      'productManager',
+      'modeling',
+      'aAdd',
+      'video',
+      'instructionManual',
+      'colorDesign',
+      'productPlaneDesign',
+      'operation',
+      'productDesign',
+    ]
+
+    list.value.forEach((item) => {
+      // 检查缓存（添加类型检查）
+      if (item.id !== undefined && processedDataCache.value.has(item.id)) {
+        const cached = processedDataCache.value.get(item.id)
+        Object.assign(item, cached)
+      } else {
+        const processed: any = {}
+        fieldsToProcess.forEach((field) => {
+          const key = `_${field}`
+          processed[key] = item[field]?.replaceAll(',', '<br />')
+        })
+        if (item.id !== undefined) {
+          processedDataCache.value.set(item.id, processed)
+        }
+        Object.assign(item, processed)
+      }
+    })
+
+    listLoading.value = false
+  } catch (error) {
+    console.error('获取数据失败:', error)
+    listLoading.value = false
+  }
 }
 const fetchSiteList = async () => {
   const { data } = await getSeasonalCoefficientSiteList()
@@ -2096,7 +2172,7 @@ const fetchOperationUserList = async () => {
   operationUserList.value = data
   operationUserList.value.unshift({ id: -1, label: '全部' })
 }
-onBeforeMount(() => {
+onBeforeMount(async () => {
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
@@ -2108,10 +2184,20 @@ onBeforeMount(() => {
     activeName.value = Number(tab)
     queryForm.status = activeName.value
   }
-  fetchOperationUserList()
-  fetchSiteList()
-  fetchUserList()
-  fetchData()
+
+  // 并发请求所有初始数据
+  await Promise.all([fetchOperationUserList(), fetchSiteList(), fetchUserList(), fetchData()])
+})
+
+// 清理资源
+onBeforeUnmount(() => {
+  if (searchDebounceTimer.value) {
+    clearTimeout(searchDebounceTimer.value)
+  }
+  // 清理列宽缓存
+  columnWidthCache.value.clear()
+  // 清理数据处理缓存
+  processedDataCache.value.clear()
 })
 </script>
 
