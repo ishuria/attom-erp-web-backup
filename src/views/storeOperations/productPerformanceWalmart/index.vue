@@ -50,7 +50,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+            <el-button type="primary" @click="handleOpenFilter">筛选</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
@@ -341,6 +341,8 @@
     <vab-filter-walmart-dialog
       :filter-visible="filterVisible"
       :loading="filterLoading"
+      :operation-user-id="queryForm.operationUserId"
+      :saved-filter-data="queryForm"
       @update-filter="handleConfirmFilter"
       @update-visible="handleCloseFilterDialog"
     />
@@ -377,12 +379,13 @@ import { CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationTypeUserList } from '~/src/api/devlocal/frontPage'
 import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
+import { useUserStore } from '~/src/store/modules/user'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
 import {
   addWalmartOperationLog,
-  filterWalmartList,
   getCurrencyWalmartOperation,
   getDevelopUserList,
   getOperationColumnList,
@@ -564,27 +567,10 @@ const changeCurrency = async () => {
     queryData()
   }
 }
-const handleConfirmFilter = async (filterForm: any) => {
-  filterLoading.value = true
-  try {
-    const { site, ...filterQueryForm } = queryForm
-    const siteIds = site.join(',')
-    const { data } = await filterWalmartList({
-      ...filterQueryForm,
-      ...filterForm,
-      siteIds,
-    })
-    if (data) {
-      $baseMessage('沃尔玛运营筛选成功！', 'success')
-      filterVisible.value = false
-      total.value = data.total
-      list.value = data.list
-    }
-  } catch {
-    $baseMessage('筛选失败，请重试', 'error')
-  } finally {
-    filterLoading.value = false
-  }
+const handleConfirmFilter = (filterForm: any) => {
+  Object.assign(queryForm, filterForm)
+  filterVisible.value = false
+  queryData()
 }
 const walmartSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
@@ -1012,6 +998,23 @@ const reorderSeasonalData = (data: number[]) => {
   if (data.length !== 12) return data
   const currentMonthIndex = getCurrentMonthIndex()
   return [...data.slice(currentMonthIndex), ...data.slice(0, currentMonthIndex)]
+}
+const myName = useUserStore().getUsername
+const operationTypeList = ref<{ id: number; typeName: string }[]>([])
+const handleOpenFilter = () => {
+  filterVisible.value = true
+  handleGetOperationTypeById(queryForm.operationUserId)
+}
+const handleGetOperationTypeById = async (id: number) => {
+  if (id === -1) {
+    const currentId = operateUserList.value.find((item) => item.label.includes(myName))?.id || -1
+    const { data } = await getOperationTypeUserList({ userId: currentId })
+    operationTypeList.value = data
+    return
+  } else {
+    const { data } = await getOperationTypeUserList({ userId: id })
+    operationTypeList.value = data
+  }
 }
 const fetchData = async () => {
   if (listLoading.value) return
