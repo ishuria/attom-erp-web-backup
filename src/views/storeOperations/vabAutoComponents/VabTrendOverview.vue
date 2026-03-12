@@ -2305,8 +2305,13 @@ const fetchChartData = async () => {
     currencySymbol.value = data.symbol || ''
     // 更新卡片数据（在图表数据加载完成后更新）
     updateCardsData()
-    // 获取操作日志数据
-    await fetchOperationLogCount()
+    // 操作日志与图表渲染并行，加载完成后仅更新 markPoint
+    fetchOperationLogCount().then(() => {
+      if (chartInstance && fullTrendList.value.length > 0 && radio.value === 'day') {
+        updateOperationLogMarkPoint()
+        updateChart()
+      }
+    })
   } catch (error) {
     console.error('获取图表数据失败:', error)
     fullTrendList.value = []
@@ -2318,7 +2323,7 @@ const fetchChartData = async () => {
 
 // 监听 fullTrendList 变化，更新图表（图表需要完整数据）
 watch(
-  () => fullTrendList.value,
+  fullTrendList,
   () => {
     if (chartInstance && fullTrendList.value.length > 0) {
       // 如果是第一次加载数据，尝试恢复状态
@@ -2344,15 +2349,14 @@ watch(
       handleSwitchTime()
     }
   },
-  { deep: true, immediate: false }
+  { immediate: false }
 )
 
 // 监听 props 变化，重新获取数据
 watch(
   () => [props.selectField, props.compareType, props.selectDateRange, props.selectedSku, props.asin],
   () => {
-    fetchChartData()
-    fetchTableData() // 图表数据变化时，表格数据也需要刷新
+    Promise.all([fetchChartData(), fetchTableData()])
   },
   { deep: true }
 )
@@ -2360,19 +2364,8 @@ watch(
 watch(
   () => props.selectedSite,
   () => {
-    fetchChartData()
-    fetchTableData()
+    Promise.all([fetchChartData(), fetchTableData()])
   }
-)
-// 监听操作日志数据变化，更新图表
-watch(
-  () => operationLogCountByDate.value,
-  () => {
-    if (chartInstance && fullTrendList.value.length > 0 && radio.value === 'day') {
-      handleSwitchTime()
-    }
-  },
-  { deep: true }
 )
 const getKeyWordType = (type: string) => {
   switch (type) {
