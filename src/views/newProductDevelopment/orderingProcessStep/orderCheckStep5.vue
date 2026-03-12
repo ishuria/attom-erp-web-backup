@@ -68,6 +68,7 @@
             <template v-if="row['column0'] === 'seasonal'">
               <el-checkbox v-model="row[prop]" disabled :false-value="0" :true-value="1" />
             </template>
+            <template v-if="row['column0'] === 'moq'">{{ row[prop] }} 套</template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -80,7 +81,8 @@
                 row['column0'] !== 'magnetic' &&
                 row['column0'] !== 'woodenProduct' &&
                 row['column0'] !== 'toy' &&
-                row['column0'] !== 'seasonal'
+                row['column0'] !== 'seasonal' &&
+                row['column0'] !== 'moq'
               "
             >
               {{ row[prop] }}

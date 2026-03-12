@@ -234,6 +234,7 @@ declare module 'vue' {
     VabAddConsumable: typeof import('./../../../src/views/purchase/vabAutoComponents/vabAddConsumable.vue')['default']
     VabAddRepository: typeof import('./../../../src/views/purchase/vabAutoComponents/vabAddRepository.vue')['default']
     VabAdPieTab: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabAdPieTab.vue')['default']
+    VabAggregationInvoiceMath: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabAggregationInvoiceMath.vue')['default']
     VabAlert: typeof import('./../../components/VabAlert/index.vue')['default']
     VabApp: typeof import('./../../components/VabApp/index.vue')['default']
     VabAppMain: typeof import('./../../components/VabAppMain/index.vue')['default']

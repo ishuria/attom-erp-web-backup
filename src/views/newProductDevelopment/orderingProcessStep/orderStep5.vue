@@ -55,7 +55,7 @@
                 'benchmarkAsin',
                 'patent',
                 'manufacturerEnName',
-                'moq',
+
                 'fullCaseQty',
               ].includes(row['column0'])
             "
@@ -70,6 +70,18 @@
             </div>
             <span>{{ row[prop] }}</span>
           </template>
+          <template v-if="row['column0'] === 'moq'">
+            <div class="none">
+              <el-input
+                v-model="row[prop]"
+                @blur="clickCancel($event, prop)"
+                @input="handleInputChange(row, prop)"
+                @keyup.enter="clickCancel($event, prop)"
+              />
+            </div>
+            <span>{{ row[prop] }} 套</span>
+          </template>
+
           <template v-if="row['column0'] === 'productManager'">
             <el-select
               v-model="row[prop]"
