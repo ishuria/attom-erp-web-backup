@@ -230,7 +230,7 @@ const handleCheckTypeUpdate = async (row: IreviewStepNo4ListQualityInspection) =
   // 自定义抽检
   if (row.checkType === 6) {
     if (!row.packingPrecautions?.includes('抽检比例：')) {
-      row.packingPrecautions = (row.packingPrecautions || '') + '\n抽检比例：'
+      row.packingPrecautions = (row.packingPrecautions || '') + '\n【抽检比例】：'
     }
   }
   const { data } = await reviewStepNo4UpdateQualityInspection({

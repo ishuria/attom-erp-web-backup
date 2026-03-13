@@ -12,8 +12,8 @@
         :cell-style="cellStyle"
         :data="list"
         :header-cell-style="{ 'text-align': 'center' }"
-        stripe
         height="800"
+        stripe
         @cell-click="changeInput"
       >
         <el-table-column label="修改日期" prop="createTime" width="140">
@@ -86,8 +86,8 @@
 </template>
 
 <script lang="ts" setup>
-import { batchAddPackingPrecautions } from '/@/api/devlocal/productInformation'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
+import { batchAddPackingPrecautions } from '/@/api/devlocal/productInformation'
 import { $baseAlert } from '/@/hooks'
 import { IgetProductQualityInspection } from '/@/type/productInformation/skuInformationType'
 import { checkTypeList } from '/@/views/newProductDevelopment/indexCommon'
@@ -168,6 +168,12 @@ const handleStatusChange = async (row: any) => {
 }
 const handleCheckType = async (row: any) => {
   row.status = 1
+  // 自定义抽检
+  if (row.checkType === 6) {
+    if (!row.packagePrecautions?.includes('抽检比例：')) {
+      row.packagePrecautions = (row.packagePrecautions || '') + '\n【抽检比例】：'
+    }
+  }
 }
 const handleAdd = async () => {
   const newQualityInspection = {

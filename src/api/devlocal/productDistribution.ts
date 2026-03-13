@@ -9,9 +9,8 @@ import type {
   IGetDistributionProductListRes,
   IUpdateDistributionAsinUserReq,
   IUpdateDistributionUserType,
-  IUpdateOldStatusReq
+  IUpdateOldStatusReq,
 } from '/@/type/storeOperation/productDistributionType'
-
 
 /**
  * @description 查询自动认领设定列表
@@ -29,13 +28,13 @@ export function delDistributionList(params: { id: number }): Promise<{ data: boo
   return request({
     url: `${BASE_API}/distribution/delete`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * @description 产品分配-查询站点列表
  */
-export function getDistributionSiteList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getDistributionSiteList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/distribution/site/list`,
     method: 'get',
@@ -44,7 +43,7 @@ export function getDistributionSiteList(): Promise<{ data: { id: number, label: 
 /**
  * @description 产品分配-查询运营人员列表
  */
-export function getDistributionOptionUserList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getDistributionOptionUserList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/distribution/option/user/list`,
     method: 'get',
@@ -53,11 +52,11 @@ export function getDistributionOptionUserList(): Promise<{ data: { id: number, l
 /**
  * @description 产品分配-查询运营人对应的分类列表
  */
-export function getDistributionUserTypeList(params: { userId: number }): Promise<{ data: { id: number, label: string }[] }> {
+export function getDistributionUserTypeList(params: { userId: number }): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/distribution/user/type/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -67,7 +66,7 @@ export function getDistributionProductList(params: IGetDistributionProductListRe
   return request({
     url: `${BASE_API}/distribution/product/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -77,7 +76,7 @@ export function addDistributionList(data: IAddDistributionListReq): Promise<{ da
   return request({
     url: `${BASE_API}/distribution/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -87,7 +86,7 @@ export function updateDistributionAsinUser(data: IUpdateDistributionAsinUserReq)
   return request({
     url: `${BASE_API}/distribution/asin/user`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -97,7 +96,7 @@ export function updateDistributionUserType(data: IUpdateDistributionUserType): P
   return request({
     url: `${BASE_API}/distribution/user/type`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -118,6 +117,6 @@ export function updateOldStatus(data: IUpdateOldStatusReq): Promise<{ data: bool
   return request({
     url: `${BASE_API}/distribution/oldStatus/update`,
     method: 'post',
-    data
+    data,
   })
 }

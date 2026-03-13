@@ -98,7 +98,6 @@
 </template>
 
 <script lang="ts" setup>
-import { $baseAlert } from '/@/hooks'
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
@@ -108,6 +107,7 @@ import {
   getProductQualityInspection,
   updateProductQualityInspection,
 } from '/@/api/devlocal/productInformation'
+import { $baseAlert } from '/@/hooks'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { checkTypeList } from '/@/views/newProductDevelopment/indexCommon'
 
@@ -159,6 +159,12 @@ const handlerCloseDialog = () => {
   emit('update:tableValue', list.value)
 }
 const handleCheckType = async (row: any) => {
+  // 自定义抽检
+  if (row.checkType === 6) {
+    if (!row.packagePrecautions?.includes('抽检比例：')) {
+      row.packagePrecautions = (row.packagePrecautions || '') + '\n【抽检比例】：'
+    }
+  }
   await updateProductQualityInspection(row)
   fetchData()
   row.status = 1
