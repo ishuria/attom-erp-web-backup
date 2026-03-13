@@ -227,15 +227,23 @@ const variantsSelectStringList = ref<IGetSelectVariantsStringList[]>([])
 // 质检清单列表
 const qualityInspectionList = ref<IreviewStepNo4ListQualityInspection[]>([])
 const handleCheckTypeUpdate = async (row: IreviewStepNo4ListQualityInspection) => {
-  await reviewStepNo4UpdateQualityInspection({
+  // 自定义抽检
+  if (row.checkType === 6) {
+    if (!row.packingPrecautions?.includes('抽检比例：')) {
+      row.packingPrecautions = (row.packingPrecautions || '') + '\n抽检比例：'
+    }
+  }
+  const { data } = await reviewStepNo4UpdateQualityInspection({
     checkType: row.checkType!, //0全检 1抽检5% 2抽检10% 3抽检15% 4抽检20% 5注意事项
     packingPrecautions: row.packingPrecautions!,
     qualityInspectionId: row.qualityInspectionId!,
     variant: row.variant!,
     variantId: row.variantId!,
-    requirePhoto: row.requirePhoto!
+    requirePhoto: row.requirePhoto!,
   })
-  fetchQualityInspectionData()
+  if (data) {
+    fetchQualityInspectionData()
+  }
 }
 const handleVariantUpdate = async (row: IreviewStepNo4ListQualityInspection) => {
   row.variantId = parseInt(row.variant!)

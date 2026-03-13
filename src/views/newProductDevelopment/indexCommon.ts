@@ -144,40 +144,54 @@ export const checkTypeList = [
     value: 5,
     label: '注意事项',
   },
+  {
+    value: 6,
+    label: '抽检(比例自填)',
+  },
 ]
 
 export const packKeepSamplesOption = [
-  { 
-    label: '有拍照样品无需留样', value: 0
+  {
+    label: '有拍照样品无需留样',
+    value: 0,
   },
   {
-    label: '无拍照样品留样1套', value: 1,
+    label: '无拍照样品留样1套',
+    value: 1,
   },
   {
-    label: '无拍照样品留样2套', value: 2,
+    label: '无拍照样品留样2套',
+    value: 2,
   },
   {
-    label: '做CE认证留样1套', value: 3,
+    label: '做CE认证留样1套',
+    value: 3,
   },
   {
-    label: '做CPC认证留样1套', value: 4,
+    label: '做CPC认证留样1套',
+    value: 4,
   },
   {
-    label: '做毒理留样1套', value: 5,
-  }
+    label: '做毒理留样1套',
+    value: 5,
+  },
 ]
 
 export const productPositioningOption = [
   {
-    label: '精品', value: 0,
+    label: '精品',
+    value: 0,
   },
   {
-    label: '精铺', value: 1,
+    label: '精铺',
+    value: 1,
   },
   {
-    label: '铺货', value: 2,
+    label: '铺货',
+    value: 2,
   },
   {
-    label: '多款式测款，同款拓展（包括但不限于尺寸、个数、颜色等）', value: 3,
+    label: '多款式测款，同款拓展（包括但不限于尺寸、个数、颜色等）',
+    value: 3,
   },
 ]
