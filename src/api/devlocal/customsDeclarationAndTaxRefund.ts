@@ -58,6 +58,8 @@ import type {
   IGetTaxRefundInvoiceMatchQuery,
   IGetTaxRefundInvoiceMatchRes,
   IGetTaxRefundListQuery,
+  IGetTaxRefundMainInvoiceListQuery,
+  IGetTaxRefundMainInvoiceListRes,
   IGetTaxRefundMainInvoiceMatchQuery,
   IGetTaxRefundMainInvoiceMatchRes,
   IGetTaxRefundMainListQuery,
@@ -740,6 +742,28 @@ export const getTaxRefundMainInvoiceMatch = (data: IGetTaxRefundMainInvoiceMatch
 }
 
 /**
+ * @description 退税产品主表 - 发票列表查询
+ */
+export const getTaxRefundMainInvoiceList = (data: IGetTaxRefundMainInvoiceListQuery): Promise<IGetTaxRefundMainInvoiceListRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/main/invoice/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 退税产品主表 - 清空发票匹配
+ */
+export const cleanTaxRefundMainInvoice = (params: { detailId: number }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/main/invoice/clean`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
  * @description VAT退税产品汇总 - 发票匹配提交
  */
 export const submitTaxRefundMainInvoiceMatch = (data: ISubmitTaxRefundMainInvoiceMatch): Promise<IBooleanRes> => {
@@ -861,6 +885,16 @@ export const getInvoiceDetail = (params: { detailId: number }): Promise<IInvoice
     url: `${BASE_API}/taxRefund/invoice/detail`,
     method: 'get',
     params,
+  })
+}
+
+/**
+ * @description 退税产品主表-发票匹配第二次提交前置请求
+ */
+export const submitConfirmTaxRefundInvoiceMatchBefore = (): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/main/invoice/match/before`,
+    method: 'post',
   })
 }
 

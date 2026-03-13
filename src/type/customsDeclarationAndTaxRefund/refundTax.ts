@@ -534,16 +534,8 @@ export interface IGetTaxRefundMainList {
   taxRebate?: number
   /** 税前成本 */
   taxRebateCost?: number
-  /** 发票匹配日期 */
-  formattedMatchDate?: string[]
-  /** 发票代码 */
-  formattedInvoiceCode?: string[]
-  /** 发票行次 */
-  formattedInvoiceNo?: string[]
-  /** 匹配数量 */
-  formattedInvoiceCount?: string[]
-  /** 发票号码 */
-  formattedInvoiceNumber?: { invoiceNumber: string }[]
+  /** 发票信息 */
+  invoiceDetailList?: IGetTaxRefundMainInvoiceInfo[]
   /** 开票类型 */
   invoicing?: string
   /** 备注 */
@@ -562,6 +554,27 @@ export interface IGetTaxRefundMainList {
   cifPrice?: number
   /** FOB售价（别名） */
   fobPrice?: number
+  /** 发票匹配日期 */
+  matchDate?: number
+}
+
+export interface IGetTaxRefundMainInvoiceInfo {
+  /**
+   * 发票明细id
+   */
+  id?: number
+  /**
+   * 发票号码
+   */
+  invoiceNumber?: string
+  /**
+   * 匹配发票数量
+   */
+  invoiceMatchCount?: number
+  /**
+   * 发票路径
+   */
+  invoicePath?: string
 }
 
 // VAT退税产品汇总 - 发票匹配
@@ -626,4 +639,64 @@ export interface ISubmitTaxRefundMainInvoiceMatch {
   detailId: number
   /** 退税产品记录id列表 */
   taxRefundMainIds: number[]
+}
+
+/** 退税产品主表 - 发票列表查询参数 */
+export interface IGetTaxRefundMainInvoiceListQuery {
+  keyWord?: string
+  pageNo: number
+  pageSize: number
+}
+
+/** 退税产品主表 - 发票列表响应 */
+export interface IGetTaxRefundMainInvoiceListRes {
+  data?: {
+    total?: number
+    list?: IGetTaxRefundMainInvoiceList[]
+  }
+}
+
+/** 退税产品主表 - 发票列表项 */
+export interface IGetTaxRefundMainInvoiceList {
+  /** 行次 */
+  no?: number
+  /** 未税金额 */
+  preTaxPrice?: number
+  /** 供应商名称 */
+  suppliser?: string
+  /** 开票品名 */
+  invoiceName?: string
+  /** 规格型号 */
+  specificationModel?: string
+  /** 总发票数量 */
+  invoiceCount?: number
+  /** 发票明细id */
+  detailId?: number
+  /** 发票代码 */
+  invoiceCode?: string
+  /** 发票的路径 */
+  invoicePath?: string
+  /** 发票单位 */
+  invoiceUnit?: string
+  /** 匹配合同号 */
+  matchContractNumber?: string
+  /** 含税金额 */
+  includingTaxPrice?: number
+  /** 报关数量 */
+  customsDeclarationCount?: number
+  /** 报关单位 */
+  customsDeclarationUnit?: string
+  /** Po零件的总含税价 */
+  taxInclusiveCost?: number
+  /** 发票号码 */
+  invoiceNumber?: string
+  /** 匹配的PO */
+  matchPo?: string
+  /** 发票主键id */
+  id?: number
+  /** 退税产品主表id */
+  taxRefundMainId?: number
+  /** 匹配发票数量 */
+  matchInvoiceCount?: number
+  purchaseName?: string
 }

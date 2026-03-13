@@ -61,6 +61,7 @@
             {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
           </template>
         </el-table-column>
+        <el-table-column label="报关单出口日期" min-width="150" prop="exportDate" sortable />
         <el-table-column label="合同编号" min-width="150" prop="contractNumber" sortable />
         <el-table-column label="报关品名" min-width="150" prop="customsDeclarationName" sortable />
         <el-table-column label="报关单位" min-width="120" prop="customsDeclarationUnit">
@@ -70,7 +71,28 @@
         </el-table-column>
         <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
         <el-table-column label="供应商" min-width="150" prop="suppliser" sortable />
+        <el-table-column label="发票号码" min-width="180" prop="invoiceNumber">
+          <template #default="{ row }">
+            <template v-if="row.invoiceDetailList && row.invoiceDetailList.length > 0">
+              <div v-for="(item, index) in row.invoiceDetailList" :key="item.id || index" class="invoice-number-row">
+                <span>{{ item.invoiceNumber }}</span>
+                <div v-if="item.invoiceNumber" class="button-group">
+                  <el-button :icon="Document" size="small" @click="showPdf(item.invoicePath)" />
+                  <el-button
+                    v-if="item.invoicePath"
+                    class="button-download"
+                    :icon="Download"
+                    size="small"
+                    @click="downloadInvoice(item.invoicePath)"
+                  />
+                </div>
+              </div>
+            </template>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
         <el-table-column label="PO" min-width="100" prop="po" sortable />
+        <el-table-column label="PO零件数量" min-width="100" prop="count" sortable />
         <el-table-column label="CIF售价$" min-width="100" prop="cif">
           <template #default="{ row }">
             {{ row.cif || row.cifPrice }}
@@ -82,6 +104,7 @@
           </template>
         </el-table-column>
         <el-table-column label="运费$" min-width="100" prop="freightFee" />
+        <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
         <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
         <el-table-column label="匹配发票总金额￥" min-width="140" prop="matchInvoicePrice">
           <template #header>
@@ -90,7 +113,8 @@
             总金额￥
           </template>
         </el-table-column>
-        <el-table-column label="匹配发票总数量" min-width="90" prop="matchInvoiceTotalCount" />
+        <el-table-column label="匹配发票数量" min-width="90" prop="matchInvoiceCount" />
+        <el-table-column label="匹配日期" min-width="110" prop="matchDate" />
         <el-table-column label="利润￥" min-width="100" prop="profit" />
         <el-table-column label="利润率" min-width="90" prop="profitMargin">
           <template #default="{ row }">
@@ -99,17 +123,6 @@
         </el-table-column>
         <el-table-column label="退税金额￥" min-width="110" prop="taxRebate" />
         <el-table-column label="税前成本￥" min-width="110" prop="acutalTaxCost" />
-
-        <el-table-column label="备注" min-width="150" prop="remarks">
-          <template #default="{ row }">
-            <el-tooltip content="" effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ row.remarks }}</div>
-              </template>
-              <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
-            </el-tooltip>
-          </template>
-        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" />
         </template>
@@ -128,7 +141,7 @@
       @update-invoice-matching-visible="closeInvoiceMatching"
     />
     <!-- 云舟催票文件 -->
-    <vab-dialog v-model="ticketReminderVisible" title="生成云舟催票文件" width="25%" @close="closeTicketReminder">
+    <vab-dialog v-model="ticketReminderVisible" title="聚合生成云舟催票文件" width="25%" @close="closeTicketReminder">
       <el-form ref="ticketReminderFormRef" label-position="top" :model="ticketReminderForm" :rules="ticketReminderFormRules">
         <el-form-item label="发货日期" prop="shipmentDate">
           <el-date-picker
@@ -191,11 +204,17 @@
         <el-button :loading="generateLoading" type="primary" @click="handleConfirmTicketReminder">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 预览pdf -->
+    <vab-dialog v-model="pdfVisible" top="5vh" @close="pdfVisible = false">
+      <div v-loading="pdfLoading" class="pdf-container">
+        <vab-pdf :source="source" />
+      </div>
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { CopyDocument, Search } from '@element-plus/icons-vue'
+import { CopyDocument, Document, Download, Search } from '@element-plus/icons-vue'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { getTaxRefundMainList, taxRefundInvoiceBeforeCheck } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
@@ -203,6 +222,7 @@ import { downloadFilePD } from '/@/api/devlocal/download'
 import { getProductAllSupplier } from '/@/api/devlocal/productInformation'
 import type { IGetTaxRefundMainList, IGetTaxRefundMainListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { handleClip } from '/@/utils/clipboard'
+import VabPdf from '/@/plugins/VabPdf'
 
 defineOptions({
   name: 'VatRefundProductAggregation',
@@ -223,6 +243,27 @@ const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const date = ref<[string, string]>(getDefaultStringTime())
 const datePickerKey = ref<number>(0)
+
+// PDF预览相关
+const pdfVisible = ref<boolean>(false)
+const pdfLoading = ref<boolean>(false)
+const source = ref<string>('')
+
+const showPdf = (path: string) => {
+  pdfLoading.value = true
+  source.value = path
+  pdfVisible.value = true
+  pdfLoading.value = false
+}
+
+const downloadInvoice = (path: string) => {
+  const link = document.createElement('a')
+  link.href = path
+  link.download = link.href.split('/').pop()!
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 
 // 云舟催票文件相关
 type ITicketReminderForm = {
@@ -417,21 +458,20 @@ const handleConfirmTicketReminder = async () => {
           endDate: ticketReminderForm.shipmentDate[1],
           status: ticketReminderForm.status,
         }
-        // const { data } = await taxRefundInvoiceBeforeCheck(params)
-        //
+
         // if (data) {
-        //   const response = await downloadFilePD('/taxRefund/hasten/invoice', params)
-        //   // 如果返回的是 JSON 类型，说明可能是错误信息
-        //   if (response.type === 'application/json') {
-        //     const reader = new FileReader()
-        //     reader.addEventListener('load', () => {
-        //       const result = JSON.parse(reader.result as string)
-        //       if (result.code === 5000) {
-        //         $baseMessage(result.msg, 'error')
-        //       }
-        //     })
-        //     reader.readAsText(response)
-        //   }
+          const response = await downloadFilePD('/taxRefund/main/hasten/invoice', params)
+          // 如果返回的是 JSON 类型，说明可能是错误信息
+          if (response.type === 'application/json') {
+            const reader = new FileReader()
+            reader.addEventListener('load', () => {
+              const result = JSON.parse(reader.result as string)
+              if (result.code === 5000) {
+                $baseMessage(result.msg, 'error')
+              }
+            })
+            reader.readAsText(response)
+          }
         // }
         generateLoading.value = false
       } catch (error) {
@@ -483,6 +523,15 @@ onMounted(() => {
         align-items: center;
         justify-content: center;
         padding: 4px 0;
+
+        .button-group {
+          display: flex;
+          margin-left: 6px;
+
+          .button-download {
+            margin-left: 6px;
+          }
+        }
       }
 
       .create-time {
