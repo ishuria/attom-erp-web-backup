@@ -156,6 +156,7 @@
               {{ row.unsaleableProductSalesRatio ? row.unsaleableProductSalesRatio + '%' : '-' }}
             </template>
           </el-table-column>
+          <el-table-column label="新认领产品数" min-width="120" prop="claimAsinCount" />
           <el-table-column fixed="right" label="操作" min-width="100">
             <template #default="{ row }">
               <el-link type="primary" underline="never" @click="handleAsinDetail(row)">详情</el-link>

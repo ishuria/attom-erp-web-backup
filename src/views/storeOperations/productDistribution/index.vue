@@ -106,7 +106,12 @@
       <el-table-column label="产品经理" min-width="130" prop="productManagerName" />
       <el-table-column label="运营" min-width="110" prop="userId">
         <template #default="{ row }">
-          <el-select v-model="row.userId" placeholder="请选择运营人员" @change="handleChangeUser(row)">
+          <el-select
+            v-model="row.userId"
+            :disabled="row.userId !== null && roleCode !== ROLE_BOSS_CODE"
+            placeholder="请选择运营人员"
+            @change="handleChangeUser(row)"
+          >
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
@@ -207,7 +212,9 @@ import {
   updateDistributionUserType,
   updateOldStatus,
 } from '/@/api/devlocal/productDistribution'
+import { ROLE_BOSS_CODE } from '/@/const/role'
 import StoreOperationPermission from '/@/permissions/storeOperation'
+import { useAclStore } from '/@/store/modules/acl'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -215,6 +222,7 @@ defineOptions({
   name: 'ProductDistribution',
 })
 
+const roleCode = useAclStore().getRole[0]
 const selectedRowIndex = ref<number>(-1)
 const selectedRows = ref<IGetDistributionProductList[]>([])
 const handleRowClick = (row: any) => {

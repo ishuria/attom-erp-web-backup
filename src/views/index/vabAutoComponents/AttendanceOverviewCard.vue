@@ -22,6 +22,13 @@
       <el-table-column label="缺卡" min-width="100" prop="sWorkCount" sortable="custom" />
       <el-table-column label="迟到次数" min-width="100" prop="lateCount" sortable="custom" />
       <el-table-column label="迟到时长" min-width="100" prop="lateDuration" sortable="custom" />
+      <el-table-column
+        v-if="roleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || roleCode === ROLE_ECOMMERCEOPERATOR_CODE"
+        align="center"
+        label="新认领产品数"
+        min-width="100"
+        prop="claimAsinCount"
+      />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
@@ -30,6 +37,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '~/src/const/role'
+import { useAclStore } from '~/src/store/modules/acl'
 import { IGetFrontPageAttendanceOverview } from '~/src/type/index/frontPage'
 
 defineOptions({
@@ -50,6 +59,7 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
     order,
   })
 }
+const roleCode = useAclStore().getRole[0]
 </script>
 
 <style lang="scss" scoped>

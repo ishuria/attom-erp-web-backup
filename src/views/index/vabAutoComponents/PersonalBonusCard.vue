@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useAclStore } from '/@/store/modules/acl'
 import type { IGetFrontPagePersonalBonusItem } from '/@/type/index/frontPage'
 
 defineOptions({
@@ -38,6 +39,8 @@ const props = withDefaults(defineProps<Props>(), {
   data: () => [],
   loading: false,
 })
+
+const roleCode = useAclStore().getRole[0]
 </script>
 
 <style lang="scss" scoped>
