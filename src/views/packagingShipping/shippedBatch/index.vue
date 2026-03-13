@@ -114,7 +114,13 @@
       </el-table-column>
       <el-table-column label="丢货标记" min-width="100" prop="lostGoodsStatus">
         <template #default="{ row }">
-          <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" @change="handleUpdateLostGoodsStatus(row)" />
+          <el-checkbox
+            v-model="row.lostGoodsStatus"
+            :disabled="row.lostGoodsStatus === 1"
+            :false-value="0"
+            :true-value="1"
+            @change="handleUpdateLostGoodsStatus(row)"
+          />
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="260">
@@ -399,10 +405,34 @@ const handleUpdate = async (row: IGetShipmentFbaList) => {
   })
 }
 const handleUpdateLostGoodsStatus = async (row: IGetShipmentFbaList) => {
-  await updateShipmentFBALostGoodsStatus({
-    id: row.id,
-    lostGoodsStatus: row.lostGoodsStatus,
-  })
+  const oldStatus = row.lostGoodsStatus === 1 ? 0 : 1
+
+  try {
+    $baseConfirm(
+      '确定标记丢货吗？标记丢货后不可撤销！',
+      null,
+      async () => {
+        const { data } = await updateShipmentFBALostGoodsStatus({
+          id: row.id,
+          lostGoodsStatus: row.lostGoodsStatus,
+        })
+
+        if (!data) {
+          row.lostGoodsStatus = oldStatus
+        }
+        if (data) {
+          $baseMessage('丢货标记成功！', 'success')
+          fetchData()
+        }
+      },
+      () => {
+        row.lostGoodsStatus = oldStatus
+      }
+    )
+  } catch (error) {
+    // 用户取消 或 请求失败
+    row.lostGoodsStatus = oldStatus
+  }
 }
 // 展示明细
 const showDetails = (row: IGetShipmentFbaList) => {
