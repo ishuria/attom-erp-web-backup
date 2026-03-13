@@ -370,6 +370,13 @@
       </el-col>
     </el-row>
 
+    <!-- 收发误差数 -->
+    <el-row v-if="ableViewShippingErrorCard" class="row-spacing" :gutter="20">
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <shipping-error-chart />
+      </el-col>
+    </el-row>
+
     <!-- 第六层 -->
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
       <!-- top100新品销售额 -->
@@ -573,6 +580,10 @@ const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_BOSS_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
+const ableViewShippingErrorCard =
+  currentRoleCode === ROLE_BOSS_CODE ||
+  currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE ||
+  currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewArtDesignDashboardCard = currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE

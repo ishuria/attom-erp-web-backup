@@ -188,6 +188,7 @@ declare module 'vue' {
     SegmentedCustomContent: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedCustomContent.vue')['default']
     SegmentedCustomStyle: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedCustomStyle.vue')['default']
     SentButNotReported: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/SentButNotReported.vue')['default']
+    ShippingErrorChart: typeof import('./../../../src/views/index/vabAutoComponents/ShippingErrorChart.vue')['default']
     SkuCustomsClearanceComponent: typeof import('./../../../src/views/productInfomation/skuDeclaration/vabAutoComponents/SkuCustomsClearanceComponent.vue')['default']
     SkuSelectDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/SkuSelectDialog.vue')['default']
     SkuSiteDailyCostChartCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/SkuSiteDailyCostChartCard.vue')['default']

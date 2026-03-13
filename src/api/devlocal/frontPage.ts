@@ -483,3 +483,16 @@ export function getFrontPageFbaCountSaleDayChart(data: {
     data,
   })
 }
+
+export function getShippingErrorChart(data: {
+  dateType: string
+  includeReceiving: boolean
+  startMonth: string
+  endMonth: string
+}): Promise<{ data: { month: string; errorCount: number }[] }> {
+  return request({
+    url: `${BASE_API}/front_page/shipping/error/chart`,
+    method: 'post',
+    data,
+  })
+}
