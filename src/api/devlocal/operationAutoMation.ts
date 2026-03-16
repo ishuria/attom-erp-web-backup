@@ -226,9 +226,27 @@ export function getPriceProfitScatter(params: GetSaleTrendParams): Promise<GetPr
  * @param data 请求参数
  * @returns Promise
  */
-export function syncAmazonPrice(data: { sku: string; site: number; new_price: string }): Promise<{ code: number; message: string }> {
+export function syncAmazonPrice(data: {
+  sku: string
+  site: number
+  new_price: string
+  updateType?: 'stock_rules' | 'operation_sku' // 更新类型，默认 operation_sku
+}): Promise<{ code: number; message: string }> {
   return request({
     url: `${BASE_API}/amazon/price/adjust`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 试算毛利率
+ * @param data 请求参数
+ * @returns Promise
+ */
+export function trialGrossMargin(data: { sku: string; site: number; newPrice: string }): Promise<{ data: { grossMarginRate: number } }> {
+  return request({
+    url: `${BASE_API}/operation/price/trial`,
     method: 'post',
     data,
   })

@@ -683,6 +683,7 @@ const handleSyncPrice = async (row: IOperationStocksItem) => {
       sku: row.sku,
       site: row.site,
       new_price: String(row.bestPrice),
+      updateType: 'stock_rules', // 调价库存规则表
     })
     if (result.code === 0) {
       $baseMessage('价格同步成功', 'success')

@@ -318,8 +318,46 @@
   </span>
 
   <!-- 当前售价 -->
-  <span v-else-if="item.label === '当前售价'">
+  <span v-else-if="item.label === '当前售价'" class="current-price-cell">
     <el-link type="primary" @click="$emit('routerPush', row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
+    <el-popover
+      v-if="type === 'sku'"
+      placement="bottom"
+      trigger="hover"
+      :width="280"
+      @show="initPriceInput(row)"
+    >
+      <template #reference>
+        <vab-icon class="edit-price-icon" icon="edit-2-fill" />
+      </template>
+      <div class="price-adjust-popover">
+        <div class="price-input-row">
+          <el-input
+            ref="priceInputRef"
+            v-model="row._newPrice"
+            :min="0"
+            placeholder="输入价格"
+            :precision="2"
+            @change="trialPriceGrossMargin(row)"
+          >
+            <template #prefix>
+              <span>{{ row.currencyIcon || '$' }}</span>
+            </template>
+          </el-input>
+        </div>
+        <div class="price-info-row">
+          <span>调整幅度：</span>
+          <span :class="getAdjustmentClass(row)">{{ getAdjustmentText(row) }}</span>
+        </div>
+        <div class="price-info-row">
+          <span>预估毛利：</span>
+          <span class="profit-value">{{ getEstimatedProfit(row) }}</span>
+        </div>
+        <div class="price-action-row">
+          <el-button :loading="row._publishing" plain type="primary" @click="publishPrice(row)">发布</el-button>
+        </div>
+      </div>
+    </el-popover>
   </span>
 
   <!-- 小类排名 -->
@@ -445,7 +483,9 @@
 
 <script lang="ts" setup>
 import { Star } from '@element-plus/icons-vue'
+import { nextTick, ref } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
+import { syncAmazonPrice, trialGrossMargin } from '/@/api/devlocal/operationAutoMation'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import { formatPercentage } from '/@/utils/rate'
 import { removeHtmlTags } from '/@/utils/tableColum'
@@ -472,7 +512,8 @@ const props = withDefaults(defineProps<Props>(), {
   isBoss: false,
 })
 
-defineEmits<{
+// 价格调整相关方法
+const emit = defineEmits<{
   imagePreview: [url: string]
   showReleaseOrder: [row: any]
   showRemark: [row: any]
@@ -480,6 +521,7 @@ defineEmits<{
   updateOpeType: [row: any]
   updateStopStatus: [row: any]
   routerPush: [row: any]
+  publishPrice: [row: any, newPrice: number]
 }>()
 
 // 使用 Set 优化查找性能
@@ -677,6 +719,96 @@ const handleReturnGoods = (row: any) => {
 const goToReview = (asin: string) => {
   window.open(`https://www.amazon.com/product-reviews/${asin}`, '_blank')
 }
+
+// 价格调整相关
+const priceInputRef = ref<any>(null)
+
+const initPriceInput = (row: any) => {
+  row._newPrice = row.sellingPrice
+  nextTick(() => {
+    priceInputRef.value?.focus()
+  })
+}
+
+const getAdjustmentClass = (row: any) => {
+  if (!row._newPrice || !row.sellingPrice) return ''
+  const diff = row._newPrice - row.sellingPrice
+  if (diff > 0) return 'adjustment-up'
+  if (diff < 0) return 'adjustment-down'
+  return ''
+}
+
+const getAdjustmentText = (row: any) => {
+  if (!row._newPrice || !row.sellingPrice) return '--'
+  const diff = row._newPrice - row.sellingPrice
+  const percent = ((diff / row.sellingPrice) * 100).toFixed(2)
+  if (diff > 0) return `+${percent}%`
+  if (diff < 0) return `${percent}%`
+  return '0%'
+}
+
+const getEstimatedProfit = (row: any) => {
+  if (!row._newPrice) return '--'
+  // 返回缓存的预估毛利率
+  if (row._trialGrossMargin != null) {
+    return `${row._trialGrossMargin.toFixed(2)}%`
+  }
+  return '--'
+}
+
+// 试算毛利率（调用后端接口）
+const trialPriceGrossMargin = async (row: any) => {
+  if (!row._newPrice || !row.sku || row.site == null) return
+  // 如果价格没有变化，不调用接口
+  if (row._newPrice === row.sellingPrice) {
+    row._trialGrossMargin = row.grossProfit
+    return
+  }
+  try {
+    const res = await trialGrossMargin({
+      sku: row.sku,
+      site: row.site,
+      newPrice: String(row._newPrice),
+    })
+    row._trialGrossMargin = res.data?.grossMarginRate
+  } catch (e) {
+    console.error('试算毛利率失败:', e)
+    row._trialGrossMargin = null
+  }
+}
+
+const publishPrice = async (row: any) => {
+  if (!row._newPrice || row._newPrice <= 0) {
+    $baseMessage('请输入有效价格', 'warning')
+    return
+  }
+  row._publishing = true
+  try {
+    const res = await syncAmazonPrice({
+      sku: row.sku,
+      site: row.site,
+      new_price: String(row._newPrice),
+      updateType: 'operation_sku', // 运营看板SKU表
+    })
+    if (res.code === 0) {
+      $baseMessage('发布成功', 'success')
+      // 更新当前行的售价和毛利率
+      row.sellingPrice = row._newPrice
+      if (row._trialGrossMargin != null) {
+        row.grossProfit = row._trialGrossMargin
+      }
+    } else {
+      $baseMessage(res.message || '发布失败', 'error')
+    }
+  } catch (e) {
+    console.error('发布价格失败:', e)
+    $baseMessage('发布失败', 'error')
+  } finally {
+    row._publishing = false
+  }
+}
+  
+
 </script>
 
 <style lang="scss" scoped>
@@ -836,6 +968,52 @@ const goToReview = (asin: string) => {
   .rate-count {
     margin-left: -11px;
     color: #36788c;
+  }
+}
+
+// 价格调整弹窗样式
+.current-price-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  .edit-price-icon {
+    font-size: 14px;
+    color: var(--el-color-primary);
+    cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+      color: var(--el-color-primary-dark-2);
+      transform: scale(1.1);
+    }
+  }
+}
+.price-adjust-popover {
+  .price-input-row {
+    margin-bottom: 12px;
+  }
+  .price-info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    
+    .adjustment-up {
+      color: #67c23a;
+      font-weight: 600;
+    }
+    .adjustment-down {
+      color: #f56c6c;
+      font-weight: 600;
+    }
+    .profit-value {
+      color: #e6a23c;
+      font-weight: 600;
+    }
+  }
+  .price-action-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
   }
 }
 </style>
