@@ -61,16 +61,33 @@
             {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="报关单出口日期" min-width="150" prop="exportDate" sortable />
-        <el-table-column label="合同编号" min-width="150" prop="contractNumber" sortable />
-        <el-table-column label="报关品名" min-width="150" prop="customsDeclarationName" sortable />
-        <el-table-column label="报关单位" min-width="120" prop="customsDeclarationUnit">
-          <template #default="{ row }">
-            {{ row.customsDeclarationUnit }}
+        <el-table-column label="合同编号" min-width="140" prop="contractNumber" sortable />
+        <el-table-column label="报关品名" min-width="110" prop="customsDeclarationName" sortable />
+        <el-table-column label="报关数量" min-width="90" prop="customsDeclarationCount" />
+        <el-table-column label="报关单位" min-width="70" prop="customsDeclarationUnit" />
+        <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
+        <el-table-column label="未税成本￥" min-width="110" prop="taxRefundsCost" />
+        <el-table-column label="匹配发票总金额￥" min-width="100" prop="matchInvoicePrice">
+          <template #header>
+            匹配发票
+            <br />
+            总金额￥
           </template>
         </el-table-column>
-        <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
-        <el-table-column label="供应商" min-width="150" prop="suppliser" sortable />
+        <el-table-column label="供应商" min-width="180" prop="suppliser" sortable />
+        <el-table-column label="供应商税号" min-width="150" prop="taxNumber" />
+        <el-table-column label="PO" min-width="100" prop="po" sortable />
+        <el-table-column label="匹配日期" min-width="150" prop="matchDate" />
+        <el-table-column label="发票行号" min-width="90" prop="matchDate">
+          <template #default="{ row }">
+            <template v-if="row.invoiceDetailList && row.invoiceDetailList.length > 0">
+              <div v-for="(item, index) in row.invoiceDetailList" :key="item.id || index" class="invoice-number-row">
+                <span>{{ item.no }}</span>
+              </div>
+            </template>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
         <el-table-column label="发票号码" min-width="180" prop="invoiceNumber">
           <template #default="{ row }">
             <template v-if="row.invoiceDetailList && row.invoiceDetailList.length > 0">
@@ -91,38 +108,7 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="PO" min-width="100" prop="po" sortable />
-        <el-table-column label="PO零件数量" min-width="100" prop="count" sortable />
-        <el-table-column label="CIF售价$" min-width="100" prop="cif">
-          <template #default="{ row }">
-            {{ row.cif || row.cifPrice }}
-          </template>
-        </el-table-column>
-        <el-table-column label="FOB售价$" min-width="100" prop="fob">
-          <template #default="{ row }">
-            {{ row.fob || row.fobPrice }}
-          </template>
-        </el-table-column>
-        <el-table-column label="运费$" min-width="100" prop="freightFee" />
-        <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
-        <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
-        <el-table-column label="匹配发票总金额￥" min-width="140" prop="matchInvoicePrice">
-          <template #header>
-            匹配发票
-            <br />
-            总金额￥
-          </template>
-        </el-table-column>
-        <el-table-column label="匹配发票数量" min-width="90" prop="matchInvoiceCount" />
-        <el-table-column label="匹配日期" min-width="110" prop="matchDate" />
-        <el-table-column label="利润￥" min-width="100" prop="profit" />
-        <el-table-column label="利润率" min-width="90" prop="profitMargin">
-          <template #default="{ row }">
-            {{ row.profitMargin ? row.profitMargin + '%' : '' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="退税金额￥" min-width="110" prop="taxRebate" />
-        <el-table-column label="税前成本￥" min-width="110" prop="acutalTaxCost" />
+        <el-table-column label="Sku" min-width="180" prop="sku" />
         <template #empty>
           <el-empty class="vab-data-empty" />
         </template>
@@ -460,18 +446,18 @@ const handleConfirmTicketReminder = async () => {
         }
 
         // if (data) {
-          const response = await downloadFilePD('/taxRefund/main/hasten/invoice', params)
-          // 如果返回的是 JSON 类型，说明可能是错误信息
-          if (response.type === 'application/json') {
-            const reader = new FileReader()
-            reader.addEventListener('load', () => {
-              const result = JSON.parse(reader.result as string)
-              if (result.code === 5000) {
-                $baseMessage(result.msg, 'error')
-              }
-            })
-            reader.readAsText(response)
-          }
+        const response = await downloadFilePD('/taxRefund/main/hasten/invoice', params)
+        // 如果返回的是 JSON 类型，说明可能是错误信息
+        if (response.type === 'application/json') {
+          const reader = new FileReader()
+          reader.addEventListener('load', () => {
+            const result = JSON.parse(reader.result as string)
+            if (result.code === 5000) {
+              $baseMessage(result.msg, 'error')
+            }
+          })
+          reader.readAsText(response)
+        }
         // }
         generateLoading.value = false
       } catch (error) {

@@ -548,6 +548,7 @@ export interface IGetTaxRefundMainList {
   sku?: string
   /** ShipmentId */
   shipmentId?: string
+  taxNumber?: string
   /** 供应商税号 */
   suppliserTaxNumber?: string
   /** CIF售价（别名） */
@@ -563,6 +564,7 @@ export interface IGetTaxRefundMainInvoiceInfo {
    * 发票明细id
    */
   id?: number
+  no?: number
   /**
    * 发票号码
    */
