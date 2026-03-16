@@ -475,6 +475,7 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { defineAsyncComponent, ref } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import {
@@ -906,7 +907,7 @@ const handleDelPlannedPo = (row: any) => {
 }
 const batchReleaseLoading = ref<boolean>(false)
 // 批量发布PO成功
-const handleAllPublishPo = async () => {
+const _handleAllPublishPo = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning', 'hey')
     return
@@ -928,8 +929,11 @@ const handleAllPublishPo = async () => {
     batchReleaseLoading.value = false
   }
 }
+// 防抖包装
+const handleAllPublishPo = useDebounceFn(_handleAllPublishPo, 1000)
+
 // 发布po
-const handlePublishPo = async (row: any) => {
+const _handlePublishPo = async (row: any) => {
   try {
     $baseConfirm('确定要发布到PO吗', null, async () => {
       const { data } = await releasePlanPo({
@@ -944,6 +948,8 @@ const handlePublishPo = async (row: any) => {
     console.error(error)
   }
 }
+// 防抖包装
+const handlePublishPo = useDebounceFn(_handlePublishPo, 1000)
 const handlePlannedPoDetail = async (row: any) => {
   const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
   const tab = handleTabs({
