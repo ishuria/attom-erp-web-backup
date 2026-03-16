@@ -98,14 +98,14 @@ async function mergePdfs(fileList: any[]) {
       return
     }
 
-    if (blobData instanceof Blob) {
-      const url = window.URL.createObjectURL(blobData)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `pdfMerge_${Date.now()}.pdf`
-      link.click()
-      window.URL.revokeObjectURL(url)
-    }
+    // if (blobData instanceof Blob) {
+    //   const url = window.URL.createObjectURL(blobData)
+    //   const link = document.createElement('a')
+    //   link.href = url
+    //   link.download = `pdfMerge_${Date.now()}.pdf`
+    //   link.click()
+    //   window.URL.revokeObjectURL(url)
+    // }
 
     $baseMessage('PDF合并成功', 'success')
     visible.value = false // 关闭弹窗

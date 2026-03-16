@@ -680,7 +680,7 @@ const queryForm = reactive<IReviewQueryReq>({
   pageNo: 1,
   pageSize: 20,
   status: 8,
-  orderByField: '',
+  orderByField: 'createTime',
   orderDirection: 'desc',
 })
 

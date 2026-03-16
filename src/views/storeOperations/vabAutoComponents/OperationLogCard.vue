@@ -58,9 +58,10 @@
           <div v-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
           <!-- 其他情况保持原有逻辑 -->
           <div v-else-if="row.content">
-            <el-link class="content-link" type="primary" @click="handleAggregateClick(row)">
+            <el-link v-if="row.isAggregate" class="content-link" type="primary" @click="handleAggregateClick(row)">
               <span class="content-text">{{ row.content }}</span>
             </el-link>
+            <span v-else class="content-text">{{ row.content }}</span>
           </div>
           <div v-else>
             <!-- 特殊情况：广告推广状态+创建，只显示"产品推广状态" -->

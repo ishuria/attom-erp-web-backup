@@ -49,7 +49,7 @@
 <script lang="ts" setup>
 import VabCostAccounting from './vabAutoComponents/VabCostAccounting.vue'
 import VabTrialCalculation from './vabAutoComponents/VabTrialCalculation.vue'
-import { getChannelList, getCostAccountingChannelList } from '/@/api/devlocal/encasement'
+import { getCostAccountingChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
@@ -95,7 +95,7 @@ const setPreviewList = (imageUrl: string) => {
 }
 
 const fetchChannelData = async () => {
-  const { data } = await getChannelList()
+  const { data } = await getCostAccountingChannelList()
   channelList.value = data
 }
 const fetchCostAccountingChannelData = async () => {

@@ -103,9 +103,8 @@
           <!-- 系统抓取(type=1)时的解析展示 -->
           <div v-if="row.type === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
           <div v-else>
-            <el-link class="content-link" type="primary">
-              <span class="content-text">{{ row.content }}</span>
-            </el-link>
+              {{ row.content }}
+          
           </div>
         </template>
       </el-table-column>

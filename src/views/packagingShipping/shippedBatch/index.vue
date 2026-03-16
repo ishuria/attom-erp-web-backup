@@ -37,6 +37,7 @@
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
+      show-summary
       stripe
       @cell-click="cellClick"
       @row-click="handleRowClick"
