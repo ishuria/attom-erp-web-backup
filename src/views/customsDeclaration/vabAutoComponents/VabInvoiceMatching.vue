@@ -983,7 +983,7 @@ const handleSubmitConfirm = async () => {
   // }
 
   try {
-    const { data } = await submitConfirmTaxRefundInvoiceMatch()
+    const { data } = await submitConfirmTaxRefundInvoiceMatch({ type: 0 })
     if (data) {
       $baseMessage('确认成功！', 'success')
       // 清空 detailIds，避免重复提交

@@ -901,10 +901,11 @@ export const submitConfirmTaxRefundInvoiceMatchBefore = (): Promise<IBooleanRes>
 /**
  * @description 退税管理-发票匹配第二次提交
  */
-export const submitConfirmTaxRefundInvoiceMatch = (): Promise<IBooleanRes> => {
+export const submitConfirmTaxRefundInvoiceMatch = (params: { type: number }): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/taxRefund/invoice/match/submitConfirm`,
     method: 'post',
+    params,
   })
 }
 /**

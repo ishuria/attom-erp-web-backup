@@ -815,7 +815,7 @@ const handleSubmitConfirm = async () => {
     }
 
     // 前置接口返回 true，才正式调用提交接口
-    const { data } = await submitConfirmTaxRefundInvoiceMatch()
+    const { data } = await submitConfirmTaxRefundInvoiceMatch({ type: 1 })
     if (data) {
       $baseMessage('确认成功！', 'success')
       // 清空 detailIds，避免重复提交
