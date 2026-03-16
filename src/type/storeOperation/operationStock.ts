@@ -114,6 +114,8 @@ export interface IOperationStocksItem {
    * sku图片
    */
   skuImg: string
+  bestPrice: number
+  syncingPrice: boolean
 }
 
 export interface IOperationStockDefaultParams {

@@ -195,10 +195,23 @@
               @keyup.esc="handleCellBlur($event, row, $index)"
             />
           </div>
-          <span>
-            {{ row.bestPrice }}
-            <br />
-            {{ row.bestGrossProfitMargin }}%
+          <span class="best-price-cell">
+            <span class="price-info">
+              {{ row.bestPrice }}
+              <br />
+              {{ row.bestGrossProfitMargin }}%
+            </span>
+            <vab-icon
+              v-if="row.syncingPrice"
+              class="sync-icon syncing"
+              icon="loader-4-line"
+            />
+            <vab-icon
+              v-else
+              class="sync-icon"
+              icon="loop-left-fill"
+              @click.stop="handleSyncPrice(row)"
+            />
           </span>
         </template>
       </el-table-column>
@@ -521,6 +534,7 @@
 import { Histogram, Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import { CSSProperties } from 'vue'
+import { syncAmazonPrice } from '/@/api/devlocal/operationAutoMation'
 import { type IAutoMationItem, IAutoMationQueryReq } from '/@/type/storeOperation/autoMation'
 import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
 import handleClipboard from '/@/utils/clipboard'
@@ -657,6 +671,33 @@ const handlerSysLog = (row: IOperationStocksItem) => {
   operationStockVisible.value = true
 }
 
+// 同步价格到亚马逊
+const handleSyncPrice = async (row: IOperationStocksItem) => {
+  if (!row.bestPrice) {
+    $baseMessage('最优价不能为空', 'warning')
+    return
+  }
+  row.syncingPrice = true
+  try {
+    const result = await syncAmazonPrice({
+      sku: row.sku,
+      site: row.site,
+      new_price: String(row.bestPrice),
+    })
+    if (result.code === 0) {
+      $baseMessage('价格同步成功', 'success')
+      handleQueryData()
+    } else {
+      $baseMessage(result.message || '价格同步失败', 'error')
+    }
+  } catch (error) {
+    $baseMessage('价格同步请求失败', 'error')
+    console.error('同步价格失败:', error)
+  } finally {
+    row.syncingPrice = false
+  }
+}
+
 const operationStockSelectionChangeHandler = (val: IOperationStocksItem[]) => {
   multipleSelection.value = val
 }
@@ -744,6 +785,36 @@ const headerCellStyle = (data: { row: any; column: any; rowIndex: number; column
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+.best-price-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  .price-info {
+    text-align: left;
+  }
+  .sync-icon {
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--el-color-primary);
+    transition: all 0.3s;
+    flex-shrink: 0;
+    &:hover {
+      color: var(--el-color-primary-dark-2);
+      transform: scale(1.1);
+    }
+    &.syncing {
+      animation: rotate 1s linear infinite;
+    }
+  }
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 .custom-bar {

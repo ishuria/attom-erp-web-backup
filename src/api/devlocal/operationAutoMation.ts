@@ -220,3 +220,16 @@ export function getPriceProfitScatter(params: GetSaleTrendParams): Promise<GetPr
     params,
   })
 }
+
+/**
+ * @description 同步价格到亚马逊
+ * @param data 请求参数
+ * @returns Promise
+ */
+export function syncAmazonPrice(data: { sku: string; site: number; new_price: string }): Promise<{ code: number; message: string }> {
+  return request({
+    url: `${BASE_API}/amazon/price/adjust`,
+    method: 'post',
+    data,
+  })
+}
