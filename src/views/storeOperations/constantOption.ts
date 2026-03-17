@@ -189,6 +189,10 @@ export const sizeSourceOption = [
     label: '亚马逊',
     value: 1,
   },
+  {
+    label: '手动输入',
+    value: 2,
+  },
 ]
 
 export const months = [

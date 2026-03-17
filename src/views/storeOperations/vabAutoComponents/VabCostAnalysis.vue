@@ -179,7 +179,7 @@
       </el-table-column>
       <el-table-column label="尾程" min-width="80" prop="lastMile">
         <template #default="{ row }">
-          <div v-if="row.sizeSource === 0" class="none">
+          <div v-if="row.sizeSource === 2" class="none">
             <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.lastMile != null ? row.symbol + row.lastMile : '' }}</span>
