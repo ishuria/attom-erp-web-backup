@@ -46,14 +46,23 @@
     >
       <el-table-column label="角色" prop="roleName" show-overflow-tooltip width="120" />
       <el-table-column label="人员" prop="userName" show-overflow-tooltip width="120" />
-      <el-table-column label="提示词功能" prop="functionName" show-overflow-tooltip width="200" />
-      <el-table-column label="提示词" min-width="300" prop="prompt" show-overflow-tooltip>
+      <el-table-column label="提示词功能" prop="functionName" width="200">
+        <template #default="{ row }">
+          <el-tooltip content=" " effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row.functionName }}</div>
+            </template>
+            <div class="multi-line-ellipsis-1">{{ row.functionName }}</div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="提示词" min-width="300" prop="prompt">
         <template #default="{ row }">
           <el-tooltip effect="dark" placement="top">
             <template #content>
-              <div class="prompt-tooltip">{{ row.prompt }}</div>
+              <div class="custom-tooltip prompt-tooltip">{{ row.prompt }}</div>
             </template>
-            <div class="prompt-text">{{ row.prompt }}</div>
+            <div class="multi-line-ellipsis-1 prompt-text">{{ row.prompt }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -372,9 +381,6 @@ onMounted(() => {
   padding: 20px;
 
   .prompt-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     cursor: pointer;
 
     &:hover {
@@ -382,10 +388,11 @@ onMounted(() => {
     }
   }
 
+  // 提示词预览样式 - 支持markdown格式
   .prompt-tooltip {
     max-width: 500px;
     white-space: pre-wrap;
-    word-break: break-all;
+    word-break: break-word;
   }
 }
 
@@ -489,5 +496,10 @@ onMounted(() => {
       }
     }
   }
+}
+.custom-tooltip {
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 </style>
