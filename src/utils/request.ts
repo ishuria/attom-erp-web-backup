@@ -91,6 +91,9 @@ const tryRefreshToken = async (config: any): Promise<any> => {
       }
     } catch (error) {
       console.error('刷新令牌失败:', error)
+      // 关闭进度条
+      const VabProgress = await import('nprogress').then((m) => m.default)
+      if (VabProgress.status) VabProgress.done()
       router.push({ path: '/login', replace: true }).then(() => {})
     } finally {
       refreshToking = false

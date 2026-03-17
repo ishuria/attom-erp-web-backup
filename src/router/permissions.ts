@@ -51,6 +51,7 @@ export const setupPermissions = (router: Router) => {
           next({ ...to, replace: true })
         } catch (error) {
           console.error('vue-shop-vite 错误拦截:', error)
+          if (showProgressBar) VabProgress.done()
           await resetAll()
           next(toLoginRoute(to.fullPath))
         }
@@ -72,6 +73,7 @@ export const setupPermissions = (router: Router) => {
 
   router.onError((error: any) => {
     console.error('vue-shop-vite 错误拦截:', error.message)
+    if (VabProgress.status) VabProgress.done()
   })
 
   return router
