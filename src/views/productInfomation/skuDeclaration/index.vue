@@ -103,6 +103,16 @@
           <el-checkbox v-model="row.fdaFlag" @change="changeFdaFlag(row)" />
         </template>
       </el-table-column>
+      <el-table-column label="Lacey申报" :min-width="flexColumnWidth(clearanceList, 'Lacey申报', 'laceyFlag')" prop="laceyFlag">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.laceyFlag" @change="changeLaceyFlag(row)" />
+        </template>
+      </el-table-column>
+      <el-table-column label="EPA申报" :min-width="flexColumnWidth(clearanceList, 'EPA申报', 'epaFlag')" prop="epaFlag">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.epaFlag" @change="changeEpaFlag(row)" />
+        </template>
+      </el-table-column>
       <!-- <el-table-column label="HTS美国" width="160" >
         <template #default="{ row }">
           <el-select
@@ -867,6 +877,54 @@ const changeFdaFlag = async (value: any) => {
   }
 }
 
+const changeLaceyFlag = async (value: any) => {
+  try {
+    const { data } = await updateCustomsClearanceSku({
+      id: value.id,
+      brank: value.brank,
+      manufacturerEn: value.manufacturerEn,
+      manufacturerAddressEn: value.manufacturerAddressEn,
+      clearanceNameEn: value.clearanceNameEn,
+      clearanceNameZh: value.clearanceNameZh,
+      materialEn: value.materialEn,
+      materialZh: value.materialZh,
+      usageEn: value.usageEn,
+      usageZh: value.usageZh,
+      laceyFlag: value.laceyFlag,
+    })
+
+    if (data) {
+      $baseMessage('修改成功！', 'success')
+    }
+  } catch {
+    Object.assign(value, copyRow)
+  }
+}
+
+const changeEpaFlag = async (value: any) => {
+  try {
+    const { data } = await updateCustomsClearanceSku({
+      id: value.id,
+      brank: value.brank,
+      manufacturerEn: value.manufacturerEn,
+      manufacturerAddressEn: value.manufacturerAddressEn,
+      clearanceNameEn: value.clearanceNameEn,
+      clearanceNameZh: value.clearanceNameZh,
+      materialEn: value.materialEn,
+      materialZh: value.materialZh,
+      usageEn: value.usageEn,
+      usageZh: value.usageZh,
+      epaFlag: value.epaFlag,
+    })
+
+    if (data) {
+      $baseMessage('修改成功！', 'success')
+    }
+  } catch {
+    Object.assign(value, copyRow)
+  }
+}
+
 // 零件table blur事件
 const clickCancel = async (event: any, value: any) => {
   const rootElement = getRootElement(event.srcElement, '.cell')
@@ -896,6 +954,8 @@ const clickCancel = async (event: any, value: any) => {
         usageEn: value.usageEn,
         usageZh: value.usageZh,
         fdaFlag: value.fdaFlag,
+        laceyFlag: value.laceyFlag,
+        epaFlag: value.epaFlag,
       })
     } catch {
       Object.assign(value, copyRow)

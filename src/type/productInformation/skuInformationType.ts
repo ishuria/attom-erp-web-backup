@@ -1318,6 +1318,8 @@ export interface IUpdateCustomsClearanceSku {
   usageZh?: string
   /** FDA申报费 */
   fdaFlag?: boolean
+  epaFlag?: boolean
+  laceyFlag?: boolean
 }
 
 export interface IUpdateSkuFnSku {
