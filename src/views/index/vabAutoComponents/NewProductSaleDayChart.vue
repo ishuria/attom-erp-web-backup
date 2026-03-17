@@ -2,7 +2,7 @@
   <vab-card :body-style="{ height: '422px' }" class="new-product-sale-day-chart-card" skeleton>
     <template #header>
       <vab-icon icon="chart-line" />
-      上新天数销售额/利润
+      上新天数 vs 利润/销售额
       <div class="right-select">
         <el-select v-model="dataType" style="max-width: 7em" @change="fetchData">
           <el-option label="利润" value="profit" />

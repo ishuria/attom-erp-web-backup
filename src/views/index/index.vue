@@ -370,19 +370,19 @@
       </el-col>
     </el-row>
 
-    <!-- 收发误差数 -->
-    <el-row v-if="ableViewShippingErrorCard" class="row-spacing" :gutter="20">
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+   
+    <el-row  class="row-spacing" :gutter="20">
+       <!-- 收发误差数 -->
+      <el-col v-if="ableViewShippingErrorCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <shipping-error-chart />
+      </el-col>
+          <!-- 上新天数销售额/利润图表 -->
+      <el-col v-if="ableViewNewProductSaleDayChartCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <new-product-sale-day-chart :site-list="siteList" :user-list="newProductSaleDayChartUserList" />
       </el-col>
     </el-row>
 
-    <!-- 上新天数销售额/利润图表 -->
-    <el-row v-if="ableProductManagerViewCard" class="row-spacing" :gutter="20">
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <new-product-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
-      </el-col>
-    </el-row>
+
 
     <!-- 第六层 -->
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
@@ -466,6 +466,7 @@ import { random } from 'lodash-es'
 import { getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
+import { getUserPersonLevelDropdownList } from '/@/api/devlocal/commission'
 import {
   getFrontPageAdjustDetailMonth,
   getFrontPageAssessmentData,
@@ -555,6 +556,12 @@ const ableProductManagerViewCard =
   currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
 const ableProductManagerLeadViewCard = currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
 const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
+// 上新天数销售额/利润图表可见性：产品经理、产品设计、Boss
+const ableViewNewProductSaleDayChartCard =
+  currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
+  currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE ||
+  currentRoleCode === ROLE_BOSS_CODE
 const commissionRole = [
   ROLE_GRAPHICDESIGNLEAD_CODE,
   ROLE_GRAPHICDESIGNER_CODE,
@@ -954,6 +961,12 @@ const fetchUserList = async () => {
 const lossUserList = ref<{ id: number; label: string }[]>([])
 const selectLossUserId = ref<number>()
 const fbaCountUserList = ref<{ id: number; label: string }[]>([])
+// 上新天数销售额/利润图表人员列表
+const newProductSaleDayChartUserList = ref<{ id: number; label: string }[]>([])
+const fetchNewProductSaleDayChartUserList = async () => {
+  const { data } = await getUserPersonLevelDropdownList()
+  newProductSaleDayChartUserList.value = [{ id: -1, label: '全部' }, ...data]
+}
 const fetchLossUserList = async () => {
   const { data } = await getFrontPageProductManagerSelectOption({ type: 1 })
   lossUserList.value = data
@@ -1490,8 +1503,21 @@ onBeforeMount(async () => {
     await fetchRankOverAchieved()
     await fetchRankAssessmentFinish()
     await fetchRankNewProductCommission()
+    await fetchMonthlyProductProfit()
+    await fetchMonthlyPlusAssessment()
+    await fetchMonthlyMinusAssessment()
+    await fetchRankOverAchieved()
+    await fetchRankAssessmentFinish()
+    await fetchRankNewProductCommission()
     // 初始化时获取利润分成预览数据
     await fetchProfitSharePreview()
+  }
+  // 上新天数销售额/利润图表数据获取
+  if (ableViewNewProductSaleDayChartCard) {
+    if (!siteList.value.length) {
+      fetchSiteList()
+    }
+    fetchNewProductSaleDayChartUserList()
   }
   if (ableViewTop30ProductSaleCard) {
     fetchTop30ProductSale()
