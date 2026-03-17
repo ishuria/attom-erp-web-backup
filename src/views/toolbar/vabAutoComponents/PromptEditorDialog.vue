@@ -49,7 +49,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:modelValue', value: boolean): void
-  (e: 'save', data: { userId: number; componentId: string | null; prompt: string }): void
+  (e: 'save', data: { prompt: string }): void
 }
 
 const props = defineProps<Props>()
@@ -77,8 +77,6 @@ const handleSave = () => {
   }
 
   emit('save', {
-    userId: props.currentRow.userId,
-    componentId: props.currentRow.componentId || null,
     prompt: editorContent.value,
   })
 }

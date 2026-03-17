@@ -94,8 +94,8 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="FlowID">
-          <el-input v-model.trim="addFormData.flowId" clearable placeholder="请输入FlowID（选填）" />
+        <el-form-item label="FlowID" prop="flowId">
+          <el-input v-model.trim="addFormData.flowId" clearable placeholder="请输入FlowID" />
         </el-form-item>
 
         <el-form-item label="ComponentID" prop="componentId">
@@ -170,6 +170,7 @@ const addFormRules = reactive<FormRules>({
   roleId: [{ required: true, message: '请选择角色', trigger: 'change' }],
   functionName: [{ required: true, message: '请输入提示词功能', trigger: 'blur' }],
   prompt: [{ required: true, message: '请输入提示词内容', trigger: 'blur' }],
+  flowId: [{ required: true, message: '请输入FlowID', trigger: 'blur' }],
   componentId: [{ required: true, message: '请输入ComponentID', trigger: 'blur' }],
 })
 
@@ -301,10 +302,14 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   }
 }
 // 保存提示词（从编辑弹窗组件触发）
-const handleSavePrompt = async (data: { userId: number; componentId: string | null; prompt: string }) => {
+const handleSavePrompt = async (data: { prompt: string }) => {
   try {
     submitLoading.value = true
-    await updateUserPrompt(data)
+    // 使用当前编辑行的 id 和新的 prompt 内容
+    await updateUserPrompt({
+      id: currentEditRow.value.id,
+      prompt: data.prompt,
+    })
     $baseMessage('修改成功', 'success')
     editorDialogVisible.value = false
     currentEditRow.value = null
@@ -333,10 +338,10 @@ const handleAddSubmit = async () => {
 
     await addAiPrompt({
       roleId: addFormData.roleId,
-      componentId: addFormData.componentId || null,
+      componentId: addFormData.componentId,
       functionName: addFormData.functionName,
       prompt: addFormData.prompt,
-      flowId: addFormData.flowId || null,
+      flowId: addFormData.flowId,
     })
 
     $baseMessage('新增成功', 'success')

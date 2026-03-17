@@ -333,3 +333,10 @@ export interface IFbaCountSaleDayItem {
   saleDayRange: string
   fbaCount: number
 }
+
+// 上新天数销售额/利润图表数据项
+export interface IGetFrontPageNewProductSaleDayChartRes {
+  dayRange: string // 上新天数区间，如 "0-30", "31-60"
+  sales: number // 销售额
+  profit: number // 利润
+}

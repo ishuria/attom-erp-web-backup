@@ -17,6 +17,7 @@ import {
   IGetFrontPageInventoryProductsTotalValue,
   IGetFrontPageJobLevelCommission,
   IGetFrontPageMonthlyAssessment,
+  IGetFrontPageNewProductSaleDayChartRes,
   IGetFrontPagePerformanceHistory,
   IGetFrontPagePerformanceHistoryReq,
   IGetFrontPagePersonalBonusRes,
@@ -492,6 +493,24 @@ export function getShippingErrorChart(data: {
 }): Promise<{ data: { month: string; errorCount: number }[] }> {
   return request({
     url: `${BASE_API}/front_page/shipping/error/chart`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 首页-上新天数销售额/利润图表
+ * @param data { userId: number, site: number, month: string, dataType: 'sales' | 'profit' }
+ * @returns IGetFrontPageNewProductSaleDayChartRes
+ */
+export function getFrontPageNewProductSaleDayChart(data: {
+  userId: number
+  site: number
+  month: string
+  dataType: string
+}): Promise<{ data: IGetFrontPageNewProductSaleDayChartRes[] }> {
+  return request({
+    url: `${BASE_API}/front_page/new_product/sale_day/chart`,
     method: 'post',
     data,
   })

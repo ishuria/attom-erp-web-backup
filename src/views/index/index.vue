@@ -377,6 +377,13 @@
       </el-col>
     </el-row>
 
+    <!-- 上新天数销售额/利润图表 -->
+    <el-row v-if="ableProductManagerViewCard" class="row-spacing" :gutter="20">
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <new-product-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
+      </el-col>
+    </el-row>
+
     <!-- 第六层 -->
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
       <!-- top100新品销售额 -->
@@ -1474,6 +1481,7 @@ onBeforeMount(async () => {
   if (ableProductManagerViewCard) {
     // await fetchHistoryMonthList()
     await fetchAdjustDetailMonthList()
+    fetchSiteList()
     fetchUserList()
     fetchRankNewProductOneYearCommission()
     await fetchMonthlyProductProfit()
