@@ -944,6 +944,7 @@ export interface IApplyPurchaseReductionCostReq {
   poComponentId: number
   beforePrice: number
   afterPrice: number
+  remark?: string
 }
 
 export interface IGetPurchaseComponentCustomInfo {

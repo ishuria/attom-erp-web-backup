@@ -925,6 +925,9 @@
         <el-form-item label="优化后价格" prop="afterPrice">
           <el-input v-model="reductionCostForm.afterPrice" type="number" />
         </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="reductionCostForm.remark" :rows="20" type="textarea" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="closeReductionCost">取消</el-button>
@@ -974,6 +977,7 @@ import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationC
 import {
   aggregationContract,
   applyPurchaseReductionCost,
+  batchComponentRefund,
   checkPurchasePo,
   delPayRecord,
   deletePo,
@@ -991,7 +995,6 @@ import {
   updateComponentAllPay,
   updateComponentPayPart,
   updateComponentRefund,
-  batchComponentRefund,
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
 import PoPermission from '/@/permissions/po'
@@ -1094,6 +1097,7 @@ const confirmReductionCost = async () => {
           poComponentId: _poComponentId.value,
           beforePrice: Number(reductionCostForm.beforePrice),
           afterPrice: Number(reductionCostForm.afterPrice),
+          remark: reductionCostForm.remark
         })
         if (data) {
           $baseMessage('降本提成申请成功！', 'success')
