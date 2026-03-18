@@ -139,6 +139,10 @@ export interface IReviewCommonItem {
    */
   patent?: string
   /**
+   * 是否专利申请
+   */
+  patentFlag?: number
+  /**
    * 产品经理
    */
   productManager?: string
@@ -381,6 +385,7 @@ export interface IReviewStepNo1Variant {
   woodenProduct?: number
   toy?: number
   seasonal?: number
+  patentFlag?: number
 }
 
 export interface IReviewStepResp {

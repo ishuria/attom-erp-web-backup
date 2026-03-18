@@ -89,6 +89,9 @@
             <template v-if="row['column0'] === 'seasonal'">
               <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="editDisabled" :false-value="0" :true-value="1" />
             </template>
+            <template v-if="row['column0'] === 'patentFlag'">
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="editDisabled" :false-value="0" :true-value="1" />
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -101,7 +104,8 @@
                 row['column0'] !== 'magnetic' &&
                 row['column0'] !== 'woodenProduct' &&
                 row['column0'] !== 'toy' &&
-                row['column0'] !== 'seasonal'
+                row['column0'] !== 'seasonal' &&
+                row['column0'] !== 'patentFlag'
               "
             >
               {{ row[prop] }}
@@ -218,6 +222,7 @@ const labelMap: Record<string, string> = {
   woodenProduct: '木制品',
   toy: '玩具',
   seasonal: '应季产品',
+  patentFlag: '专利申请',
   variantSku: '合并变体的SKU',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
@@ -280,6 +285,7 @@ const buildParams = (): IReviewStep2Req => {
       woodenProduct: item.woodenProduct,
       toy: item.toy,
       seasonal: item.seasonal,
+      patentFlag: item.patentFlag,
     }
 
     paramVArr.push(v)
@@ -360,6 +366,7 @@ const fetchData = async () => {
       woodenProduct: item.woodenProduct || 0,
       toy: item.toy || 0,
       seasonal: item.seasonal || 0,
+      patentFlag: item.patentFlag || 0,
       variantSku: item.variantSku,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,

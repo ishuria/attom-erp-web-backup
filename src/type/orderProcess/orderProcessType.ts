@@ -594,6 +594,10 @@ export interface IreviewStepNo5SkuInfoPerfect {
    * 是否季节性 0 不是 1是
    */
   seasonal?: number
+  /**
+   * 是否专利申请 0 不是 1是
+   */
+  patentFlag?: number
 }
 // 新品订货流程- 检查提交审核信息 - 保存
 export interface IreviewStepNo6SaveSix {
@@ -660,6 +664,7 @@ export interface IreviewInsertSkuInfo {
   woodenProduct?: number
   toy?: number
   seasonal?: number
+  patentFlag?: number
 }
 
 export interface ISubmitReviewComponentQuery {

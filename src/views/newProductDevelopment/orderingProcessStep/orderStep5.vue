@@ -204,6 +204,15 @@
               @change="handleUpdateMagnetic(row, prop)"
             />
           </template>
+          <template v-if="row['column0'] === 'patentFlag'">
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateMagnetic(row, prop)"
+            />
+          </template>
 
           <template v-if="row['column0'] === 'procurementManager'">
             <!-- <el-select
@@ -371,6 +380,7 @@ const handleInsertSku = async (row: any, prop: string) => {
       exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][prop] = data.woodenProduct || 0
       exchangeList.value[FIELD_INDEX_MAP.TOY][prop] = data.toy || 0
       exchangeList.value[FIELD_INDEX_MAP.SEASONAL][prop] = data.seasonal || 0
+      exchangeList.value[FIELD_INDEX_MAP.PATENT_FLAG][prop] = data.patentFlag || 0
       exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop] = data.benchmarkAsin
 
       await reviewStepNo5SkuInfoPerfect({
@@ -383,6 +393,7 @@ const handleInsertSku = async (row: any, prop: string) => {
         woodenProduct: exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][prop],
         toy: exchangeList.value[FIELD_INDEX_MAP.TOY][prop],
         seasonal: exchangeList.value[FIELD_INDEX_MAP.SEASONAL][prop],
+        patentFlag: exchangeList.value[FIELD_INDEX_MAP.PATENT_FLAG][prop],
         benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop],
         orderEntryId: exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][prop],
       })
@@ -469,23 +480,24 @@ const FIELD_INDEX_MAP = {
   WOODEN_PRODUCT: 10,
   TOY: 11,
   SEASONAL: 12,
-  MOQ_IDX: 13,
-  FULL_CASE_QTY_IDX: 14,
-  BENCHMARK_ASIN: 15,
-  PATENT: 16,
-  PRODUCT_MANAGER: 17,
-  PRODUCT_DESIGN: 18,
-  PROCUREMENT_MANAGER: 19,
-  SAMPLE_RETENTION: 20,
-  PACKING_GROUP: 21,
-  MANUFACTURER_EN_NAME: 22,
-  CERTIFICATE_UPLOAD: 23,
-  SKU_MERGE: 24,
-  OPERATE: 25,
-  ORDER_ENTRY_ID: 26,
-  PRODUCT_MANAGER_ID: 27,
-  PRODUCT_DESIGN_ID: 28,
-  PROCUREMENT_MANAGER_ID: 29,
+  PATENT_FLAG: 13,
+  MOQ_IDX: 14,
+  FULL_CASE_QTY_IDX: 15,
+  BENCHMARK_ASIN: 16,
+  PATENT: 17,
+  PRODUCT_MANAGER: 18,
+  PRODUCT_DESIGN: 19,
+  PROCUREMENT_MANAGER: 20,
+  SAMPLE_RETENTION: 21,
+  PACKING_GROUP: 22,
+  MANUFACTURER_EN_NAME: 23,
+  CERTIFICATE_UPLOAD: 24,
+  SKU_MERGE: 25,
+  OPERATE: 26,
+  ORDER_ENTRY_ID: 27,
+  PRODUCT_MANAGER_ID: 28,
+  PRODUCT_DESIGN_ID: 29,
+  PROCUREMENT_MANAGER_ID: 30,
 } as const
 
 const labelMap: Record<string, string> = {
@@ -503,6 +515,7 @@ const labelMap: Record<string, string> = {
   woodenProduct: '木制品',
   toy: '玩具',
   seasonal: '应季产品',
+  patentFlag: '专利申请',
   moq: '起订量',
   fullCaseQty: '整箱数',
   benchmarkAsin: '对标竞品ASIN',
@@ -546,6 +559,7 @@ const buildParams = (key: string) => {
     woodenProduct: exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][key],
     toy: exchangeList.value[FIELD_INDEX_MAP.TOY][key],
     seasonal: exchangeList.value[FIELD_INDEX_MAP.SEASONAL][key],
+    patentFlag: exchangeList.value[FIELD_INDEX_MAP.PATENT_FLAG][key],
     moq: exchangeList.value[FIELD_INDEX_MAP.MOQ_IDX][key],
     fullCaseQty: exchangeList.value[FIELD_INDEX_MAP.FULL_CASE_QTY_IDX][key],
     benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][key],
@@ -1021,6 +1035,7 @@ const fetchVariantList = async () => {
           woodenProduct: item.woodenProduct || 0,
           toy: item.toy || 0,
           seasonal: item.seasonal || 0,
+          patentFlag: item.patentFlag || 0,
           moq: item.moq,
           fullCaseQty: item.fullCaseQty,
           benchmarkAsin: item.benchmarkAsin,
