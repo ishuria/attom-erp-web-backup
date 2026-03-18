@@ -321,7 +321,7 @@
   <span v-else-if="item.label === '当前售价'" class="current-price-cell">
     <el-link type="primary" @click="$emit('routerPush', row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
     <el-popover
-      v-if="type === 'sku'"
+      v-if="type === 'sku' && isOperationRole"
       placement="bottom"
       trigger="hover"
       :width="280"
@@ -486,6 +486,8 @@ import { Star } from '@element-plus/icons-vue'
 import { nextTick, ref } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { syncAmazonPrice, trialGrossMargin } from '/@/api/devlocal/operationAutoMation'
+import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import { formatPercentage } from '/@/utils/rate'
 import { removeHtmlTags } from '/@/utils/tableColum'
@@ -493,6 +495,10 @@ import { removeHtmlTags } from '/@/utils/tableColum'
 defineOptions({
   name: 'PerformanceTableCell',
 })
+
+const currentRoleCode = useAclStore().getRole[0]
+const isOperationRole = currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
+|| currentRoleCode === ROLE_BOSS_CODE
 
 interface Props {
   item: any
@@ -795,7 +801,7 @@ const publishPrice = async (row: any) => {
       // 更新当前行的售价和毛利率
       row.sellingPrice = row._newPrice
       if (row._trialGrossMargin != null) {
-        row.grossProfit = row._trialGrossMargin
+        row.grossProfit = Number(row._trialGrossMargin || 0) / 100
       }
     } else {
       $baseMessage(res.message || '发布失败', 'error')
