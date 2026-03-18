@@ -885,3 +885,23 @@ export interface IOperationCoefficientIndicator {
   /** 每次违规提成减少比例 */
   commissionReduction: number
 }
+
+export interface IOperationSubcategoryRankingItem {
+  id?: number
+  gear: number
+  proportion: number
+}
+
+export interface IGetOperationSubcategoryRankingListRes {
+  data: IOperationSubcategoryRankingItem[]
+}
+
+export interface IUpdateOperationSubcategoryRankingReq {
+  id: number
+  proportion: number
+}
+
+export interface IAddOperationSubcategoryRankingReq {
+  gear: number
+  proportion: number
+}

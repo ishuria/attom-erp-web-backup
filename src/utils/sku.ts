@@ -1,10 +1,10 @@
-import { useSkuStore } from "/@/store/modules/sku"
+import { useSkuStore } from '/@/store/modules/sku'
 
-const skuStore = useSkuStore();
+const skuStore = useSkuStore()
 
 export const _addSku = (newSku: any, tempId: string) => {
-  skuStore.addSku(newSku, tempId); // 调用 addSku 方法
-};
+  skuStore.addSku(newSku, tempId) // 调用 addSku 方法
+}
 
 export const _updateSku = (newValue: SkuType) => {
   skuStore.updateSku(newValue)

@@ -6,7 +6,7 @@ import type {
   IAddEmailAfterSalesReq,
   IGetEmailAfterSalesListReq,
   IGetEmailAfterSalesListRes,
-  IUpdateEmailAfterSalesReq
+  IUpdateEmailAfterSalesReq,
 } from '/@/type/storeOperation/emailAfterSales'
 
 /**
@@ -64,7 +64,7 @@ export const updateEmailAfterSales = (data: IUpdateEmailAfterSalesReq): Promise<
 /**
  * 获取客服来源下拉列表
  */
-export const getCustomerServiceSourceList = (): Promise<{ data: { id: number, label: string }[] }> => {
+export const getCustomerServiceSourceList = (): Promise<{ data: { id: number; label: string }[] }> => {
   return request({
     url: `${BASE_API}/customer/service/source/list`,
     method: 'get',

@@ -29,7 +29,7 @@ export interface IGetSkuShippingChannelList {
   skuImgUrl: string
   weight: string
   merchandiseName: string
-  siteMerchandiseList: { channel: string, siteName: string }[]
+  siteMerchandiseList: { channel: string; siteName: string }[]
   [property: string]: any
 }
 export interface IGetMerchandiseTypeListRes {
@@ -82,7 +82,7 @@ export interface IUpdateBatchSkuShippingChannelMerchandise {
 }
 // SKU货物类别-货物类别对应的站点渠道列表
 export interface IGetMerchandiseTypeChannelRes {
-  data: { siteName: string, channel: string }[]
+  data: { siteName: string; channel: string }[]
 }
 // SKU货物类别-批量修改渠道id
 export interface IUpdateMerchandiseTypeBatchReq {

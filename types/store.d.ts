@@ -67,38 +67,38 @@ declare interface UserModuleType {
 }
 
 interface ComponentList {
-  actualTaxRate?: number;
-  componentName?: string;
-  componentUrl?: string;
-  contractTerms?: string;
-  currency?: number;
-  customsDeclarationStatus?: number;
-  existingPartsListId?: number;
-  freight?: string;
-  id?: number;
-  invoicing?: number;
-  invoicingTaxRate?: number;
-  minQuantity?: number;
-  moldCost?: string;
-  moreCount?: number;
-  numCartons?: number;
-  orderNo?: string;
-  poSkuId?: number;
-  preTaxPrice?: string;
-  purchaseCount?: number;
-  purchaseId?: number;
-  purchaseLink?: string;
-  purchaseMatters?: string;
-  repositoryId?: number;
-  stock?: number;
-  suppliserId?: number;
-  suppliserList?: SuppliserList[];
-  taxIncludedPrice?: string;
-  totalPrice?: string;
-  unit?: string;
-  unitPrice?: string;
-  useStockCount?: number;
-  [property: string]: any;
+  actualTaxRate?: number
+  componentName?: string
+  componentUrl?: string
+  contractTerms?: string
+  currency?: number
+  customsDeclarationStatus?: number
+  existingPartsListId?: number
+  freight?: string
+  id?: number
+  invoicing?: number
+  invoicingTaxRate?: number
+  minQuantity?: number
+  moldCost?: string
+  moreCount?: number
+  numCartons?: number
+  orderNo?: string
+  poSkuId?: number
+  preTaxPrice?: string
+  purchaseCount?: number
+  purchaseId?: number
+  purchaseLink?: string
+  purchaseMatters?: string
+  repositoryId?: number
+  stock?: number
+  suppliserId?: number
+  suppliserList?: SuppliserList[]
+  taxIncludedPrice?: string
+  totalPrice?: string
+  unit?: string
+  unitPrice?: string
+  useStockCount?: number
+  [property: string]: any
 }
 declare interface SkuType {
   tempId: string
@@ -119,7 +119,7 @@ declare interface SkuType {
     sku?: string
     skuImgUrl?: string
     skuRemarks?: string
-    [property: string]: any;
+    [property: string]: any
   }
   skuComponentList: ComponentList[]
 }

@@ -1,7 +1,7 @@
 import { BASE_API } from '/@/api/devlocal/api'
 import request from '/@/utils/request'
 
-import type {IMenuAddOrUpdteReq,IMenuDeleteReq} from '/@/type/menu/menuType'
+import type { IMenuAddOrUpdteReq, IMenuDeleteReq } from '/@/type/menu/menuType'
 
 export const getList = (params?: any) => {
   return request({
@@ -13,7 +13,7 @@ export const getList = (params?: any) => {
 
 /**
  * 获取菜单列表
- * @returns 
+ * @returns
  */
 export const getMenuList = () => {
   return request({
@@ -24,7 +24,7 @@ export const getMenuList = () => {
 
 /**
  * 获取菜单名称列表
- * @returns 
+ * @returns
  */
 export const getMenuNameList = () => {
   return request({
@@ -36,7 +36,7 @@ export const getMenuNameList = () => {
 /**
  * 添加菜单
  * @param data
- * @returns 
+ * @returns
  */
 export const doAdd = (data?: IMenuAddOrUpdteReq) => {
   return request({
@@ -48,8 +48,8 @@ export const doAdd = (data?: IMenuAddOrUpdteReq) => {
 
 /**
  * 修改菜单
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const doUpdate = (data?: IMenuAddOrUpdteReq) => {
   return request({
@@ -61,8 +61,8 @@ export const doUpdate = (data?: IMenuAddOrUpdteReq) => {
 
 /**
  * 删除菜单
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const doDelete = (data: IMenuDeleteReq) => {
   return request({

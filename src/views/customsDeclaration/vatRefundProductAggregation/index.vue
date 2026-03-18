@@ -48,8 +48,8 @@
       <el-table
         v-loading="listLoading"
         border
-        :data="list"
         class="noneHoveTable"
+        :data="list"
         :default-sort="{ prop: 'shipmentDate', order: 'descending' }"
         show-summary
         :summary-method="handleSummaryMethod"

@@ -30,7 +30,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="success" @click="handleUpload" :loading="loading">上传</el-button>
+        <el-button :loading="loading" type="success" @click="handleUpload">上传</el-button>
       </template>
     </vab-dialog>   
   </div>

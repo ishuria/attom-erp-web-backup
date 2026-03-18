@@ -742,6 +742,39 @@
               </div>
             </div>
           </el-card>
+
+          <el-card shadow="never" style="width: 20%">
+            <template #header>
+              <div class="card-header">
+                <span>小类排名配置</span>
+              </div>
+            </template>
+            <el-button style="margin-bottom: 20px" type="primary" @click="openAddSubcategoryDialog">新增</el-button>
+            <el-table border :data="subcategoryRankingList" :header-cell-style="{ textAlign: 'center' }" stripe @cell-click="changeSubcategoryInput">
+              <el-table-column label="档位" min-width="120" prop="gear" />
+              <el-table-column label="额外提成比例" min-width="180" prop="proportion">
+                <template #default="{ row }">
+                  <div class="subcategory-proportion-cell">
+                    <div v-if="editingSubcategoryId === row.id">
+                      <el-input
+                        v-model="row.proportion"
+                        type="number"
+                        @blur="clickCancelSubcategory($event, row)"
+                        @focus="cacheSubcategoryRankingRow(row)"
+                        @keyup.enter="clickCancelSubcategory($event, row)"
+                      >
+                        <template #append>%</template>
+                      </el-input>
+                    </div>
+                    <span v-else>{{ row.proportion ?? '' }}{{ row.proportion !== undefined ? '%' : '' }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <template #empty>
+                <el-empty class="vab-data-empty" />
+              </template>
+            </el-table>
+          </el-card>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -786,6 +819,23 @@
         <el-button type="primary" @click="handleConfirmParamSetting">确定</el-button>
       </template>
     </vab-dialog>
+    <vab-dialog v-model="subcategoryDialogVisible" :draggable="false" title="新增档位" width="20%" @close="resetSubcategoryForm">
+      <el-form ref="subcategoryFormRef" label-width="110px" :model="subcategoryForm" :rules="subcategoryFormRules">
+        <el-form-item label="档位" prop="gear">
+          <el-input-number v-model="subcategoryForm.gear" :controls="false" :min="1" :precision="0" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="提成比例" prop="proportion">
+          <div class="subcategory-form-input">
+            <el-input-number v-model="subcategoryForm.proportion" :controls="false" :min="0" :precision="2" style="width: 100%" />
+            <span>%</span>
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="subcategoryDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitSubcategoryForm">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -795,11 +845,13 @@ import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
+  addOperationSubcategoryRanking,
   getCommissionArtTypeList,
   getCommissionProductTypeList,
   getCommissionSetting,
   getOldProductProportion,
   getOperationCommissionCoefficient,
+  getOperationSubcategoryRankingList,
   updateCommissionArtType,
   updateCommissionProductType,
   updateCommissionProductTypeScore,
@@ -807,11 +859,13 @@ import {
   updateCommissionSetting2,
   updateOldProductProportion,
   updateOperationCommissionCoefficient,
+  updateOperationSubcategoryRanking,
 } from '/@/api/devlocal/commission'
 import type {
   IGetCommissionArtTypeList,
   IGetCommissionProductTypeList,
   IGetCommissionSettingTableList,
+  IOperationSubcategoryRankingItem,
   IUpdateCommissionSetting1Req,
 } from '/@/type/commission/commissionType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -828,6 +882,19 @@ const listLoading = ref<boolean>(false)
 const list = ref<IGetCommissionArtTypeList[]>([])
 const list2 = ref<IGetCommissionProductTypeList[]>([])
 const list3 = ref<IGetCommissionSettingTableList[]>([])
+const subcategoryRankingList = ref<IOperationSubcategoryRankingItem[]>([])
+const subcategoryRankingSnapshot = ref<Record<number, number>>({})
+const editingSubcategoryId = ref<number | undefined>(undefined)
+const subcategoryDialogVisible = ref<boolean>(false)
+const subcategoryFormRef = ref<FormInstance>()
+const subcategoryForm = reactive({
+  gear: undefined as number | undefined,
+  proportion: undefined as number | undefined,
+})
+const subcategoryFormRules = reactive<FormRules>({
+  gear: [{ required: true, message: '请输入档位', trigger: 'blur' }],
+  proportion: [{ required: true, message: '请输入额外提成比例', trigger: 'blur' }],
+})
 let copyRow: any
 const form = reactive<any>({})
 const formRef = ref<FormInstance>()
@@ -1014,6 +1081,35 @@ const clickCancel3 = async (event: any, value: any) => {
   }
 }
 
+const changeSubcategoryInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.property !== 'proportion') {
+    return
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row))
+  editingSubcategoryId.value = row.id
+  nextTick(() => {
+    focusAndSelectInput(cell)
+  })
+}
+
+const clickCancelSubcategory = async (event: any, value: IOperationSubcategoryRankingItem) => {
+  editingSubcategoryId.value = undefined
+
+  if (isEqual(copyRow, value)) {
+    return
+  }
+
+  if (event.type === 'blur' || event.type === 'keyup') {
+    const originalValue = copyRow?.proportion
+    try {
+      await handleSubcategoryRankingBlur(value)
+    } catch {
+      value.proportion = originalValue
+    }
+  }
+}
+
 // ============ 运营类型相关 ============
 
 interface OperationIndicator {
@@ -1029,6 +1125,104 @@ interface OperationIndicator {
 interface OperationConfig {
   oldProductClaimRatio: number
   indicators: OperationIndicator[]
+}
+
+const syncSubcategoryRankingSnapshot = () => {
+  subcategoryRankingSnapshot.value = subcategoryRankingList.value.reduce(
+    (result, item) => {
+      if (item.id !== undefined) {
+        result[item.id] = item.proportion
+      }
+      return result
+    },
+    {} as Record<number, number>
+  )
+}
+
+const cacheSubcategoryRankingRow = (row: IOperationSubcategoryRankingItem) => {
+  if (row.id === undefined) {
+    return
+  }
+
+  subcategoryRankingSnapshot.value[row.id] = row.proportion
+}
+
+const fetchOperationSubcategoryRankingList = async () => {
+  const { data } = await getOperationSubcategoryRankingList()
+  subcategoryRankingList.value = [...(data || [])]
+    .sort((a, b) => a.gear - b.gear)
+    .map((item) => ({
+      ...item,
+      proportion: Number((item.proportion * 100).toFixed(2)),
+    }))
+  syncSubcategoryRankingSnapshot()
+}
+
+const handleSubcategoryRankingBlur = async (row: IOperationSubcategoryRankingItem) => {
+  if (row.id === undefined) {
+    return
+  }
+
+  const originalValue = subcategoryRankingSnapshot.value[row.id]
+  if (originalValue === row.proportion) {
+    return
+  }
+
+  try {
+    const { data } = await updateOperationSubcategoryRanking({
+      id: row.id,
+      proportion: Number((row.proportion / 100).toFixed(4)),
+    })
+
+    if (data) {
+      $baseMessage('保存成功！', 'success')
+      subcategoryRankingSnapshot.value[row.id] = row.proportion
+    }
+  } catch (error) {
+    console.error('保存小类排名配置失败:', error)
+    row.proportion = originalValue
+    $baseMessage('保存失败，请重试', 'error')
+  }
+}
+
+const resetSubcategoryForm = () => {
+  subcategoryForm.gear = undefined
+  subcategoryForm.proportion = undefined
+  subcategoryFormRef.value?.resetFields()
+}
+
+const openAddSubcategoryDialog = () => {
+  resetSubcategoryForm()
+  subcategoryDialogVisible.value = true
+}
+
+const submitSubcategoryForm = async () => {
+  const valid = await subcategoryFormRef.value?.validate().catch(() => false)
+  if (!valid) {
+    return
+  }
+
+  const exists = subcategoryRankingList.value.some((item) => item.gear === subcategoryForm.gear)
+  if (exists) {
+    $baseMessage('该档位已存在，请勿重复新增', 'warning')
+    return
+  }
+
+  try {
+    const { data } = await addOperationSubcategoryRanking({
+      gear: Number(subcategoryForm.gear),
+      proportion: Number(((subcategoryForm.proportion || 0) / 100).toFixed(4)),
+    })
+    if (data) {
+      $baseMessage('新增成功！', 'success')
+      subcategoryDialogVisible.value = false
+      resetSubcategoryForm()
+      await fetchOperationSubcategoryRankingList()
+    }
+  } catch (error) {
+    console.error('新增小类排名配置失败:', error)
+    $baseMessage('新增失败，请重试', 'error')
+  }
 }
 
 // 运营配置数据
@@ -1192,6 +1386,10 @@ const fetchOperationConfig = async () => {
   }
 }
 
+const fetchOperationTabData = async () => {
+  await Promise.all([fetchOperationConfig(), fetchOperationSubcategoryRankingList()])
+}
+
 // 老品认领比例失焦保存
 const handleOldProductRatioBlur = async () => {
   // 检查值是否发生变化
@@ -1300,7 +1498,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
   } else if (tab.props.name === 0) {
     fetchData()
   } else if (tab.props.name === 2) {
-    fetchOperationConfig()
+    fetchOperationTabData()
   }
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -1391,6 +1589,13 @@ onBeforeMount(() => {
       font-weight: bold;
       font-size: 16px;
     }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
 
   .indicator-card {
@@ -1523,5 +1728,24 @@ onBeforeMount(() => {
     margin-top: 20px;
     padding: 20px 0;
   }
+
+  .subcategory-card {
+    :deep(.el-table .cell) {
+      text-align: center;
+    }
+
+    .subcategory-proportion-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.subcategory-form-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
 }
 </style>

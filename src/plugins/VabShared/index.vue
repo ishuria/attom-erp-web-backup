@@ -1,15 +1,15 @@
 <template>
   <vab-dialog 
     v-model="dflag" 
-    title="共享" 
-    width="650"
+    :before-close = "handlerCloseDialog" 
+    title="共享"
     top="5vh"
-    :before-close = "handlerCloseDialog"
+    width="650"
  >
-    <el-table :data="props.list" :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }" height="75vh">
+    <el-table :cell-style="{ textAlign: 'center' }" :data="props.list" :header-cell-style="{ 'text-align': 'center' }" height="75vh">
       <el-table-column label="用户id" prop="userID" />
       <el-table-column label="用户名" prop="userName" />
-      <el-table-column label="角色名" prop="roleName" column-key="type" :filter-method="filterHandler" :filters="roleNameFilters" />
+      <el-table-column column-key="type" :filter-method="filterHandler" :filters="roleNameFilters" label="角色名" prop="roleName" />
       <el-table-column label="操作" prop="isShare" >
         <template #default="{ row }">
           <el-switch

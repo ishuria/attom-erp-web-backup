@@ -74,7 +74,7 @@ export interface IGetDistributionProductList {
    */
   userId?: number
   id: number
-  userTypeList: { id: number, label: string }[]
+  userTypeList: { id: number; label: string }[]
 }
 export interface IAddDistributionListReq {
   userId: number

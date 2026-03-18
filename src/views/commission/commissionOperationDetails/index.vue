@@ -424,6 +424,11 @@
               {{ row.originProportion ? row.originProportion + '%' : '-' }}
             </template>
           </el-table-column>
+          <el-table-column label="小类排名额外比例" min-width="150" prop="minorCategoryProportion">
+            <template #default="{ row }">
+              {{ row.minorCategoryProportion ? row.minorCategoryProportion + '%' : '-' }}
+            </template>
+          </el-table-column>
           <el-table-column label="指标不达标调整" min-width="180" prop="adjustProportion" sortable="custom">
             <template #default="{ row }">
               {{ row.adjustProportion !== undefined ? row.adjustProportion + '%' : '-' }}
@@ -472,6 +477,11 @@
             </template>
           </el-table-column>
           <el-table-column label="汇率" min-width="100" prop="avgRate" sortable="custom" />
+          <el-table-column label="平均小类排名" min-width="140" prop="averageSubcategoryRanking">
+            <template #default="{ row }">
+              {{ row.averageSubcategoryRanking ?? '-' }}
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="老品净利润" min-width="120" prop="oldProfitGross" sortable="custom">
             <template #default="{ row }">
               {{ row.oldProfitGross ? '$' + row.oldProfitGross : '-' }}
@@ -684,7 +694,7 @@ const bonusDetailList = ref<any[]>([])
 const bonusDetailTotal = ref<number>(0)
 
 // 老品利润
-const oldProductProfitMonthRange = ref<[string, string] | null>(null)
+const oldProductProfitMonthRange = ref<[string, string] | undefined>(undefined)
 const oldProductProfitQueryForm = reactive({
   keyWord: '',
   pageNo: 1,
@@ -923,7 +933,7 @@ const handleBonusDetailSizeChange = (val: number) => {
 }
 
 // ============ 老品利润方法 ============
-const handleOldProductProfitMonthChange = (value: [string, string] | null) => {
+const handleOldProductProfitMonthChange = (value: [string, string] | undefined) => {
   if (value) {
     oldProductProfitQueryForm.startMonth = value[0]
     oldProductProfitQueryForm.endMonth = value[1]

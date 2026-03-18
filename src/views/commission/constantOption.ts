@@ -1,4 +1,4 @@
-export const colorList =   [
+export const colorList = [
   '#62d9ad', // 青绿色
   '#00aeef', // 天蓝色
   '#ffdc4c', // 金黄色
@@ -10,12 +10,12 @@ export const colorList =   [
   '#33b5e5', // 浅蓝色
   '#ffc107', // 柠檬黄
   '#3cb371', // 春绿色
-  '#5bc0de',  // 宝石蓝
+  '#5bc0de', // 宝石蓝
   '#4db6ac', // 薄荷绿
   '#48c9b0', // 绿松石色
   '#40e0d0', // 绿松石蓝
   '#7fffd4', // 碧绿色
-  '#98fb98'  // 淡绿色
+  '#98fb98', // 淡绿色
 ]
 export const redColorList = [
   '#FF0000', // 纯红色 - 最基础的亮红色
@@ -34,5 +34,5 @@ export const redColorList = [
   '#FA8072', // 鲑鱼色 - 浅红色
   '#E9967A', // 暗鲑鱼色 - 暗淡的红色
   '#F08080', // 浅珊瑚色 - 最浅的红色
-  '#FFA07A'  // 亮鲑鱼色 - 明亮的橙红色
+  '#FFA07A', // 亮鲑鱼色 - 明亮的橙红色
 ]

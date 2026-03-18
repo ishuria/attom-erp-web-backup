@@ -3,34 +3,34 @@
     
     <el-table 
       v-loading="loading"
-      border stripe 
-      :cell-style="cellStyle"
+      border :cell-style="cellStyle" 
+      :data="list"
       :header-cell-style="headerCellStyle" 
-      :data="list" 
+      stripe 
       @cell-click="changeInput"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column fixed="left" align="center" v-if="tab === 1" type="selection" />
-      <el-table-column label="基本信息" fixed="left">
-        <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')"></el-table-column>
-        <el-table-column label="货代单号" prop="freightForwardingNumber" width="160"></el-table-column>
-        <el-table-column label="站点" prop="site" width="130"></el-table-column>
+      <el-table-column v-if="tab === 1" align="center" fixed="left" type="selection" />
+      <el-table-column fixed="left" label="基本信息">
+        <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')"/>
+        <el-table-column label="货代单号" prop="freightForwardingNumber" width="160"/>
+        <el-table-column label="站点" prop="site" width="130"/>
       </el-table-column>
       <el-table-column label="我方预估">
-        <el-table-column label="结算对象" prop="ourSettlementObject" :width="flexColumnWidth(list, '结算对象', 'ourSettlementObject')"></el-table-column>
-        <el-table-column label="我方费用名" prop="ourCostName" :width="flexColumnWidth(list, '我方费用名', 'ourCostName')"></el-table-column>
-        <el-table-column label="数量" prop="count" min-width="90"></el-table-column>
-        <el-table-column label="预估单价" prop="unitPrice" :width="flexColumnWidth(list, '预估单价', 'unitPrice')"></el-table-column>
-        <el-table-column label="预估总额" prop="estimateCost" :width="flexColumnWidth(list, '预估总额', 'estimateCost')"></el-table-column>
-        <el-table-column label="预估货币" prop="currency" min-width="100"></el-table-column>
-        <el-table-column label="合并报关" prop="mergeCustomsDeclaration" min-width="100">
+        <el-table-column label="结算对象" prop="ourSettlementObject" :width="flexColumnWidth(list, '结算对象', 'ourSettlementObject')"/>
+        <el-table-column label="我方费用名" prop="ourCostName" :width="flexColumnWidth(list, '我方费用名', 'ourCostName')"/>
+        <el-table-column label="数量" min-width="90" prop="count"/>
+        <el-table-column label="预估单价" prop="unitPrice" :width="flexColumnWidth(list, '预估单价', 'unitPrice')"/>
+        <el-table-column label="预估总额" prop="estimateCost" :width="flexColumnWidth(list, '预估总额', 'estimateCost')"/>
+        <el-table-column label="预估货币" min-width="100" prop="currency"/>
+        <el-table-column label="合并报关" min-width="100" prop="mergeCustomsDeclaration">
           <template #default="{ row }">
             <div v-for="item in row.mergeCustomsDeclaration.split(',')" :key="item">
               {{ item }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="合并清关" prop="mergeCustomsClearance" min-width="100">
+        <el-table-column label="合并清关" min-width="100" prop="mergeCustomsClearance">
           <template #default="{ row }">
             <div v-for="item in row.mergeCustomsClearance.split(',')" :key="item">
               {{ item }}
@@ -39,13 +39,13 @@
         </el-table-column>
       </el-table-column>
       <el-table-column label="货代账单">
-        <el-table-column label="结算对象" prop="settlementObject" :width="flexColumnWidth(list, '结算对象', 'settlementObject')"></el-table-column>
-        <el-table-column label="货代费用名" prop="freightForwardingFee" :width="flexColumnWidth(list, '货代费用名', 'freightForwardingFee')"></el-table-column>
-        <el-table-column label="实际数量" prop="actualQuantity" min-width="100"></el-table-column>
-        <el-table-column label="实际单价" prop="actualUnitPrice" min-width="100"></el-table-column>
-        <el-table-column label="实际总额" prop="actualTotal" min-width="100"></el-table-column>
-        <el-table-column label="实际币种" prop="actualCurrency" min-width="100"></el-table-column>
-        <el-table-column label="账单备注" prop="billRemarks" min-width="100">
+        <el-table-column label="结算对象" prop="settlementObject" :width="flexColumnWidth(list, '结算对象', 'settlementObject')"/>
+        <el-table-column label="货代费用名" prop="freightForwardingFee" :width="flexColumnWidth(list, '货代费用名', 'freightForwardingFee')"/>
+        <el-table-column label="实际数量" min-width="100" prop="actualQuantity"/>
+        <el-table-column label="实际单价" min-width="100" prop="actualUnitPrice"/>
+        <el-table-column label="实际总额" min-width="100" prop="actualTotal"/>
+        <el-table-column label="实际币种" min-width="100" prop="actualCurrency"/>
+        <el-table-column label="账单备注" min-width="100" prop="billRemarks">
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
@@ -62,19 +62,19 @@
             {{ row.difference > 0 ? '+' + row.difference : row.difference }}
           </template>
         </el-table-column>
-        <el-table-column label="允许误差" prop="error" min-width="100">
+        <el-table-column label="允许误差" min-width="100" prop="error">
           <template #default="{ row }">
             {{ row.error ? row.error + '%' : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="系统自检" prop="systemSelfTest" min-width="160">
+        <el-table-column label="系统自检" min-width="160" prop="systemSelfTest">
           <template #default="{ row }">
             <div v-for="item in row.systemSelfTest.split(';')" :key="item">
               {{ item }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="人工检查问题备注" prop="manualRemarks" min-width="100">
+        <el-table-column label="人工检查问题备注" min-width="100" prop="manualRemarks">
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
@@ -85,15 +85,15 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="操作"></el-table-column>
+      <el-table-column label="操作"/>
       <template #empty>
         <el-empty class="vab-data-empty" />
       </template>
     </el-table>
     <vab-remark-dialog
       v-model="remarkVisible"
-      title="修改人工检查问题备注"
       :remark="remark"
+      title="修改人工检查问题备注"
       @update:remark="handleUpdateRemark"
     />
   </div>

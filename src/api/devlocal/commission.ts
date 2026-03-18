@@ -22,7 +22,10 @@ import type {
   IGetReductionCostDetailListReq,
   IGetReductionCostDetailListRes,
   IGetReductionCostListRes,
+  IGetOperationSubcategoryRankingListRes,
+  IAddOperationSubcategoryRankingReq,
   IOperationCommissionCoefficientRes,
+  IUpdateOperationSubcategoryRankingReq,
   IUpdateCommissionArtTypeReq,
   IUpdateCommissionProductTypeReq,
   IUpdateCommissionSetting1Req,
@@ -620,6 +623,38 @@ export function updateOperationCommissionCoefficient(data: {
 }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/commission/coefficient/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 获取运营小类排名配置
+ */
+export function getOperationSubcategoryRankingList(): Promise<IGetOperationSubcategoryRankingListRes> {
+  return request({
+    url: `${BASE_API}/operation/commission/subcategoryRanking/list`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 更新运营小类排名配置
+ */
+export function updateOperationSubcategoryRanking(data: IUpdateOperationSubcategoryRankingReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/commission/subcategoryRanking/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 新增运营小类排名配置
+ */
+export function addOperationSubcategoryRanking(data: IAddOperationSubcategoryRankingReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/commission/subcategoryRanking/add`,
     method: 'post',
     data,
   })

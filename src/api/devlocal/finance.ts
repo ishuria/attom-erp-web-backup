@@ -8,7 +8,8 @@ import {
   IGetOutBoundListReq,
   IGetOutBoundListRes,
   IGetOutboundInventoryCheckRes,
-  IGetInboundSummaryRes, IGetInboundSummaryComponentRes,
+  IGetInboundSummaryRes,
+  IGetInboundSummaryComponentRes,
 } from '/@/type/finance/financeType'
 
 export function getOutBoundList(data: IGetOutBoundListReq): Promise<IGetOutBoundListRes> {
