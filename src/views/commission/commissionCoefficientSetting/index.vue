@@ -750,7 +750,13 @@
               </div>
             </template>
             <el-button style="margin-bottom: 20px" type="primary" @click="openAddSubcategoryDialog">新增</el-button>
-            <el-table border :data="subcategoryRankingList" :header-cell-style="{ textAlign: 'center' }" stripe @cell-click="changeSubcategoryInput">
+            <el-table
+              border
+              :data="subcategoryRankingList"
+              :header-cell-style="{ textAlign: 'center' }"
+              stripe
+              @cell-click="changeSubcategoryInput"
+            >
               <el-table-column label="档位" min-width="120" prop="gear" />
               <el-table-column label="额外提成比例" min-width="180" prop="proportion">
                 <template #default="{ row }">
@@ -801,6 +807,9 @@
         </el-form-item>
         <el-form-item label="转化率不达标豁免金额($)">
           <el-input v-model="form.price" />
+        </el-form-item>
+        <el-form-item label="说明书类型提成上限(￥)">
+          <el-input v-model="form.instructionManualUpperLimitPrice" />
         </el-form-item>
       </el-form>
       <el-table border class="noneHoverTable" :data="list3" stripe @cell-click="changeInput">
@@ -915,6 +924,7 @@ const handleConfirmParamSetting = async () => {
         compensationDay: form.compensationDay,
         newDiscountRatio: Number(form.newDiscountRatio) / 100,
         price: form.price,
+        instructionManualUpperLimitPrice: form.instructionManualUpperLimitPrice,
       })
       if (data) {
         $baseMessage('提交成功！', 'success')

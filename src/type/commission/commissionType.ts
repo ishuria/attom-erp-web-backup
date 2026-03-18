@@ -102,6 +102,7 @@ export interface IUpdateCommissionSetting1Req {
   compensationDay: number | null
   newDiscountRatio: number | null
   price: string | null
+  instructionManualUpperLimitPrice: number | null
 }
 export interface IGetCommissionTaskPictureListReq {
   keyWord: string
