@@ -82,6 +82,7 @@ import type {
   IupdateProductComponentName,
   IupdateProductComponentSuppliser,
   IupdateProductReplenParams,
+  IupdateProductSizeWeight,
   IupdateProductSku,
   IupdateProductSkuRemark,
   IupdateProductStatus,
@@ -304,6 +305,17 @@ export function getProductAllName(params: IgetProductAllName) {
 export function updateProductStatus(data?: IupdateProductStatus) {
   return request({
     url: `${BASE_API}/product/update/status`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * SKU信息 - 修改尺寸重量
+ */
+export function updateProductSizeWeight(data: IupdateProductSizeWeight): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/update`,
     method: 'post',
     data,
   })

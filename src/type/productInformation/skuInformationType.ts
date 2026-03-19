@@ -9,6 +9,7 @@ export interface IgetProductListQuery {
 export interface IgetProductList {
   skuId: number
   sku: string
+  _sku: string
   skuImgUrl: string
   fnSkuUpc: string
   productionHaltStatus: number
@@ -55,6 +56,15 @@ export interface IupdateProductStatus {
   toy: number
   seasonal: number
 }
+
+export interface IupdateProductSizeWeight {
+  id: number
+  length: number
+  width: number
+  height: number
+  weight: number
+}
+
 export interface ISkuId {
   skuId: number
 }

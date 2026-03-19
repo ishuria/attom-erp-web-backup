@@ -216,6 +216,9 @@
                 <el-dropdown-item @click.stop="showSkuDeliverTimeDetails(row)">
                   <el-link type="primary" underline="never">交期查看</el-link>
                 </el-dropdown-item>
+                <el-dropdown-item @click.stop="handleEditSizeWeight(row)">
+                  <el-link type="primary" underline="never">修改尺寸重量</el-link>
+                </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" underline="never">证书</el-link>
                 </el-dropdown-item>
@@ -261,6 +264,33 @@
         <el-button type="primary" @click="handleCopySkuConfirm">确定</el-button>
       </template>
     </vab-dialog>
+    <vab-dialog v-model="sizeWeightVisible" title="修改尺寸重量" top="28vh" width="18%" @close="handleSizeWeightClose">
+      <el-form ref="sizeWeightFormRef" class="size-weight-form" label-position="top" :model="sizeWeightForm" :rules="sizeWeightFormRules">
+        <el-form-item label="SKU">
+          <el-input :model-value="sizeWeightSku" disabled />
+        </el-form-item>
+        <div class="size-weight-form__row">
+          <el-form-item label="长(cm)" prop="length">
+            <el-input-number v-model="sizeWeightForm.length" :controls="false" :min="0" :precision="2" style="width: 100%" />
+          </el-form-item>
+          <el-form-item label="宽(cm)" prop="width">
+            <el-input-number v-model="sizeWeightForm.width" :controls="false" :min="0" :precision="2" style="width: 100%" />
+          </el-form-item>
+        </div>
+        <div class="size-weight-form__row">
+          <el-form-item label="高(cm)" prop="height">
+            <el-input-number v-model="sizeWeightForm.height" :controls="false" :min="0" :precision="2" style="width: 100%" />
+          </el-form-item>
+          <el-form-item label="重量(g)" prop="weight">
+            <el-input-number v-model="sizeWeightForm.weight" :controls="false" :min="0" :precision="2" style="width: 100%" />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleSizeWeightClose">取消</el-button>
+        <el-button :loading="sizeWeightSubmitting" type="primary" @click="handleSizeWeightConfirm">确定</el-button>
+      </template>
+    </vab-dialog>
     <!-- 批量新增打包注意事项 -->
     <vab-batch-packing-precautions v-model="batchPackingPrecautionsVisible" :sku-id-list="skuIdList" />
     <!-- 打包工时明细 -->
@@ -274,12 +304,13 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { copyProductSku, getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
+import { copyProductSku, getProductList, updateProductSizeWeight, updateProductStatus } from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
+import type { IgetProductList, IupdateProductSizeWeight } from '/@/type/productInformation/skuInformationType'
 import handleClipboard from '/@/utils/clipboard'
 import { hasPermission } from '/@/utils/permission'
 import { handleMatched, handleTabs } from '/@/utils/routes'
@@ -396,6 +427,81 @@ const copySkuClose = () => {
 const copySkuFormRules = reactive({
   sku: [{ required: true, message: '请输入新SKU', trigger: 'blur' }],
 })
+const sizeWeightVisible = ref<boolean>(false)
+const sizeWeightSubmitting = ref<boolean>(false)
+const sizeWeightSku = ref<string>('')
+const sizeWeightFormRef = ref<FormInstance>()
+const sizeWeightForm = reactive<IupdateProductSizeWeight>({
+  id: 0,
+  length: 0,
+  width: 0,
+  height: 0,
+  weight: 0,
+})
+const validateNumberField = (_rule: unknown, value: number | undefined, callback: (error?: Error) => void) => {
+  if (value === null || value === undefined || Number.isNaN(value)) {
+    callback(new Error('请输入数字'))
+    return
+  }
+  callback()
+}
+const sizeWeightFormRules = reactive<FormRules<IupdateProductSizeWeight>>({
+  length: [{ required: true, validator: validateNumberField, trigger: 'blur' }],
+  width: [{ required: true, validator: validateNumberField, trigger: 'blur' }],
+  height: [{ required: true, validator: validateNumberField, trigger: 'blur' }],
+  weight: [{ required: true, validator: validateNumberField, trigger: 'blur' }],
+})
+const resetSizeWeightForm = () => {
+  sizeWeightSku.value = ''
+  sizeWeightForm.id = 0
+  sizeWeightForm.length = 0
+  sizeWeightForm.width = 0
+  sizeWeightForm.height = 0
+  sizeWeightForm.weight = 0
+}
+const handleSizeWeightClose = () => {
+  sizeWeightVisible.value = false
+  sizeWeightFormRef.value?.resetFields()
+  resetSizeWeightForm()
+}
+const handleEditSizeWeight = (row: IgetProductList) => {
+  selectedRowIndex.value = row.skuId
+  sizeWeightSku.value = row._sku?.[0] || row.sku
+  sizeWeightForm.id = row.skuId
+  sizeWeightForm.length = row.length
+  sizeWeightForm.width = row.width
+  sizeWeightForm.height = row.height
+  sizeWeightForm.weight = row.weight
+  sizeWeightVisible.value = true
+  nextTick(() => {
+    sizeWeightFormRef.value?.clearValidate()
+  })
+}
+const handleSizeWeightConfirm = async () => {
+  if (!sizeWeightFormRef.value) return
+  const valid = await sizeWeightFormRef.value
+    .validate()
+    .then(() => true)
+    .catch(() => false)
+  if (!valid) return
+  sizeWeightSubmitting.value = true
+  try {
+    const { data } = await updateProductSizeWeight({
+      id: sizeWeightForm.id,
+      length: sizeWeightForm.length,
+      width: sizeWeightForm.width,
+      height: sizeWeightForm.height,
+      weight: sizeWeightForm.weight,
+    })
+    if (data) {
+      $baseMessage('尺寸重量修改成功', 'success')
+      handleSizeWeightClose()
+      fetchData()
+    }
+  } finally {
+    sizeWeightSubmitting.value = false
+  }
+}
 const handleCopySkuConfirm = async () => {
   copySkuFormRef.value.validate(async (isValid: boolean) => {
     if (isValid) {
@@ -644,5 +750,19 @@ onBeforeMount(() => {
 // 搜索框宽度设置
 .search-input {
   width: 300px !important;
+}
+
+.size-weight-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.size-weight-form__row :deep(.el-form-item) {
+  margin-bottom: 18px;
+}
+
+.size-weight-form :deep(.el-input-number) {
+  width: 100%;
 }
 </style>
