@@ -5,7 +5,7 @@
     :close-on-click-modal="false"
     :destroy-on-close="false"
     :title="title"
-    width="1080px"
+    width="65vw"
   >
     <div class="ai-chat-dialog">
       <div class="dialog-body">
@@ -68,7 +68,7 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 12px;
-  height: min(74vh, 720px);
+  height: min(82vh, 920px);
 }
 
 .dialog-header-copy {
@@ -98,13 +98,13 @@ watch(
 
 @media screen and (max-width: 1280px) {
   .ai-chat-dialog {
-    height: min(72vh, 660px);
+    height: min(78vh, 820px);
   }
 }
 
 @media screen and (max-width: 768px) {
   .ai-chat-dialog {
-    height: 72vh;
+    height: 74vh;
   }
 
   .dialog-body {

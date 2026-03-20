@@ -48,6 +48,11 @@ const handleSend = () => {
   padding-top: 12px;
   border-top: 1px solid var(--el-border-color-lighter);
 
+  :deep(.el-textarea__inner) {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
   .actions {
     display: flex;
     align-items: center;
@@ -55,7 +60,7 @@ const handleSend = () => {
   }
 
   .hint {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--el-text-color-secondary);
   }
 }

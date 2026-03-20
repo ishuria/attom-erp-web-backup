@@ -95,10 +95,10 @@ const handleCommand = async (command: string, item: ChatConversation) => {
 .ai-conversation-sidebar {
   display: flex;
   flex-direction: column;
-  width: 280px;
-  min-width: 280px;
+  width: 344px;
+  min-width: 344px;
   height: 100%;
-  padding: 16px 12px;
+  padding: 18px 14px;
   background: var(--el-fill-color-lighter);
   border-right: 1px solid var(--el-border-color-lighter);
 
@@ -106,11 +106,11 @@ const handleCommand = async (command: string, item: ChatConversation) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
 
   .title {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
   }
 
@@ -118,7 +118,7 @@ const handleCommand = async (command: string, item: ChatConversation) => {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     min-height: 0;
     overflow-y: auto;
   }
@@ -129,7 +129,7 @@ const handleCommand = async (command: string, item: ChatConversation) => {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    padding: 10px;
+    padding: 16px 14px;
     text-align: left;
     cursor: pointer;
     background: var(--el-bg-color);
@@ -162,8 +162,8 @@ const handleCommand = async (command: string, item: ChatConversation) => {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
     color: var(--el-text-color-secondary);
     cursor: pointer;
     background: transparent;
@@ -187,20 +187,20 @@ const handleCommand = async (command: string, item: ChatConversation) => {
   }
 
   .name {
-    font-size: 13px;
+    font-size: 16px;
     color: var(--el-text-color-primary);
   }
 
   .time {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--el-text-color-secondary);
   }
 }
 
 @media screen and (max-width: 1280px) {
   .ai-conversation-sidebar {
-    width: 248px;
-    min-width: 248px;
+    width: 300px;
+    min-width: 300px;
   }
 }
 </style>

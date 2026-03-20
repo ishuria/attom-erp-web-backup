@@ -73,12 +73,12 @@ const htmlContent = computed(() => renderAiMarkdown(props.message.content))
 
   .avatar {
     display: flex;
-    flex: 0 0 32px;
+    flex: 0 0 36px;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--el-color-white);
     background: linear-gradient(135deg, var(--el-color-primary), #3e8bff);
@@ -91,8 +91,8 @@ const htmlContent = computed(() => renderAiMarkdown(props.message.content))
     }
 
     img {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       object-fit: contain;
     }
   }
@@ -109,17 +109,18 @@ const htmlContent = computed(() => renderAiMarkdown(props.message.content))
     display: flex;
     gap: 8px;
     align-items: center;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--el-text-color-secondary);
   }
 
   .bubble {
-    max-width: min(100%, 420px);
-    padding: 12px 14px;
+    max-width: 70%;
+    padding: 14px 16px;
     overflow-wrap: anywhere;
     background: var(--el-fill-color-light);
     border: 1px solid var(--el-border-color-lighter);
     border-radius: 14px;
+    font-size: 16px;
 
     &.is-error {
       color: var(--el-color-danger);
@@ -129,11 +130,14 @@ const htmlContent = computed(() => renderAiMarkdown(props.message.content))
   }
 
   .plain {
+    font-size: 16px;
+    line-height: 1.8;
     white-space: pre-wrap;
   }
 
   .markdown-body {
-    line-height: 1.7;
+    font-size: 16px;
+    line-height: 1.8;
 
     :deep(p) {
       margin: 0 0 8px;
@@ -148,6 +152,8 @@ const htmlContent = computed(() => renderAiMarkdown(props.message.content))
       overflow: auto;
       background: var(--el-fill-color-dark);
       border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.7;
     }
 
     :deep(code) {
