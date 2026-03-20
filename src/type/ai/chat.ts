@@ -1,0 +1,25 @@
+export type ChatRole = 'user' | 'assistant' | 'system'
+
+export interface ChatMessage {
+  id?: number | string
+  role: ChatRole
+  content: string
+  createdAt?: string
+  status?: 'loading' | 'success' | 'error'
+}
+
+export interface ChatConversation {
+  id: number | string
+  title: string
+  createdAt?: string
+}
+
+export interface ChatModuleConfig {
+  enabled?: boolean
+  defaultModel?: string
+  showLauncher?: boolean
+  title?: string
+  welcomeMessage?: string
+  enableConversation?: boolean
+  placement?: 'bottom-right'
+}

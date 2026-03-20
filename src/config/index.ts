@@ -102,5 +102,6 @@ export const {
   columnDrag,
   rightToolsDrag,
   showBox,
+  showAiAssistant,
   showDeepSeek,
 } = config

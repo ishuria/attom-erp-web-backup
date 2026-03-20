@@ -68,6 +68,8 @@ export const themeConfig: ThemeType = {
   glassMode: false,
   // 液态玻璃透明度
   glassOpacity: 0.85,
+  // 是否显示AI助手组件
+  showAiAssistant: false,
   // 是否显示DeepSeek组件
   showDeepSeek: false,
 }
