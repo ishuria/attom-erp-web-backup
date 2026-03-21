@@ -7,17 +7,19 @@ import {
   sendAiChatMessage,
   updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
-import type { ChatConversation, ChatMessage } from '/@/type/ai/chat'
-import { streamAiMessage } from '/@/utils/aiStream'
+import type { ChatConversation, ChatMessage, CreateConversationOptions, EnsureConversationOptions } from '/@/type/ai/chat'
 
+// 为本地兜底消息生成临时主键，避免渲染层依赖后端 id。
 const createLocalId = (prefix: string) => `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
 
+// 统一兼容后端不同字段命名，保持 store 内部结构稳定。
 const normalizeConversation = (item: any): ChatConversation => ({
   id: item?.id ?? createLocalId('conv'),
   title: item?.title ?? '新建对话',
   createdAt: item?.createdAt ?? item?.createTime ?? dayjs().format('YYYY-MM-DD HH:mm:ss'),
 })
 
+// 消息列表也做同样的字段归一，减少视图层判断分支。
 const normalizeMessage = (item: any): ChatMessage => ({
   id: item?.id ?? createLocalId('msg'),
   role: item?.role ?? 'assistant',
@@ -34,8 +36,10 @@ const pickArray = (response: any) => {
   return []
 }
 
+// 某些接口直接返回对象，某些接口包在 data 中，这里统一抹平。
 const pickObject = (response: any) => response?.data ?? response ?? {}
 
+// 会话暂无历史消息时，给出一个默认欢迎语，避免右侧区域空白。
 const createWelcomeMessage = (): ChatMessage => ({
   id: createLocalId('msg'),
   role: 'assistant',
@@ -44,25 +48,40 @@ const createWelcomeMessage = (): ChatMessage => ({
   status: 'success',
 })
 
+const normalizeCreateConversationOptions = (options?: CreateConversationOptions): CreateConversationOptions => ({
+  payload: options?.payload ? { ...options.payload } : undefined,
+})
+
+const DEFAULT_CONVERSATION_TITLES = new Set(['', '新建对话', '新对话'])
+
 export const useAiStore = defineStore('ai', {
   state: () => ({
+    // 弹窗/侧边 AI 面板的打开状态。
     isOpen: true,
+    // 当前是否处于流式或请求中，供输入框和发送按钮禁用使用。
     isStreaming: false,
     loading: false,
+    // 避免重复初始化会话列表。
     initialized: false,
+    // 当前会话列表所属的业务上下文 id；未传时表示通用会话列表。
+    conversationListContextId: null as number | string | null,
     currentModel: 'gpt-4o-mini',
     conversations: [] as ChatConversation[],
     activeConversationId: null as number | string | null,
+    // 按 conversationId 缓存消息，切换会话时无需反复清空重建。
     messages: {} as Record<string, ChatMessage[]>,
   }),
   getters: {
+    // 当前激活会话对象。
     activeConversation(state) {
       return state.conversations.find((item) => String(item.id) === String(state.activeConversationId))
     },
+    // 当前激活会话对应的消息列表。
     activeMessages(state) {
       const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
       return key ? (state.messages[key] ?? []) : []
     },
+    // 没有激活会话或请求进行中时，不允许发送。
     canSend(state) {
       return !state.loading && !state.isStreaming && !!state.activeConversationId
     },
@@ -80,49 +99,72 @@ export const useAiStore = defineStore('ai', {
     toggleModal() {
       this.isOpen = !this.isOpen
     },
-    async ensureInitialized() {
-      if (this.initialized) return
-      await this.loadConversations()
+    // 统一更新本地会话标题，确保侧边栏列表和当前激活会话读取的是同一份状态。
+    setConversationTitle(id: number | string, title: string) {
+      const key = String(id)
+      const conversationIndex = this.conversations.findIndex((item) => String(item.id) === key)
+      if (conversationIndex === -1) return
+
+      const list = [...this.conversations]
+      list[conversationIndex] = {
+        ...list[conversationIndex],
+        title,
+      }
+      this.conversations = list
+    },
+    // 初始化只做一次；具体是否在空列表时自动创建会话，由 options 控制。
+    async ensureInitialized(options?: EnsureConversationOptions) {
+      if (this.initialized && !options?.forceRefresh) return
+      await this.loadConversations(options)
       this.initialized = true
     },
-    async loadConversations() {
+    // 拉取会话列表，并在需要时自动补建首个会话。
+    async loadConversations(options?: EnsureConversationOptions) {
+      const contextId = options?.id ?? this.conversationListContextId
+      const createIfEmpty = options?.createIfEmpty ?? true
+      const currentActiveConversationId = this.activeConversationId
+
+      this.conversationListContextId = contextId ?? null
+
       try {
-        const response = await getAiConversationList()
+        const response = await getAiConversationList(contextId ?? undefined)
         this.conversations = pickArray(response).map(normalizeConversation)
       } catch {
         this.conversations = []
       }
 
-      if (this.conversations.length === 0) {
-        await this.createConversation()
+      if (this.conversations.length === 0 && createIfEmpty) {
+        await this.createConversation(options?.createOptions)
         return
       }
 
-      if (!this.activeConversationId) await this.switchConversation(this.conversations[0].id)
-    },
-    async createConversation() {
-      try {
-        const response = await createAiConversation()
-        const conversation = normalizeConversation(pickObject(response))
-        this.conversations.unshift(conversation)
-        await this.switchConversation(conversation.id)
-        return
-      } catch {}
-
-      const fallbackConversation = {
-        id: createLocalId('conv'),
-        title: '新建对话',
-        createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      if (currentActiveConversationId != null) {
+        const matchedConversation = this.conversations.find((item) => String(item.id) === String(currentActiveConversationId))
+        if (matchedConversation) {
+          this.activeConversationId = matchedConversation.id
+          return
+        }
       }
-      this.conversations.unshift(fallbackConversation)
-      this.activeConversationId = fallbackConversation.id
-      this.messages[String(fallbackConversation.id)] = [createWelcomeMessage()]
+
+      if (this.conversations.length > 0) await this.switchConversation(this.conversations[0].id)
     },
+    // 统一的会话创建入口，允许页面层透传业务上下文参数。
+    async createConversation(options?: CreateConversationOptions) {
+      const normalizedOptions = normalizeCreateConversationOptions(options)
+
+      const response = await createAiConversation(normalizedOptions.payload)
+      const conversation = normalizeConversation(pickObject(response))
+      this.conversations.unshift(conversation)
+      await this.switchConversation(conversation.id)
+      return conversation
+    },
+    // 切换会话时按需懒加载消息，避免初次进入一次性拉取全部历史。
     async switchConversation(id: number | string) {
       this.activeConversationId = id
       const key = String(id)
       if (!this.messages[key]) await this.loadMessages(id)
     },
+    // 消息接口失败时保留默认欢迎语，保证会话仍可继续发送。
     async loadMessages(id: number | string) {
       const key = String(id)
       try {
@@ -133,6 +175,7 @@ export const useAiStore = defineStore('ai', {
         this.messages[key] = this.messages[key] ?? [createWelcomeMessage()]
       }
     },
+    // 删除当前激活会话后，优先切到列表中的下一个；如果已空则补建一个新会话。
     async removeConversation(id: number | string) {
       await deleteAiConversation(id)
 
@@ -144,26 +187,30 @@ export const useAiStore = defineStore('ai', {
         else await this.createConversation()
       }
     },
+    // 仅在首条用户消息发送后更新一次标题，后续消息不再覆盖。
     async updateTitleIfNeeded(conversationId: number | string, content: string) {
       const key = String(conversationId)
-      const visibleMessages = (this.messages[key] ?? []).filter((item) => item.role !== 'system')
-      if (visibleMessages.length > 2) return
-
       const title = content.trim().slice(0, 20) || '新建对话'
-      const current = this.conversations.find((item) => String(item.id) === key)
-      if (current) current.title = title
+      const conversationIndex = this.conversations.findIndex((item) => String(item.id) === key)
+      if (conversationIndex === -1) return
+
+      const currentTitle = this.conversations[conversationIndex]?.title?.trim?.() ?? ''
+      // 只在默认标题场景下自动改名，避免覆盖用户已有标题或后端已生成标题。
+      if (!DEFAULT_CONVERSATION_TITLES.has(currentTitle)) return
+
+      this.setConversationTitle(conversationId, title)
 
       try {
         await updateAiConversationTitle({ id: conversationId, title })
       } catch {}
     },
+    // 发送消息时先落本地消息，再等待接口返回，保证界面响应及时。
     async sendMessage(content: string) {
       const question = content.trim()
       if (!question) return
 
       if (!this.activeConversationId) await this.createConversation()
       if (!this.activeConversationId) return
-
       const conversationId = this.activeConversationId
       const key = String(conversationId)
       const userMessage: ChatMessage = {
@@ -180,66 +227,63 @@ export const useAiStore = defineStore('ai', {
         createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         status: 'loading',
       }
-
       this.messages[key] = this.messages[key] ?? []
       this.messages[key].push(userMessage, assistantMessage)
+      await this.updateTitleIfNeeded(conversationId, question)
+      const updateAssistantMessage = (patch: Partial<ChatMessage>) => {
+        const lastIndex = this.messages[key].length - 1
+        const list = [...this.messages[key]]
+        list[lastIndex] = {
+          ...list[lastIndex],
+          ...patch,
+        }
+        this.messages[key] = list
+      }
       this.loading = true
       this.isStreaming = true
 
-      let hasStreamChunk = false
-
       try {
-        // 优先走流式接口；若当前后端未提供该能力，再自动回退到普通消息接口。
-        await streamAiMessage(
-          {
+        try {
+          const response = await sendAiChatMessage({
             conversationId,
             content: question,
             model: this.currentModel,
-          },
-          {
-            onChunk: (chunk) => {
-              hasStreamChunk = true
-              assistantMessage.content += chunk
-            },
-            onDone: () => {
-              assistantMessage.status = 'success'
-            },
-            onError: (message) => {
-              throw new Error(message)
-            },
-          }
-        )
-      } catch (streamError: any) {
-        if (!hasStreamChunk) {
-          try {
-            const response = await sendAiChatMessage({
-              conversationId,
-              content: question,
-              model: this.currentModel,
+          })
+          const payload = pickObject(response)
+          if (typeof payload === 'string') {
+            updateAssistantMessage({
+              content: payload,
+              status: 'success',
             })
-            const payload = pickObject(response)
-            assistantMessage.content = payload?.content ?? payload?.reply ?? payload?.message ?? '已收到请求，但未返回可展示内容。'
-            assistantMessage.status = 'success'
-          } catch (requestError: any) {
-            assistantMessage.content = `请求失败：${requestError?.msg ?? requestError?.message ?? '请稍后重试'}`
-            assistantMessage.status = 'error'
+          } else {
+            updateAssistantMessage({
+              content: payload?.content ?? payload?.reply ?? payload?.message ?? '已收到请求，但未返回可展示内容。',
+              status: 'success',
+            })
           }
-        } else {
-          assistantMessage.content = assistantMessage.content || `请求失败：${streamError?.message ?? '流式响应异常'}`
-          assistantMessage.status = 'error'
+        } catch (requestError: any) {
+          updateAssistantMessage({
+            content: `请求失败：${requestError?.msg ?? requestError?.message ?? '请稍后重试'}`,
+            status: 'error',
+          })
         }
+      } catch (streamError: any) {
+        updateAssistantMessage({
+          content: assistantMessage.content || `请求失败：${streamError?.message ?? '响应异常'}`,
+          status: 'error',
+        })
       } finally {
         this.loading = false
         this.isStreaming = false
       }
-
-      await this.updateTitleIfNeeded(conversationId, question)
     },
+    // 供页面卸载或重新进入时重置 AI 模块状态。
     resetState() {
       this.isOpen = true
       this.isStreaming = false
       this.loading = false
       this.initialized = false
+      this.conversationListContextId = null
       this.currentModel = 'gpt-4o-mini'
       this.conversations = []
       this.activeConversationId = null

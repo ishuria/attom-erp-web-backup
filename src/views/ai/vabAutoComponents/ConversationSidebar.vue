@@ -2,7 +2,7 @@
   <div class="ai-conversation-sidebar">
     <div class="header">
       <span class="title">会话</span>
-      <el-button :icon="Plus" circle plain size="small" @click="aiStore.createConversation" />
+      <el-button v-if="showCreateButton" circle :icon="Plus" plain size="small" @click="aiStore.createConversation" />
     </div>
     <div class="list">
       <div
@@ -44,6 +44,15 @@ defineOptions({
 
 const aiStore = useAiStore()
 
+withDefaults(
+  defineProps<{
+    showCreateButton?: boolean
+  }>(),
+  {
+    showCreateButton: true,
+  }
+)
+
 const handleDelete = async (id: number | string) => {
   try {
     await ElMessageBox.confirm('确认删除该会话？', '提示', {
@@ -73,7 +82,7 @@ const handleRename = async (item: ChatConversation) => {
       id: item.id,
       title,
     })
-    item.title = title
+    aiStore.setConversationTitle(item.id, title)
     $baseMessage('会话名称已更新', 'success', 'hey')
   } catch (error: any) {
     if (error === 'cancel' || error === 'close') return

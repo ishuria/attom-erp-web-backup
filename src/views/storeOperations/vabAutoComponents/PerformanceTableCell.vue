@@ -175,6 +175,25 @@
     </el-select>
   </span>
 
+  <!-- operation 操作列 -->
+  <span v-else-if="item.prop === 'operation'">
+    <el-dropdown @click.stop>
+      <el-button text type="primary" @click.stop="$emit('showAiTitleOptimization', row)">
+        标题优化
+        <el-icon class="el-icon--right">
+          <arrow-down />
+        </el-icon>
+      </el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item @click.stop="$emit('showAiTitleOptimization', row)">
+            <el-link type="primary" underline="never">标题优化</el-link>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </span>
+
   <!-- 停产 -->
   <span v-else-if="item.label === '停产'">
     <el-checkbox
@@ -320,13 +339,7 @@
   <!-- 当前售价 -->
   <span v-else-if="item.label === '当前售价'" class="current-price-cell">
     <el-link type="primary" @click="$emit('routerPush', row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
-    <el-popover
-      v-if="type === 'sku' && isOperationRole"
-      placement="bottom"
-      trigger="hover"
-      :width="280"
-      @show="initPriceInput(row)"
-    >
+    <el-popover v-if="type === 'sku' && isOperationRole" placement="bottom" trigger="hover" :width="280" @show="initPriceInput(row)">
       <template #reference>
         <vab-icon class="edit-price-icon" icon="edit-2-fill" />
       </template>
@@ -482,7 +495,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Star } from '@element-plus/icons-vue'
+import { ArrowDown, Star } from '@element-plus/icons-vue'
 import { nextTick, ref } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { syncAmazonPrice, trialGrossMargin } from '/@/api/devlocal/operationAutoMation'
@@ -497,8 +510,10 @@ defineOptions({
 })
 
 const currentRoleCode = useAclStore().getRole[0]
-const isOperationRole = currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
-|| currentRoleCode === ROLE_BOSS_CODE
+const isOperationRole =
+  currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
+  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE ||
+  currentRoleCode === ROLE_BOSS_CODE
 
 interface Props {
   item: any
@@ -524,6 +539,7 @@ const emit = defineEmits<{
   showReleaseOrder: [row: any]
   showRemark: [row: any]
   showOperationLog: [row: any]
+  showAiTitleOptimization: [row: any]
   updateOpeType: [row: any]
   updateStopStatus: [row: any]
   routerPush: [row: any]
@@ -813,8 +829,6 @@ const publishPrice = async (row: any) => {
     row._publishing = false
   }
 }
-  
-
 </script>
 
 <style lang="scss" scoped>
@@ -1001,7 +1015,7 @@ const publishPrice = async (row: any) => {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
-    
+
     .adjustment-up {
       color: #67c23a;
       font-weight: 600;

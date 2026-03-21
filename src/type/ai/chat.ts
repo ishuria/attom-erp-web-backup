@@ -14,6 +14,22 @@ export interface ChatConversation {
   createdAt?: string
 }
 
+export interface CreateConversationPayload {
+  operationSkuId?: number | string
+  [key: string]: any
+}
+
+export interface CreateConversationOptions {
+  payload?: CreateConversationPayload
+}
+
+export interface EnsureConversationOptions {
+  id?: number | string
+  createIfEmpty?: boolean
+  createOptions?: CreateConversationOptions
+  forceRefresh?: boolean
+}
+
 export interface ChatModuleConfig {
   enabled?: boolean
   defaultModel?: string

@@ -61,6 +61,7 @@
             :x-axis="xAxis"
             @image-preview="emit('imagePreview', $event)"
             @router-push="emit('routerPush', $event)"
+            @show-ai-title-optimization="emit('showAiTitleOptimization', $event)"
             @show-operation-log="emit('showOperationLog', $event)"
             @show-release-order="emit('showReleaseOrder', $event)"
             @show-remark="emit('showRemark', $event)"
@@ -124,6 +125,7 @@ const emit = defineEmits<{
   showOperationLog: [row: any]
   showReleaseOrder: [row: any]
   showRemark: [row: any]
+  showAiTitleOptimization: [row: any]
   updateOpeType: [row: any]
   updateStopStatus: [row: any]
   routerPush: [row: any]

@@ -18,11 +18,6 @@ const { theme } = storeToRefs(settingsStore)
 const dialogVisible = ref(false)
 
 const openChatDialog = () => {
-  if (!theme.value.showAiAssistant) {
-    $baseMessage('请先在主题设置中启用AI助手', 'warning', 'hey')
-    return
-  }
-
   dialogVisible.value = true
 }
 </script>

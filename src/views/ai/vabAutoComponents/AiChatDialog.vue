@@ -9,7 +9,7 @@
   >
     <div class="ai-chat-dialog">
       <div class="dialog-body">
-        <conversation-sidebar />
+        <conversation-sidebar :show-create-button="showCreateButton" />
         <chat-panel />
       </div>
     </div>
@@ -17,15 +17,25 @@
 </template>
 
 <script lang="ts" setup>
+import type { CreateConversationOptions } from '/@/type/ai/chat'
+import { nextTick } from 'vue'
 import { useAiStore } from '/@/store/modules/ai'
 
 const props = withDefaults(
   defineProps<{
     modelValue: boolean
     title?: string
+    disabled?: boolean
+    showCreateButton?: boolean
+    forceCreateConversationOnOpen?: boolean
+    createConversationOptions?: CreateConversationOptions
+    refreshConversationsOnOpen?: boolean
   }>(),
   {
     title: '标题优化助手',
+    showCreateButton: true,
+    forceCreateConversationOnOpen: false,
+    refreshConversationsOnOpen: true,
   }
 )
 
@@ -51,8 +61,24 @@ watch(
   async (value) => {
     if (value) {
       aiStore.openModal()
-      // 对话框打开前先初始化会话，避免用户看到空白状态闪烁。
-      await aiStore.ensureInitialized()
+      if (props.forceCreateConversationOnOpen) {
+        await nextTick()
+        if (!aiStore.initialized) {
+          await aiStore.ensureInitialized({
+            createIfEmpty: false,
+          })
+        }
+        await aiStore.createConversation(props.createConversationOptions ? { ...props.createConversationOptions } : undefined)
+      } else {
+        if (props.refreshConversationsOnOpen) {
+          // 每次打开都同步一次服务端会话列表，避免标题、会话列表和本地缓存不一致。
+          await aiStore.ensureInitialized({
+            forceRefresh: true,
+          })
+        } else {
+          await aiStore.ensureInitialized()
+        }
+      }
     } else {
       aiStore.closeModal()
     }

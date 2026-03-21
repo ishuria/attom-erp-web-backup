@@ -134,6 +134,7 @@
           @image-preview="imagePreviewShow"
           @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-ai-title-optimization="showAiTitleOptimization"
           @show-operation-log="showOperationLog"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
@@ -278,6 +279,7 @@
           @image-preview="imagePreviewShow"
           @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-ai-title-optimization="showAiTitleOptimization"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
           @sort-change="asinSortChange"
@@ -420,6 +422,7 @@
           @image-preview="imagePreviewShow"
           @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-ai-title-optimization="showAiTitleOptimization"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
           @sort-change="pAsinSortChange"
@@ -465,6 +468,11 @@
       :fetch-history-log-api="fetchHistoryLogAdapter"
       :row="_row"
       :update-remark-api="updateRemarkAdapter"
+    />
+    <ai-chat-dialog
+      v-model="aiTitleOptimizationVisible"
+      :refresh-conversations-on-open="false"
+      :show-create-button="false"
     />
     <!-- 季节趋势 -->
     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
@@ -568,7 +576,9 @@ import {
 } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
+import { useAiStore } from '/@/store/modules/ai'
 import { useUserStore } from '/@/store/modules/user'
+import type { CreateConversationOptions } from '/@/type/ai/chat'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
@@ -587,6 +597,7 @@ defineOptions({
 
 const userName = useUserStore().getUsername
 const currentRole = useAclStore().getRole
+const aiStore = useAiStore()
 const isBoss = computed(() => currentRole.includes(ROLE_BOSS_CODE) || currentRole.includes(ROLE_ECOMMERCEOPERATIONLEAD_CODE))
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
@@ -597,6 +608,8 @@ const asinId = ref<number | undefined>(undefined)
 let skuRow: any
 const spFileUploadVisible = ref<boolean>(false)
 const logSummaryVisible = ref<boolean>(false)
+const aiTitleOptimizationVisible = ref<boolean>(false)
+const aiTitleOptimizationConversationOptions = ref<CreateConversationOptions | undefined>(undefined)
 // 打开发布订货
 const handleShowReleaseOrder = async (row: any) => {
   // currentRowId.value = row.id
@@ -1021,6 +1034,28 @@ const showRemark = (row: any) => {
 }
 const operationLogVisible = ref<boolean>(false)
 const inputRef = ref<InstanceType<typeof ElInput> | null>(null)
+const showAiTitleOptimization = async (row: any) => {
+  _row.value = row
+  const operationSkuId = row?.id
+  aiTitleOptimizationConversationOptions.value = {
+    payload: operationSkuId != null
+      ? {
+          operationSkuId,
+        }
+      : undefined,
+  }
+  await aiStore.ensureInitialized({
+    id: row?.id,
+    createIfEmpty: false,
+    forceRefresh: true,
+  })
+  try {
+    await aiStore.createConversation(aiTitleOptimizationConversationOptions.value)
+    aiTitleOptimizationVisible.value = true
+  } catch {
+    aiTitleOptimizationVisible.value = false
+  }
+}
 
 const showOperationLog = async (row: any) => {
   _row.value = row
