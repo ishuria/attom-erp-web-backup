@@ -92,3 +92,52 @@ export interface IUpdateOldStatusReq {
   ids: number[]
   oldStatus: number
 }
+
+export interface IMarkUnclaimedReq {
+  ids: number[]
+  confirmSubmit: boolean
+}
+
+export interface IMarkUnclaimedRes {
+  data: boolean
+  msg?: string
+}
+
+export interface IGetUnclaimedListReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  status: number
+}
+
+export interface IUnclaimedSkuItem {
+  productDesc?: string
+  sku?: string
+}
+
+export interface IGetUnclaimedListItem {
+  amazonUrl?: string
+  asin?: string
+  id: number
+  originUserName?: string
+  parentAsin?: string
+  remark?: string
+  siteName?: string
+  skuList?: IUnclaimedSkuItem[]
+  status: number
+  submitDate?: string
+  submitUserName?: string
+}
+
+export interface IGetUnclaimedListRes {
+  data: {
+    list: IGetUnclaimedListItem[]
+    total: number
+  }
+}
+
+export interface IUnclaimedApprovalReq {
+  id: number
+  remark: string
+  status: 1 | 2
+}

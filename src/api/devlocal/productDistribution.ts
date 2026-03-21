@@ -7,6 +7,11 @@ import type {
   IGetDistributionListRes,
   IGetDistributionProductListReq,
   IGetDistributionProductListRes,
+  IGetUnclaimedListReq,
+  IGetUnclaimedListRes,
+  IMarkUnclaimedReq,
+  IMarkUnclaimedRes,
+  IUnclaimedApprovalReq,
   IUpdateDistributionAsinUserReq,
   IUpdateDistributionUserType,
   IUpdateOldStatusReq,
@@ -116,6 +121,39 @@ export function getDistributionUserType() {
 export function updateOldStatus(data: IUpdateOldStatusReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/distribution/oldStatus/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 产品分配-标记待认领
+ */
+export function markUnclaimed(data: IMarkUnclaimedReq): Promise<IMarkUnclaimedRes> {
+  return request({
+    url: `${BASE_API}/mark/unclaimed`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 待老品认领列表
+ */
+export function getUnclaimedList(data: IGetUnclaimedListReq): Promise<IGetUnclaimedListRes> {
+  return request({
+    url: `${BASE_API}/unclaimed/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 待老品认领审批
+ */
+export function approvalUnclaimed(data: IUnclaimedApprovalReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/unclaimed/approval`,
     method: 'post',
     data,
   })

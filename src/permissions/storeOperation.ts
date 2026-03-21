@@ -9,6 +9,10 @@ class StoreOperationPermission {
   static readonly KEY_PRODUCTS_DEFAULT_PARAMS = 'storeOperation:keyProducts:defaultParams'
   /** 产品分配-批量老品认领 */
   static readonly PRODUCT_DISTRIBUTION_BATCH_CLAIM = 'storeOperation:productDistribution:batchClaim'
+  /** 产品分配-标记待认领 */
+  static readonly PRODUCT_DISTRIBUTION_MARK_UNCLAIMED = 'storeOperation:productDistribution:markUnclaimed'
+  /** 待老品认领-审批 */
+  static readonly UNCLAIMED_APPROVAL = 'storeOperation:unclaimed:approval'
 }
 
 export default StoreOperationPermission

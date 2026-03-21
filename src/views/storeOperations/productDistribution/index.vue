@@ -34,7 +34,15 @@
           <el-form-item>
             <el-button type="primary" @click="showAutoClaimSettings">自动分站点认领设定</el-button>
             <el-button
+              :loading="markUnclaimedLoading"
+              type="primary"
+              @click="handleMarkUnclaimed"
+            >
+              标记待认领
+            </el-button>
+            <el-button
               v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"
+              :disabled="markUnclaimedLoading"
               type="primary"
               @click="handleBatchClaim"
             >
@@ -208,6 +216,7 @@ import {
   getDistributionSiteList,
   getDistributionUserType,
   getDistributionUserTypeList,
+  markUnclaimed,
   updateDistributionAsinUser,
   updateDistributionUserType,
   updateOldStatus,
@@ -238,11 +247,65 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
   return ''
 }
 const handleBatchClaim = () => {
+  if (markUnclaimedLoading.value) {
+    return
+  }
   if (selectedRows.value.length === 0) {
     $baseMessage('请先选择需要操作的数据！', 'warning')
     return
   }
   batchClaimVisible.value = true
+}
+const markUnclaimedLoading = ref<boolean>(false)
+const extractErrorMessage = (error: unknown) => {
+  if (typeof error === 'object' && error && 'msg' in error && typeof error.msg === 'string') {
+    return error.msg
+  }
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+  return ''
+}
+const isMultiOwnerConflict = (message: string) => {
+  return ['多负责人', '确认提交', '继续提交', '冲突'].some((keyword) => message.includes(keyword))
+}
+const submitMarkUnclaimed = async (confirmSubmit: boolean) => {
+  markUnclaimedLoading.value = true
+  try {
+    const { data } = await markUnclaimed({
+      ids: selectedRows.value.map((item) => item.id),
+      confirmSubmit,
+    })
+    if (data) {
+      $baseMessage('提交成功', 'success')
+      await fetchData()
+    }
+  } catch (error) {
+    const message = extractErrorMessage(error)
+    if (!confirmSubmit && message && isMultiOwnerConflict(message)) {
+      try {
+        await ElMessageBox.confirm(message, '提交确认', {
+          cancelButtonText: '取消',
+          confirmButtonText: '确认提交',
+          customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
+          type: 'warning',
+        })
+        await submitMarkUnclaimed(true)
+      } catch {}
+    }
+  } finally {
+    markUnclaimedLoading.value = false
+  }
+}
+const handleMarkUnclaimed = async () => {
+  if (selectedRows.value.length === 0) {
+    $baseMessage('请选择需要标记的数据', 'warning')
+    return
+  }
+  if (batchClaimVisible.value) {
+    return
+  }
+  await submitMarkUnclaimed(false)
 }
 const handleConfirmBatchClaim = async () => {
   batchClaimFormRef.value?.validate(async (isValid: boolean) => {
@@ -463,21 +526,17 @@ const fetchUserList = async () => {
 }
 const fetchData = async () => {
   listLoading.value = true
-  const { site, ...filterQueryForm } = queryForm
-  const { data } = await getDistributionProductList({
-    ...filterQueryForm,
-    siteCodes: site.join(','),
-  })
-  total.value = data.total
-  list.value = data.list
-  // list.value.forEach(async (item) => {
-  //   if (item.userId != null && item.userId != undefined) {
-  //     const { data } = await getDistributionUserTypeList({ userId: item.userId })
-  //     item.userTypeList = data
-  //   }
-  // })
-  listLoading.value = false
-  // fetchUserType()
+  try {
+    const { site, ...filterQueryForm } = queryForm
+    const { data } = await getDistributionProductList({
+      ...filterQueryForm,
+      siteCodes: site.join(','),
+    })
+    total.value = data.total
+    list.value = data.list
+  } finally {
+    listLoading.value = false
+  }
 }
 const typeList = ref<any>()
 const fetchUserType = async () => {
