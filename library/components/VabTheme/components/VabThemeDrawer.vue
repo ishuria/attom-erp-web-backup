@@ -126,9 +126,6 @@
         <el-form-item :label="translate('快捷盒子')">
           <el-switch v-model="theme.showBox" />
         </el-form-item>
-        <el-form-item :label="translate('AI助手')">
-          <el-switch v-model="theme.showAiAssistant" />
-        </el-form-item>
         <el-form-item :label="translate('DeepSeek AI')">
           <el-switch v-model="theme.showDeepSeek" />
         </el-form-item>

@@ -177,8 +177,6 @@ declare interface ThemeType {
   glassMode?: boolean
   // 液态玻璃透明度
   glassOpacity?: number
-  // 是否显示AI助手组件
-  showAiAssistant?: boolean
   // 是否显示DeepSeek-R1组件
   showDeepSeek?: boolean
 }
