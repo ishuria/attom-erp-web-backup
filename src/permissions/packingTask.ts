@@ -25,6 +25,8 @@ class PackingTaskPermission {
   static readonly PACKING_TASK_TASK_NUMBER_UPDATE = 'packing:task:task:number:update'
   /** 打包任务-删除权限 */
   static readonly PACKING_TASK_DELETE = 'packing:task:delete'
+  /** 打包任务-打包反馈权限 */
+  static readonly PACKING_TASK_FEEDBACK = 'packing:task:feedback'
 }
 
 export default PackingTaskPermission

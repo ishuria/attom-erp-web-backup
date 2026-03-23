@@ -68,6 +68,7 @@
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @show-barcode="showBarcode"
+          @show-feedback="handleShowFeedback"
           @show-modify="handleShowModify"
           @show-modify-task="handleShowModifyTask"
           @show-new-inspection-report="showNewInspectionReport"
@@ -149,6 +150,7 @@
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @show-barcode="showBarcode"
+          @show-feedback="handleShowFeedback"
           @show-modify="handleShowModify"
           @show-modify-task="handleShowModifyTask"
           @show-new-inspection-report="showNewInspectionReport"
@@ -242,6 +244,7 @@
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @show-barcode="showBarcode"
+          @show-feedback="handleShowFeedback"
           @show-modify="handleShowModify"
           @show-modify-task="handleShowModifyTask"
           @show-new-inspection-report="showNewInspectionReport"
@@ -321,6 +324,7 @@
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @show-barcode="showBarcode"
+          @show-feedback="handleShowFeedback"
           @show-modify="handleShowModify"
           @show-modify-task="handleShowModifyTask"
           @show-new-inspection-report="showNewInspectionReport"
@@ -400,6 +404,7 @@
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @show-barcode="showBarcode"
+          @show-feedback="handleShowFeedback"
           @show-modify="handleShowModify"
           @show-modify-task="handleShowModifyTask"
           @show-new-inspection-report="showNewInspectionReport"
@@ -479,6 +484,7 @@
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @show-barcode="showBarcode"
+          @show-feedback="handleShowFeedback"
           @show-modify="handleShowModify"
           @show-modify-task="handleShowModifyTask"
           @show-new-inspection-report="showNewInspectionReport"
@@ -551,6 +557,7 @@
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @show-barcode="showBarcode"
+          @show-feedback="handleShowFeedback"
           @show-modify="handleShowModify"
           @show-modify-task="handleShowModifyTask"
           @show-new-inspection-report="showNewInspectionReport"
@@ -1045,6 +1052,8 @@
     <vab-quality-inspection-report v-model="newQualityInspectionReportVisible" :sku="sku" :sku-id="skuId" />
     <!-- 打包质检报告 -->
     <vab-packing-inspection-report v-model="qualityInspectionReportVisible" :sku="sku" :task-id="taskId" />
+    <!-- 打包反馈 -->
+    <vab-package-feedback-dialog v-model="feedbackDialogVisible"  :current-row="feedbackCurrentRow" @submitted="fetchDataByStatus" />
   </div>
 </template>
 
@@ -1370,6 +1379,14 @@ const partsListCellClassName = (data: { row: any; column: any; rowIndex: number;
     return 'clear-padding'
   }
   return ''
+}
+
+// 打包反馈
+const feedbackDialogVisible = ref<boolean>(false)
+const feedbackCurrentRow = ref<any>(null)
+const handleShowFeedback = (row: any) => {
+  feedbackCurrentRow.value = row
+  feedbackDialogVisible.value = true
 }
 
 // 质检报告是否可见

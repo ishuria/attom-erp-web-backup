@@ -1190,3 +1190,64 @@ export interface IGetQualityInspectionList {
    */
   variantName?: string
 }
+
+// 打包反馈相关类型
+export interface IPackageFeedbackReq {
+  taskId: number
+  feedbackContent: string
+}
+
+export interface IPackageFeedbackQueryReq {
+  keyWord?: string
+  pageNo: number
+  pageSize: number
+  orderByField?: string
+  orderDirection?: string
+}
+
+export interface IPackageFeedbackDiscussionReq {
+  id: number
+  discussionResult: string
+}
+
+export interface IPackageFeedbackUpdateContentReq {
+  id: number
+  feedbackContent: string
+}
+
+export interface IPackageFeedbackUpdateStatusReq {
+  id: number
+  /** 0=待讨论 1=待执行 2=已解决 */
+  status: number
+}
+
+export interface IPackageFeedbackItem {
+  id?: number
+  taskId?: number
+  po?: string
+  sku?: string
+  productName?: string
+  skuImageUrl?: string
+  feedbackContent?: string
+  discussionResult?: string
+  feedbackUserName?: string
+  feedbackDate?: string
+  lastFeedbackTime?: string
+  /** 0=待讨论 1=待执行 2=已解决 */
+  status?: number
+}
+
+export interface IPackageFeedbackListResp {
+  code?: number
+  data?: {
+    list?: IPackageFeedbackItem[]
+    total?: number
+  }
+  msg?: string
+}
+
+export interface IPackageFeedbackItemResp {
+  code?: number
+  data?: IPackageFeedbackItem
+  msg?: string
+}

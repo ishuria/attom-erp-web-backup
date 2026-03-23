@@ -61,6 +61,13 @@ import type {
   IUpdateSalesStatus,
   IUpdateSignLog,
   IUserIds,
+  IPackageFeedbackReq,
+  IPackageFeedbackQueryReq,
+  IPackageFeedbackDiscussionReq,
+  IPackageFeedbackUpdateContentReq,
+  IPackageFeedbackUpdateStatusReq,
+  IPackageFeedbackListResp,
+  IPackageFeedbackItemResp,
 } from '/@/type/packagingShipping/packagingType'
 
 import type {
@@ -910,5 +917,54 @@ export function updateShippingCountAdjustment(params: { id: number; count: numbe
     url: `${BASE_API}/shipment/count/adjust`,
     method: 'post',
     params,
+  })
+}
+
+// 打包反馈相关API
+export function addPackageFeedback(data: IPackageFeedbackReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/feedback/add`,
+    method: 'post',
+    data,
+  })
+}
+
+export function getPackageFeedbackList(data: IPackageFeedbackQueryReq): Promise<IPackageFeedbackListResp> {
+  return request({
+    url: `${BASE_API}/package/feedback/list`,
+    method: 'post',
+    data,
+  })
+}
+
+export function updatePackageFeedbackDiscussion(data: IPackageFeedbackDiscussionReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/feedback/updateDiscussion`,
+    method: 'post',
+    data,
+  })
+}
+
+export function getPackageFeedbackByTaskId(data: { taskId: number }): Promise<IPackageFeedbackItemResp> {
+  return request({
+    url: `${BASE_API}/package/feedback/get`,
+    method: 'post',
+    data,
+  })
+}
+
+export function updatePackageFeedbackContent(data: IPackageFeedbackUpdateContentReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/feedback/updateContent`,
+    method: 'post',
+    data,
+  })
+}
+
+export function updatePackageFeedbackStatus(data: IPackageFeedbackUpdateStatusReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/feedback/updateStatus`,
+    method: 'post',
+    data,
   })
 }

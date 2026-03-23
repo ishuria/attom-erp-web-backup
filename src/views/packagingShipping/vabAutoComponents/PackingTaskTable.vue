@@ -222,6 +222,14 @@
                 >
                   <el-link type="primary" underline="never">任务数修改</el-link>
                 </el-dropdown-item>
+                <!-- v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_FEEDBACK] })" -->
+
+                <el-dropdown-item
+                v-if="currentRoleCode === ROLE_PACKAGER_CODE || currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE"
+                  @click="handleShowFeedback(row)"
+                >
+                  <el-link type="primary" underline="never">打包反馈</el-link>
+                </el-dropdown-item>
                 <el-dropdown-item
                   v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_DELETE] })"
                   @click="handleDelete(row)"
@@ -255,6 +263,8 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import { computed } from 'vue'
 import { updateIsClaimable } from '~/src/api/devlocal/packagingShipping'
+import { ROLE_PACKAGER_CODE, ROLE_WAREHOUSEMANNAGERlEAD_CODE } from '~/src/const/role'
+import { useAclStore } from '~/src/store/modules/acl'
 import PackingTaskPermission from '/@/permissions/packingTask'
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
@@ -266,6 +276,7 @@ defineOptions({
   name: 'PackingTaskTable',
 })
 
+const currentRoleCode = useAclStore().getRole[0]
 interface Props {
   columns: PackingTaskColumn[]
   data: any[]
@@ -294,6 +305,7 @@ const emit = defineEmits<{
   showModifyTask: [row: any]
   qualityCheckChange: [row: any]
   deleteTask: [row: any]
+  showFeedback: [row: any]
 }>()
 
 // 过滤出可见的列
@@ -363,6 +375,10 @@ const handleQualityCheckChange = (row: any) => {
 
 const handleDelete = (row: any) => {
   emit('deleteTask', row)
+}
+
+const handleShowFeedback = (row: any) => {
+  emit('showFeedback', row)
 }
 
 // 修改可认领
