@@ -1,7 +1,7 @@
 <template>
   <div class="vab-ai-assistant">
     <vab-icon class="vab-ai-assistant-icon" icon="openai-line" @click="openChatDialog" />
-    <ai-chat-dialog v-model="dialogVisible" />
+    <ai-chat-dialog v-model="dialogVisible" :create-conversation-if-empty-on-open="false" />
   </div>
 </template>
 

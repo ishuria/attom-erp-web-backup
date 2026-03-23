@@ -9,9 +9,9 @@ const AI_BASE_API = `${BASE_API}/ai`
  * 获取 AI 会话列表
  * 用于初始化左侧会话栏数据。
  */
-export const getAiConversationList = (id?: number | string) => {
+export const getAiConversationList = () => {
   return request({
-    url: `${AI_BASE_API}/conversations/list/${id}`,
+    url: `${AI_BASE_API}/conversations/list`,
     method: 'get',
   })
 }
@@ -72,7 +72,7 @@ export const updateAiConversationTitle = (data: { id: number | string; title: st
  * @param data.content 用户输入内容
  * @param data.model 模型标识，可选
  */
-export const sendAiChatMessage = (data: { conversationId: number | string; content: string; model?: string }) => {
+export const sendAiChatMessage = (data: { conversationId: number | string; content?: string; model?: string }) => {
   return request({
     url: `${AI_BASE_API}/conversations/${data.conversationId}/messages`,
     method: 'post',

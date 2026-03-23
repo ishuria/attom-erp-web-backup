@@ -5,7 +5,6 @@ import {
   getAiConversationList,
   getAiMessageList,
   sendAiChatMessage,
-  updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
 import type { ChatConversation, ChatMessage, CreateConversationOptions, EnsureConversationOptions } from '/@/type/ai/chat'
 
@@ -52,8 +51,6 @@ const normalizeCreateConversationOptions = (options?: CreateConversationOptions)
   payload: options?.payload ? { ...options.payload } : undefined,
 })
 
-const DEFAULT_CONVERSATION_TITLES = new Set(['', '新建对话', '新对话'])
-
 export const useAiStore = defineStore('ai', {
   state: () => ({
     // 弹窗/侧边 AI 面板的打开状态。
@@ -63,8 +60,6 @@ export const useAiStore = defineStore('ai', {
     loading: false,
     // 避免重复初始化会话列表。
     initialized: false,
-    // 当前会话列表所属的业务上下文 id；未传时表示通用会话列表。
-    conversationListContextId: null as number | string | null,
     currentModel: 'gpt-4o-mini',
     conversations: [] as ChatConversation[],
     activeConversationId: null as number | string | null,
@@ -120,14 +115,11 @@ export const useAiStore = defineStore('ai', {
     },
     // 拉取会话列表，并在需要时自动补建首个会话。
     async loadConversations(options?: EnsureConversationOptions) {
-      const contextId = options?.id ?? this.conversationListContextId
       const createIfEmpty = options?.createIfEmpty ?? true
       const currentActiveConversationId = this.activeConversationId
 
-      this.conversationListContextId = contextId ?? null
-
       try {
-        const response = await getAiConversationList(contextId ?? undefined)
+        const response = await getAiConversationList()
         this.conversations = pickArray(response).map(normalizeConversation)
       } catch {
         this.conversations = []
@@ -187,23 +179,6 @@ export const useAiStore = defineStore('ai', {
         else await this.createConversation()
       }
     },
-    // 仅在首条用户消息发送后更新一次标题，后续消息不再覆盖。
-    async updateTitleIfNeeded(conversationId: number | string, content: string) {
-      const key = String(conversationId)
-      const title = content.trim().slice(0, 20) || '新建对话'
-      const conversationIndex = this.conversations.findIndex((item) => String(item.id) === key)
-      if (conversationIndex === -1) return
-
-      const currentTitle = this.conversations[conversationIndex]?.title?.trim?.() ?? ''
-      // 只在默认标题场景下自动改名，避免覆盖用户已有标题或后端已生成标题。
-      if (!DEFAULT_CONVERSATION_TITLES.has(currentTitle)) return
-
-      this.setConversationTitle(conversationId, title)
-
-      try {
-        await updateAiConversationTitle({ id: conversationId, title })
-      } catch {}
-    },
     // 发送消息时先落本地消息，再等待接口返回，保证界面响应及时。
     async sendMessage(content: string) {
       const question = content.trim()
@@ -229,7 +204,6 @@ export const useAiStore = defineStore('ai', {
       }
       this.messages[key] = this.messages[key] ?? []
       this.messages[key].push(userMessage, assistantMessage)
-      await this.updateTitleIfNeeded(conversationId, question)
       const updateAssistantMessage = (patch: Partial<ChatMessage>) => {
         const lastIndex = this.messages[key].length - 1
         const list = [...this.messages[key]]
@@ -283,7 +257,6 @@ export const useAiStore = defineStore('ai', {
       this.isStreaming = false
       this.loading = false
       this.initialized = false
-      this.conversationListContextId = null
       this.currentModel = 'gpt-4o-mini'
       this.conversations = []
       this.activeConversationId = null

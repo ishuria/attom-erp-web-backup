@@ -2,6 +2,7 @@
   <div class="vab-right-tools">
     <vab-search v-show="!isHorizontal" class="hidden-xs-only" />
     <vab-color-picker v-show="theme.showColorPicker" />
+    <vab-ai-assistant v-show="theme.showAiAssistant" class="hidden-xs-only" />
     <vab-deep-seek v-show="theme.showDeepSeek" class="hidden-xs-only" />
     <vab-dark v-show="theme.showDark" :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }" />
     <vab-theme v-show="theme.showTheme && routeName !== 'SeparateLayout'" />

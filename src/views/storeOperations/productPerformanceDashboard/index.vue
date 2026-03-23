@@ -119,6 +119,7 @@
         </vab-query-form>
         <performance-table
           :active-name="activeName"
+          :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
           :columns="checkList1"
           :data="list"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
@@ -264,6 +265,7 @@
         </vab-query-form>
         <performance-table
           :active-name="activeName"
+          :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
           :columns="checkList2"
           :data="asinList"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
@@ -407,6 +409,7 @@
         </vab-query-form>
         <performance-table
           :active-name="activeName"
+          :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
           :columns="checkList3"
           :data="pAsinList"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
@@ -468,11 +471,6 @@
       :fetch-history-log-api="fetchHistoryLogAdapter"
       :row="_row"
       :update-remark-api="updateRemarkAdapter"
-    />
-    <ai-chat-dialog
-      v-model="aiTitleOptimizationVisible"
-      :refresh-conversations-on-open="false"
-      :show-create-button="false"
     />
     <!-- 季节趋势 -->
     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
@@ -542,6 +540,7 @@ import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { addOperationLog, getOperationLog } from '~/src/api/devlocal/productAnalysis'
 import { months } from '../constantOption'
+import { createAiConversation, sendAiChatMessage } from '/@/api/devlocal/ai'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
 import {
@@ -576,9 +575,7 @@ import {
 } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
-import { useAiStore } from '/@/store/modules/ai'
 import { useUserStore } from '/@/store/modules/user'
-import type { CreateConversationOptions } from '/@/type/ai/chat'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
@@ -597,7 +594,6 @@ defineOptions({
 
 const userName = useUserStore().getUsername
 const currentRole = useAclStore().getRole
-const aiStore = useAiStore()
 const isBoss = computed(() => currentRole.includes(ROLE_BOSS_CODE) || currentRole.includes(ROLE_ECOMMERCEOPERATIONLEAD_CODE))
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
@@ -608,8 +604,7 @@ const asinId = ref<number | undefined>(undefined)
 let skuRow: any
 const spFileUploadVisible = ref<boolean>(false)
 const logSummaryVisible = ref<boolean>(false)
-const aiTitleOptimizationVisible = ref<boolean>(false)
-const aiTitleOptimizationConversationOptions = ref<CreateConversationOptions | undefined>(undefined)
+const aiTitleOptimizationLoadingIds = ref<Array<number | string>>([])
 // 打开发布订货
 const handleShowReleaseOrder = async (row: any) => {
   // currentRowId.value = row.id
@@ -1034,26 +1029,58 @@ const showRemark = (row: any) => {
 }
 const operationLogVisible = ref<boolean>(false)
 const inputRef = ref<InstanceType<typeof ElInput> | null>(null)
-const showAiTitleOptimization = async (row: any) => {
-  _row.value = row
-  const operationSkuId = row?.id
-  aiTitleOptimizationConversationOptions.value = {
-    payload: operationSkuId != null
-      ? {
-          operationSkuId,
-        }
-      : undefined,
+const pickObject = (response: any) => response?.data ?? response ?? {}
+
+const normalizeAiConversationId = (response: any) => {
+  const payload = pickObject(response)
+  return payload?.id ?? payload?.conversationId ?? payload?.conversation?.id ?? null
+}
+
+const normalizeTitleOptimizationField = (label: string, value: unknown) => {
+  if (value == null) return `${label}：-`
+  if (typeof value === 'string') {
+    const normalizedValue = value.trim()
+    return `${label}：${normalizedValue || '-'}`
   }
-  await aiStore.ensureInitialized({
-    id: row?.id,
-    createIfEmpty: false,
-    forceRefresh: true,
-  })
+  return `${label}：${String(value)}`
+}
+
+const showAiTitleOptimization = async (row: any) => {
+  const operationSkuId = row?.id
+  if (operationSkuId == null || operationSkuId === '') {
+    $baseMessage('当前数据缺少业务标识，无法发起标题优化', 'error')
+    return
+  }
+
+  const loadingKey = String(operationSkuId)
+  if (aiTitleOptimizationLoadingIds.value.some((id) => String(id) === loadingKey)) {
+    return
+  }
+
+  aiTitleOptimizationLoadingIds.value = [...aiTitleOptimizationLoadingIds.value, operationSkuId]
+
   try {
-    await aiStore.createConversation(aiTitleOptimizationConversationOptions.value)
-    aiTitleOptimizationVisible.value = true
-  } catch {
-    aiTitleOptimizationVisible.value = false
+    const createResponse = await createAiConversation({
+      operationSkuId,
+    })
+    const conversationId = normalizeAiConversationId(createResponse)
+
+    if (conversationId == null || conversationId === '') {
+      throw new Error('会话创建成功但未返回有效会话 ID')
+    }
+
+    try {
+      await sendAiChatMessage({
+        conversationId,
+      })
+      $baseMessage('已开始标题优化，结果请查看通知，预计2分钟左右', 'success')
+    } catch (error: any) {
+      $baseMessage(error?.msg ?? error?.message ?? '标题优化任务创建成功，但消息发送失败', 'error')
+    }
+  } catch (error: any) {
+    $baseMessage(error?.msg ?? error?.message ?? '创建标题优化会话失败', 'error')
+  } finally {
+    aiTitleOptimizationLoadingIds.value = aiTitleOptimizationLoadingIds.value.filter((id) => String(id) !== loadingKey)
   }
 }
 

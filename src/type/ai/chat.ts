@@ -24,7 +24,6 @@ export interface CreateConversationOptions {
 }
 
 export interface EnsureConversationOptions {
-  id?: number | string
   createIfEmpty?: boolean
   createOptions?: CreateConversationOptions
   forceRefresh?: boolean

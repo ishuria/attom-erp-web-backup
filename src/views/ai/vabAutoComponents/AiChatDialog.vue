@@ -30,12 +30,14 @@ const props = withDefaults(
     forceCreateConversationOnOpen?: boolean
     createConversationOptions?: CreateConversationOptions
     refreshConversationsOnOpen?: boolean
+    createConversationIfEmptyOnOpen?: boolean
   }>(),
   {
-    title: '标题优化助手',
-    showCreateButton: true,
+    title: 'AI 助手',
+    showCreateButton: false,
     forceCreateConversationOnOpen: false,
     refreshConversationsOnOpen: true,
+    createConversationIfEmptyOnOpen: true,
   }
 )
 
@@ -73,10 +75,13 @@ watch(
         if (props.refreshConversationsOnOpen) {
           // 每次打开都同步一次服务端会话列表，避免标题、会话列表和本地缓存不一致。
           await aiStore.ensureInitialized({
+            createIfEmpty: props.createConversationIfEmptyOnOpen,
             forceRefresh: true,
           })
         } else {
-          await aiStore.ensureInitialized()
+          await aiStore.ensureInitialized({
+            createIfEmpty: props.createConversationIfEmptyOnOpen,
+          })
         }
       }
     } else {

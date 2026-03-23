@@ -52,6 +52,7 @@
         </template>
         <template #default="{ row }">
           <performance-table-cell
+            :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
             :is-boss="isBoss"
             :item="item"
             :row="row"
@@ -102,6 +103,7 @@ interface Props {
   seasonalXData?: string[]
   userName?: string
   isBoss?: boolean
+  aiTitleOptimizationLoadingIds?: Array<number | string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -114,6 +116,7 @@ const props = withDefaults(defineProps<Props>(), {
   seasonalXData: () => [],
   userName: '',
   isBoss: false,
+  aiTitleOptimizationLoadingIds: () => [],
 })
 
 // Emits
