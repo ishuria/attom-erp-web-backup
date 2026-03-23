@@ -40,14 +40,14 @@
             >
               标记待认领
             </el-button>
-            <el-button
-              v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"
-              :disabled="markUnclaimedLoading"
-              type="primary"
-              @click="handleBatchClaim"
-            >
-              批量老品认领
-            </el-button>
+<!--            <el-button-->
+<!--              v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"-->
+<!--              :disabled="markUnclaimedLoading"-->
+<!--              type="primary"-->
+<!--              @click="handleBatchClaim"-->
+<!--            >-->
+<!--              批量老品认领-->
+<!--            </el-button>-->
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>

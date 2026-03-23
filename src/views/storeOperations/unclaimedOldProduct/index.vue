@@ -3,17 +3,18 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item label="关键词">
+          <el-form-item>
             <el-input
               v-model.trim="queryForm.keyWord"
               clearable
               placeholder="请输入 asin / parentAsin / sku"
               style="width: 260px"
+              @blur="handleQuery"
               @keyup.enter="handleQuery"
             />
           </el-form-item>
           <el-form-item label="审批状态">
-            <el-select v-model="queryForm.status" placeholder="全部" style="width: 160px">
+            <el-select v-model="queryForm.status" placeholder="全部" style="width: 160px" @change="handleQuery">
               <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
@@ -38,7 +39,8 @@
         <template #default="{ row }">
           <div v-if="row.skuList?.length" class="sku-list">
             <div v-for="(item, index) in row.skuList" :key="`${item.sku || 'sku'}-${index}`" class="sku-item">
-              {{ formatSkuLine(item.sku, item.productDesc) }}
+              <div class="sku-item__value">{{ item.sku || '-' }}</div>
+              <div class="sku-item__value">{{ item.productDesc || '-' }}</div>
             </div>
           </div>
           <span v-else>-</span>
@@ -154,13 +156,6 @@ const getStatusTagType = (status: number) => {
     2: 'info',
   }
   return statusMap[status] ?? 'info'
-}
-
-const formatSkuLine = (sku?: string, productDesc?: string) => {
-  if (sku && productDesc) {
-    return `${sku} / ${productDesc}`
-  }
-  return sku || productDesc || '-'
 }
 
 const cellStyle = ({ column }: { column: { label: string } }): CSSProperties => {
@@ -310,5 +305,9 @@ onBeforeMount(() => {
 .sku-item {
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.sku-item__value {
+  display: block;
 }
 </style>
