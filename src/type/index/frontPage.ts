@@ -293,6 +293,9 @@ export interface ILowVolumeProductStorageFee {
 
   /** 建议清算 */
   recommendClearing: number
+
+  /** 近90天上榜天数 */
+  listedDays90: number
 }
 
 export interface IGetFrontPageAttendanceOverview {

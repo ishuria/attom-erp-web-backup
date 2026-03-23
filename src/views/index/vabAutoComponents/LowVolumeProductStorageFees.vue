@@ -50,10 +50,10 @@
       <el-table-column align="center" label="预计剩余库存仓储天数" min-width="130" prop="remainingStorageDays">
         <template #default="{ row }">{{ row.remainingStorageDays }}天</template>
       </el-table-column>
-      <el-table-column align="center" label="预计剩余总仓储费" min-width="120" prop="totalStorageFee" sortable="custom">
+      <el-table-column align="center" label="预计剩余总仓储费" min-width="130" prop="totalStorageFee" sortable="custom">
         <template #default="{ row }">¥{{ row.totalStorageFee }}</template>
       </el-table-column>
-      <el-table-column align="center" label="预计库存售完利润" min-width="120" prop="expectedProfit">
+      <el-table-column align="center" label="预计库存售完利润" min-width="130" prop="expectedProfit">
         <template #default="{ row }">¥{{ row.expectedProfit }}</template>
       </el-table-column>
       <el-table-column align="center" label="建议清算" prop="recommendClearing" width="95">
@@ -67,6 +67,9 @@
           <vab-icon v-if="row.outletDeal === 1" icon="check-fill" style="color: var(--el-color-success); font-size: 16px" />
           <vab-icon v-else icon="close-fill" style="color: var(--el-color-danger); font-size: 16px" />
         </template>
+      </el-table-column>
+      <el-table-column align="center" label="近90天上榜天数" min-width="130" prop="listedDays90" sortable="custom">
+        <template #default="{ row }">{{ row.listedDays90 ?? 0 }}天</template>
       </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
