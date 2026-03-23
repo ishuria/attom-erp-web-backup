@@ -339,4 +339,5 @@ export interface IGetFrontPageNewProductSaleDayChartRes {
   dayRange: string // 上新天数区间，如 "0-30", "31-60"
   sales: number // 销售额
   profit: number // 利润
+  bonus: number // 提成
 }

@@ -2,11 +2,16 @@
   <vab-card :body-style="{ height: '422px' }" class="new-product-sale-day-chart-card" skeleton>
     <template #header>
       <vab-icon icon="chart-line" />
-      上新天数 vs 利润/销售额
+      上新天数 vs {{ ableProductManagerViewCard ? '提成' : '利润/销售额' }}
       <div class="right-select">
         <el-select v-model="dataType" style="max-width: 7em" @change="fetchData">
-          <el-option label="利润" value="profit" />
-          <el-option label="销售额" value="sales" />
+          <el-option v-if="!ableProductManagerViewCard" label="利润" value="profit" />
+          <el-option v-if="!ableProductManagerViewCard" label="销售额" value="sales" />
+          <el-option
+            
+            label="提成"
+            value="bonus"
+          />
         </el-select>
         <el-date-picker
           v-model="selectedMonth"
@@ -34,6 +39,8 @@ defineOptions({
   name: 'NewProductSaleDayChart',
 })
 
+import { ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE } from '~/src/const/role'
+import { useAclStore } from '~/src/store/modules/acl'
 import { getFrontPageNewProductSaleDayChart } from '/@/api/devlocal/frontPage'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { getCurrentMonth } from '/@/utils/dateUtils'
@@ -43,7 +50,10 @@ const props = defineProps<{
   siteList: { id: number; label: string }[]
 }>()
 
-const dataType = ref<string>('profit') // 默认选择利润
+const currentRoleCode = useAclStore().getRole[0]
+const ableProductManagerViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
+const dataType = ref<string>(ableProductManagerViewCard ? 'bonus' : 'profit') // 默认选择利润
+
 const selectedMonth = ref<string>(getCurrentMonth())
 const userId = ref<number>(-1)
 const site = ref<number>(-1)
@@ -186,36 +196,88 @@ const fetchData = async () => {
     }
 
     // 更新 Y 轴名称
-    option.yAxis.name = dataType.value === 'sales' ? '销售额(¥)' : '利润(¥)'
+option.yAxis.name =
+  dataType.value === 'sales'
+    ? '销售额(¥)'
+    : dataType.value === 'profit'
+    ? '利润(¥)'
+    : '提成(¥)';
 
-    // 获取 X 轴数据
-    option.xAxis.data = data.map((item: any) => item.dayRange)
+// 获取 X 轴数据
+option.xAxis.data = data.map((item: any) => item.dayRange);
 
-    // 构建折线图数据
-    const seriesData = data.map((item: any) => (dataType.value === 'sales' ? item.sales : item.profit))
+// 构建折线图 series
+const series: any[] = [];
 
-    option.series = [
-      {
-        name: dataType.value === 'sales' ? '销售额' : '利润',
-        type: 'line',
-        data: seriesData,
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        lineStyle: {
-          width: 2,
-          color: colorPalette[0],
-        },
-        itemStyle: {
-          color: colorPalette[0],
-        },
-        areaStyle: {
-          opacity: 0.1,
-          color: colorPalette[0],
-        },
+// 定义颜色，可以根据需要多加
+const colorPalette = ['#5470C6', '#91CC75', '#EE6666'];
+
+// 判断显示哪个数据
+const seriesMap = {
+  sales: '销售额',
+  profit: '利润',
+  bonus: '提成',
+};
+
+Object.keys(seriesMap).forEach((key, idx) => {
+  if (dataType.value === key) {
+    series.push({
+      name: seriesMap[key],
+      type: 'line',
+      data: data.map((item: any) => item[key]),
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 6,
+      lineStyle: {
+        width: 2,
+        color: colorPalette[idx],
       },
-    ]
-    option.legend.data = [dataType.value === 'sales' ? '销售额' : '利润']
+      itemStyle: {
+        color: colorPalette[idx],
+      },
+      areaStyle: {
+        opacity: 0.1,
+        color: colorPalette[idx],
+      },
+    });
+  }
+});
+
+option.series = series;
+
+// 更新图例
+option.legend.data = series.map((s) => s.name);
+    // // 更新 Y 轴名称
+    // option.yAxis.name = dataType.value === 'sales' ? '销售额(¥)' : '利润(¥)'
+
+    // // 获取 X 轴数据
+    // option.xAxis.data = data.map((item: any) => item.dayRange)
+
+    // // 构建折线图数据
+    // const seriesData = data.map((item: any) => (dataType.value === 'sales' ? item.sales : item.profit))
+
+    // option.series = [
+    //   {
+    //     name: dataType.value === 'sales' ? '销售额' : '利润',
+    //     type: 'line',
+    //     data: seriesData,
+    //     smooth: true,
+    //     symbol: 'circle',
+    //     symbolSize: 6,
+    //     lineStyle: {
+    //       width: 2,
+    //       color: colorPalette[0],
+    //     },
+    //     itemStyle: {
+    //       color: colorPalette[0],
+    //     },
+    //     areaStyle: {
+    //       opacity: 0.1,
+    //       color: colorPalette[0],
+    //     },
+    //   },
+    // ]
+    // option.legend.data = [dataType.value === 'sales' ? '销售额' : '利润']
   } catch (e) {
     console.error(e)
     resetChart()
