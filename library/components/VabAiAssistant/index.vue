@@ -1,31 +1,49 @@
 <template>
   <div class="vab-ai-assistant">
-    <vab-icon class="vab-ai-assistant-icon" icon="openai-line" @click="openChatDialog" />
+    <el-badge :hidden="notificationStore.unreadCount <= 0" :value="notificationStore.displayUnreadCount" class="vab-ai-assistant-badge" type="danger">
+      <vab-icon class="vab-ai-assistant-icon" icon="openai-line" @click="openChatDialog" />
+    </el-badge>
     <ai-chat-dialog v-model="dialogVisible" :create-conversation-if-empty-on-open="false" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useSettingsStore } from '/@/store/modules/settings'
+import { useNotificationStore } from '/@/store/modules/notification'
 import AiChatDialog from '/@/views/ai/vabAutoComponents/AiChatDialog.vue'
 
 defineOptions({
   name: 'VabAiAssistant',
 })
 
-const settingsStore = useSettingsStore()
-const { theme } = storeToRefs(settingsStore)
+const notificationStore = useNotificationStore()
 const dialogVisible = ref(false)
 
 const openChatDialog = () => {
   dialogVisible.value = true
+  void notificationStore.markAllRead()
 }
 </script>
 
 <style lang="scss" scoped>
 .vab-ai-assistant {
-  :deep(.vab-ai-assistant-icon) {
+  :deep(.vab-ai-assistant-badge) {
+    display: inline-flex;
     margin-left: 15px;
+    cursor: pointer;
+
+    .el-badge__content {
+      min-width: 18px;
+      height: 18px;
+      line-height: 18px;
+      padding: 0 5px;
+      border: 0;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+  }
+
+  :deep(.vab-ai-assistant-icon) {
     font-size: 18px;
     color: var(--el-text-color-regular);
     cursor: pointer;

@@ -19,7 +19,9 @@
 
 <script lang="ts" setup>
 import Sortable from 'sortablejs'
+import { useNotificationStore } from '/@/store/modules/notification'
 import { useSettingsStore } from '/@/store/modules/settings'
+import { useUserStore } from '/@/store/modules/user'
 
 defineOptions({
   name: 'VabRightTools',
@@ -34,7 +36,10 @@ defineProps({
 
 const route = useRoute()
 const settingsStore = useSettingsStore()
+const notificationStore = useNotificationStore()
+const userStore = useUserStore()
 const { theme, device } = storeToRefs(settingsStore)
+const { token } = storeToRefs(userStore)
 const routeName = ref<any>(route.name)
 
 let sortable: any
@@ -62,6 +67,7 @@ onMounted(() => {
   nextTick(() => {
     handleTabDrag()
   })
+  if (token.value && !notificationStore.initialized && !notificationStore.connecting) void notificationStore.initialize()
 })
 
 watch(
@@ -74,6 +80,22 @@ watch(
     immediate: true,
   }
 )
+
+watch(
+  token,
+  async (value, oldValue) => {
+    if (value && !oldValue && !notificationStore.initialized && !notificationStore.connecting) {
+      await notificationStore.initialize()
+      return
+    }
+
+    if (!value && oldValue) await notificationStore.resetState()
+  },
+  {
+    immediate: false,
+  }
+)
+
 </script>
 
 <style lang="scss" scoped>

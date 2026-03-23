@@ -48,6 +48,11 @@ const handleScroll = (scroll: any) => {
     updateScrollTop(scroll.scrollTop, route.name)
   })
 }
+
+const setScrollTopSafely = (scrollTop: number) => {
+  scrollbarRef.value?.setScrollTop(scrollTop)
+}
+
 const resizeBody = () => {
   const { width } = useWindowSize()
   mobile.value = width.value - 1 < 992
@@ -87,13 +92,13 @@ watch(
           const uniqueArray = JSON.parse(localStorage.getItem('scrollTop') || '[]')
           const pageItem = uniqueArray.find((item: any) => item.routeName === newValue) as any
           if (pageItem) {
-            scrollbarRef.value!.setScrollTop(pageItem.scrollTop)
+            setScrollTopSafely(pageItem.scrollTop)
             if (pageItem.scrollTop !== 0 && newValue === 'ScrollTop') {
               $baseMessage('已为您滚动至上次停留的页面位置', 'success', 'hey')
             }
-          } else scrollbarRef.value!.setScrollTop(0)
+          } else setScrollTopSafely(0)
         }, 300)
-      else scrollbarRef.value!.setScrollTop(0)
+      else setScrollTopSafely(0)
     })
   },
   {

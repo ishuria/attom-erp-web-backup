@@ -1070,10 +1070,11 @@ const showAiTitleOptimization = async (row: any) => {
     }
 
     try {
+      $baseMessage('已开始标题优化，结果请查看通知，预计2分钟左右', 'success')
+      aiTitleOptimizationLoadingIds.value = aiTitleOptimizationLoadingIds.value.filter((id) => String(id) !== loadingKey)
       await sendAiChatMessage({
         conversationId,
       })
-      $baseMessage('已开始标题优化，结果请查看通知，预计2分钟左右', 'success')
     } catch (error: any) {
       $baseMessage(error?.msg ?? error?.message ?? '标题优化任务创建成功，但消息发送失败', 'error')
     }
