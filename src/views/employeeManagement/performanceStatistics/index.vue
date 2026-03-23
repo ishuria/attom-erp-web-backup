@@ -160,7 +160,7 @@
           </el-table-column>
           <el-table-column label="总奖金" min-width="110" prop="totalBonus" sortable="custom">
             <template #default="{ row }">
-              {{ handleCalculateTotalBonus(row) }}
+              {{ row.totalBonus != null ? Number(row.totalBonus).toFixed(2) : '0.00' }}
             </template>
           </el-table-column>
           <template #empty>
@@ -1348,19 +1348,6 @@ const handleChangeNoAssessment = async (row: IGetUserAttendanceList) => {
     id: row.id!,
     status: row.noAssessment!,
   })
-}
-// 计算每行总奖金
-const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
-  let totalBonus = 0
-  if (row.procurementBonus != null) totalBonus += row.procurementBonus
-  if (row.procurementCostReduction != null) totalBonus += row.procurementCostReduction
-  if (row.artDesignPicture != null) totalBonus += row.artDesignPicture
-  if (row.artDesignLongTime != null) totalBonus += row.artDesignLongTime
-  if (row.developmentDesign != null) totalBonus += row.developmentDesign
-  if (row.procurementBonusCrossMonth != null) totalBonus += row.procurementBonusCrossMonth
-  if (row.taxRefundPrice != null) totalBonus += row.taxRefundPrice
-  if (row.managementBonus != null) totalBonus += row.managementBonus
-  return totalBonus.toFixed(2)
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   // const index = data.columnIndex
