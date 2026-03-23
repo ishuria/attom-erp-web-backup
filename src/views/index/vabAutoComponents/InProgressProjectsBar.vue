@@ -65,7 +65,7 @@ const option = reactive({
       name: 'OEM',
       type: 'bar',
       stack: 'one',
-      data: props.data.map((item) => item.oem0Count),
+      data: props.data.map((item) => item.oem1Count),
       itemStyle: {
         color: '#67C23A', 
       },
@@ -75,7 +75,7 @@ const option = reactive({
       name: '非OEM',
       type: 'bar',
       stack: 'one',
-      data: props.data.map((item) => item.oem1Count),
+      data: props.data.map((item) => item.oem0Count),
       itemStyle: {
         color: '#E6A23C', 
       },
@@ -85,8 +85,8 @@ const option = reactive({
 
 watch(() => props.data, (newVal) => {
   option.xAxis.data = newVal.map((item) => item.spendTime)
-  option.series[0].data = newVal.map((item) => item.oem0Count)
-  option.series[1].data = newVal.map((item) => item.oem1Count)
+  option.series[0].data = newVal.map((item) => item.oem1Count)
+  option.series[1].data = newVal.map((item) => item.oem0Count)
 })
 
 </script>
