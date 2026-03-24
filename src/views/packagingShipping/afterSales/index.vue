@@ -1150,24 +1150,27 @@ const fetchData = async () => {
     queryForm.startDate = undefined
     queryForm.endDate = undefined
   }
-  const { data } = await getAfterSalesList(queryForm)
-  if (data) {
-    list.value = data.list
-    total.value = data.total
-    badDebtTotal.value = data.badDebtTotal
-    listLoading.value = false
-    list.value.forEach((item: any) => {
-      item.suppliser = item.suppliser.replaceAll(',', '<br>')
-      item.remark = item.remark.replace(/,/g, '\n')
-      item.hide = false
-      if (!item.voucherUrl) {
+  try {
+    const { data } = await getAfterSalesList(queryForm)
+    if (data) {
+      list.value = data.list
+      total.value = data.total
+      badDebtTotal.value = data.badDebtTotal
+      list.value.forEach((item: any) => {
+        item.suppliser = item.suppliser.replaceAll(',', '<br>')
+        item.remark = item.remark.replace(/,/g, '\n')
         item.hide = false
-        item.imageList = []
-      } else if (item.voucherUrl) {
-        item.hide = true
-        item.imageList = [{ url: item.voucherUrl }]
-      }
-    })
+        if (!item.voucherUrl) {
+          item.hide = false
+          item.imageList = []
+        } else if (item.voucherUrl) {
+          item.hide = true
+          item.imageList = [{ url: item.voucherUrl }]
+        }
+      })
+    }
+  } finally {
+    listLoading.value = false
   }
 }
 const router = useRouter()
