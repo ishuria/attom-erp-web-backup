@@ -515,6 +515,8 @@ export interface IGetAfterSalesListReq {
   status: number
   pageNo: number
   pageSize: number
+  startDate?: string
+  endDate?: string
 }
 export interface IGetAfterSalesListResp {
   data?: {

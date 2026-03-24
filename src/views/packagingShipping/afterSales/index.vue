@@ -980,6 +980,7 @@ import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { CSSProperties } from 'vue'
 import handleClipboard from '~/src/utils/clipboard'
+import { getDefaultStringTime } from '~/src/utils/dateUtils'
 import {
   archiveAfterSales,
   badDebtAfterSales,
@@ -995,7 +996,6 @@ import {
 } from '/@/api/devlocal/packagingShipping'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import { getDefaultStringTime } from '~/src/utils/dateUtils'
 
 defineOptions({
   name: 'AfterSales',
@@ -1129,6 +1129,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
   // Object.assign(list.value, [])
   if (tab.props.name !== undefined) {
     queryForm.status = Number(tab.props.name)
+    activeName.value = Number(tab.props.name)
   }
   router.push({
     query: {
@@ -1141,8 +1142,14 @@ const handleTabClick = (tab: TabsPaneContext) => {
 const badDebtTotal = ref<number>(0)
 const fetchData = async () => {
   listLoading.value = true
-  queryForm.startDate = date.value[0]
-  queryForm.endDate = date.value[1]
+  // 时间范围只作用于坏账tab
+  if (activeName.value === 4) {
+    queryForm.startDate = date.value?.[0]
+    queryForm.endDate = date.value?.[1]
+  } else {
+    queryForm.startDate = undefined
+    queryForm.endDate = undefined
+  }
   const { data } = await getAfterSalesList(queryForm)
   if (data) {
     list.value = data.list
