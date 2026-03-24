@@ -8,7 +8,7 @@
           <el-option v-if="!ableProductManagerViewCard" label="利润" value="profit" />
           <el-option v-if="!ableProductManagerViewCard" label="销售额" value="sales" />
           <el-option
-            
+
             label="提成"
             value="bonus"
           />
@@ -30,6 +30,17 @@
         </el-select>
       </div>
     </template>
+    <!-- 时间范围快捷选择 -->
+    <div class="range-selector">
+      <el-radio-group v-model="dayRange" size="small" @change="fetchData">
+        <el-radio-button label="all">全部</el-radio-button>
+        <el-radio-button label="3m">近3月</el-radio-button>
+        <el-radio-button label="6m">近6月</el-radio-button>
+        <el-radio-button label="1y">近1年</el-radio-button>
+        <el-radio-button label="2y">近2年</el-radio-button>
+        <el-radio-button label="2y+">2年+</el-radio-button>
+      </el-radio-group>
+    </div>
     <vab-chart :key="chartKey" :loading="loading" :option="option" />
   </vab-card>
 </template>
@@ -57,6 +68,7 @@ const dataType = ref<string>(ableProductManagerViewCard ? 'bonus' : 'profit') //
 const selectedMonth = ref<string>(getCurrentMonth())
 const userId = ref<number>(-1)
 const site = ref<number>(-1)
+const dayRange = ref<string>('all') // 上新天数范围筛选
 const settingsStore = useSettingsStore()
 const loading = ref(false)
 const { theme } = storeToRefs(settingsStore)
@@ -94,7 +106,7 @@ const option = reactive<any>({
   xAxis: {
     type: 'category',
     data: [],
-    name: '上新天数',
+    name: '已上新天数',
     nameLocation: 'middle',
     nameGap: 30,
     nameTextStyle: {
@@ -187,6 +199,7 @@ const fetchData = async () => {
       site: site.value,
       month: selectedMonth.value,
       dataType: dataType.value,
+      dayRange: dayRange.value,
     })
 
     // 空对象 or 非法数据
@@ -322,6 +335,13 @@ onMounted(() => {
     align-items: center;
     justify-content: flex-end;
     gap: 10px;
+    z-index: 10;
+  }
+
+  .range-selector {
+    position: absolute;
+    top: 10px;
+    left: 30px;
     z-index: 10;
   }
 

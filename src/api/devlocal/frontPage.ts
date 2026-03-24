@@ -500,7 +500,7 @@ export function getShippingErrorChart(data: {
 
 /**
  * 首页-上新天数销售额/利润图表
- * @param data { userId: number, site: number, month: string, dataType: 'sales' | 'profit' }
+ * @param data { userId: number, site: number, month: string, dataType: 'sales' | 'profit', dayRange: string }
  * @returns IGetFrontPageNewProductSaleDayChartRes
  */
 export function getFrontPageNewProductSaleDayChart(data: {
@@ -508,6 +508,7 @@ export function getFrontPageNewProductSaleDayChart(data: {
   site: number
   month: string
   dataType: string
+  dayRange?: string
 }): Promise<{ data: IGetFrontPageNewProductSaleDayChartRes[] }> {
   return request({
     url: `${BASE_API}/front_page/new_product/sale_day/chart`,
