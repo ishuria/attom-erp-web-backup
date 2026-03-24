@@ -12,6 +12,8 @@ export interface IGetDistributionProductListReq {
   keyWord: string
   pageNo: number
   pageSize: number
+  oldProductClaim: number
+  haltStatus: number
 }
 export interface IGetDistributionProductListRes {
   data: {

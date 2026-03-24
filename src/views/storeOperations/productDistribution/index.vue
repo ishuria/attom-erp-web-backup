@@ -3,6 +3,9 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form inline :model="queryForm">
+          <el-form-item>
+            <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
+          </el-form-item>
           <el-form-item label="站点">
             <el-select
               v-model="queryForm.site"
@@ -336,6 +339,7 @@ type IQueryForm = {
   site: CheckboxValueType[]
   status: number
   oldProductClaim: number
+  haltStatus: number
 }
 const queryForm = reactive<IQueryForm>({
   keyWord: '',
@@ -344,6 +348,7 @@ const queryForm = reactive<IQueryForm>({
   site: [],
   status: -1,
   oldProductClaim: 0,
+  haltStatus: 1,
 })
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -485,6 +490,14 @@ const handleCheckAll = (val: CheckboxValueType) => {
     queryData()
   }
 }
+const handleHideStopProduction = () => {
+  if (queryForm.haltStatus === 0) {
+    queryForm.haltStatus = 1
+  } else {
+    queryForm.haltStatus = 0
+  }
+  fetchData()
+}
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
@@ -531,6 +544,8 @@ const fetchData = async () => {
     const { data } = await getDistributionProductList({
       ...filterQueryForm,
       siteCodes: site.join(','),
+      oldProductClaim: queryForm.oldProductClaim,
+      haltStatus: queryForm.haltStatus,
     })
     total.value = data.total
     list.value = data.list
