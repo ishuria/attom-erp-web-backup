@@ -10,7 +10,6 @@
           </p>
           <div class="actions">
             <el-button type="primary" @click="aiStore.openModal">打开聊天窗口</el-button>
-            <el-button plain @click="aiStore.createConversation">新建会话</el-button>
           </div>
         </div>
         <div class="meta">
