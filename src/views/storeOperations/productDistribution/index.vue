@@ -41,7 +41,7 @@
               type="primary"
               @click="handleMarkUnclaimed"
             >
-              标记待认领
+              申请老品认领
             </el-button>
 <!--            <el-button-->
 <!--              v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"-->
@@ -225,7 +225,6 @@ import {
   updateOldStatus,
 } from '/@/api/devlocal/productDistribution'
 import { ROLE_BOSS_CODE } from '/@/const/role'
-import StoreOperationPermission from '/@/permissions/storeOperation'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 import { flexColumnWidth } from '/@/utils/tableColum'

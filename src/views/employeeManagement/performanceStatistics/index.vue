@@ -723,23 +723,25 @@
             <el-table-column label="职级" min-width="100" prop="leveName" />
             <el-table-column label="角色" min-width="130" prop="roleName" />
             <el-table-column label="过去6个月月均产品提成" min-width="155" prop="sixAvgCommissionPrice" />
-            <el-table-column label="过去6个月月均上线1年内新品提成" min-width="190" prop="newSixAvgCommissionPrice" />
-            <el-table-column label="广告花费" min-width="190" prop="adSpend">
+            <el-table-column label="过去6个月月均上线1年内新品提成" min-width="200" prop="newSixAvgCommissionPrice" />
+            <el-table-column label="父体个数" min-width="100" prop="parentCount" />
+            <el-table-column label="有效父体数" min-width="110" prop="validParentCount" />
+            <el-table-column label="广告花费" min-width="120" prop="adSpend">
               <template #default="scope">
                 <span>{{ scope.row.adSpend ? scope.row.currencyIcon + formatAmount(scope.row.adSpend) : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="广告销售额" min-width="190" prop="adSales">
+            <el-table-column label="广告销售额" min-width="120" prop="adSales">
               <template #default="scope">
                 <span>{{ scope.row.adSales ? scope.row.currencyIcon + formatAmount(scope.row.adSales) : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="总销售额" min-width="190" prop="totalSales">
+            <el-table-column label="总销售额" min-width="120" prop="totalSales">
               <template #default="scope">
                 <span>{{ scope.row.totalSales ? scope.row.currencyIcon + formatAmount(scope.row.totalSales) : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="总毛利润" min-width="190" prop="totalGrossProfit">
+            <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit">
               <template #default="scope">
                 <span>{{ scope.row.totalGrossProfit ? scope.row.currencyIcon + formatAmount(scope.row.totalGrossProfit) : '-' }}</span>
               </template>
