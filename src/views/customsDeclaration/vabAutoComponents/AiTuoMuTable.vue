@@ -289,9 +289,15 @@ const setSelectRows = (value: IAiTuoMuItem[]) => {
 }
 const totalCustomsDeclarationCount = computed<number>(() => {
   return selectRowsData.value.reduce((total: number, item: IAiTuoMuItem) => {
-    const count = Number(item.customsDeclarationCount) || 0
-    return total + count // 累加每个 item.customsDeclarationCount
-  }, 0) // 初始值为 0
+    // 处理 "32.00<br/>32.00<br/>" 这种带换行的格式
+    const countStr = item.customsDeclarationCount || ''
+    const sum = countStr
+      .split(/<br\s*\/?>/i)
+      .map((s: string) => Number(s.trim()))
+      .filter((n: number) => !isNaN(n))
+      .reduce((acc: number, n: number) => acc + n, 0)
+    return total + sum
+  }, 0)
 })
 // 总重
 const totalTaxIncludedPrice = computed<number>(() => {

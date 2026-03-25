@@ -117,7 +117,7 @@
         <el-table-column label="发票号码" min-width="120" prop="invoiceNumber" sortable="custom">
           <template #default="{ row }">
             <div v-if="Array.isArray(row.matchInvoiceRecord)">
-              <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item">
+              <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item copySku" @click="handleClipboard($event, item.invoiceNumber)">
                 {{ item.invoiceNumber || '-' }}
               </div>
             </div>
@@ -188,6 +188,7 @@ import type {
   IGetTaxRefundBatchDetailQuery,
   PayRecordList,
 } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const props = defineProps<{
@@ -368,6 +369,13 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   }
   .percentage-red {
     color: var(--el-color-danger);
+  }
+}
+.copySku {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  &:hover {
+    color: var(--el-color-primary-dark-2);
   }
 }
 </style>

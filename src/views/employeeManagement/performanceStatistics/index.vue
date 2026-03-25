@@ -273,6 +273,7 @@
           <el-table-column label="侵权产品数" min-width="110" prop="infringementProductNumber" />
           <el-table-column label="下架产品数" min-width="110" prop="removeProductNumber" />
           <el-table-column label="销毁货值" min-width="100" prop="destroyGoodsValue" />
+          <el-table-column label="驳回次数" min-width="100" prop="rejectCount" />
           <el-table-column min-width="120" prop="sixPastCommission">
             <template #header>
               过去6个月
