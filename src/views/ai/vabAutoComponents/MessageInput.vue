@@ -2,17 +2,17 @@
   <div class="ai-message-input">
     <el-input
       v-model="draft"
-      :disabled="disabled"
-      :maxlength="3000"
-      placeholder="输入消息，Shift+Enter 换行，Enter 发送"
-      resize="none"
-      :rows="3"
       type="textarea"
+      :rows="3"
+      resize="none"
+      :maxlength="3000"
+      :disabled="disabled"
+      :placeholder="placeholder || '输入消息，Shift+Enter 换行，Enter 发送'"
       @keydown.enter.exact.prevent="handleSend"
     />
     <div class="actions">
       <span class="hint">Shift+Enter 换行</span>
-      <el-button :loading="disabled" type="primary" @click="handleSend">发送</el-button>
+      <el-button type="primary" :disabled="isSendDisabled" @click="handleSend">发送</el-button>
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 const props = defineProps<{
   disabled?: boolean
+  placeholder?: string
 }>()
 
 const emit = defineEmits<{
@@ -31,8 +32,10 @@ defineOptions({
 })
 
 const draft = ref('')
+const isSendDisabled = computed(() => !!props.disabled || !draft.value.trim())
 
 const handleSend = () => {
+  if (isSendDisabled.value) return
   const value = draft.value.trim()
   if (!value) return
   emit('send', value)

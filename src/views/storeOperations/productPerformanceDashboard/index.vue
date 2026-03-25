@@ -575,6 +575,7 @@ import {
 } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
+import { useAiStore } from '/@/store/modules/ai'
 import { useUserStore } from '/@/store/modules/user'
 import type {
   IGetOperationAmazonSKUList,
@@ -594,6 +595,7 @@ defineOptions({
 
 const userName = useUserStore().getUsername
 const currentRole = useAclStore().getRole
+const aiStore = useAiStore()
 const isBoss = computed(() => currentRole.includes(ROLE_BOSS_CODE) || currentRole.includes(ROLE_ECOMMERCEOPERATIONLEAD_CODE))
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
@@ -1070,12 +1072,23 @@ const showAiTitleOptimization = async (row: any) => {
     }
 
     try {
-      $baseMessage('已开始标题优化，结果请查看通知，预计2分钟左右', 'success')
-      aiTitleOptimizationLoadingIds.value = aiTitleOptimizationLoadingIds.value.filter((id) => String(id) !== loadingKey)
+      await aiStore.ensureInitialized({
+        createIfEmpty: false,
+        forceRefresh: true,
+      })
+      await aiStore.switchConversation(conversationId)
+      aiStore.setConversationBusy(conversationId, {
+        reason: 'title-optimization',
+        message: '标题优化处理中，当前会话暂时不能发送消息，请等待结果返回。',
+        placeholderText: '已提交标题优化请求，正在等待模型返回结果...',
+      })
+      $baseMessage('已开始标题优化，当前会话会在结果返回前禁止发送新消息', 'success')
       await sendAiChatMessage({
         conversationId,
       })
+      void aiStore.waitForConversationReply(conversationId)
     } catch (error: any) {
+      aiStore.failConversationBusy(conversationId, error?.msg ?? error?.message ?? '标题优化任务创建成功，但消息发送失败')
       $baseMessage(error?.msg ?? error?.message ?? '标题优化任务创建成功，但消息发送失败', 'error')
     }
   } catch (error: any) {

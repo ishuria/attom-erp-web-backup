@@ -14,6 +14,12 @@ export interface ChatConversation {
   createdAt?: string
 }
 
+export interface ChatConversationBusyState {
+  reason: 'chat' | 'title-optimization'
+  message: string
+  placeholderMessageId?: number | string
+}
+
 export interface CreateConversationPayload {
   operationSkuId?: number | string
   [key: string]: any

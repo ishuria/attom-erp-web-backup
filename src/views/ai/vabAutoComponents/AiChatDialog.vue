@@ -2,7 +2,7 @@
   <vab-dialog
     v-model="dialogVisible"
     append-to-body
-    :close-on-click-modal="false"
+    :close-on-click-modal="true"
     :destroy-on-close="false"
     :title="title"
     width="65vw"

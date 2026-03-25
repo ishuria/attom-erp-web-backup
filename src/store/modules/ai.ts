@@ -1,6 +1,13 @@
 import dayjs from 'dayjs'
 import { createAiConversation, deleteAiConversation, getAiConversationList, getAiMessageList, sendAiChatMessage } from '/@/api/devlocal/ai'
-import type { ChatConversation, ChatMessage, CreateConversationOptions, EnsureConversationOptions } from '/@/type/ai/chat'
+
+import type {
+  ChatConversation,
+  ChatConversationBusyState,
+  ChatMessage,
+  CreateConversationOptions,
+  EnsureConversationOptions,
+} from '/@/type/ai/chat'
 
 // 为本地兜底消息生成临时主键，避免渲染层依赖后端 id。
 const createLocalId = (prefix: string) => `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -32,18 +39,11 @@ const pickArray = (response: any) => {
 // 某些接口直接返回对象，某些接口包在 data 中，这里统一抹平。
 const pickObject = (response: any) => response?.data ?? response ?? {}
 
-// 会话暂无历史消息时，给出一个默认欢迎语，避免右侧区域空白。
-const createWelcomeMessage = (): ChatMessage => ({
-  id: createLocalId('msg'),
-  role: 'assistant',
-  content: '您好，我是 标题优化 助手。请输入您的问题，我会尽力为您提供帮助。',
-  createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-  status: 'success',
-})
-
 const normalizeCreateConversationOptions = (options?: CreateConversationOptions): CreateConversationOptions => ({
   payload: options?.payload ? { ...options.payload } : undefined,
 })
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const useAiStore = defineStore('ai', {
   state: () => ({
@@ -59,6 +59,7 @@ export const useAiStore = defineStore('ai', {
     activeConversationId: null as number | string | null,
     // 按 conversationId 缓存消息，切换会话时无需反复清空重建。
     messages: {} as Record<string, ChatMessage[]>,
+    conversationBusyMap: {} as Record<string, ChatConversationBusyState>,
   }),
   getters: {
     // 当前激活会话对象。
@@ -70,9 +71,14 @@ export const useAiStore = defineStore('ai', {
       const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
       return key ? (state.messages[key] ?? []) : []
     },
+    activeConversationBusyState(state) {
+      const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
+      return key ? state.conversationBusyMap[key] ?? null : null
+    },
     // 没有激活会话或请求进行中时，不允许发送。
     canSend(state) {
-      return !state.loading && !state.isStreaming && !!state.activeConversationId
+      const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
+      return !state.loading && !state.isStreaming && !state.conversationBusyMap[key] && !!state.activeConversationId
     },
   },
   actions: {
@@ -150,27 +156,28 @@ export const useAiStore = defineStore('ai', {
       const key = String(id)
       if (!this.messages[key]) await this.loadMessages(id)
     },
-    // 消息接口失败时保留默认欢迎语，保证会话仍可继续发送。
+    // 消息接口失败时保留现有本地消息，避免把空态误写成欢迎语。
     async loadMessages(id: number | string) {
       const key = String(id)
       try {
         const response = await getAiMessageList(id)
         const list = pickArray(response).map(normalizeMessage)
-        this.messages[key] = list.length > 0 ? list : [createWelcomeMessage()]
+        this.messages[key] = list
       } catch {
-        this.messages[key] = this.messages[key] ?? [createWelcomeMessage()]
+        this.messages[key] = this.messages[key] ?? []
       }
     },
-    // 删除当前激活会话后，优先切到列表中的下一个；如果已空则补建一个新会话。
+    // 删除当前激活会话后，优先切到列表中的下一个；如果已空则保留零会话状态。
     async removeConversation(id: number | string) {
       await deleteAiConversation(id)
 
       this.conversations = this.conversations.filter((item) => String(item.id) !== String(id))
       delete this.messages[String(id)]
+      delete this.conversationBusyMap[String(id)]
 
       if (String(this.activeConversationId) === String(id)) {
         if (this.conversations.length > 0) await this.switchConversation(this.conversations[0].id)
-        else await this.createConversation()
+        else this.activeConversationId = null
       }
     },
     // 发送消息时先落本地消息，再等待接口返回，保证界面响应及时。
@@ -178,8 +185,8 @@ export const useAiStore = defineStore('ai', {
       const question = content.trim()
       if (!question) return
 
-      if (!this.activeConversationId) await this.createConversation()
       if (!this.activeConversationId) return
+      if (this.conversationBusyMap[String(this.activeConversationId)]) return
       const conversationId = this.activeConversationId
       const key = String(conversationId)
       const userMessage: ChatMessage = {
@@ -245,6 +252,104 @@ export const useAiStore = defineStore('ai', {
         this.isStreaming = false
       }
     },
+    setConversationBusy(
+      conversationId: number | string,
+      payload: {
+        reason: ChatConversationBusyState['reason']
+        message: string
+        placeholderText?: string
+      }
+    ) {
+      const key = String(conversationId)
+      const placeholderMessageId = createLocalId('msg')
+      const placeholderMessage: ChatMessage = {
+        id: placeholderMessageId,
+        role: 'assistant',
+        content: payload.placeholderText ?? '',
+        createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        status: 'loading',
+      }
+
+      this.messages[key] = this.messages[key] ?? []
+      this.messages[key] = [...this.messages[key], placeholderMessage]
+      this.conversationBusyMap[key] = {
+        reason: payload.reason,
+        message: payload.message,
+        placeholderMessageId,
+      }
+    },
+    finishConversationBusy(conversationId: number | string, content: string) {
+      const key = String(conversationId)
+      const busyState = this.conversationBusyMap[key]
+      if (!busyState) return
+
+      const nextContent = content.trim() || '已收到请求，但未返回可展示内容。'
+      const list = [...(this.messages[key] ?? [])]
+      const targetIndex = list.findIndex((item) => String(item.id) === String(busyState.placeholderMessageId))
+
+      if (targetIndex >= 0) {
+        list[targetIndex] = {
+          ...list[targetIndex],
+          content: nextContent,
+          status: 'success',
+        }
+        this.messages[key] = list
+      }
+
+      delete this.conversationBusyMap[key]
+    },
+    async waitForConversationReply(
+      conversationId: number | string,
+      options?: {
+        interval?: number
+        maxAttempts?: number
+      }
+    ) {
+      const key = String(conversationId)
+      const interval = options?.interval ?? 5000
+      const maxAttempts = options?.maxAttempts ?? 48
+
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        if (!this.conversationBusyMap[key]) return
+
+        try {
+          const response = await getAiMessageList(conversationId)
+          const list = pickArray(response).map(normalizeMessage)
+          const hasReply = list.some((item: ChatMessage) => item.role === 'assistant' && !!item.content.trim())
+
+          if (hasReply) {
+            this.messages[key] = list
+            delete this.conversationBusyMap[key]
+            return
+          }
+        } catch {
+          // 轮询阶段忽略单次失败，避免短暂网络抖动直接打断等待态。
+        }
+
+        await sleep(interval)
+      }
+
+      this.failConversationBusy(conversationId, '标题优化结果等待超时，请稍后重新进入会话查看。')
+    },
+    failConversationBusy(conversationId: number | string, errorMessage: string) {
+      const key = String(conversationId)
+      const busyState = this.conversationBusyMap[key]
+      if (!busyState) return
+
+      const list = [...(this.messages[key] ?? [])]
+      const targetIndex = list.findIndex((item) => String(item.id) === String(busyState.placeholderMessageId))
+
+      if (targetIndex >= 0) {
+        list[targetIndex] = {
+          ...list[targetIndex],
+          content: errorMessage.trim() || '请求失败，请稍后重试',
+          status: 'error',
+        }
+        this.messages[key] = list
+      }
+
+      delete this.conversationBusyMap[key]
+    },
     // 供页面卸载或重新进入时重置 AI 模块状态。
     resetState() {
       this.isOpen = true
@@ -255,6 +360,7 @@ export const useAiStore = defineStore('ai', {
       this.conversations = []
       this.activeConversationId = null
       this.messages = {}
+      this.conversationBusyMap = {}
     },
   },
 })

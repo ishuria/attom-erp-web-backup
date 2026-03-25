@@ -1,7 +1,9 @@
 <template>
   <div class="ai-chat-panel">
     <div class="toolbar">
-
+      <div v-if="busyMessage" class="busy-banner">
+        {{ busyMessage }}
+      </div>
     </div>
 
     <div v-if="!aiStore.activeMessages.length" class="empty-state">
@@ -11,7 +13,11 @@
 
     <message-list v-else :messages="aiStore.activeMessages" />
 
-    <message-input :disabled="aiStore.loading || aiStore.isStreaming" @send="aiStore.sendMessage" />
+    <message-input
+      :disabled="inputDisabled"
+      :placeholder="inputPlaceholder"
+      @send="aiStore.sendMessage"
+    />
   </div>
 </template>
 
@@ -26,6 +32,13 @@ defineOptions({
 
 const aiStore = useAiStore()
 const currentTitle = computed(() => aiStore.activeConversation?.title ?? 'AI 助手')
+const busyState = computed(() => aiStore.activeConversationBusyState)
+const hasActiveConversation = computed(() => !!aiStore.activeConversationId)
+const inputDisabled = computed(() => !hasActiveConversation.value || aiStore.loading || aiStore.isStreaming || !!busyState.value)
+const busyMessage = computed(() => busyState.value?.message ?? '')
+const inputPlaceholder = computed(() =>
+  !hasActiveConversation.value ? '当前没有会话，暂时不能发送消息' : busyState.value?.message ?? '输入消息，Shift+Enter 换行，Enter 发送'
+)
 
 const MessageInput = ChatPanelMessageInput
 const MessageList = ChatPanelMessageList
@@ -46,6 +59,15 @@ const MessageList = ChatPanelMessageList
     gap: 12px;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .busy-banner {
+    font-size: 13px;
+    color: var(--el-color-warning-dark-2);
+    background: var(--el-color-warning-light-9);
+    border: 1px solid var(--el-color-warning-light-5);
+    border-radius: 10px;
+    padding: 10px 12px;
   }
 
 

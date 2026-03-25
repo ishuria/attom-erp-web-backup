@@ -2,7 +2,7 @@
   <div class="ai-conversation-sidebar">
     <div class="header">
       <span class="title">会话</span>
-      <el-button v-if="showCreateButton" circle :icon="Plus" plain size="small" @click="aiStore.createConversation" />
+      <el-button v-if="showCreateButton" circle :icon="Plus" plain size="small" @click="handleCreateConversation" />
     </div>
     <div class="list">
       <div
@@ -43,6 +43,7 @@ defineOptions({
 })
 
 const aiStore = useAiStore()
+const handleCreateConversation = () => aiStore.createConversation()
 
 withDefaults(
   defineProps<{
