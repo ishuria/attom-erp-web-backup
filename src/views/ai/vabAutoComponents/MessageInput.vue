@@ -12,7 +12,7 @@
     />
     <div class="actions">
       <span class="hint">Shift+Enter 换行</span>
-      <el-button type="primary" :disabled="isSendDisabled" @click="handleSend">发送</el-button>
+      <el-button type="primary" :disabled="disabled" @click="handleSend">发送</el-button>
     </div>
   </div>
 </template>
@@ -32,10 +32,9 @@ defineOptions({
 })
 
 const draft = ref('')
-const isSendDisabled = computed(() => !!props.disabled || !draft.value.trim())
 
 const handleSend = () => {
-  if (isSendDisabled.value) return
+  if (props.disabled) return
   const value = draft.value.trim()
   if (!value) return
   emit('send', value)
