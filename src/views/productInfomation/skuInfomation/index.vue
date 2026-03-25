@@ -267,7 +267,7 @@
     <vab-dialog v-model="sizeWeightVisible" title="修改尺寸重量" top="28vh" width="18%" @close="handleSizeWeightClose">
       <el-form ref="sizeWeightFormRef" class="size-weight-form" label-position="top" :model="sizeWeightForm" :rules="sizeWeightFormRules">
         <el-form-item label="SKU">
-          <el-input :model-value="sizeWeightSku" disabled />
+          <el-input disabled :model-value="sizeWeightSku" />
         </el-form-item>
         <div class="size-weight-form__row">
           <el-form-item label="长(cm)" prop="length">

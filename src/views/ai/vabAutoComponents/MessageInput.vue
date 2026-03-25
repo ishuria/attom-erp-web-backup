@@ -2,17 +2,17 @@
   <div class="ai-message-input">
     <el-input
       v-model="draft"
-      type="textarea"
-      :rows="3"
-      resize="none"
-      :maxlength="3000"
       :disabled="disabled"
+      :maxlength="3000"
       placeholder="输入消息，Shift+Enter 换行，Enter 发送"
+      resize="none"
+      :rows="3"
+      type="textarea"
       @keydown.enter.exact.prevent="handleSend"
     />
     <div class="actions">
       <span class="hint">Shift+Enter 换行</span>
-      <el-button type="primary" :loading="disabled" @click="handleSend">发送</el-button>
+      <el-button :loading="disabled" type="primary" @click="handleSend">发送</el-button>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="vab-ai-assistant">
-    <el-badge :hidden="notificationStore.unreadCount <= 0" :value="notificationStore.displayUnreadCount" class="vab-ai-assistant-badge" type="danger">
+    <el-badge class="vab-ai-assistant-badge" :hidden="notificationStore.unreadCount <= 0" type="danger" :value="notificationStore.displayUnreadCount">
       <vab-icon class="vab-ai-assistant-icon" icon="openai-line" @click="openChatDialog" />
     </el-badge>
     <ai-chat-dialog v-model="dialogVisible" :create-conversation-if-empty-on-open="false" />

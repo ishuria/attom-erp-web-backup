@@ -7,7 +7,7 @@
             <strong>{{ title }}</strong>
             <span>可复用的 AI 对话模块</span>
           </div>
-          <el-button :icon="Close" circle text @click="aiStore.closeModal" />
+          <el-button circle :icon="Close" text @click="aiStore.closeModal" />
         </div>
         <div class="modal-body">
           <conversation-sidebar />

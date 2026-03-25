@@ -15,7 +15,7 @@
         </template>
         <template v-else>
           <typing-indicator v-if="message.status === 'loading' && !message.content" />
-          <div v-else class="markdown-body" v-html="htmlContent" @click="handleMarkdownAction" />
+          <div v-else class="markdown-body" @click="handleMarkdownAction" v-html="htmlContent" />
         </template>
       </div>
     </div>

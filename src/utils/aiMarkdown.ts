@@ -34,9 +34,7 @@ const resolveCodeLanguageLabel = (className?: string) => {
 }
 
 const wrapTables = (html: string) => {
-  return html
-    .replace(/<table>/g, '<div class="markdown-table-wrap"><table>')
-    .replace(/<\/table>/g, '</table></div>')
+  return html.replace(/<table>/g, '<div class="markdown-table-wrap"><table>').replace(/<\/table>/g, '</table></div>')
 }
 
 const wrapCodeBlocks = (html: string) => {

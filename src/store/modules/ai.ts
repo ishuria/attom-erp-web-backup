@@ -1,11 +1,5 @@
 import dayjs from 'dayjs'
-import {
-  createAiConversation,
-  deleteAiConversation,
-  getAiConversationList,
-  getAiMessageList,
-  sendAiChatMessage,
-} from '/@/api/devlocal/ai'
+import { createAiConversation, deleteAiConversation, getAiConversationList, getAiMessageList, sendAiChatMessage } from '/@/api/devlocal/ai'
 import type { ChatConversation, ChatMessage, CreateConversationOptions, EnsureConversationOptions } from '/@/type/ai/chat'
 
 // 为本地兜底消息生成临时主键，避免渲染层依赖后端 id。

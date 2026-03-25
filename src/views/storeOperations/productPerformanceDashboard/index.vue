@@ -61,9 +61,9 @@
                 <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[0] }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">今销更新：{{ saleUpdateDate[0] }}</el-text>
                 <el-divider direction="vertical" />
-                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{ saleUpdateDate[10] }}</el-text>
+                <el-text style="font-weight: 600">其他数据更新：{{ saleUpdateDate[5] }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -207,9 +207,9 @@
                 <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[1] }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">今销更新：{{ saleUpdateDate[1] }}</el-text>
                 <el-divider direction="vertical" />
-                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{ saleUpdateDate[11] }}</el-text>
+                <el-text style="font-weight: 600">补货数量和月数据更新：{{ saleUpdateDate[11] }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -351,9 +351,9 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[2] }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">今销更新：{{ saleUpdateDate[2] }}</el-text>
                 <el-divider direction="vertical" />
-                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{ saleUpdateDate[12] }}</el-text>
+                <el-text style="font-weight: 600">补货数量和月数据更新：{{ saleUpdateDate[12] }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -2193,8 +2193,9 @@ const saleUpdateDate = ref<string[] | undefined[]>([])
 const fetchUpdateDate = async () => {
   const { data } = await getOperationUpdateDate({ type: activeName.value })
   saleUpdateDate.value[activeName.value] = data
-  const { data: date } = await getOperationUpdateDate({ type: activeName.value + 10 })
-  saleUpdateDate.value[activeName.value + 10] = date
+  const secondType = activeName.value === 0 ? 5 : activeName.value + 10
+  const { data: date } = await getOperationUpdateDate({ type: secondType })
+  saleUpdateDate.value[secondType] = date
   // console.log(saleUpdateDate.value)
 }
 // 优化首屏渲染：优先级处理
