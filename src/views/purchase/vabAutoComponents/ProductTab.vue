@@ -92,12 +92,14 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
+      ref="tableRef"
       v-loading="listLoading"
       border
       :cell-class-name="clearPadding"
       class="product-table"
       :data="list"
       stripe
+      @selection-change="handleSelectionChange"
       @sort-change="handleSortChange"
     >
       <el-table-column type="selection" width="38" />
@@ -155,7 +157,13 @@
     />
 
     <!-- 统计采购量 -->
-    <purchase-quantity-line-chart v-model:date="date" v-model:visible="lineChartVisible" />
+    <purchase-quantity-line-chart
+      v-model:date="date"
+      v-model:visible="lineChartVisible"
+      :selected-rows="selectedRows"
+      :site-agg="queryForm.siteAgg"
+      :site-list="siteList"
+    />
 
     <!-- SKU采购量趋势弹窗 -->
     <sku-purchase-trend-chart-dialog v-model:data="currentTrendRow" v-model:visible="trendDialogVisible" />
@@ -192,6 +200,15 @@ const emit = defineEmits<{
   (e: 'on-show-image-preview', url: string): void
 }>()
 const lineChartVisible = ref<boolean>(false)
+
+// 表格选中行
+const tableRef = ref()
+const selectedRows = ref<IGetPurchaseStatisticsSkuItem[]>([])
+
+// 表格选择变化
+const handleSelectionChange = (rows: IGetPurchaseStatisticsSkuItem[]) => {
+  selectedRows.value = rows
+}
 
 // 月度趋势相关
 const trendDialogVisible = ref<boolean>(false)

@@ -816,3 +816,25 @@ export function specialDeletePo(params: IIds): Promise<IBooleanResp> {
     params,
   })
 }
+
+/**
+ * 批量查询SKU月度采购趋势
+ */
+export function getSkuMonthlyTrend(data: { skuList: string[]; startDate: string; endDate: string; siteAgg: number }): Promise<{
+  data: {
+    xAxisData: string[]
+    trendList: Array<{
+      legendKey: string
+      sku: string
+      siteId?: number
+      siteName?: string
+      purchaseCountList: number[]
+    }>
+  }
+}> {
+  return request({
+    url: `${BASE_API}/purchase/statistics/sku/monthly-trend`,
+    method: 'post',
+    data,
+  })
+}
