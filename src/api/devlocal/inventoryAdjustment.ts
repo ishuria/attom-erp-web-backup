@@ -6,6 +6,8 @@ import type {
   InventoryAdjustAddReq,
   InventoryAdjustDetailQuery,
   InventoryAdjustListReq,
+  InventoryAdjustPackingTaskQuery,
+  InventoryAdjustPoListReq,
   InventoryAdjustPriceCalcReq,
 } from '/@/type/inventory/adjust'
 
@@ -16,10 +18,19 @@ export function getInventoryAdjustSkuInfo(sku: string) {
   })
 }
 
-export function getInventoryAdjustPoList(sku: string) {
+export function getInventoryAdjustPoList(data: InventoryAdjustPoListReq) {
   return request({
-    url: `${BASE_API}/purchase/poList/${sku}`,
+    url: `${BASE_API}/purchase/poList`,
     method: 'post',
+    data,
+  })
+}
+
+export function getInventoryAdjustPackingTaskList(data: InventoryAdjustPackingTaskQuery) {
+  return request({
+    url: `${BASE_API}/query/package/task/list`,
+    method: 'post',
+    data,
   })
 }
 

@@ -4,7 +4,7 @@
       <vab-query-form-left-panel :span="10">
         <div class="header-actions">
           <el-button :icon="Plus" type="primary" @click="openAddDialog">新增库存调整</el-button>
-          <el-button :loading="marginLoading" type="primary" @click="openMarginDialog">余量设定</el-button>
+<!--          <el-button :loading="marginLoading" type="primary" @click="openMarginDialog">余量设定</el-button>-->
         </div>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="14">
@@ -44,7 +44,7 @@
     <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" row-key="id">
       <el-table-column align="center" label="调整日期" min-width="120">
         <template #default="{ row }">
-          {{ formatDisplayDate(row.adjustDate) }}
+          {{ formatDisplayDate(row.createTime) }}
         </template>
       </el-table-column>
       <el-table-column label="PO" min-width="120" prop="po" show-overflow-tooltip />
@@ -58,12 +58,18 @@
       </el-table-column>
       <el-table-column align="center" label="调整数量" min-width="100">
         <template #default="{ row }">
-          {{ formatNumber(row.adjustQuantity) }}
+          {{ formatNumber(row.count) }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="调整价格" min-width="130">
         <template #default="{ row }">
           {{ formatCurrency(row.price) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="被调整到打包任务ID" min-width="180" prop="packageTaskId" show-overflow-tooltip />
+      <el-table-column align="center" label="调整之前的数量" min-width="130">
+        <template #default="{ row }">
+          {{ formatNumber(row.packageTaskCount) }}
         </template>
       </el-table-column>
       <el-table-column label="Shipment ID" min-width="140" prop="shipmentId" show-overflow-tooltip />
@@ -75,10 +81,10 @@
           {{ formatDisplayDateTime(row.createTime) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="红冲状态" min-width="100">
+      <el-table-column align="center" label="类型" min-width="100">
         <template #default="{ row }">
-          <el-tag :type="getRedFlushTagType(row.redFlushStatus)">
-            {{ getRedFlushLabel(row.redFlushStatus) }}
+          <el-tag :type="getRedFlushTagType(row.type)">
+            {{ getRedFlushLabel(row.type) }}
           </el-tag>
         </template>
       </el-table-column>
@@ -103,7 +109,7 @@
     <vab-dialog v-model="addVisible" title="新增库存调整" width="760px" @close="handleAddDialogClose">
       <el-form
         ref="addFormRef"
-        v-loading="skuInfoLoading || addLoading || priceCalcLoading"
+        v-loading="skuInfoLoading || addLoading || priceCalcLoading || packingTaskLoading"
         class="dialog-form"
         :model="addForm"
         :rules="addRules"
@@ -111,13 +117,36 @@
         label-width="96px"
       >
         <div class="dialog-grid">
-          <el-form-item class="dialog-grid-span-2" label="SKU" prop="sku">
-            <el-input v-model.trim="addForm.sku" clearable placeholder="请输入 SKU" @blur="handleSearchSku" @keyup.enter="handleSearchSku" />
-          </el-form-item>
-          <el-form-item label="PO">
-            <el-select v-model="addForm.poId" clearable filterable placeholder="请选择 PO" style="width: 100%">
-              <el-option v-for="item in poOptions" :key="item.poId" :label="item.po" :value="item.poId" />
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="addForm.type" placeholder="请选择调整类型" style="width: 100%">
+              <el-option v-for="item in redFlushOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
+          </el-form-item>
+          <el-form-item class="dialog-grid-span-2" label="SKU" prop="sku">
+            <el-input
+              v-model.trim="addForm.sku"
+              clearable
+              placeholder="请输入 SKU"
+              @blur="handleSearchSku"
+              @keyup.enter="handleSearchSku"
+            />
+          </el-form-item>
+          <el-form-item prop="poId" label="PO">
+            <template #default>
+              <el-select
+                v-model="addForm.poId"
+                clearable
+                filterable
+                remote
+                :loading="poLoading"
+                :remote-method="handleSearchPo"
+                placeholder="请输入 PO 搜索"
+                style="width: 80%"
+              >
+                <el-option v-for="item in poOptions" :key="item.poId" :label="item.po" :value="item.poId" />
+              </el-select>
+              <el-checkbox style="padding-left: 10px" v-model="addForm.allPo">全部 PO</el-checkbox>
+            </template>
           </el-form-item>
           <el-form-item label="产品信息">
             <el-input :model-value="addForm.productDesc" disabled />
@@ -127,17 +156,38 @@
               <el-image v-if="addForm.skuImg" :preview-src-list="[addForm.skuImg]" :src="addForm.skuImg" fit="cover" />
             </div>
           </el-form-item>
+          <el-form-item v-if="showPackingTaskFields" prop="packingTaskId">
+            <template #label>
+              <span class="packing-task-label">
+                打包任务
+                <el-tooltip content="请选择调整到的打包任务" effect="dark" placement="top">
+                  <el-icon class="packing-task-tip">
+                    <question-filled />
+                  </el-icon>
+                </el-tooltip>
+              </span>
+            </template>
+            <el-select
+              v-model="addForm.packingTaskId"
+              clearable
+              filterable
+              :loading="packingTaskLoading"
+              placeholder="请选择打包任务"
+              style="width: 100%"
+            >
+              <el-option v-for="item in packingTaskOptions" :key="item.packageTaskId" :label="item.value" :value="item.packageTaskId" />
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="showPackingTaskFields" label="打包任务数" prop="currentTaskCount">
+            <el-input :model-value="addForm.currentTaskCount" disabled />
+          </el-form-item>
           <el-form-item label="货件编号">
             <el-input v-model.trim="addForm.shipmentId" clearable placeholder="请输入货件编号" />
           </el-form-item>
           <el-form-item label="箱号">
             <el-input v-model.trim="addForm.boxNumber" clearable placeholder="请输入箱号" />
           </el-form-item>
-          <el-form-item label="红冲状态" prop="redFlushStatus">
-            <el-select v-model="addForm.redFlushStatus" placeholder="请选择红冲状态" style="width: 100%">
-              <el-option v-for="item in redFlushOptions" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
+
           <el-form-item label="调整数量" prop="count">
             <el-input-number v-model="addForm.count" :precision="2" :step="1" style="width: 100%" />
           </el-form-item>
@@ -212,13 +262,14 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus, RefreshRight, Search } from '@element-plus/icons-vue'
+import { Plus, QuestionFilled, RefreshRight, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import {
   addInventoryAdjust,
   getInventoryAdjustDetail,
   getInventoryAdjustList,
   getInventoryAdjustMargin,
+  getInventoryAdjustPackingTaskList,
   getInventoryAdjustPoList,
   getInventoryAdjustPrice,
   getInventoryAdjustSkuInfo,
@@ -229,6 +280,7 @@ import type {
   InventoryAdjustAddForm,
   InventoryAdjustDetailItem,
   InventoryAdjustItem,
+  InventoryAdjustPackingTaskOption,
   InventoryAdjustPoOption,
   InventoryAdjustQuery,
 } from '/@/type/inventory/adjust'
@@ -239,8 +291,8 @@ defineOptions({
 })
 
 const redFlushOptions = [
-  { label: '未红冲', value: 0 },
-  { label: '已红冲', value: 1 },
+  { label: '正常调整', value: 0 },
+  { label: '发布打包任务', value: 1 },
 ]
 
 const createDefaultQueryForm = (): InventoryAdjustQuery => ({
@@ -254,12 +306,15 @@ const createDefaultAddForm = (): InventoryAdjustAddForm => ({
   sku: '',
   productDesc: '',
   skuImg: '',
+  packingTaskId: undefined,
+  currentTaskCount: undefined,
+  allPo: false,
   poId: undefined,
   shipmentId: '',
   boxNumber: '',
   count: undefined,
   price: undefined,
-  redFlushStatus: 0,
+  type: 0,
   remark: '',
 })
 
@@ -300,9 +355,14 @@ const addVisible = ref(false)
 const addLoading = ref(false)
 const skuInfoLoading = ref(false)
 const priceCalcLoading = ref(false)
+const poLoading = ref(false)
+const packingTaskLoading = ref(false)
 const addFormRef = ref<FormInstance>()
 const addForm = reactive<InventoryAdjustAddForm>(createDefaultAddForm())
 const poOptions = ref<InventoryAdjustPoOption[]>([])
+const packingTaskOptions = ref<InventoryAdjustPackingTaskOption[]>([])
+const poKeyword = ref('')
+const showPackingTaskFields = computed(() => String(addForm.type ?? '0') === '0')
 
 const detailVisible = ref(false)
 const detailLoading = ref(false)
@@ -314,30 +374,9 @@ const detailQuery = reactive({
   pageSize: 20,
 })
 
-const isRedFlushSelected = computed(() => String(addForm.redFlushStatus ?? '0') === '1')
-
-const normalizeCountByRedFlushStatus = (value?: number) => {
-  if (value === undefined || value === null || Number.isNaN(Number(value)) || Number(value) === 0) return value
-  const normalizedValue = Number(value)
-  if (isRedFlushSelected.value) return normalizedValue > 0 ? -normalizedValue : normalizedValue
-  return normalizedValue < 0 ? Math.abs(normalizedValue) : normalizedValue
-}
-
 const validateAdjustQuantity = (_rule: any, value: number | undefined, callback: (error?: Error) => void) => {
   if (value === undefined || value === null || Number.isNaN(value)) {
     callback(new Error('请输入调整数量'))
-    return
-  }
-  if (Number(value) === 0) {
-    callback(new Error('调整数量不能为 0'))
-    return
-  }
-  if (!isRedFlushSelected.value && Number(value) < 0) {
-    callback(new Error('未红冲状态下只能输入正数'))
-    return
-  }
-  if (isRedFlushSelected.value && Number(value) > 0) {
-    callback(new Error('已红冲状态下只能输入负数'))
     return
   }
   callback()
@@ -345,6 +384,7 @@ const validateAdjustQuantity = (_rule: any, value: number | undefined, callback:
 
 const addRules = reactive<FormRules<InventoryAdjustAddForm>>({
   sku: [{ required: true, trigger: 'blur', message: '请输入 SKU' }],
+  poId: [{ required: true, trigger: 'change', message: '请选择 PO' }],
   count: [{ trigger: 'blur', validator: validateAdjustQuantity }],
 })
 
@@ -404,8 +444,8 @@ const formatCurrency = (value?: number) => {
   return Number(value).toFixed(2)
 }
 
-const getRedFlushLabel = (value?: number | string) => (String(value) === '1' ? '已红冲' : '未红冲')
-const getRedFlushTagType = (value?: number | string) => (String(value) === '1' ? 'danger' : 'success')
+const getRedFlushLabel = (value?: number | string) => (String(value) === '1' ? '发布打包任务' : '正常调整')
+const getRedFlushTagType = (value?: number | string) => (String(value) === '1' ? 'danger' : 'info')
 
 const fetchList = async () => {
   listLoading.value = true
@@ -493,10 +533,18 @@ const handleSizeChange = (value: number) => {
   fetchList()
 }
 
-const resetAddForm = () => {
-  Object.assign(addForm, createDefaultAddForm())
+const resetAddFormByType = (type: number | string | undefined) => {
+  Object.assign(addForm, createDefaultAddForm(), {
+    type: type ?? 0,
+  })
+  poKeyword.value = ''
   poOptions.value = []
+  packingTaskOptions.value = []
   addFormRef.value?.clearValidate()
+}
+
+const resetAddForm = () => {
+  resetAddFormByType(createDefaultAddForm().type)
 }
 
 const openAddDialog = () => {
@@ -508,21 +556,81 @@ const handleAddDialogClose = () => {
   resetAddForm()
 }
 
+const fetchPoOptions = async (po = '') => {
+  const sku = addForm.sku.trim()
+  if (!sku) {
+    poOptions.value = []
+    addForm.poId = undefined
+    return
+  }
+
+  poLoading.value = true
+  try {
+    const poListResponse = await getInventoryAdjustPoList({
+      sku,
+      po: po || undefined,
+      allPo: addForm.allPo,
+    })
+    poOptions.value = pickArray<InventoryAdjustPoOption>(poListResponse)
+    const currentPoExists = poOptions.value.some((item) => item.poId === addForm.poId)
+    if (!currentPoExists) addForm.poId = undefined
+  } catch {
+    poOptions.value = []
+    addForm.poId = undefined
+  } finally {
+    poLoading.value = false
+  }
+}
+
+const handleSearchPo = (value: string) => {
+  poKeyword.value = value.trim()
+  fetchPoOptions(poKeyword.value)
+}
+
+const fetchPackingTaskOptions = async () => {
+  const sku = addForm.sku.trim()
+  if (!showPackingTaskFields.value || !sku || addForm.poId == null || addForm.poId === '') {
+    packingTaskOptions.value = []
+    addForm.packingTaskId = undefined
+    addForm.currentTaskCount = undefined
+    return
+  }
+
+  packingTaskLoading.value = true
+  try {
+    const response = await getInventoryAdjustPackingTaskList({
+      poId: addForm.poId,
+      sku,
+    })
+    packingTaskOptions.value = pickArray<InventoryAdjustPackingTaskOption>(response)
+    const currentTask = packingTaskOptions.value.find((item) => item.packageTaskId === addForm.packingTaskId)
+    if (currentTask) addForm.currentTaskCount = currentTask.packageTaskCount ?? undefined
+    else {
+      addForm.packingTaskId = undefined
+      addForm.currentTaskCount = undefined
+    }
+  } catch {
+    packingTaskOptions.value = []
+    addForm.packingTaskId = undefined
+    addForm.currentTaskCount = undefined
+  } finally {
+    packingTaskLoading.value = false
+  }
+}
+
 const handleSearchSku = async () => {
   const sku = addForm.sku.trim()
   if (!sku) return
 
   skuInfoLoading.value = true
   try {
-    const [skuInfoResponse, poListResponse] = await Promise.all([getInventoryAdjustSkuInfo(sku), getInventoryAdjustPoList(sku)])
+    const skuInfoResponse = await getInventoryAdjustSkuInfo(sku)
     const skuInfo = pickObject<{ productDesc?: string; skuImg?: string }>(skuInfoResponse)
-    const poList = pickArray<InventoryAdjustPoOption>(poListResponse)
     addForm.productDesc = skuInfo.productDesc ?? ''
     addForm.skuImg = skuInfo.skuImg ?? ''
-    addForm.poId = undefined
-    poOptions.value = poList
+    await fetchPoOptions(poKeyword.value)
 
-    if (!skuInfo.productDesc && !skuInfo.skuImg && poList.length === 0) {
+    if (!skuInfo.productDesc && !skuInfo.skuImg && poOptions.value.length === 0) {
       $baseMessage('未查询到对应 SKU 信息', 'warning', 'hey')
     }
   } catch {
@@ -530,6 +638,9 @@ const handleSearchSku = async () => {
     addForm.skuImg = ''
     addForm.poId = undefined
     poOptions.value = []
+    packingTaskOptions.value = []
+    addForm.packingTaskId = undefined
+    addForm.currentTaskCount = undefined
   } finally {
     skuInfoLoading.value = false
   }
@@ -560,19 +671,22 @@ const handleCalculateAdjustPrice = async () => {
 
 const handleSubmitAdd = async () => {
   if (!addFormRef.value) return
-  addForm.count = normalizeCountByRedFlushStatus(addForm.count)
 
   await addFormRef.value.validate()
   addLoading.value = true
   try {
+    const selectedPo = poOptions.value.find((item) => item.poId === addForm.poId)
     await addInventoryAdjust({
       sku: addForm.sku.trim(),
       poId: addForm.poId,
+      po: String(addForm.type) === '1' ? selectedPo?.po : undefined,
+      packageTaskId: addForm.packingTaskId,
+      packageTaskCount: addForm.currentTaskCount == null || addForm.currentTaskCount === '' ? undefined : Number(addForm.currentTaskCount),
       shipmentId: addForm.shipmentId.trim() || undefined,
       boxNumber: addForm.boxNumber.trim() || undefined,
       count: Number(addForm.count),
       price: Number(addForm.price),
-      status: addForm.redFlushStatus!,
+      type: addForm.type!,
       remark: addForm.remark.trim() || undefined,
     })
     $baseMessage('新增成功', 'success', 'hey')
@@ -583,23 +697,6 @@ const handleSubmitAdd = async () => {
     addLoading.value = false
   }
 }
-
-watch(
-  () => addForm.count,
-  (value) => {
-    const normalizedValue = normalizeCountByRedFlushStatus(value)
-    if (normalizedValue !== value) addForm.count = normalizedValue
-  },
-)
-
-watch(
-  () => addForm.redFlushStatus,
-  () => {
-    const normalizedValue = normalizeCountByRedFlushStatus(addForm.count)
-    if (normalizedValue !== addForm.count) addForm.count = normalizedValue
-    addFormRef.value?.validateField?.('count')
-  },
-)
 
 const openDetailDialog = (row: InventoryAdjustItem) => {
   detailQuery.id = row.id
@@ -648,7 +745,7 @@ const handleSaveMargin = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([fetchList(), fetchMargin()])
+  await fetchList()
 })
 
 watch(
@@ -656,7 +753,47 @@ watch(
   ([visible]) => {
     if (!visible) return
     handleCalculateAdjustPrice()
-  },
+  }
+)
+
+watch(
+  () => addForm.type,
+  (value) => {
+    if (!addVisible.value) return
+    resetAddFormByType(value)
+    if (String(value) === '1') addForm.allPo = true
+    if (String(value) === '1') {
+      packingTaskOptions.value = []
+      addForm.packingTaskId = undefined
+      addForm.currentTaskCount = undefined
+    } else if (addVisible.value) {
+      fetchPackingTaskOptions()
+    }
+  }
+)
+
+watch(
+  () => addForm.allPo,
+  () => {
+    if (!addVisible.value || !addForm.sku.trim()) return
+    fetchPoOptions(poKeyword.value)
+  }
+)
+
+watch(
+  () => addForm.poId,
+  () => {
+    if (!addVisible.value) return
+    fetchPackingTaskOptions()
+  }
+)
+
+watch(
+  () => addForm.packingTaskId,
+  (value) => {
+    const currentTask = packingTaskOptions.value.find((item) => item.packageTaskId === value)
+    addForm.currentTaskCount = currentTask?.packageTaskCount ?? undefined
+  }
 )
 </script>
 
@@ -692,6 +829,30 @@ watch(
     font-size: 12px;
   }
 
+  .po-label {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .po-label-text {
+    font-weight: 500;
+  }
+
+  .po-label :deep(.el-checkbox) {
+    margin-right: 0;
+    height: 20px;
+  }
+
+  .po-label :deep(.el-checkbox__label) {
+    padding-left: 6px;
+    font-weight: 400;
+    color: var(--el-text-color-secondary);
+    font-size: 13px;
+  }
+
   .dialog-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -719,6 +880,23 @@ watch(
       display: block;
     }
   }
+
+  .packing-task-row {
+    display: flex;
+    width: 100%;
+  }
+
+  .packing-task-label {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .packing-task-tip {
+    color: var(--el-text-color-secondary);
+    font-size: 16px;
+    cursor: help;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -738,7 +916,6 @@ watch(
     .dialog-grid-span-2 {
       grid-column: auto;
     }
-
   }
 }
 </style>

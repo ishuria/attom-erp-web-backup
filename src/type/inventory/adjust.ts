@@ -22,9 +22,12 @@ export interface InventoryAdjustItem {
   sku?: string
   productModel?: string
   productDesc?: string
+  packageTaskId?: number | string
+  packageTaskCount?: number
   componentName?: string
   productName?: string
   adjustQuantity?: number
+  count?: number
   price?: number
   adjustPreTaxPrice?: number
   taxInclusiveTotalPrice?: number
@@ -35,7 +38,6 @@ export interface InventoryAdjustItem {
   remark?: string
   createUserName?: string
   createTime?: string
-  redFlushStatus?: number | string
 }
 
 export interface InventoryAdjustDetailQuery {
@@ -65,27 +67,50 @@ export interface InventoryAdjustPoOption {
   po: string
 }
 
+export interface InventoryAdjustPoListReq {
+  sku: string
+  po?: string
+  allPo?: boolean
+}
+
+export interface InventoryAdjustPackingTaskQuery {
+  poId: number | string
+  sku: string
+}
+
+export interface InventoryAdjustPackingTaskOption {
+  packageTaskId: number | string
+  packageTaskCount?: number
+  value: string
+}
+
 export interface InventoryAdjustAddForm {
   sku: string
   productDesc: string
   skuImg: string
+  packingTaskId?: number | string
+  currentTaskCount?: number | string
+  allPo?: boolean
   poId?: number | string
   shipmentId: string
   boxNumber: string
   count?: number
   price?: number
-  redFlushStatus?: number | string
+  type?: number | string
   remark: string
 }
 
 export interface InventoryAdjustAddReq {
   sku: string
   poId?: number | string
+  po?: string
+  packageTaskId?: number | string
+  packageTaskCount?: number
   shipmentId?: string
   boxNumber?: string
   count: number
   price: number
-  status: number | string
+  type: number | string
   remark?: string
 }
 
