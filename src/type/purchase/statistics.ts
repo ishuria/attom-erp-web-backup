@@ -15,6 +15,8 @@ export interface IGetPurchaseStatisticsProductListReq {
   endDate: string
   siteList: number[]
   siteAgg: number
+  /** 供应商聚合: 0=按主体供应商分开, 1=合并供应商 */
+  supplierAgg: number
   orderByField?: string
   orderDirection?: string
 }
@@ -81,6 +83,9 @@ export interface IGetPurchaseStatisticsSkuItem {
 
   /** SKU月均采购平均值 */
   avgMonthlyPurchaseAmount: number
+
+  /** 主体供应商ID */
+  mainSupplierId: number
 
   /** 主体供应商 */
   mainSupplierName: string

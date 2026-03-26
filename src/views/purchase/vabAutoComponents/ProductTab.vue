@@ -34,6 +34,7 @@
           <el-form-item>
             <div class="filter-group">
               <el-checkbox v-model="queryForm.siteAgg" :false-value="0" :true-value="1" @change="queryData">站点聚合</el-checkbox>
+              <el-checkbox v-model="queryForm.supplierAgg" :false-value="0" :true-value="1" @change="queryData">供应商聚合</el-checkbox>
             </div>
           </el-form-item>
           <el-form-item>
@@ -128,6 +129,9 @@
           </div>
           <div v-if="item.label === '站点'" style="white-space: pre-line">
             {{ row.siteNames.replaceAll(',', '\n') }}
+          </div>
+          <div v-if="item.label === '主体供应商'" style="white-space: pre-line">
+            {{ row.mainSupplierName.replaceAll(',', '\n') }}
           </div>
         </template>
       </el-table-column>

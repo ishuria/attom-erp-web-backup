@@ -121,6 +121,7 @@ const productQueryForm = reactive<IGetPurchaseStatisticsProductListReq>({
   endDate: '',
   siteList: [],
   siteAgg: 0,
+  supplierAgg: 1,
 })
 const list = ref<IGetPurchaseStatisticsSupplierItem[]>([])
 const componentList = ref<IGetPurchaseStatisticsProductItem[]>([])
