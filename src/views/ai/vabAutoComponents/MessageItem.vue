@@ -112,7 +112,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     justify-content: center;
     width: 38px;
     height: 38px;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--el-color-white);
     background: linear-gradient(135deg, var(--el-color-primary), #3e8bff);
@@ -144,7 +144,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     display: flex;
     gap: 10px;
     align-items: center;
-    font-size: 13px;
+    font-size: 16px;
     color: var(--el-text-color-secondary);
   }
 
@@ -159,7 +159,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     overflow-wrap: anywhere;
     border: 1px solid var(--el-border-color-lighter);
     border-radius: 20px;
-    font-size: 25px;
+    font-size: 16px;
     transition:
       box-shadow 0.2s ease,
       border-color 0.2s ease,
@@ -198,7 +198,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
   }
 
   .markdown-body {
-    font-size: 25px;
+    font-size: 16px;
     line-height: 1.85;
     color: var(--el-text-color-primary);
 
@@ -229,7 +229,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(h1) {
-      font-size: 26px;
+      font-size: 24px;
     }
 
     :deep(h2) {
@@ -237,11 +237,11 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(h3) {
-      font-size: 19px;
+      font-size: 20px;
     }
 
     :deep(h4) {
-      font-size: 16px;
+      font-size: 18px;
     }
 
     :deep(strong) {
@@ -296,7 +296,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(.markdown-code-lang) {
-      font-size: 12px;
+      font-size: 16px;
       font-weight: 600;
       letter-spacing: 0.08em;
       color: rgb(232 237 247 / 0.78);
@@ -305,7 +305,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
     :deep(.markdown-code-copy) {
       padding: 4px 10px;
-      font-size: 12px;
+      font-size: 16px;
       color: #f4f7fb;
       cursor: pointer;
       background: rgb(255 255 255 / 0.08);
@@ -329,7 +329,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       overflow: auto;
       color: #e8edf7;
       background: transparent;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.75;
     }
 
@@ -339,7 +339,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
     :deep(:not(pre) > code) {
       padding: 2px 7px;
-      font-size: 0.9em;
+      font-size: 16px;
       color: var(--el-color-primary-dark-2);
       background: var(--el-color-primary-light-9);
       border: 1px solid rgb(93 122 255 / 0.1);
@@ -387,7 +387,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       width: 100%;
       min-width: 560px;
       border-collapse: collapse;
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1.7;
     }
 
@@ -449,7 +449,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     .markdown-body {
-      font-size: 18px;
+      font-size: 15px;
 
       :deep(table) {
         min-width: 420px;

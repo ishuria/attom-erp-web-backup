@@ -72,8 +72,8 @@ export interface InventoryAdjustAddForm {
   poId?: number | string
   shipmentId: string
   boxNumber: string
-  adjustQuantity?: number
-  adjustPreTaxPrice?: number
+  count?: number
+  price?: number
   redFlushStatus?: number | string
   remark: string
 }
@@ -83,13 +83,14 @@ export interface InventoryAdjustAddReq {
   poId?: number | string
   shipmentId?: string
   boxNumber?: string
-  adjustQuantity: number
-  adjustPreTaxPrice: number
-  redFlushStatus: number | string
+  count: number
+  price: number
+  status: number | string
   remark?: string
 }
 
 export interface InventoryAdjustPriceCalcReq {
+  sku: string
   poId: number | string
   count: number
 }

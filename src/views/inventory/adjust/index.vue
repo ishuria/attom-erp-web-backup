@@ -112,7 +112,7 @@
       >
         <div class="dialog-grid">
           <el-form-item class="dialog-grid-span-2" label="SKU" prop="sku">
-            <el-input v-model.trim="addForm.sku" clearable placeholder="请输入 SKU" @blur="handleSearchSku" />
+            <el-input v-model.trim="addForm.sku" clearable placeholder="请输入 SKU" @blur="handleSearchSku" @keyup.enter="handleSearchSku" />
           </el-form-item>
           <el-form-item label="PO">
             <el-select v-model="addForm.poId" clearable filterable placeholder="请选择 PO" style="width: 100%">
@@ -138,11 +138,11 @@
               <el-option v-for="item in redFlushOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="调整数量" prop="adjustQuantity">
-            <el-input-number v-model="addForm.adjustQuantity" :precision="2" :step="1" style="width: 100%" />
+          <el-form-item label="调整数量" prop="count">
+            <el-input-number v-model="addForm.count" :precision="2" :step="1" style="width: 100%" />
           </el-form-item>
-          <el-form-item label="调整价格" prop="adjustPreTaxPrice">
-            <el-input-number v-model="addForm.adjustPreTaxPrice" disabled :precision="2" :step="1" style="width: 100%" />
+          <el-form-item label="调整价格" prop="price">
+            <el-input-number v-model="addForm.price" disabled :precision="2" :step="1" style="width: 100%" />
           </el-form-item>
           <el-form-item class="dialog-grid-span-2" label="备注">
             <el-input v-model.trim="addForm.remark" :maxlength="500" :rows="4" placeholder="请输入备注" show-word-limit type="textarea" />
@@ -257,8 +257,8 @@ const createDefaultAddForm = (): InventoryAdjustAddForm => ({
   poId: undefined,
   shipmentId: '',
   boxNumber: '',
-  adjustQuantity: undefined,
-  adjustPreTaxPrice: undefined,
+  count: undefined,
+  price: undefined,
   redFlushStatus: 0,
   remark: '',
 })
@@ -314,6 +314,15 @@ const detailQuery = reactive({
   pageSize: 20,
 })
 
+const isRedFlushSelected = computed(() => String(addForm.redFlushStatus ?? '0') === '1')
+
+const normalizeCountByRedFlushStatus = (value?: number) => {
+  if (value === undefined || value === null || Number.isNaN(Number(value)) || Number(value) === 0) return value
+  const normalizedValue = Number(value)
+  if (isRedFlushSelected.value) return normalizedValue > 0 ? -normalizedValue : normalizedValue
+  return normalizedValue < 0 ? Math.abs(normalizedValue) : normalizedValue
+}
+
 const validateAdjustQuantity = (_rule: any, value: number | undefined, callback: (error?: Error) => void) => {
   if (value === undefined || value === null || Number.isNaN(value)) {
     callback(new Error('请输入调整数量'))
@@ -323,25 +332,34 @@ const validateAdjustQuantity = (_rule: any, value: number | undefined, callback:
     callback(new Error('调整数量不能为 0'))
     return
   }
+  if (!isRedFlushSelected.value && Number(value) < 0) {
+    callback(new Error('未红冲状态下只能输入正数'))
+    return
+  }
+  if (isRedFlushSelected.value && Number(value) > 0) {
+    callback(new Error('已红冲状态下只能输入负数'))
+    return
+  }
   callback()
 }
 
 const addRules = reactive<FormRules<InventoryAdjustAddForm>>({
   sku: [{ required: true, trigger: 'blur', message: '请输入 SKU' }],
-  adjustQuantity: [{ trigger: 'blur', validator: validateAdjustQuantity }],
+  count: [{ trigger: 'blur', validator: validateAdjustQuantity }],
 })
 
 const taxInclusiveTotalPricePreview = computed(() => {
-  const count = Number(addForm.adjustQuantity ?? 0)
-  const price = Number(addForm.adjustPreTaxPrice ?? 0)
+  const count = Number(addForm.count ?? 0)
+  const price = Number(addForm.price ?? 0)
   if (!count || !price) return '-'
   return (count * price).toFixed(2)
 })
 
 const shouldCalculateAdjustPrice = computed(() => {
+  if (!addForm.sku.trim()) return false
   if (addForm.poId === undefined || addForm.poId === null || addForm.poId === '') return false
-  const count = Number(addForm.adjustQuantity)
-  if (addForm.adjustQuantity === undefined || addForm.adjustQuantity === null || Number.isNaN(count)) return false
+  const count = Number(addForm.count)
+  if (addForm.count === undefined || addForm.count === null || Number.isNaN(count)) return false
   return count !== 0
 })
 
@@ -519,21 +537,22 @@ const handleSearchSku = async () => {
 
 const handleCalculateAdjustPrice = async () => {
   if (!shouldCalculateAdjustPrice.value) {
-    addForm.adjustPreTaxPrice = undefined
+    addForm.price = undefined
     return
   }
 
   priceCalcLoading.value = true
   try {
     const response = await getInventoryAdjustPrice({
+      sku: addForm.sku.trim(),
       poId: addForm.poId!,
-      count: Number(addForm.adjustQuantity),
+      count: Number(addForm.count),
     })
     const price = pickObject<number>(response)
     const normalizedPrice = Number(price)
-    addForm.adjustPreTaxPrice = Number.isNaN(normalizedPrice) ? undefined : Number(normalizedPrice.toFixed(2))
+    addForm.price = Number.isNaN(normalizedPrice) ? undefined : Number(normalizedPrice.toFixed(2))
   } catch {
-    addForm.adjustPreTaxPrice = undefined
+    addForm.price = undefined
   } finally {
     priceCalcLoading.value = false
   }
@@ -541,6 +560,7 @@ const handleCalculateAdjustPrice = async () => {
 
 const handleSubmitAdd = async () => {
   if (!addFormRef.value) return
+  addForm.count = normalizeCountByRedFlushStatus(addForm.count)
 
   await addFormRef.value.validate()
   addLoading.value = true
@@ -550,9 +570,9 @@ const handleSubmitAdd = async () => {
       poId: addForm.poId,
       shipmentId: addForm.shipmentId.trim() || undefined,
       boxNumber: addForm.boxNumber.trim() || undefined,
-      adjustQuantity: Number(addForm.adjustQuantity),
-      adjustPreTaxPrice: Number(addForm.adjustPreTaxPrice),
-      redFlushStatus: addForm.redFlushStatus!,
+      count: Number(addForm.count),
+      price: Number(addForm.price),
+      status: addForm.redFlushStatus!,
       remark: addForm.remark.trim() || undefined,
     })
     $baseMessage('新增成功', 'success', 'hey')
@@ -563,6 +583,23 @@ const handleSubmitAdd = async () => {
     addLoading.value = false
   }
 }
+
+watch(
+  () => addForm.count,
+  (value) => {
+    const normalizedValue = normalizeCountByRedFlushStatus(value)
+    if (normalizedValue !== value) addForm.count = normalizedValue
+  },
+)
+
+watch(
+  () => addForm.redFlushStatus,
+  () => {
+    const normalizedValue = normalizeCountByRedFlushStatus(addForm.count)
+    if (normalizedValue !== addForm.count) addForm.count = normalizedValue
+    addFormRef.value?.validateField?.('count')
+  },
+)
 
 const openDetailDialog = (row: InventoryAdjustItem) => {
   detailQuery.id = row.id
@@ -615,7 +652,7 @@ onMounted(async () => {
 })
 
 watch(
-  () => [addVisible.value, addForm.poId, addForm.adjustQuantity] as const,
+  () => [addVisible.value, addForm.poId, addForm.count] as const,
   ([visible]) => {
     if (!visible) return
     handleCalculateAdjustPrice()
