@@ -68,13 +68,13 @@ export interface InventoryAdjustPoOption {
 export interface InventoryAdjustAddForm {
   sku: string
   productDesc: string
+  skuImg: string
   poId?: number | string
   shipmentId: string
   boxNumber: string
   adjustQuantity?: number
   adjustPreTaxPrice?: number
   redFlushStatus?: number | string
-  source: string
   remark: string
 }
 
@@ -86,8 +86,12 @@ export interface InventoryAdjustAddReq {
   adjustQuantity: number
   adjustPreTaxPrice: number
   redFlushStatus: number | string
-  source?: string
   remark?: string
+}
+
+export interface InventoryAdjustPriceCalcReq {
+  poId: number | string
+  count: number
 }
 
 export interface InventoryAdjustMarginForm {

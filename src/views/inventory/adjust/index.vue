@@ -31,9 +31,7 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="handleQuery">
-                查询
-              </el-button>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="handleQuery">查询</el-button>
             </el-form-item>
             <el-form-item>
               <el-button :icon="RefreshRight" @click="handleReset">重置</el-button>
@@ -43,22 +41,19 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table
-      v-loading="listLoading"
-      border
-      :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
-      row-key="id"
-    >
+    <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" row-key="id">
       <el-table-column align="center" label="调整日期" min-width="120">
         <template #default="{ row }">
           {{ formatDisplayDate(row.adjustDate) }}
         </template>
       </el-table-column>
       <el-table-column label="PO" min-width="120" prop="po" show-overflow-tooltip />
-      <el-table-column label="产品名称/型号" min-width="180" show-overflow-tooltip>
+      <el-table-column label="SKU" min-width="180" show-overflow-tooltip>
         <template #default="{ row }">
-          {{ row.sku || row.productModel || '-' }}
+          <div class="sku-column-cell">
+            <div>{{ row.sku || '-' }}</div>
+            <div v-if="row.productModel" class="sku-column-subtext">{{ row.productModel }}</div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="调整数量" min-width="100">
@@ -106,21 +101,31 @@
     />
 
     <vab-dialog v-model="addVisible" title="新增库存调整" width="760px" @close="handleAddDialogClose">
-      <el-form ref="addFormRef" v-loading="skuInfoLoading || addLoading" :model="addForm" :rules="addRules" label-position="top">
+      <el-form
+        ref="addFormRef"
+        v-loading="skuInfoLoading || addLoading || priceCalcLoading"
+        class="dialog-form"
+        :model="addForm"
+        :rules="addRules"
+        label-position="right"
+        label-width="96px"
+      >
         <div class="dialog-grid">
-          <el-form-item label="SKU" prop="sku">
-            <div class="sku-input-row">
-              <el-input v-model.trim="addForm.sku" clearable placeholder="请输入 SKU" @blur="handleSearchSku" />
-              <el-button :loading="skuInfoLoading" type="primary" @click="handleSearchSku">查询 SKU 信息</el-button>
-            </div>
-          </el-form-item>
-          <el-form-item label="产品信息">
-            <el-input v-model="addForm.productDesc" disabled placeholder="根据 SKU 自动带出" />
+          <el-form-item class="dialog-grid-span-2" label="SKU" prop="sku">
+            <el-input v-model.trim="addForm.sku" clearable placeholder="请输入 SKU" @blur="handleSearchSku" />
           </el-form-item>
           <el-form-item label="PO">
             <el-select v-model="addForm.poId" clearable filterable placeholder="请选择 PO" style="width: 100%">
               <el-option v-for="item in poOptions" :key="item.poId" :label="item.po" :value="item.poId" />
             </el-select>
+          </el-form-item>
+          <el-form-item label="产品信息">
+            <el-input :model-value="addForm.productDesc" disabled />
+          </el-form-item>
+          <el-form-item label="SKU 图片">
+            <div class="sku-image-preview">
+              <el-image v-if="addForm.skuImg" :preview-src-list="[addForm.skuImg]" :src="addForm.skuImg" fit="cover" />
+            </div>
           </el-form-item>
           <el-form-item label="货件编号">
             <el-input v-model.trim="addForm.shipmentId" clearable placeholder="请输入货件编号" />
@@ -134,16 +139,10 @@
             </el-select>
           </el-form-item>
           <el-form-item label="调整数量" prop="adjustQuantity">
-            <el-input-number v-model="addForm.adjustQuantity" :precision="2" :step="0.1" style="width: 100%" />
+            <el-input-number v-model="addForm.adjustQuantity" :precision="2" :step="1" style="width: 100%" />
           </el-form-item>
-          <el-form-item label="调整未税价格" prop="adjustPreTaxPrice">
-            <el-input-number v-model="addForm.adjustPreTaxPrice" :min="0" :precision="2" :step="0.1" style="width: 100%" />
-          </el-form-item>
-          <el-form-item label="含税总价￥">
-            <el-input :model-value="taxInclusiveTotalPricePreview" disabled placeholder="根据数量和未税价格计算预览" />
-          </el-form-item>
-          <el-form-item label="来源">
-            <el-input v-model.trim="addForm.source" clearable placeholder="请输入来源" />
+          <el-form-item label="调整价格" prop="adjustPreTaxPrice">
+            <el-input-number v-model="addForm.adjustPreTaxPrice" disabled :precision="2" :step="1" style="width: 100%" />
           </el-form-item>
           <el-form-item class="dialog-grid-span-2" label="备注">
             <el-input v-model.trim="addForm.remark" :maxlength="500" :rows="4" placeholder="请输入备注" show-word-limit type="textarea" />
@@ -157,12 +156,7 @@
     </vab-dialog>
 
     <vab-dialog v-model="detailVisible" title="库存调整明细" width="900px" @close="handleDetailDialogClose">
-      <el-table
-        v-loading="detailLoading"
-        border
-        :data="detailList"
-        :header-cell-style="{ textAlign: 'center' }"
-      >
+      <el-table v-loading="detailLoading" border :data="detailList" :header-cell-style="{ textAlign: 'center' }">
         <el-table-column align="center" label="好的数量" min-width="110">
           <template #default="{ row }">
             {{ formatNumber(row.goodCount) }}
@@ -204,11 +198,11 @@
     </vab-dialog>
 
     <vab-dialog v-model="marginVisible" title="余量设定" width="420px" @close="handleMarginDialogClose">
-        <el-form :model="marginForm" label-position="top">
-          <el-form-item label="余量设定">
+      <el-form :model="marginForm" label-position="top">
+        <el-form-item label="余量设定">
           <el-input-number v-model="marginForm.margin" :precision="0" :step="1" style="width: 100%" />
-          </el-form-item>
-        </el-form>
+        </el-form-item>
+      </el-form>
       <template #footer>
         <el-button @click="marginVisible = false">取消</el-button>
         <el-button :loading="marginSaving" type="primary" @click="handleSaveMargin">确定</el-button>
@@ -226,6 +220,7 @@ import {
   getInventoryAdjustList,
   getInventoryAdjustMargin,
   getInventoryAdjustPoList,
+  getInventoryAdjustPrice,
   getInventoryAdjustSkuInfo,
   updateInventoryAdjustMargin,
 } from '/@/api/devlocal/inventoryAdjustment'
@@ -258,17 +253,17 @@ const createDefaultQueryForm = (): InventoryAdjustQuery => ({
 const createDefaultAddForm = (): InventoryAdjustAddForm => ({
   sku: '',
   productDesc: '',
+  skuImg: '',
   poId: undefined,
   shipmentId: '',
   boxNumber: '',
   adjustQuantity: undefined,
   adjustPreTaxPrice: undefined,
   redFlushStatus: 0,
-  source: '',
   remark: '',
 })
 
-const pickArray = <T = any>(response: any): T[] => {
+const pickArray = <T = any,>(response: any): T[] => {
   if (Array.isArray(response)) return response
   if (Array.isArray(response?.data)) return response.data
   if (Array.isArray(response?.rows)) return response.rows
@@ -278,7 +273,7 @@ const pickArray = <T = any>(response: any): T[] => {
   return []
 }
 
-const pickObject = <T = any>(response: any): T => (response?.data ?? response ?? {}) as T
+const pickObject = <T = any,>(response: any): T => (response?.data ?? response ?? {}) as T
 
 const pickTotal = (response: any) => {
   if (typeof response?.total === 'number') return response.total
@@ -304,6 +299,7 @@ const marginSaving = ref(false)
 const addVisible = ref(false)
 const addLoading = ref(false)
 const skuInfoLoading = ref(false)
+const priceCalcLoading = ref(false)
 const addFormRef = ref<FormInstance>()
 const addForm = reactive<InventoryAdjustAddForm>(createDefaultAddForm())
 const poOptions = ref<InventoryAdjustPoOption[]>([])
@@ -333,8 +329,6 @@ const validateAdjustQuantity = (_rule: any, value: number | undefined, callback:
 const addRules = reactive<FormRules<InventoryAdjustAddForm>>({
   sku: [{ required: true, trigger: 'blur', message: '请输入 SKU' }],
   adjustQuantity: [{ trigger: 'blur', validator: validateAdjustQuantity }],
-  adjustPreTaxPrice: [{ required: true, trigger: 'blur', message: '请输入调整未税价格' }],
-  redFlushStatus: [{ required: true, trigger: 'change', message: '请选择红冲状态' }],
 })
 
 const taxInclusiveTotalPricePreview = computed(() => {
@@ -342,6 +336,13 @@ const taxInclusiveTotalPricePreview = computed(() => {
   const price = Number(addForm.adjustPreTaxPrice ?? 0)
   if (!count || !price) return '-'
   return (count * price).toFixed(2)
+})
+
+const shouldCalculateAdjustPrice = computed(() => {
+  if (addForm.poId === undefined || addForm.poId === null || addForm.poId === '') return false
+  const count = Number(addForm.adjustQuantity)
+  if (addForm.adjustQuantity === undefined || addForm.adjustQuantity === null || Number.isNaN(count)) return false
+  return count !== 0
 })
 
 const normalizeMarginValue = (value: unknown) => {
@@ -495,25 +496,46 @@ const handleSearchSku = async () => {
 
   skuInfoLoading.value = true
   try {
-    const [skuInfoResponse, poListResponse] = await Promise.all([
-      getInventoryAdjustSkuInfo(sku),
-      getInventoryAdjustPoList(sku),
-    ])
-    const skuInfo = pickObject<{ productDesc?: string }>(skuInfoResponse)
+    const [skuInfoResponse, poListResponse] = await Promise.all([getInventoryAdjustSkuInfo(sku), getInventoryAdjustPoList(sku)])
+    const skuInfo = pickObject<{ productDesc?: string; skuImg?: string }>(skuInfoResponse)
     const poList = pickArray<InventoryAdjustPoOption>(poListResponse)
     addForm.productDesc = skuInfo.productDesc ?? ''
+    addForm.skuImg = skuInfo.skuImg ?? ''
     addForm.poId = undefined
     poOptions.value = poList
 
-    if (!skuInfo.productDesc && poList.length === 0) {
+    if (!skuInfo.productDesc && !skuInfo.skuImg && poList.length === 0) {
       $baseMessage('未查询到对应 SKU 信息', 'warning', 'hey')
     }
   } catch {
     addForm.productDesc = ''
+    addForm.skuImg = ''
     addForm.poId = undefined
     poOptions.value = []
   } finally {
     skuInfoLoading.value = false
+  }
+}
+
+const handleCalculateAdjustPrice = async () => {
+  if (!shouldCalculateAdjustPrice.value) {
+    addForm.adjustPreTaxPrice = undefined
+    return
+  }
+
+  priceCalcLoading.value = true
+  try {
+    const response = await getInventoryAdjustPrice({
+      poId: addForm.poId!,
+      count: Number(addForm.adjustQuantity),
+    })
+    const price = pickObject<number>(response)
+    const normalizedPrice = Number(price)
+    addForm.adjustPreTaxPrice = Number.isNaN(normalizedPrice) ? undefined : Number(normalizedPrice.toFixed(2))
+  } catch {
+    addForm.adjustPreTaxPrice = undefined
+  } finally {
+    priceCalcLoading.value = false
   }
 }
 
@@ -531,7 +553,6 @@ const handleSubmitAdd = async () => {
       adjustQuantity: Number(addForm.adjustQuantity),
       adjustPreTaxPrice: Number(addForm.adjustPreTaxPrice),
       redFlushStatus: addForm.redFlushStatus!,
-      source: addForm.source.trim() || undefined,
       remark: addForm.remark.trim() || undefined,
     })
     $baseMessage('新增成功', 'success', 'hey')
@@ -592,6 +613,14 @@ const handleSaveMargin = async () => {
 onMounted(async () => {
   await Promise.all([fetchList(), fetchMargin()])
 })
+
+watch(
+  () => [addVisible.value, addForm.poId, addForm.adjustQuantity] as const,
+  ([visible]) => {
+    if (!visible) return
+    handleCalculateAdjustPrice()
+  },
+)
 </script>
 
 <style lang="scss" scoped>
@@ -616,6 +645,16 @@ onMounted(async () => {
     flex-wrap: wrap;
   }
 
+  .sku-column-cell {
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  .sku-column-subtext {
+    color: var(--el-text-color-secondary);
+    font-size: 12px;
+  }
+
   .dialog-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -626,10 +665,22 @@ onMounted(async () => {
     grid-column: 1 / -1;
   }
 
-  .sku-input-row {
+  .sku-image-preview {
+    width: 100%;
+    height: 84px;
+    border: 1px solid #d8dee9;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
     display: flex;
-    gap: 12px;
     align-items: center;
+    justify-content: center;
+
+    .el-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
   }
 }
 
@@ -649,11 +700,6 @@ onMounted(async () => {
 
     .dialog-grid-span-2 {
       grid-column: auto;
-    }
-
-    .sku-input-row {
-      flex-direction: column;
-      align-items: stretch;
     }
 
   }

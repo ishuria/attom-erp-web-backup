@@ -154,12 +154,12 @@ const handleMarkdownAction = async (event: MouseEvent) => {
   }
 
   .bubble {
-    max-width: min(82%, 920px);
+    max-width: min(82%, 1200px);
     padding: 16px 18px;
     overflow-wrap: anywhere;
     border: 1px solid var(--el-border-color-lighter);
     border-radius: 20px;
-    font-size: 16px;
+    font-size: 25px;
     transition:
       box-shadow 0.2s ease,
       border-color 0.2s ease,
@@ -198,7 +198,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
   }
 
   .markdown-body {
-    font-size: 16px;
+    font-size: 25px;
     line-height: 1.85;
     color: var(--el-text-color-primary);
 
@@ -387,8 +387,8 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       width: 100%;
       min-width: 560px;
       border-collapse: collapse;
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 18px;
+      line-height: 1.7;
     }
 
     :deep(thead tr) {
@@ -397,7 +397,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
     :deep(th),
     :deep(td) {
-      padding: 12px 14px;
+      padding: 14px 16px;
       text-align: left;
       vertical-align: top;
       border-bottom: 1px solid var(--el-border-color-lighter);
@@ -449,7 +449,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     .markdown-body {
-      font-size: 15px;
+      font-size: 18px;
 
       :deep(table) {
         min-width: 420px;

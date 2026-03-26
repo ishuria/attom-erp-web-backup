@@ -3,7 +3,7 @@
     <el-input
       v-model="draft"
       type="textarea"
-      :rows="3"
+      :rows="5"
       resize="none"
       :maxlength="3000"
       :disabled="disabled"

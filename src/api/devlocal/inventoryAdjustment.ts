@@ -6,6 +6,7 @@ import type {
   InventoryAdjustAddReq,
   InventoryAdjustDetailQuery,
   InventoryAdjustListReq,
+  InventoryAdjustPriceCalcReq,
 } from '/@/type/inventory/adjust'
 
 export function getInventoryAdjustSkuInfo(sku: string) {
@@ -25,6 +26,14 @@ export function getInventoryAdjustPoList(sku: string) {
 export function addInventoryAdjust(data: InventoryAdjustAddReq) {
   return request({
     url: `${BASE_API}/stock/adjust/add`,
+    method: 'post',
+    data,
+  })
+}
+
+export function getInventoryAdjustPrice(data: InventoryAdjustPriceCalcReq) {
+  return request({
+    url: `${BASE_API}/stock/po/adjust/price`,
     method: 'post',
     data,
   })
