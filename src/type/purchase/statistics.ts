@@ -95,4 +95,15 @@ export interface IGetPurchaseStatisticsSkuItem {
 
   /** 产品经理 */
   productManagerName: string
+
+  /** 月度采购趋势列表（12个月） */
+  monthlyTrendList: IMonthlyTrend[]
+}
+
+/** 月度采购趋势 */
+export interface IMonthlyTrend {
+  /** 年月（格式：2025-01） */
+  yearMonth: string
+  /** 采购套数 */
+  purchaseCount: number
 }

@@ -133,6 +133,13 @@
           <div v-if="item.label === '主体供应商'" style="white-space: pre-line">
             {{ row.mainSupplierName.replaceAll(',', '\n') }}
           </div>
+          <!-- 采购量趋势柱状图 -->
+          <div v-if="item.label === '采购量柱状图'" class="trend-bar-container" @click="openTrendDialog(row)">
+            <vab-echarts-chart-bar
+              :x-axis-data="getMonthXAxis(row)"
+              :y-axis-data="getMonthPurchaseCount(row)"
+            />
+          </div>
         </template>
       </el-table-column>
       <template #empty>
@@ -149,6 +156,9 @@
 
     <!-- 统计采购量 -->
     <purchase-quantity-line-chart v-model:date="date" v-model:visible="lineChartVisible" />
+
+    <!-- SKU采购量趋势弹窗 -->
+    <sku-purchase-trend-chart-dialog v-model:data="currentTrendRow" v-model:visible="trendDialogVisible" />
   </div>
 </template>
 
@@ -156,6 +166,7 @@
 import { Search } from '@element-plus/icons-vue'
 import { CheckboxValueType } from 'element-plus'
 import { hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
+import SkuPurchaseTrendChartDialog from './SkuPurchaseTrendChartDialog.vue'
 import { IGetPurchaseStatisticsProductListReq, IGetPurchaseStatisticsSkuItem } from '/@/type/purchase/statistics'
 import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -181,6 +192,27 @@ const emit = defineEmits<{
   (e: 'on-show-image-preview', url: string): void
 }>()
 const lineChartVisible = ref<boolean>(false)
+
+// 月度趋势相关
+const trendDialogVisible = ref<boolean>(false)
+const currentTrendRow = ref<IGetPurchaseStatisticsSkuItem | null>(null)
+
+// 从monthlyTrendList中提取x轴数据（年月）
+const getMonthXAxis = (row: IGetPurchaseStatisticsSkuItem) => {
+  return row.monthlyTrendList?.map((t) => t.yearMonth) || []
+}
+
+// 从monthlyTrendList中提取y轴数据（采购套数）
+const getMonthPurchaseCount = (row: IGetPurchaseStatisticsSkuItem) => {
+  return row.monthlyTrendList?.map((t) => t.purchaseCount) || []
+}
+
+// 打开采购趋势弹窗
+const openTrendDialog = (row: IGetPurchaseStatisticsSkuItem) => {
+  currentTrendRow.value = row
+  trendDialogVisible.value = true
+}
+
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const handleCheckAll = (val: CheckboxValueType) => {
@@ -355,5 +387,11 @@ const showImagePreview = (url: string) => {
 .icon-hover:hover {
   color: var(--el-color-primary);
   background-color: #f2f2f2; /* 浅灰色背景 */
+}
+// 采购量趋势柱状图容器
+.trend-bar-container {
+  width: 100%;
+  height: 59px;
+  cursor: pointer;
 }
 </style>

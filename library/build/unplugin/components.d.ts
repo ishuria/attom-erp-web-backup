@@ -214,6 +214,7 @@ declare module 'vue' {
     SentButNotReported: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/SentButNotReported.vue')['default']
     ShippingErrorChart: typeof import('./../../../src/views/index/vabAutoComponents/ShippingErrorChart.vue')['default']
     SkuCustomsClearanceComponent: typeof import('./../../../src/views/productInfomation/skuDeclaration/vabAutoComponents/SkuCustomsClearanceComponent.vue')['default']
+    SkuPurchaseTrendChartDialog: typeof import('./../../../src/views/purchase/vabAutoComponents/SkuPurchaseTrendChartDialog.vue')['default']
     SkuSelectDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/SkuSelectDialog.vue')['default']
     SkuSiteDailyCostChartCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/SkuSiteDailyCostChartCard.vue')['default']
     SpFileUpload: typeof import('./../../../src/views/storeOperations/vabAutoComponents/SpFileUpload.vue')['default']
