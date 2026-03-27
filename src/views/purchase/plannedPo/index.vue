@@ -44,6 +44,14 @@
             >
               不报关可发布
             </el-button>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.QTY_APPROVAL] }"
+              :loading="qtyApprovalLoading"
+              type="success"
+              @click="handleQtyApproval"
+            >
+              数量审批
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <!-- 列设置面板 -->
@@ -163,6 +171,15 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
+            </template>
+          </el-table-column>
+
+          <!-- 状态列 -->
+          <el-table-column label="状态" min-width="115" prop="publishStatus">
+            <template #default="{ row }">
+              <el-tag :type="getStatusType(row.publishStatus)">
+                {{ getStatusLabel(row.publishStatus) }}
+              </el-tag>
             </template>
           </el-table-column>
 
@@ -376,6 +393,14 @@
             </template>
           </el-table-column>
 
+          <!-- 状态列 -->
+          <el-table-column label="状态" min-width="115" prop="publishStatus">
+            <template #default="{ row }">
+              <el-tag :type="getStatusType(row.publishStatus)">
+                {{ getStatusLabel(row.publishStatus) }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <!-- 第一组：PO操作到站点 (支持合并单元格) -->
           <el-table-column
             v-for="(item, index) in checkList"
@@ -473,9 +498,9 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
+import { useDebounceFn } from '@vueuse/core'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { defineAsyncComponent, ref } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import {
@@ -486,6 +511,7 @@ import {
   getPoPurchaseMatters,
   planPoNbgFlagHander,
   planPoNrMoq,
+  planPoQtyApprovalPass,
   planPorMoq,
   releaseBatchPlanPo,
   releasePlanPo,
@@ -523,6 +549,16 @@ const setSelectRows = (value: string) => {
   selectRows.value = value
 }
 const deraltProcurementManager = { userId: -1, userName: '全部采购负责人' }
+// 状态类型映射
+const getStatusType = (status: number) => {
+  const types = ['', 'success', 'warning', 'danger'] as const
+  return types[status] || 'info'
+}
+
+const getStatusLabel = (status: number) => {
+  const labels = ['', '可发布', '数量审批', '不报关审批']
+  return labels[status] || '-'
+}
 
 // 列配置数据
 const columns = ref<any>([])
@@ -709,7 +745,7 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
 
   let result = { rowspan: 1, colspan: 1 }
 
-  if (columnIndex === 0 || label === 'PO操作' || label === '创建日期' || label === '请购人' || label === '站点') {
+  if (columnIndex === 0 || label === 'PO操作' || label === '创建日期' || label === '请购人' || label === '站点' || label === '状态') {
     const id = row.id
 
     // 只在第一次出现时计算
@@ -864,12 +900,35 @@ const handleNotBg = async () => {
     notBgLoading.value = true
     const { data } = await planPoNbgFlagHander({ ids })
     if (data === true) {
-      $baseMessage('批量不报关可发布标记更新成功！', 'success', 'hey')
+      $baseMessage('不报关审批通过！', 'success', 'hey')
+      fetchData()
     }
   } catch (error) {
     console.error(error)
   } finally {
     notBgLoading.value = false
+  }
+}
+
+// 数量审批通过
+const qtyApprovalLoading = ref<boolean>(false)
+const handleQtyApproval = async () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning', 'hey')
+    return
+  }
+  const ids = selectRows.value.map((item: any) => item.id).join(',')
+  try {
+    qtyApprovalLoading.value = true
+    const { data } = await planPoQtyApprovalPass({ ids })
+    if (data === true) {
+      $baseMessage('数量审批通过成功！', 'success', 'hey')
+      fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    qtyApprovalLoading.value = false
   }
 }
 

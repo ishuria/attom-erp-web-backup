@@ -21,6 +21,8 @@ class PlanPoPermission {
   static readonly DELETE_PO_SKU = 'purchase:planPoSku:delete'
   /** 不报关可发布 */
   static readonly NOT_BG_RELEASE = 'purchase:planPoSku:notBg:Flag'
+  /** 数量审批 */
+  static readonly QTY_APPROVAL = 'purchase:planPoSku:qtyApproval:Flag'
 
   /** PO操作列权限 */
   static poOperationColumnPermission(): PermissionConfig {

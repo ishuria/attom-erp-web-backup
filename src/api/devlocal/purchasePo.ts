@@ -608,6 +608,16 @@ export function planPoNbgFlagHander(params?: IIds) {
     params,
   })
 }
+
+// 采购计划-数量审批通过
+export function planPoQtyApprovalPass(params?: IIds) {
+  return request({
+    url: `${BASE_API}/purchase/planPo/qtyApproval/pass`,
+    method: 'post',
+    params,
+  })
+}
+
 /**
  * @description 采购订单-降本提成申请
  * @param params
