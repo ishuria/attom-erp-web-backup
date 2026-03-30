@@ -4,6 +4,7 @@
       <template #content>
         <div class="flex items-center">
           <span><strong>SKU详情</strong></span>
+          <el-button link style="margin-left: 16px" type="primary" @click="showChangeLog">变更日志</el-button>
         </div>
       </template>
     </el-page-header>
@@ -138,7 +139,7 @@
               <el-col :span="5">
                 <el-form-item label="采购负责人">
                   <el-select
-                    v-model="sku.procurementManager"
+                    v-model="sku.procurementManagerId"
                     clearable
                     :disabled="!ableToEditProcurementManager"
                     filterable
@@ -730,6 +731,40 @@
     </vab-dialog>
     <!-- 历史价格 -->
     <history-price-table v-model="historyPriceVisible" :list="historyPriceList" />
+
+    <!-- 价格变更理由弹窗 -->
+    <vab-dialog v-model="priceChangeReasonVisible" title="价格变更理由" width="400">
+      <el-form label-position="top">
+        <el-form-item label="请输入价格变更理由">
+          <el-input v-model="priceChangeReason" clearable placeholder="请输入价格变更理由" :rows="4" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="cancelPriceChange">取消</el-button>
+        <el-button type="primary" @click="confirmPriceChange">确认</el-button>
+      </template>
+    </vab-dialog>
+
+    <!-- SKU变更日志 -->
+    <vab-dialog v-model="changeLogVisible" title="SKU变更日志" width="900">
+      <el-table border :data="changeLogList" stripe>
+        <el-table-column label="修改时间" prop="createTime" width="170" />
+        <el-table-column label="修改人" prop="operator" width="100" />
+        <el-table-column label="变更项目" prop="changeField" width="120" />
+        <el-table-column label="变更前" min-width="120" prop="oldValue" show-overflow-tooltip />
+        <el-table-column label="变更后" min-width="120" prop="newValue" show-overflow-tooltip />
+        <el-table-column label="修改理由" min-width="150" prop="changeReason" show-overflow-tooltip />
+      </el-table>
+      <div style="display: flex; justify-content: flex-end; margin-top: 16px">
+        <el-pagination
+          v-model:current-page="changeLogPageNo"
+          layout="total, prev, pager, next"
+          :page-size="changeLogPageSize"
+          :total="changeLogTotal"
+          @current-change="fetchChangeLog"
+        />
+      </div>
+    </vab-dialog>
   </div>
 </template>
 
@@ -760,6 +795,7 @@ import {
   getProductSkuList,
   getProductSupplier,
   getSkuComponentInfo,
+  querySkuChangeLog,
   saveProductComponentSuitDetail,
   saveProductContractTerms,
   saveProductPurchaseMatters,
@@ -817,6 +853,90 @@ const ableToEditProductDesign = computed(() => {
 })
 const historyPriceVisible = ref<boolean>(false)
 const historyPriceList = ref<IGetCostReductionHistoryPriceList[]>([])
+
+// ========== 价格变更理由相关 ==========
+const priceChangeReasonVisible = ref<boolean>(false)
+const priceChangeReason = ref<string>('')
+/** 待提交的零件更新数据（价格变更时暂存） */
+const pendingComponentUpdate = ref<any>(null)
+
+/** 判断是否为价格字段 */
+const isPriceField = (field: string): boolean => {
+  return ['unitPrice', 'totalPrice', 'taxIncludedPrice'].includes(field)
+}
+
+/** 检测行数据中是否有价格字段变更 */
+const hasPriceChange = (newRow: any, oldRow: any): boolean => {
+  return (
+    newRow.unitPrice !== oldRow.unitPrice || newRow.totalPrice !== oldRow.totalPrice || newRow.taxIncludedPrice !== oldRow.taxIncludedPrice
+  )
+}
+
+/** 取消价格变更 */
+const cancelPriceChange = () => {
+  priceChangeReasonVisible.value = false
+  priceChangeReason.value = ''
+  // 恢复原始值
+  if (pendingComponentUpdate.value && copyRow) {
+    // 从tableData中找到对应行并恢复
+    const row = tableData.value.find((r: any) => r.id === pendingComponentUpdate.value!.id)
+    if (row) {
+      Object.assign(row, copyRow)
+    }
+  }
+  pendingComponentUpdate.value = null
+}
+
+/** 确认价格变更（附带理由） */
+const confirmPriceChange = async () => {
+  if (!priceChangeReason.value.trim()) {
+    $baseMessage('请输入价格变更理由', 'error', 'hey')
+    return
+  }
+  priceChangeReasonVisible.value = false
+  const value = pendingComponentUpdate.value
+  pendingComponentUpdate.value = null
+  if (!value) return
+
+  try {
+    await updateProductComponent({
+      ...value,
+      changeReason: priceChangeReason.value,
+    })
+    await fetchComponentData()
+    await fetchData()
+  } catch {
+    Object.assign(value, copyRow)
+  } finally {
+    priceChangeReason.value = ''
+  }
+}
+
+// ========== SKU变更日志相关 ==========
+const changeLogVisible = ref<boolean>(false)
+const changeLogList = ref<any[]>([])
+const changeLogTotal = ref<number>(0)
+const changeLogPageNo = ref<number>(1)
+const changeLogPageSize = ref<number>(20)
+
+const fetchChangeLog = async () => {
+  const { data } = await querySkuChangeLog({
+    skuId: Number(route.query.skuId),
+    pageNo: changeLogPageNo.value,
+    pageSize: changeLogPageSize.value,
+  })
+  if (data) {
+    changeLogList.value = data.list || []
+    changeLogTotal.value = data.total || 0
+  }
+}
+
+const showChangeLog = () => {
+  changeLogPageNo.value = 1
+  changeLogVisible.value = true
+  fetchChangeLog()
+}
+
 const showPrices = async (row: any) => {
   historyPriceVisible.value = true
 
@@ -1372,7 +1492,8 @@ const handleUpdateSku = async () => {
     numCartons: sku.value.numCartons,
     productManager: sku.value.productManager,
     productDesign: sku.value.productDesign,
-    procurementManager: procurementManagerList.value.find((item: any) => item.userId === sku.value.procurementManager)?.userName,
+    procurementManager: procurementManagerList.value.find((item: any) => item.userId === sku.value.procurementManagerId)?.userName,
+    procurementManagerId: sku.value.procurementManagerId,
   })
 }
 const handleRemarksChange = async () => {
@@ -1706,7 +1827,40 @@ const clickCancel = async (event: any, value: any) => {
   }
 
   if (event.type === 'blur') {
-    // 执行失去焦点处理逻辑
+    // 检测是否有价格字段变更
+    const priceChanged = hasPriceChange(value, copyRow)
+    if (priceChanged) {
+      // 暂存数据，弹出理由弹窗
+      pendingComponentUpdate.value = {
+        id: value.id,
+        sku: sku.value.sku,
+        skuId: value.skuId,
+        componentId: value.componentId,
+        componentName: value.componentName,
+        existingPartsListId: value.existingPartsListId,
+        suppliserId: value.suppliserId,
+        quantity: value.quantity,
+        unitPrice: value.unitPrice,
+        totalPrice: value.totalPrice,
+        preTaxPrice: value.preTaxPrice,
+        taxIncludedPrice: value.taxIncludedPrice,
+        currency: value.currency,
+        minimumOrderQuantity: value.minimumOrderQuantity,
+        numberFullCartons: value.numberFullCartons,
+        defaultSuppliserId: value.defaultSuppliserId,
+        invoicing: value.invoicing,
+        purchaseId: value.purchaseId,
+        declareCustomsStatus: value.declareCustomsStatus,
+        purchaseLink: value.purchaseLink,
+        defaultRepositoryId: value.defaultRepositoryId,
+        purchaseMatters: value.purchaseMatters,
+        contractTerms: value.contractTerms,
+      }
+      priceChangeReasonVisible.value = true
+      return
+    }
+
+    // 非价格变更，直接提交
     try {
       await updateProductComponent({
         id: value.id,

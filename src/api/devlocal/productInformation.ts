@@ -87,6 +87,8 @@ import type {
   IupdateProductSkuRemark,
   IupdateProductStatus,
   IupdateProductSupplier,
+  IquerySkuChangeLogReq,
+  IquerySkuChangeLogResp,
 } from '/@/type/productInformation/skuInformationType'
 
 import {
@@ -1323,5 +1325,16 @@ export function deleteProductComponentSuppliser(params: { componentId: number; s
     url: `${BASE_API}/component/supplier/delete`,
     method: 'post',
     params,
+  })
+}
+
+/**
+ * SKU详情变更日志 - 查询变更日志列表
+ */
+export function querySkuChangeLog(data: IquerySkuChangeLogReq): Promise<{ data: IquerySkuChangeLogResp }> {
+  return request({
+    url: `${BASE_API}/product/sku/changeLog/list`,
+    method: 'post',
+    data,
   })
 }

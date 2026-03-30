@@ -136,6 +136,7 @@ export interface IupdateProductSku {
   skuId?: number
   // 变体名
   variantName?: string
+  procurementManagerId?: number
 }
 
 export interface IupdateProductSkuRemark {
@@ -280,9 +281,13 @@ export interface IupdateProductComponent {
    * 出厂单价
    */
   unitPrice?: string
+  /**
+   * 价格变更理由
+   */
+  changeReason?: string
   [property: string]: any
 }
-// SKU详情-默认供应商、开票下拉修改
+// SKU详情-默认供应商、开票下拉下拉修改
 export interface IgetChangeProductComponent {
   skuId: number
   existingPartsListId: number
@@ -1490,4 +1495,33 @@ export interface IAddPackingPrecautions {
   packagePrecautions: string
   isUploadImages: number
   site: number
+}
+
+// SKU变更日志查询请求
+export interface IquerySkuChangeLogReq {
+  skuId: number
+  startTime?: string
+  endTime?: string
+  pageNo: number
+  pageSize: number
+}
+
+// SKU变更日志项
+export interface IskuChangeLogItem {
+  id: number
+  skuId: number
+  sku: string
+  changeField: string
+  oldValue: string
+  newValue: string
+  changeReason: string
+  operatorId: number
+  operator: string
+  createTime: string
+}
+
+// SKU变更日志响应
+export interface IquerySkuChangeLogResp {
+  total: number
+  list: IskuChangeLogItem[]
 }
