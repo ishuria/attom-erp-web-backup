@@ -86,7 +86,7 @@ steps:
       port: 22
       username: attom-14
       password:
-        from_secret: ssh_password
+        from_secret: 14_ssh_password
       # 使用docker compose拉去对应的镜像，并运行
       script:
         - cd ~/app/erp/web && docker compose pull && docker compose up -d
