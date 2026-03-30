@@ -426,7 +426,7 @@
           </el-table-column>
           <el-table-column label="小类排名额外比例" min-width="150" prop="minorCategoryProportion">
             <template #default="{ row }">
-              {{ row.minorCategoryProportion ? row.minorCategoryProportion + '%' : '-' }}
+              {{ row.minorCategoryProportion != null ? row.minorCategoryProportion + '%' : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="指标不达标调整" min-width="180" prop="adjustProportion" sortable="custom">

@@ -3,6 +3,8 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
+  InventoryHistoryListRes,
+  InventoryHistoryQuery,
   InventoryCountListRes,
   InventoryCountMargin,
   InventoryCountMarginUpdateReq,
@@ -35,6 +37,14 @@ export function addInventoryCount(): Promise<{ data: boolean }> {
 export function getInventoryCountList(data: InventoryCountQuery): Promise<{ data: InventoryCountListRes }> {
   return request({
     url: `${BASE_API}/stock/inventory/list`,
+    method: 'post',
+    data,
+  })
+}
+
+export function getInventoryHistoryList(data: InventoryHistoryQuery): Promise<{ data: InventoryHistoryListRes }> {
+  return request({
+    url: `${BASE_API}/stock/inventory/history/list`,
     method: 'post',
     data,
   })

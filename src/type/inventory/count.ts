@@ -4,6 +4,11 @@ export interface InventoryCountQuery {
   pageSize: number
 }
 
+export interface InventoryHistoryQuery extends InventoryCountQuery {
+  startDate: string
+  endDate: string
+}
+
 export interface InventoryCountItem {
   id: number | string
   sku?: string
@@ -38,6 +43,11 @@ export interface InventoryCountPackageTaskItem {
 }
 
 export interface InventoryCountListRes {
+  total: number
+  list: InventoryCountItem[]
+}
+
+export interface InventoryHistoryListRes {
   total: number
   list: InventoryCountItem[]
 }
