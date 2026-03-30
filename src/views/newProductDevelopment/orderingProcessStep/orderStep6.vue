@@ -59,6 +59,9 @@
             </template>
 
             <template v-if="row['column0'] === 'moq'">{{ row[prop] }} 套</template>
+            <template v-if="row['column0'] === 'patent'">
+              <span style="white-space: pre-line">{{ row[prop] }}</span>
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -71,7 +74,8 @@
                 row['column0'] !== 'toy' &&
                 row['column0'] !== 'seasonal' &&
                 row['column0'] !== 'patentFlag' &&
-                row['column0'] !== 'moq'
+                row['column0'] !== 'moq' &&
+                row['column0'] !== 'patent'
               "
             >
               {{ row[prop] }}

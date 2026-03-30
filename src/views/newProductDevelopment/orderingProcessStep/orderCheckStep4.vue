@@ -69,6 +69,9 @@
             <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
           </template>
           <template v-if="row['column0'] === 'moq'">{{ row[prop] }} 套</template>
+          <template v-if="row['column0'] === 'patent'">
+            <span style="white-space: pre-line">{{ row[prop] }}</span>
+          </template>
           <template
             v-if="
               row['column0'] !== 'productImgUrl' &&
@@ -82,7 +85,8 @@
               row['column0'] !== 'toy' &&
               row['column0'] !== 'seasonal' &&
               row['column0'] !== 'patentFlag' &&
-              row['column0'] !== 'moq'
+              row['column0'] !== 'moq' &&
+              row['column0'] !== 'patent'
             "
           >
             {{ row[prop] }}

@@ -53,9 +53,7 @@
                 'material',
                 'battery',
                 'benchmarkAsin',
-                'patent',
                 'manufacturerEnName',
-
                 'fullCaseQty',
               ].includes(row['column0'])
             "
@@ -69,6 +67,18 @@
               />
             </div>
             <span>{{ row[prop] }}</span>
+          </template>
+          <template v-if="row['column0'] === 'patent'">
+            <div class="none">
+              <el-input
+                v-model="row[prop]"
+                :autosize="{ minRows: 2, maxRows: 6 }"
+                type="textarea"
+                @blur="clickCancel($event, prop)"
+                @input="handleInputChange(row, prop)"
+              />
+            </div>
+            <span style="white-space: pre-line">{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'moq'">
             <div class="none">

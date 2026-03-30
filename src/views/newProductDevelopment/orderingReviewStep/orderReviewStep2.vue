@@ -92,6 +92,9 @@
             <template v-if="row['column0'] === 'patentFlag'">
               <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="editDisabled" :false-value="0" :true-value="1" />
             </template>
+            <template v-if="row['column0'] === 'patent'">
+              <span style="white-space: pre-line">{{ row[prop] }}</span>
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -105,7 +108,8 @@
                 row['column0'] !== 'woodenProduct' &&
                 row['column0'] !== 'toy' &&
                 row['column0'] !== 'seasonal' &&
-                row['column0'] !== 'patentFlag'
+                row['column0'] !== 'patentFlag' &&
+                row['column0'] !== 'patent'
               "
             >
               {{ row[prop] }}

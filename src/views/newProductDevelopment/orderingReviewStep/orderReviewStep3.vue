@@ -71,16 +71,16 @@
                 @keydown.enter="updateHandlerNumber($event, scope, i)"
               />
             </template> -->
+            <template v-if="scope.row['column0'] === 'patent'">
+              <span style="white-space: pre-line">{{ scope.row[prop] }}</span>
+            </template>
             <template
               v-if="
                 scope.row['column0'] !== 'variantImg' &&
                 scope.row['column0'] !== 'vineSite' &&
                 scope.row['column0'] !== 'vineCount' &&
-                scope.row['column0'] !== 'vineFlag'
-                // && scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
-                // && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0']!== 'amazonCaOrderQuantity'
-                // && scope.row['column0'] !== 'amazonJpOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
-                // && scope.row['column0']!== 'tiktokUsOrderQuantity'
+                scope.row['column0'] !== 'vineFlag' &&
+                scope.row['column0'] !== 'patent'
               "
             >
               {{ scope.row[prop] }}
