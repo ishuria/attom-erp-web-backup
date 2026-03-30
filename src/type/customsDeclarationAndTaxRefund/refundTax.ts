@@ -126,6 +126,42 @@ export interface IGetTaxRefundBatchDetailList {
   [property: string]: any
 }
 
+export interface IGetTaxRefundBatchSummaryDetailQuery {
+  contractNumber: string
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetTaxRefundBatchSummaryDetailRes {
+  data?: {
+    total?: number
+    list?: IGetTaxRefundBatchSummaryDetailList[]
+  }
+}
+
+export interface IGetTaxRefundBatchSummaryDetailList {
+  id?: number
+  shipmentDate?: string
+  contractNumber?: string
+  po?: string
+  poId?: number
+  customsDeclarationName?: string
+  customsDeclarationCount?: number
+  customsDeclarationUnit?: string
+  count?: number
+  taxInclusiveCost?: number
+  taxRefundsCost?: number
+  matchInvoiceCount?: number
+  matchInvoicePrice?: number
+  suppliser?: string
+  suppliserTaxNumber?: string
+  sku?: string
+  taxNumber?: string
+  matchDate?: string
+  invoiceDetailList?: IGetTaxRefundMainInvoiceInfo[]
+}
+
 export interface PayRecordList {
   no?: number
   /**
@@ -646,6 +682,7 @@ export interface ISubmitTaxRefundMainInvoiceMatch {
 /** 退税产品主表 - 发票列表查询参数 */
 export interface IGetTaxRefundMainInvoiceListQuery {
   keyWord?: string
+  searchFields?: string
   pageNo: number
   pageSize: number
 }

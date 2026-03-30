@@ -76,7 +76,7 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="480">
+          <el-table-column fixed="right" label="操作" width="560">
             <template #default="{ row }">
               <el-link type="primary" underline="never" @click="showFreightFee(row)">退税运费</el-link>
               <span style="margin: 0 5px"></span>
@@ -86,6 +86,8 @@
               <!--              <el-link underline="never" @click="showContractValidate(row)">采购合同校验</el-link>-->
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showInvoiceCollection(row)">发票归集</el-link>
+              <span style="margin: 0 5px"></span>
+              <el-link type="primary" underline="never" @click="showSummaryDetail(row)">汇总明细</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="handleArchiveOutbound(row)">出库归档</el-link>
               <span style="margin: 0 5px"></span>
@@ -165,13 +167,15 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="290">
+          <el-table-column fixed="right" label="操作" width="380">
             <template #default="{ row }">
               <el-link type="primary" underline="never" @click="showDetail(row)">明细</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="cancleToWaitTaxRefund(row)">撤销到待退税</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showInvoiceCollection(row)">发票归集</el-link>
+              <span style="margin: 0 5px"></span>
+              <el-link type="primary" underline="never" @click="showSummaryDetail(row)">汇总明细</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -190,6 +194,11 @@
 
     <!-- 明细 -->
     <vab-detail-dialog :id="id" :contract-number="contractNumber" :detail-visible="detailVisible" @update-detail-visible="closeDetail" />
+    <vab-batch-summary-detail-dialog
+      :visible="summaryDetailVisible"
+      :contract-number="summaryContractNumber"
+      @update-visible="closeSummaryDetail"
+    />
     <!-- 发票归集 -->
     <vab-dialog v-model="invoiceCollectionVisible" title="发票归集" width="20%" @close="closeInvoiceCollection">
       <el-form
@@ -263,6 +272,7 @@ import {
 import { downloadFileP } from '/@/api/devlocal/download'
 import type { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate } from '/@/utils/dateUtils'
+import VabBatchSummaryDetailDialog from '../vabAutoComponents/VabBatchSummaryDetailDialog.vue'
 
 defineOptions({
   name: 'VatRefundBatch',
@@ -306,9 +316,11 @@ const invoiceCollectionFormRules = reactive<any>({
   path: [{ required: 'true', message: '请输入归档路径', trigger: 'blur' }],
 })
 const detailVisible = ref<boolean>(false)
+const summaryDetailVisible = ref<boolean>(false)
 // 传递给明细的id
 const id = ref<number>()
 const contractNumber = ref<string>()
+const summaryContractNumber = ref<string>('')
 const setSelectRows = (value: IGetTaxRefundBatchList[]) => {
   selectRows.value = value
 }
@@ -463,6 +475,18 @@ const showDetail = (row: IGetTaxRefundBatchList) => {
 }
 const closeDetail = (value: boolean) => {
   detailVisible.value = value
+}
+
+const showSummaryDetail = (row: IGetTaxRefundBatchList) => {
+  summaryContractNumber.value = row.contractNumber || ''
+  summaryDetailVisible.value = true
+}
+
+const closeSummaryDetail = (value: boolean) => {
+  summaryDetailVisible.value = value
+  if (!value) {
+    summaryContractNumber.value = ''
+  }
 }
 
 // 发票归集显示

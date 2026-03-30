@@ -53,6 +53,8 @@ import type {
   IGetTaxRefundBatchDetailRes,
   IGetTaxRefundBatchListQuery,
   IGetTaxRefundBatchListRes,
+  IGetTaxRefundBatchSummaryDetailQuery,
+  IGetTaxRefundBatchSummaryDetailRes,
   IGetTaxRefundInvoiceListQuery,
   IGetTaxRefundInvoiceListRes,
   IGetTaxRefundInvoiceMatchQuery,
@@ -680,6 +682,19 @@ export const getTaxRefundBatchDetail = (params: IGetTaxRefundBatchDetailQuery): 
     url: `${BASE_API}/taxRefund/batch/detail`,
     method: 'get',
     params,
+  })
+}
+
+/**
+ * @description 退税批次-汇总明细
+ */
+export const getTaxRefundBatchSummaryDetailList = (
+  data: IGetTaxRefundBatchSummaryDetailQuery
+): Promise<IGetTaxRefundBatchSummaryDetailRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/summary/detail/list`,
+    method: 'post',
+    data,
   })
 }
 /**

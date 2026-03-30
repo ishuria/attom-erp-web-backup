@@ -93,7 +93,7 @@
             <template v-if="row.invoiceDetailList && row.invoiceDetailList.length > 0">
               <div v-for="(item, index) in row.invoiceDetailList" :key="item.id || index" class="invoice-number-row">
                 <span>{{ item.invoiceNumber }}</span>
-                <div v-if="item.invoiceNumber" class="button-group">
+                <div v-if="item.invoicePath" class="button-group">
                   <el-button :icon="Document" size="small" @click="showPdf(item.invoicePath)" />
                   <el-button
                     v-if="item.invoicePath"
@@ -217,6 +217,7 @@ defineOptions({
 const searchOptions = [
   { label: '全部', value: 'all' },
   { label: 'PO', value: 'po' },
+  { label: '发票号码', value: 'invoiceNumber' },
   { label: '报关品名', value: 'customs_declaration_name' },
   { label: '合同号', value: 'contract_number' },
   { label: '供应商', value: 'suppliser' },
