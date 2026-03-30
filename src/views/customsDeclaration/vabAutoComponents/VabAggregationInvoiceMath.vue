@@ -211,7 +211,13 @@
     </template>
   </vab-dialog>
   <!-- 匹配 -->
-  <vab-dialog v-model="matchVisible" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" @close="matchStatus = -1">
+  <vab-dialog
+    v-model="matchVisible"
+    :draggable="false"
+    style="width: fit-content; max-height: 90vh"
+    title="匹配"
+    @close="resetMatchDialogState"
+  >
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -655,6 +661,12 @@ const originalMatchList = ref<IGetTaxRefundMainInvoiceMatchList[]>([])
 // 排序状态
 const sortState = ref<{ prop: string; order: 'ascending' | 'descending' | null } | null>(null)
 
+const resetMatchDialogState = () => {
+  matchStatus.value = -1
+  matchQueryForm.keyWord = ''
+  matchQueryForm.pageNo = 1
+}
+
 const queryMatchData = () => {
   applySortAndFilter()
 }
@@ -792,6 +804,7 @@ const handleConfirm = async () => {
     })
     if (data) {
       $baseMessage('提交成功！', 'success')
+      resetMatchDialogState()
       matchVisible.value = false
       await fetchData()
       detailIds.value.push(matchQueryForm.detailId)
@@ -840,6 +853,7 @@ const showMatch = async (row: IGetTaxRefundMainInvoiceList) => {
   // 保存当前选中的行
   selectedRowId.value = row.detailId!
   matchLoading.value = row.id! // 开始 loading
+  resetMatchDialogState()
   matchQueryForm.detailId = row.detailId!
   matchListLoading.value = true
 
