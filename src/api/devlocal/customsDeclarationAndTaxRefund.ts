@@ -779,6 +779,16 @@ export const cleanTaxRefundMainInvoice = (params: { detailId: number }): Promise
 }
 
 /**
+ * @description 退税产品主表 - 关闭发票匹配弹窗取消
+ */
+export const cancelTaxRefundMainInvoice = (): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/main/invoice/cancel`,
+    method: 'get',
+  })
+}
+
+/**
  * @description VAT退税产品汇总 - 发票匹配提交
  */
 export const submitTaxRefundMainInvoiceMatch = (data: ISubmitTaxRefundMainInvoiceMatch): Promise<IBooleanRes> => {
@@ -839,6 +849,16 @@ export const cleanTaxRefundInvoice = (params: ICleanTaxRefundInvoice): Promise<I
     url: `${BASE_API}/taxRefund/invoice/clean`,
     method: 'post',
     params,
+  })
+}
+
+/**
+ * @description 退税管理 - 关闭发票匹配弹窗取消
+ */
+export const cancelTaxRefundInvoice = (): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/cancel`,
+    method: 'get',
   })
 }
 /**

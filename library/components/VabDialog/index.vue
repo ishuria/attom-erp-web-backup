@@ -113,8 +113,17 @@ const dialogVisible = useVModel(props, 'modelValue', emit)
 const isFullscreen = ref<any>(false)
 
 const closeDialog = () => {
-  dialogVisible.value = false
-  isFullscreen.value = false
+  const done = () => {
+    dialogVisible.value = false
+    isFullscreen.value = false
+  }
+
+  if (typeof props.beforeClose === 'function') {
+    props.beforeClose(done)
+    return
+  }
+
+  done()
 }
 
 const setFullscreen = () => {

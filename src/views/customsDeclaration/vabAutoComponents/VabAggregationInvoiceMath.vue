@@ -1,5 +1,14 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" title="退税产品聚合发票匹配" top="10vh" width="97%" @close="closeInvoiceMatching">
+  <vab-dialog
+    v-model="dflag"
+    :before-close="handleBeforeCloseInvoiceMatching"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :draggable="false"
+    title="退税产品聚合发票匹配"
+    top="10vh"
+    width="97%"
+  >
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -168,7 +177,7 @@
     </div>
     <template #footer>
       <div style="text-align: center">
-        <el-button @click="closeInvoiceMatching">取消</el-button>
+        <el-button :loading="closeLoading" @click="() => closeInvoiceMatching()">取消</el-button>
         <el-button :loading="confirmLoading" type="primary" @click="handleSubmitConfirm">确认</el-button>
       </div>
     </template>
@@ -315,6 +324,7 @@ import { ElMessageBox } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
+  cancelTaxRefundMainInvoice,
   cleanTaxRefundInvoice,
   cleanTaxRefundMainInvoice,
   dealTaxRefundInvoicePath,
@@ -372,10 +382,34 @@ watchEffect(() => {
 const emit = defineEmits<{
   updateInvoiceMatchingVisible: [value: boolean]
 }>()
-const closeInvoiceMatching = () => {
+const closeLoading = ref<boolean>(false)
+const finishCloseInvoiceMatching = () => {
   // 清空 detailIds，避免重复提交
   detailIds.value = []
   emit('updateInvoiceMatchingVisible', false)
+}
+const handleBeforeCloseInvoiceMatching = async (done: () => void) => {
+  await closeInvoiceMatching(done)
+}
+const closeInvoiceMatching = async (done?: () => void) => {
+  if (closeLoading.value) {
+    return
+  }
+
+  closeLoading.value = true
+  try {
+    const { data } = await cancelTaxRefundMainInvoice()
+    if (data) {
+      if (typeof done === 'function') {
+        done()
+      }
+      finishCloseInvoiceMatching()
+      return
+    }
+  } catch {
+  } finally {
+    closeLoading.value = false
+  }
 }
 
 // 上传发票可见
@@ -833,10 +867,10 @@ const handleSubmitConfirm = async () => {
       $baseMessage('确认成功！', 'success')
       // 清空 detailIds，避免重复提交
       detailIds.value = []
-      closeInvoiceMatching()
+      finishCloseInvoiceMatching()
     }
   } catch (error) {
-    closeInvoiceMatching()
+    finishCloseInvoiceMatching()
   } finally {
     confirmLoading.value = false
   }
