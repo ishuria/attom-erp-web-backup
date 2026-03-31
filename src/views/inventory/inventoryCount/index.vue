@@ -4,6 +4,7 @@
       <vab-query-form-left-panel :span="12">
         <div class="table-header-actions">
           <el-button :loading="addLoading" type="primary" @click="handleAdd">开始库存盘点</el-button>
+          <el-button :icon="Plus" type="primary" @click="openAdjustAddDialog">新增库存调整</el-button>
           <el-button :disabled="marginLoading" @click="openMarginDialog">余量设定</el-button>
           <el-button :disabled="!hasListData" :loading="finishLoading" type="success" @click="handleFinish">完成盘点</el-button>
           <el-button :disabled="!hasListData" :loading="cancelLoading" @click="handleCancel">取消盘点</el-button>
@@ -57,7 +58,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" min-width="140" prop="sku" show-overflow-tooltip />
+      <el-table-column label="SKU" min-width="180" prop="sku" show-overflow-tooltip>
+        <template #default="{ row }">
+          <div class="sku-copy-cell">
+            <span>{{ row.sku || '-' }}</span>
+            <el-button v-if="row.sku" :icon="CopyDocument" link type="primary" @click.stop="handleClip(row.sku)" />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="产品名称" min-width="220" prop="productName" show-overflow-tooltip />
       <el-table-column label="PO" min-width="140" prop="po" show-overflow-tooltip />
       <el-table-column align="center" label="订货日期" min-width="160" prop="orderDate">
@@ -95,9 +103,24 @@
           {{ formatNumber(row.lackCount) }}
         </template>
       </el-table-column>
+      <el-table-column align="right" label="总订货数" min-width="110" prop="totalOrderCount">
+        <template #default="{ row }">
+          {{ formatNumber(row.totalOrderCount) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="未到货数" min-width="110" prop="notYetArrived">
+        <template #default="{ row }">
+          {{ formatNumber(row.notYetArrived) }}
+        </template>
+      </el-table-column>
       <el-table-column align="right" label="总发货数" min-width="110" prop="totalSendCount">
         <template #default="{ row }">
           {{ formatNumber(row.totalSendCount) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="计算" min-width="110" prop="totalSendCount">
+        <template #default="{ row }">
+          {{ row.totalOrderCount - row.totalSendCount - row.notYetArrived }}
         </template>
       </el-table-column>
       <el-table-column align="right" label="总接收数" min-width="110" prop="totalReceiveCount">
@@ -157,6 +180,116 @@
       @size-change="handleSizeChange"
     />
 
+    <vab-dialog v-model="adjustAddVisible" title="新增库存调整" width="760px" @close="handleAdjustAddDialogClose">
+      <el-form
+        ref="adjustAddFormRef"
+        v-loading="adjustSkuInfoLoading || adjustAddLoading || adjustPriceCalcLoading || adjustPackingTaskLoading"
+        class="dialog-form"
+        :model="adjustAddForm"
+        :rules="adjustAddRules"
+        label-position="right"
+        label-width="96px"
+      >
+        <div class="dialog-grid">
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="adjustAddForm.type" placeholder="请选择调整类型" style="width: 100%">
+              <el-option v-for="item in adjustTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item class="dialog-grid-span-2" label="SKU" prop="sku">
+            <el-input
+              v-model.trim="adjustAddForm.sku"
+              clearable
+              placeholder="请输入 SKU"
+              @blur="handleAdjustSearchSku"
+              @keyup.enter="handleAdjustSearchSku"
+            />
+          </el-form-item>
+          <el-form-item label="PO" prop="poId">
+            <template #default>
+              <el-select
+                v-model="adjustAddForm.poId"
+                clearable
+                filterable
+                remote
+                :loading="adjustPoLoading"
+                :remote-method="handleAdjustSearchPo"
+                placeholder="请输入 PO 搜索"
+                style="width: 80%"
+              >
+                <el-option v-for="item in adjustPoOptions" :key="item.poId" :label="item.po" :value="item.poId" />
+              </el-select>
+              <el-checkbox v-model="adjustAddForm.allPo" style="padding-left: 10px">全部 PO</el-checkbox>
+            </template>
+          </el-form-item>
+          <el-form-item label="产品信息">
+            <el-input :model-value="adjustAddForm.productDesc" disabled />
+          </el-form-item>
+          <el-form-item label="SKU 图片">
+            <div class="sku-image-preview">
+              <el-image v-if="adjustAddForm.skuImg" :preview-src-list="[adjustAddForm.skuImg]" :src="adjustAddForm.skuImg" fit="cover" />
+            </div>
+          </el-form-item>
+          <el-form-item v-if="showAdjustPackingTaskFields" prop="packingTaskId">
+            <template #label>
+              <span class="packing-task-label">
+                打包任务
+                <el-tooltip content="请选择调整到的打包任务" effect="dark" placement="top">
+                  <el-icon class="packing-task-tip">
+                    <question-filled />
+                  </el-icon>
+                </el-tooltip>
+              </span>
+            </template>
+            <el-select
+              v-model="adjustAddForm.packingTaskId"
+              clearable
+              filterable
+              :loading="adjustPackingTaskLoading"
+              placeholder="请选择打包任务"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in adjustPackingTaskOptions"
+                :key="item.packageTaskId"
+                :label="item.value"
+                :value="item.packageTaskId"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="showAdjustPackingTaskFields" label="打包任务数" prop="currentTaskCount">
+            <el-input :model-value="adjustAddForm.currentTaskCount" disabled />
+          </el-form-item>
+          <el-form-item label="货件编号">
+            <el-input v-model.trim="adjustAddForm.shipmentId" clearable placeholder="请输入货件编号" />
+          </el-form-item>
+          <el-form-item label="箱号">
+            <el-input v-model.trim="adjustAddForm.boxNumber" clearable placeholder="请输入箱号" />
+          </el-form-item>
+          <el-form-item label="调整数量" prop="count">
+            <el-input-number v-model="adjustAddForm.count" :precision="2" :step="1" style="width: 100%" />
+          </el-form-item>
+          <el-form-item label="调整价格" prop="price">
+            <el-input-number v-model="adjustAddForm.price" disabled :precision="2" :step="1" style="width: 100%" />
+          </el-form-item>
+          <el-form-item class="dialog-grid-span-2" label="备注">
+            <el-input
+              v-model.trim="adjustAddForm.remark"
+              :maxlength="500"
+              :rows="4"
+              placeholder="请输入备注"
+              show-word-limit
+              type="textarea"
+            />
+          </el-form-item>
+        </div>
+      </el-form>
+      <template #footer>
+        <el-button @click="adjustAddVisible = false">取消</el-button>
+        <el-button :loading="adjustAddLoading" type="primary" @click="handleSubmitAdjustAdd">确认新增</el-button>
+      </template>
+    </vab-dialog>
+
     <vab-dialog v-model="marginVisible" title="余量设定" width="520px" @close="handleMarginDialogClose">
       <el-form
         ref="marginFormRef"
@@ -183,8 +316,15 @@
 </template>
 
 <script lang="ts" setup>
-import { RefreshRight, Search } from '@element-plus/icons-vue'
+import { CopyDocument, Plus, QuestionFilled, RefreshRight, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import {
+  addInventoryAdjust,
+  getInventoryAdjustPackingTaskList,
+  getInventoryAdjustPoList,
+  getInventoryAdjustPrice,
+  getInventoryAdjustSkuInfo,
+} from '/@/api/devlocal/inventoryAdjustment'
 import {
   addInventoryCount,
   cancelInventoryCount,
@@ -197,17 +337,28 @@ import {
 import { $baseConfirm, $baseMessage } from '/@/hooks'
 import InventoryPermission from '/@/permissions/inventory'
 import type {
+  InventoryAdjustAddForm,
+  InventoryAdjustPackingTaskOption,
+  InventoryAdjustPoOption,
+} from '/@/type/inventory/adjust'
+import type {
   InventoryCountItem,
   InventoryCountMargin,
   InventoryCountPackageTaskItem,
   InventoryCountQuery,
   InventoryCountRowEditForm,
 } from '/@/type/inventory/count'
+import { handleClip } from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'InventoryCount',
 })
+
+const adjustTypeOptions = [
+  { label: '正常调整', value: 0 },
+  { label: '发布打包任务', value: 1 },
+]
 
 const createDefaultQueryForm = (): InventoryCountQuery => ({
   keyWord: '',
@@ -223,6 +374,22 @@ const createDefaultMarginForm = (): InventoryCountMargin => ({
 const createDefaultRowEditForm = (): InventoryCountRowEditForm => ({
   id: '',
   noEncasementCount: undefined,
+  remark: '',
+})
+
+const createDefaultAdjustAddForm = (): InventoryAdjustAddForm => ({
+  sku: '',
+  productDesc: '',
+  skuImg: '',
+  packingTaskId: undefined,
+  currentTaskCount: undefined,
+  allPo: false,
+  poId: undefined,
+  shipmentId: '',
+  boxNumber: '',
+  count: undefined,
+  price: undefined,
+  type: 0,
   remark: '',
 })
 
@@ -264,6 +431,19 @@ const marginLoading = ref(false)
 const marginSaving = ref(false)
 const marginFormRef = ref<FormInstance>()
 
+const adjustAddVisible = ref(false)
+const adjustAddLoading = ref(false)
+const adjustSkuInfoLoading = ref(false)
+const adjustPriceCalcLoading = ref(false)
+const adjustPoLoading = ref(false)
+const adjustPackingTaskLoading = ref(false)
+const adjustAddFormRef = ref<FormInstance>()
+const adjustAddForm = reactive<InventoryAdjustAddForm>(createDefaultAdjustAddForm())
+const adjustPoOptions = ref<InventoryAdjustPoOption[]>([])
+const adjustPackingTaskOptions = ref<InventoryAdjustPackingTaskOption[]>([])
+const adjustPoKeyword = ref('')
+const showAdjustPackingTaskFields = computed(() => String(adjustAddForm.type ?? '0') === '0')
+
 const addLoading = ref(false)
 const cancelLoading = ref(false)
 const finishLoading = ref(false)
@@ -277,6 +457,8 @@ const mergeColumnProps = new Set([
   'skuImg',
   'sku',
   'productName',
+  'totalOrderCount',
+  'notYetArrived',
   'encasementCount',
   'totalAfterCount',
   'lackCount',
@@ -358,9 +540,23 @@ const validateProportion = (_rule: any, value: number | undefined, callback: (er
   callback()
 }
 
+const validateAdjustQuantity = (_rule: any, value: number | undefined, callback: (error?: Error) => void) => {
+  if (value === undefined || value === null || Number.isNaN(value)) {
+    callback(new Error('请输入调整数量'))
+    return
+  }
+  callback()
+}
+
 const marginRules = reactive<FormRules<InventoryCountMargin>>({
   count: [{ trigger: 'blur', validator: validateInteger }],
   proportion: [{ trigger: 'blur', validator: validateProportion }],
+})
+
+const adjustAddRules = reactive<FormRules<InventoryAdjustAddForm>>({
+  sku: [{ required: true, trigger: 'blur', message: '请输入 SKU' }],
+  poId: [{ required: true, trigger: 'change', message: '请选择 PO' }],
+  count: [{ trigger: 'blur', validator: validateAdjustQuantity }],
 })
 
 const normalizeNumberValue = (value: unknown) => {
@@ -470,6 +666,178 @@ const handleReset = () => {
   Object.assign(queryForm, createDefaultQueryForm())
   resetRowEditForm()
   fetchList()
+}
+
+const resetAdjustAddFormByType = (type: number | string | undefined) => {
+  Object.assign(adjustAddForm, createDefaultAdjustAddForm(), {
+    type: type ?? 0,
+  })
+  adjustPoKeyword.value = ''
+  adjustPoOptions.value = []
+  adjustPackingTaskOptions.value = []
+  adjustAddFormRef.value?.clearValidate()
+}
+
+const resetAdjustAddForm = () => {
+  resetAdjustAddFormByType(createDefaultAdjustAddForm().type)
+}
+
+const openAdjustAddDialog = () => {
+  resetAdjustAddForm()
+  adjustAddVisible.value = true
+}
+
+const handleAdjustAddDialogClose = () => {
+  resetAdjustAddForm()
+}
+
+const fetchAdjustPoOptions = async (po = '') => {
+  const sku = adjustAddForm.sku.trim()
+  if (!sku) {
+    adjustPoOptions.value = []
+    adjustAddForm.poId = undefined
+    return
+  }
+
+  adjustPoLoading.value = true
+  try {
+    const response = await getInventoryAdjustPoList({
+      sku,
+      po: po || undefined,
+      allPo: adjustAddForm.allPo,
+    })
+    adjustPoOptions.value = pickArray<InventoryAdjustPoOption>(response)
+    const currentPoExists = adjustPoOptions.value.some((item) => item.poId === adjustAddForm.poId)
+    if (!currentPoExists) adjustAddForm.poId = undefined
+  } catch {
+    adjustPoOptions.value = []
+    adjustAddForm.poId = undefined
+  } finally {
+    adjustPoLoading.value = false
+  }
+}
+
+const handleAdjustSearchPo = (value: string) => {
+  adjustPoKeyword.value = value.trim()
+  fetchAdjustPoOptions(adjustPoKeyword.value)
+}
+
+const fetchAdjustPackingTaskOptions = async () => {
+  const sku = adjustAddForm.sku.trim()
+  if (!showAdjustPackingTaskFields.value || !sku || adjustAddForm.poId == null || adjustAddForm.poId === '') {
+    adjustPackingTaskOptions.value = []
+    adjustAddForm.packingTaskId = undefined
+    adjustAddForm.currentTaskCount = undefined
+    return
+  }
+
+  adjustPackingTaskLoading.value = true
+  try {
+    const response = await getInventoryAdjustPackingTaskList({
+      poId: adjustAddForm.poId,
+      sku,
+    })
+    adjustPackingTaskOptions.value = pickArray<InventoryAdjustPackingTaskOption>(response)
+    const currentTask = adjustPackingTaskOptions.value.find((item) => item.packageTaskId === adjustAddForm.packingTaskId)
+    if (currentTask) adjustAddForm.currentTaskCount = currentTask.packageTaskCount ?? undefined
+    else {
+      adjustAddForm.packingTaskId = undefined
+      adjustAddForm.currentTaskCount = undefined
+    }
+  } catch {
+    adjustPackingTaskOptions.value = []
+    adjustAddForm.packingTaskId = undefined
+    adjustAddForm.currentTaskCount = undefined
+  } finally {
+    adjustPackingTaskLoading.value = false
+  }
+}
+
+const handleAdjustSearchSku = async () => {
+  const sku = adjustAddForm.sku.trim()
+  if (!sku) return
+
+  adjustSkuInfoLoading.value = true
+  try {
+    const response = await getInventoryAdjustSkuInfo(sku)
+    const skuInfo = pickObject<{ productDesc?: string; skuImg?: string }>(response)
+    adjustAddForm.productDesc = skuInfo.productDesc ?? ''
+    adjustAddForm.skuImg = skuInfo.skuImg ?? ''
+    await fetchAdjustPoOptions(adjustPoKeyword.value)
+
+    if (!skuInfo.productDesc && !skuInfo.skuImg && adjustPoOptions.value.length === 0) {
+      $baseMessage('未查询到对应 SKU 信息', 'warning', 'hey')
+    }
+  } catch {
+    adjustAddForm.productDesc = ''
+    adjustAddForm.skuImg = ''
+    adjustAddForm.poId = undefined
+    adjustPoOptions.value = []
+    adjustPackingTaskOptions.value = []
+    adjustAddForm.packingTaskId = undefined
+    adjustAddForm.currentTaskCount = undefined
+  } finally {
+    adjustSkuInfoLoading.value = false
+  }
+}
+
+const shouldCalculateAdjustPrice = computed(() => {
+  if (!adjustAddForm.sku.trim()) return false
+  if (adjustAddForm.poId === undefined || adjustAddForm.poId === null || adjustAddForm.poId === '') return false
+  const count = Number(adjustAddForm.count)
+  if (adjustAddForm.count === undefined || adjustAddForm.count === null || Number.isNaN(count)) return false
+  return count !== 0
+})
+
+const handleCalculateAdjustPrice = async () => {
+  if (!shouldCalculateAdjustPrice.value) {
+    adjustAddForm.price = undefined
+    return
+  }
+
+  adjustPriceCalcLoading.value = true
+  try {
+    const response = await getInventoryAdjustPrice({
+      sku: adjustAddForm.sku.trim(),
+      poId: adjustAddForm.poId!,
+      count: Number(adjustAddForm.count),
+    })
+    const price = pickObject<number>(response)
+    const normalizedPrice = Number(price)
+    adjustAddForm.price = Number.isNaN(normalizedPrice) ? undefined : Number(normalizedPrice.toFixed(2))
+  } catch {
+    adjustAddForm.price = undefined
+  } finally {
+    adjustPriceCalcLoading.value = false
+  }
+}
+
+const handleSubmitAdjustAdd = async () => {
+  if (!adjustAddFormRef.value) return
+
+  await adjustAddFormRef.value.validate()
+  adjustAddLoading.value = true
+  try {
+    const selectedPo = adjustPoOptions.value.find((item) => item.poId === adjustAddForm.poId)
+    await addInventoryAdjust({
+      sku: adjustAddForm.sku.trim(),
+      poId: adjustAddForm.poId,
+      po: String(adjustAddForm.type) === '1' ? selectedPo?.po : undefined,
+      packageTaskId: adjustAddForm.packingTaskId,
+      packageTaskCount:
+        adjustAddForm.currentTaskCount == null || adjustAddForm.currentTaskCount === '' ? undefined : Number(adjustAddForm.currentTaskCount),
+      shipmentId: adjustAddForm.shipmentId.trim() || undefined,
+      boxNumber: adjustAddForm.boxNumber.trim() || undefined,
+      count: Number(adjustAddForm.count),
+      price: Number(adjustAddForm.price),
+      type: adjustAddForm.type!,
+      remark: adjustAddForm.remark.trim() || undefined,
+    })
+    $baseMessage('新增成功', 'success', 'hey')
+    adjustAddVisible.value = false
+  } finally {
+    adjustAddLoading.value = false
+  }
 }
 
 const handleCurrentChange = (value: number) => {
@@ -621,6 +989,54 @@ const handleSaveRow = async () => {
 onMounted(async () => {
   await Promise.allSettled([fetchMargin(), fetchList()])
 })
+
+watch(
+  () => [adjustAddVisible.value, adjustAddForm.poId, adjustAddForm.count] as const,
+  ([visible]) => {
+    if (!visible) return
+    handleCalculateAdjustPrice()
+  }
+)
+
+watch(
+  () => adjustAddForm.type,
+  (value) => {
+    if (!adjustAddVisible.value) return
+    resetAdjustAddFormByType(value)
+    if (String(value) === '1') adjustAddForm.allPo = true
+    if (String(value) === '1') {
+      adjustPackingTaskOptions.value = []
+      adjustAddForm.packingTaskId = undefined
+      adjustAddForm.currentTaskCount = undefined
+    } else if (adjustAddVisible.value) {
+      fetchAdjustPackingTaskOptions()
+    }
+  }
+)
+
+watch(
+  () => adjustAddForm.allPo,
+  () => {
+    if (!adjustAddVisible.value || !adjustAddForm.sku.trim()) return
+    fetchAdjustPoOptions(adjustPoKeyword.value)
+  }
+)
+
+watch(
+  () => adjustAddForm.poId,
+  () => {
+    if (!adjustAddVisible.value) return
+    fetchAdjustPackingTaskOptions()
+  }
+)
+
+watch(
+  () => adjustAddForm.packingTaskId,
+  (value) => {
+    const currentTask = adjustPackingTaskOptions.value.find((item) => item.packageTaskId === value)
+    adjustAddForm.currentTaskCount = currentTask?.packageTaskCount ?? undefined
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -722,6 +1138,59 @@ onMounted(async () => {
     }
   }
 
+  .sku-copy-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .dialog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 16px;
+  }
+
+  .dialog-grid-span-2 {
+    grid-column: 1 / -1;
+  }
+
+  .sku-image-preview {
+    width: 100%;
+    height: 84px;
+    border: 1px solid #d8dee9;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .el-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+
+  .packing-task-label {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .packing-task-tip {
+    color: var(--el-text-color-secondary);
+    font-size: 16px;
+    cursor: help;
+  }
+
   .editable-text {
     display: inline-block;
     min-width: 80px;
@@ -765,6 +1234,13 @@ onMounted(async () => {
       align-items: stretch;
     }
 
+    .dialog-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dialog-grid-span-2 {
+      grid-column: auto;
+    }
   }
 }
 </style>

@@ -100,6 +100,16 @@
           {{ formatNumber(row.lackCount) }}
         </template>
       </el-table-column>
+      <el-table-column align="right" label="总订货数" min-width="110" prop="totalOrderCount">
+        <template #default="{ row }">
+          {{ formatNumber(row.totalOrderCount) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="未到货数" min-width="110" prop="notYetArrived">
+        <template #default="{ row }">
+          {{ formatNumber(row.notYetArrived) }}
+        </template>
+      </el-table-column>
       <el-table-column align="right" label="总发货数" min-width="110" prop="totalSendCount">
         <template #default="{ row }">
           {{ formatNumber(row.totalSendCount) }}
@@ -191,6 +201,8 @@ const mergeColumnProps = new Set([
   'skuImg',
   'sku',
   'productName',
+  'totalOrderCount',
+  'notYetArrived',
   'encasementCount',
   'totalAfterCount',
   'lackCount',

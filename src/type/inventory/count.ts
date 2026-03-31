@@ -17,6 +17,8 @@ export interface InventoryCountItem {
   po?: string
   poId?: number | string
   orderDate?: string
+  notYetArrived?: number
+  totalOrderCount?: number
   packageTaskId?: number | string
   actualCount?: number
   taskCount?: number

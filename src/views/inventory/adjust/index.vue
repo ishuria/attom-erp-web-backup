@@ -3,7 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel :span="10">
         <div class="header-actions">
-          <el-button :icon="Plus" type="primary" @click="openAddDialog">新增库存调整</el-button>
+<!--          <el-button :icon="Plus" type="primary" @click="openAddDialog">新增库存调整</el-button>-->
 <!--          <el-button :loading="marginLoading" type="primary" @click="openMarginDialog">余量设定</el-button>-->
         </div>
       </vab-query-form-left-panel>
