@@ -34,7 +34,7 @@
             <el-button type="primary" @click="handleOpenSmooth">平滑指数设定</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+            <el-button :icon="Filter" :type="hasFilter ? 'warning' : 'primary'" @click="filterVisible = true">筛选</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleOpenSpringFestival">春节备货</el-button>
@@ -367,6 +367,13 @@
             <el-input-number v-model="filterForm.recommendCountMax" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
+        <el-form-item label="可认领数量">
+          <div class="flex">
+            <el-input-number v-model="filterForm.totalClaimCountMin" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="filterForm.totalClaimCountMax" :min="0" placeholder="最大值" style="flex: 1" />
+          </div>
+        </el-form-item>
         <el-form-item label="最晚补货">
           <div class="flex">
             <el-date-picker
@@ -475,7 +482,7 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
+import { Filter, QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, ElInput, FormInstance, TableInstance } from 'element-plus'
 import { debounce } from 'lodash-es'
@@ -523,6 +530,29 @@ const stockUpVisible = ref<boolean>(false)
 const stockUpForm = reactive<any>({})
 const filterVisible = ref<boolean>(false)
 const filterForm = reactive<any>({})
+const hasFilter = computed(() => {
+  return (
+    filterForm.minAvgTime != null ||
+    filterForm.maxAvgTime != null ||
+    filterForm.minNewArrivalDay != null ||
+    filterForm.maxNewArrivalDay != null ||
+    filterForm.minEs != null ||
+    filterForm.maxEs != null ||
+    filterForm.minEsAvailableSaleDayTotal != null ||
+    filterForm.maxEsAvailableSaleDayTotal != null ||
+    filterForm.minSign != null ||
+    filterForm.maxSign != null ||
+    filterForm.outOfStockMin != null ||
+    filterForm.outOfStockMax != null ||
+    filterForm.recommendCountMin != null ||
+    filterForm.recommendCountMax != null ||
+    filterForm.totalClaimCountMin != null ||
+    filterForm.totalClaimCountMax != null ||
+    (latestDate.value && latestDate.value.length > 0) ||
+    (springFestivalOrderDeadline.value && springFestivalOrderDeadline.value.length > 0) ||
+    filterForm.advStatus != null
+  )
+})
 const filterFormRef = ref<FormInstance>()
 
 const remarkVisible = ref<boolean>(false)
@@ -1069,6 +1099,8 @@ const handleResetFilter = () => {
   filterForm.outOfStockMax = undefined
   filterForm.recommendCountMin = undefined
   filterForm.recommendCountMax = undefined
+  filterForm.totalClaimCountMin = undefined
+  filterForm.totalClaimCountMax = undefined
   latestDate.value = []
   springFestivalOrderDeadline.value = []
   filterForm.advStatus = undefined
@@ -1347,6 +1379,7 @@ const fetchColumn = async () => {
         'encasementCount',
         'outOfStock',
         'orderCount',
+        'totalClaimCount',
       ].includes(item.prop)
     ) {
       item.sortable = true

@@ -13,6 +13,12 @@ class StoreOperationPermission {
   static readonly PRODUCT_DISTRIBUTION_MARK_UNCLAIMED = 'storeOperation:productDistribution:markUnclaimed'
   /** 待老品认领-审批 */
   static readonly UNCLAIMED_APPROVAL = 'storeOperation:unclaimed:approval'
+  /** 产品业绩看板-运营分类设定 */
+  static readonly PRODUCT_PERFORMANCE_OPE_CLASSIFY = 'storeOperation:productPerformance:opeClassify'
+  /** 产品业绩看板-文件上传 */
+  static readonly PRODUCT_PERFORMANCE_FILE_UPLOAD = 'storeOperation:productPerformance:fileUpload'
+  /** 产品业绩看板-日志汇总 */
+  static readonly PRODUCT_PERFORMANCE_LOG_SUMMARY = 'storeOperation:productPerformance:logSummary'
 }
 
 export default StoreOperationPermission

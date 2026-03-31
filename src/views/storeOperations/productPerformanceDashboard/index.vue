@@ -49,16 +49,16 @@
                 <el-button :loading="filterLoading" type="primary" @click="filterVisible = true">筛选</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
+                <el-button v-permissions="{ permission: [StoreOperationPermission.PRODUCT_PERFORMANCE_OPE_CLASSIFY] }" type="primary" @click="showOpeClassify">运营分类设定</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="spFileUploadVisible = true">文件上传</el-button>
+                <el-button v-permissions="{ permission: [StoreOperationPermission.PRODUCT_PERFORMANCE_FILE_UPLOAD] }" type="primary" @click="spFileUploadVisible = true">文件上传</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
+                <el-button v-permissions="{ permission: [StoreOperationPermission.PRODUCT_PERFORMANCE_LOG_SUMMARY] }" type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: 600">今销更新：{{ saleUpdateDate[0] }}</el-text>
@@ -198,13 +198,13 @@
                 <el-button :loading="filterLoading" type="primary" @click="filterVisible = true">筛选</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
+                <el-button v-permissions="{ permission: [StoreOperationPermission.PRODUCT_PERFORMANCE_OPE_CLASSIFY] }" type="primary" @click="showOpeClassify">运营分类设定</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
+                <el-button v-permissions="{ permission: [StoreOperationPermission.PRODUCT_PERFORMANCE_LOG_SUMMARY] }" type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: 600">今销更新：{{ saleUpdateDate[1] }}</el-text>
@@ -345,7 +345,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
+                <el-button v-permissions="{ permission: [StoreOperationPermission.PRODUCT_PERFORMANCE_OPE_CLASSIFY] }" type="primary" @click="showOpeClassify">运营分类设定</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
@@ -574,6 +574,7 @@ import {
   updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
+import StoreOperationPermission from '/@/permissions/storeOperation'
 import { useAclStore } from '/@/store/modules/acl'
 import { useAiStore } from '/@/store/modules/ai'
 import { useUserStore } from '/@/store/modules/user'
