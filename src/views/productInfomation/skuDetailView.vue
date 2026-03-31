@@ -241,11 +241,13 @@
       </vab-query-form>
       <el-table
         ref="tableRef"
+        v-loading="updating"
         border
         :cell-class-name="clearPadding"
         :cell-style="cellStyle"
         class="noneHoveTable"
         :data="tableData"
+        element-loading-text="数据更新中..."
         :header-cell-style="{ 'text-align': 'center' }"
         stripe
         @cell-click="changeInput"
@@ -854,6 +856,9 @@ const ableToEditProductDesign = computed(() => {
 const historyPriceVisible = ref<boolean>(false)
 const historyPriceList = ref<IGetCostReductionHistoryPriceList[]>([])
 
+// ========== 更新中loading状态 ==========
+const updating = ref(false)
+
 // ========== 价格变更理由相关 ==========
 const priceChangeReasonVisible = ref<boolean>(false)
 const priceChangeReason = ref<string>('')
@@ -898,6 +903,7 @@ const confirmPriceChange = async () => {
   pendingComponentUpdate.value = null
   if (!value) return
 
+  updating.value = true
   try {
     await updateProductComponent({
       ...value,
@@ -909,6 +915,7 @@ const confirmPriceChange = async () => {
     Object.assign(value, copyRow)
   } finally {
     priceChangeReason.value = ''
+    updating.value = false
   }
 }
 
@@ -1452,10 +1459,15 @@ const handleComponentRemove = async (row: any) => {
 }
 // 修改默认供应商
 const handleSuppliserChange = async (row: any) => {
-  const { data } = await updateProductComponent(row)
-  if (data === true) {
-    fetchData()
-    fetchComponentData()
+  updating.value = true
+  try {
+    const { data } = await updateProductComponent(row)
+    if (data === true) {
+      await fetchData()
+      await fetchComponentData()
+    }
+  } finally {
+    updating.value = false
   }
 }
 const packingPrecautionsVisible = ref<boolean>(false)
@@ -1513,19 +1525,19 @@ const editorContent = ref<string>('')
  */
 const clickEditorConfirm = async (val: any) => {
   if (classify.value === 'purchaseMatters') {
-    const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val })
+    const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, text: val, sku: sku.value.sku })
     if (data === true) {
       editorContent.value = val
       clickRow.value.purchaseMatters = val
     }
   } else if (classify.value === 'contractTerms') {
-    const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val })
+    const { data } = await saveProductContractTerms({ id: clickRow.value.id, text: val, sku: sku.value.sku })
     if (data === true) {
       editorContent.value = val
       clickRow.value.contractTerms = val
     }
   } else {
-    const { data } = await saveProductComponentSuitDetail({ id: clickRow.value.id, componentSuitDetail: val })
+    const { data } = await saveProductComponentSuitDetail({ id: clickRow.value.id, text: val, sku: sku.value.sku })
     if (data === true) {
       editorContent.value = val
       clickRow.value.componentSuitDetail = val
@@ -1861,6 +1873,7 @@ const clickCancel = async (event: any, value: any) => {
     }
 
     // 非价格变更，直接提交
+    updating.value = true
     try {
       await updateProductComponent({
         id: value.id,
@@ -1894,6 +1907,8 @@ const clickCancel = async (event: any, value: any) => {
     } catch {
       // 更新失败时，恢复为原始值
       Object.assign(value, copyRow)
+    } finally {
+      updating.value = false
     }
   }
 }
@@ -1924,9 +1939,14 @@ const handleDefaultPurchase = async (row: any) => {
       $baseMessage('采购方为云舟，不能选择无法开票', 'error', 'hey')
     }
   }
-  await updateProductComponent(row)
-  fetchData()
-  fetchComponentData()
+  updating.value = true
+  try {
+    await updateProductComponent(row)
+    await fetchData()
+    await fetchComponentData()
+  } finally {
+    updating.value = false
+  }
 }
 // 处理不报关
 const handleDeclareCustoms = async (row: any) => {
@@ -1944,15 +1964,25 @@ const handleDeclareCustoms = async (row: any) => {
     $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
     return
   } else {
-    await updateProductComponent(row)
-    fetchData()
-    fetchComponentData()
+    updating.value = true
+    try {
+      await updateProductComponent(row)
+      await fetchData()
+      await fetchComponentData()
+    } finally {
+      updating.value = false
+    }
   }
 }
 const handleCurrencyChange = async (row: any) => {
-  await updateProductComponent(row)
-  fetchData()
-  fetchComponentData()
+  updating.value = true
+  try {
+    await updateProductComponent(row)
+    await fetchData()
+    await fetchComponentData()
+  } finally {
+    updating.value = false
+  }
 }
 const handleInvoicingChange = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
@@ -1967,10 +1997,15 @@ const handleInvoicingChange = async (row: any) => {
     $baseMessage('采购方为云舟或埃托姆，不能选择无法开票', 'error', 'hey')
     row.invoicing = 1
   }
-  const { data } = await updateProductComponent(row)
-  if (data === true) {
-    fetchData()
-    fetchComponentData()
+  updating.value = true
+  try {
+    const { data } = await updateProductComponent(row)
+    if (data === true) {
+      await fetchData()
+      await fetchComponentData()
+    }
+  } finally {
+    updating.value = false
   }
 }
 

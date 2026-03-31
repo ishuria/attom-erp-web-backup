@@ -73,9 +73,9 @@ import type {
   IgetProductSupplierListQuery,
   IgetProductSupplierListResp,
   Iid,
-  IsaveProductComponentSuitDetail,
-  IsaveProductContractTerms,
-  IsaveProductPurchaseMatters,
+  IquerySkuChangeLogReq,
+  IquerySkuChangeLogResp,
+  IsaveProductComponentRemark,
   IsuppliserId,
   IupdateConsumablesSupplier,
   IupdateProductComponent,
@@ -87,8 +87,6 @@ import type {
   IupdateProductSkuRemark,
   IupdateProductStatus,
   IupdateProductSupplier,
-  IquerySkuChangeLogReq,
-  IquerySkuChangeLogResp,
 } from '/@/type/productInformation/skuInformationType'
 
 import {
@@ -641,33 +639,33 @@ export function updateProductQualityInspection(data: IaddProductQualityInspectio
 /**
  * SKU零配件清单-保存采购注意事项
  */
-export function saveProductPurchaseMatters(params: IsaveProductPurchaseMatters) {
+export function saveProductPurchaseMatters(data: IsaveProductComponentRemark): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/product/save/purchaseMatters`,
     method: 'post',
-    params,
+    data,
   })
 }
 
 /**
  * SKU零配件清单-保存合同条款
  */
-export function saveProductContractTerms(params: IsaveProductContractTerms) {
+export function saveProductContractTerms(data: IsaveProductComponentRemark): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/product/save/contractTerms`,
     method: 'post',
-    params,
+    data,
   })
 }
 
 /**
  * SKU零配件清单-保存零件套装明细
  */
-export function saveProductComponentSuitDetail(params: IsaveProductComponentSuitDetail): Promise<{ data: boolean }> {
+export function saveProductComponentSuitDetail(data: IsaveProductComponentRemark): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/product/save/componentSuitDetail`,
     method: 'post',
-    params,
+    data,
   })
 }
 

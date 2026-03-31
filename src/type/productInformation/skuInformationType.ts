@@ -1121,6 +1121,12 @@ export interface IsaveProductComponentSuitDetail {
   componentSuitDetail: string
 }
 
+export interface IsaveProductComponentRemark {
+  id: number
+  text: string
+  sku: string
+}
+
 export interface IgetProductSupplier {
   code: number
   msg: string
