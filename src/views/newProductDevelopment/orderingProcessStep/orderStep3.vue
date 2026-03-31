@@ -614,7 +614,7 @@ import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { getChannelList } from '/@/api/devlocal/encasement'
+import { getChannelList, getCostAccountingChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
   getReviewVariantHts,
@@ -1588,7 +1588,7 @@ const repositoryOption = ref<any>()
 const channelList = ref<{ id: number; label: string }[]>([])
 const siteList = ref<{ id: number; label: string }[]>([])
 const fetchChannelData = async () => {
-  const { data } = await getChannelList()
+  const { data } = await getCostAccountingChannelList()
   channelList.value = data
 }
 const fetchSalesSiteList = async () => {
