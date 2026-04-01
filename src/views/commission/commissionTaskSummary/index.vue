@@ -741,7 +741,7 @@
           <el-input v-model="costForm.commissionProportion" type="number" />
         </el-form-item>
         <el-form-item label="提成天数" prop="commissionDays">
-          <el-input v-model="costForm.commissionDays" disabled type="number" />
+          <el-input v-model="costForm.commissionDays" type="number" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -957,6 +957,7 @@ const handleConfirmCostUpdate = async () => {
       const { data } = await updateReductionCostTask({
         id: _id.value,
         ...filterForm,
+        commissionDays:commissionDays,
         commissionProportion: Number(filterForm.commissionProportion) / 100,
       })
       if (data) {
