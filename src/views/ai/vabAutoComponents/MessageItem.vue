@@ -156,7 +156,8 @@ const handleMarkdownAction = async (event: MouseEvent) => {
   .bubble {
     max-width: min(82%, 1200px);
     padding: 16px 18px;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    word-break: break-word;
     border: 1px solid var(--el-border-color-lighter);
     border-radius: 20px;
     font-size: 16px;
@@ -167,6 +168,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
     &.is-role-assistant,
     &.is-role-system {
+      max-width: min(94%, 1600px);
       background:
         linear-gradient(180deg, rgb(255 255 255 / 0.98), rgb(247 249 255 / 0.98)),
         var(--el-bg-color);
@@ -384,8 +386,8 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(table) {
-      width: 100%;
-      min-width: 560px;
+      width: max-content;
+      min-width: 100%;
       border-collapse: collapse;
       font-size: 16px;
       line-height: 1.7;
@@ -400,6 +402,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       padding: 14px 16px;
       text-align: left;
       vertical-align: top;
+      white-space: nowrap;
       border-bottom: 1px solid var(--el-border-color-lighter);
     }
 
@@ -411,7 +414,6 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     :deep(th) {
       font-weight: 600;
       color: var(--el-text-color-primary);
-      white-space: nowrap;
     }
 
     :deep(td:first-child) {
