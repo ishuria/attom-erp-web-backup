@@ -368,6 +368,19 @@ export function applyArtDesignOverdue(data: { listingTaskId: number; latestDate:
 }
 
 /**
+ * 美工长期申请
+ * @param data { listingTaskId: number; reason: string }
+ * @returns
+ */
+export function applyArtDesignLongTask(data: { listingTaskId: number; reason: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/longTask/apply`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
  * 超时日期修改申请列表
  * @param params { pageNo: number; pageSize: number }
  * @returns { data: IGetArtDesignTaskList[] }

@@ -151,6 +151,7 @@ declare module 'vue' {
     InventoryProductsTotalValue: typeof import('./../../../src/views/index/vabAutoComponents/InventoryProductsTotalValue.vue')['default']
     JobLevelCommissionTable: typeof import('./../../../src/views/index/vabAutoComponents/JobLevelCommissionTable.vue')['default']
     LoginContainer: typeof import('./../../../src/views/login/vabAutoComponents/LoginContainer.vue')['default']
+    LongTaskApplication: typeof import('./../../../src/views/newProductTask/vabAutoComponents/LongTaskApplication.vue')['default']
     LowVolumeProductStorageFees: typeof import('./../../../src/views/index/vabAutoComponents/LowVolumeProductStorageFees.vue')['default']
     MenuEdit: typeof import('./../../../src/views/system/menu/vabAutoComponents/MenuEdit.vue')['default']
     MessageInput: typeof import('./../../../src/views/ai/vabAutoComponents/MessageInput.vue')['default']

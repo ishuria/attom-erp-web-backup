@@ -751,6 +751,9 @@
                     <el-dropdown-item @click="handleDeadlineExtensionApplication(row)">
                       <el-link type="primary" underline="never">超时日期修改申请</el-link>
                     </el-dropdown-item>
+                    <el-dropdown-item @click="handleLongTaskApplication(row)">
+                      <el-link type="primary" underline="never">美工长期申请</el-link>
+                    </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
                       @click="handleDelArtDesignTask(row)"
@@ -966,6 +969,9 @@
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleDeadlineExtensionApplication(row)">
                       <el-link type="primary" underline="never">超时日期修改申请</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleLongTaskApplication(row)">
+                      <el-link type="primary" underline="never">美工长期申请</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -1271,6 +1277,11 @@
       v-model:visible="deadlineExtensionApplicationVisible"
       :listing-task-id="deadlineExtensionApplicationListingTaskId"
     />
+    <long-task-application
+      v-model:visible="longTaskApplicationVisible"
+      :listing-task-id="longTaskApplicationListingTaskId"
+      @success="fetchData"
+    />
   </div>
 </template>
 
@@ -1337,6 +1348,12 @@ const deadlineExtensionApplicationListingTaskId = ref<number>(-1)
 const handleDeadlineExtensionApplication = (row: IGetArtDesignTaskList) => {
   deadlineExtensionApplicationVisible.value = true
   deadlineExtensionApplicationListingTaskId.value = row.id!
+}
+const longTaskApplicationVisible = ref<boolean>(false)
+const longTaskApplicationListingTaskId = ref<number>(-1)
+const handleLongTaskApplication = (row: IGetArtDesignTaskList) => {
+  longTaskApplicationVisible.value = true
+  longTaskApplicationListingTaskId.value = row.id!
 }
 const isBoss = currentRoleCode === ROLE_BOSS_CODE
 // 检查用户是否有权限完成任务

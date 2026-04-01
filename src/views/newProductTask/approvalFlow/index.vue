@@ -94,6 +94,7 @@
       </template>
 
       <el-table-column label="申请人" min-width="100" prop="applicantUser" />
+      <el-table-column label="类型" min-width="100" prop="type" />
       <el-table-column label="审批状态" min-width="120" prop="status">
         <template #default="{ row }">
           <el-tag v-if="row.status == 0" type="danger">待审批</el-tag>
