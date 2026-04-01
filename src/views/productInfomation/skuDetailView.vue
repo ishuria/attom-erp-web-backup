@@ -960,7 +960,7 @@ const handleCopy = async (row: any) => {
         componentId: row.componentId,
         skuId: Number(route.query.skuId),
       })
-      if (data === true) {
+      if (data) {
         $baseMessage('复制成功！', 'success', 'hey')
         fetchComponentData()
         fetchData()
@@ -1353,6 +1353,7 @@ const handleSubmitComponentName = async () => {
       const { data } = await updateProductComponentName({
         existingPartsListId: _row.value.existingPartsListId!,
         componentName: componentNameForm.componentName,
+        sku: sku.value.sku,
       })
       if (data === true) {
         updateComponentNameVisible.value = false

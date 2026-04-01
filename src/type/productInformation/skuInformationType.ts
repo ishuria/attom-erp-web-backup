@@ -297,6 +297,7 @@ export interface IgetChangeProductComponent {
 export interface IupdateProductComponentName {
   existingPartsListId: number
   componentName: string
+  sku: string
 }
 
 // SKU详情-添加到其他sku

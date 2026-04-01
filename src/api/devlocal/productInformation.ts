@@ -1282,18 +1282,14 @@ export function getSkuCustomsClearanceHtsList(params: { sku: string }): Promise<
 
 /**
  * 复制零件
- * @param params { componentId: number; skuId: number }
+ * @param data { componentId: number; skuId: number }
  * @returns { data: boolean }
  */
-export function copyProductComponent(params: {
-  componentId: number
-  skuId: number
-  existingPartsListId: number
-}): Promise<{ data: boolean }> {
+export function copyProductComponent(data: { componentId: number; skuId: number; existingPartsListId: number }): Promise<{ data: number }> {
   return request({
     url: `${BASE_API}/product/component/copy`,
     method: 'post',
-    params,
+    data,
   })
 }
 
