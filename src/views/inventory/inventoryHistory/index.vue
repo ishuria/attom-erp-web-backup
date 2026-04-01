@@ -90,7 +90,12 @@
           {{ formatNumber(row.encasementCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总售后数" min-width="110" prop="totalAfterCount">
+      <el-table-column align="right" label="总打包任务数" min-width="120" prop="totalTaskCount">
+        <template #default="{ row }">
+          {{ formatNumber(getTotalTaskCount(row)) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="总待售后数" min-width="120" prop="totalAfterCount">
         <template #default="{ row }">
           {{ formatNumber(getTotalAfterCount(row)) }}
         </template>
@@ -204,6 +209,7 @@ const mergeColumnProps = new Set([
   'totalOrderCount',
   'notYetArrived',
   'encasementCount',
+  'totalTaskCount',
   'totalAfterCount',
   'lackCount',
   'totalSendCount',
@@ -276,6 +282,12 @@ const getTotalAfterCount = (row: InventoryCountItem) => {
   const packageTaskList = getPackageTaskList(row)
   if (!packageTaskList.length) return row.afterCount
   return packageTaskList.reduce((sum, item) => sum + Number(item.afterCount || 0), 0)
+}
+
+const getTotalTaskCount = (row: InventoryCountItem) => {
+  const packageTaskList = getPackageTaskList(row)
+  if (!packageTaskList.length) return row.taskCount
+  return packageTaskList.reduce((sum, item) => sum + Number(item.taskCount || 0), 0)
 }
 
 const tableSpanMethod = ({

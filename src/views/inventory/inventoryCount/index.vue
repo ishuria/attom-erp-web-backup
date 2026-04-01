@@ -93,7 +93,12 @@
           {{ formatNumber(row.encasementCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总售后数" min-width="110" prop="totalAfterCount">
+      <el-table-column align="right" label="总打包任务数" min-width="120" prop="totalTaskCount">
+        <template #default="{ row }">
+          {{ formatNumber(getTotalTaskCount(row)) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="总待售后数" min-width="120" prop="totalAfterCount">
         <template #default="{ row }">
           {{ formatNumber(getTotalAfterCount(row)) }}
         </template>
@@ -460,6 +465,7 @@ const mergeColumnProps = new Set([
   'totalOrderCount',
   'notYetArrived',
   'encasementCount',
+  'totalTaskCount',
   'totalAfterCount',
   'lackCount',
   'totalSendCount',
@@ -605,6 +611,13 @@ const getTotalAfterCount = (row: InventoryCountItem) => {
 
   const totalAfterCount = packageTaskList.reduce((sum, item) => sum + Number(item.afterCount || 0), 0)
   return totalAfterCount
+}
+
+const getTotalTaskCount = (row: InventoryCountItem) => {
+  const packageTaskList = getPackageTaskList(row)
+  if (!packageTaskList.length) return row.taskCount
+
+  return packageTaskList.reduce((sum, item) => sum + Number(item.taskCount || 0), 0)
 }
 
 const getGroupLeadRow = (row: InventoryCountTableRow) => tableData.value.find((item) => item.parentId === row.parentId) || row
@@ -1045,70 +1058,12 @@ watch(
   flex-direction: column;
   gap: 16px;
 
-  .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .page-header__title {
-    color: var(--el-text-color-primary);
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 1.2;
-  }
-
-  .page-header__subtitle {
-    margin-top: 6px;
-    color: var(--el-text-color-secondary);
-    font-size: 13px;
-  }
-
-  .overview-panel {
-    border: 1px solid #e5e9f2;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #f7f9fc 0%, #ffffff 100%);
-    padding: 18px 20px;
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  .overview-panel__content {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
   .table-header-actions {
     display: flex;
     gap: 12px;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
-  }
-
-  .margin-card {
-    min-width: 160px;
-    border-radius: 12px;
-    background: #fff;
-    padding: 14px 16px;
-    box-shadow: 0 8px 20px rgba(31, 35, 41, 0.05);
-  }
-
-  .margin-card__label {
-    color: var(--el-text-color-secondary);
-    font-size: 13px;
-  }
-
-  .margin-card__value {
-    margin-top: 8px;
-    color: #0f172a;
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1;
   }
 
   .query-actions-row {
@@ -1218,18 +1173,6 @@ watch(
 
 @media screen and (max-width: 768px) {
   .inventory-count-page {
-    .overview-panel {
-      align-items: stretch;
-    }
-
-    .overview-panel__actions {
-      width: 100%;
-    }
-
-    .margin-card {
-      flex: 1 1 100%;
-    }
-
     .query-actions-row {
       align-items: stretch;
     }
