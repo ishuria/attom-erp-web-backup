@@ -1506,7 +1506,7 @@ export interface IAddPackingPrecautions {
 
 // SKU变更日志查询请求
 export interface IquerySkuChangeLogReq {
-  skuId: number
+  keyWord?: string
   startTime?: string
   endTime?: string
   pageNo: number
@@ -1516,14 +1516,15 @@ export interface IquerySkuChangeLogReq {
 // SKU变更日志项
 export interface IskuChangeLogItem {
   id: number
-  skuId: number
   sku: string
+  componentId: number
   changeField: string
   oldValue: string
   newValue: string
   changeReason: string
   operatorId: number
   operator: string
+  type: string
   createTime: string
 }
 

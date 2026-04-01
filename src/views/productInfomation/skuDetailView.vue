@@ -4,7 +4,6 @@
       <template #content>
         <div class="flex items-center">
           <span><strong>SKU详情</strong></span>
-          <el-button link style="margin-left: 16px" type="primary" @click="showChangeLog">变更日志</el-button>
         </div>
       </template>
     </el-page-header>
@@ -746,27 +745,6 @@
         <el-button type="primary" @click="confirmPriceChange">确认</el-button>
       </template>
     </vab-dialog>
-
-    <!-- SKU变更日志 -->
-    <vab-dialog v-model="changeLogVisible" title="SKU变更日志" width="900">
-      <el-table border :data="changeLogList" stripe>
-        <el-table-column label="修改时间" prop="createTime" width="170" />
-        <el-table-column label="修改人" prop="operator" width="100" />
-        <el-table-column label="变更项目" prop="changeField" width="120" />
-        <el-table-column label="变更前" min-width="120" prop="oldValue" show-overflow-tooltip />
-        <el-table-column label="变更后" min-width="120" prop="newValue" show-overflow-tooltip />
-        <el-table-column label="修改理由" min-width="150" prop="changeReason" show-overflow-tooltip />
-      </el-table>
-      <div style="display: flex; justify-content: flex-end; margin-top: 16px">
-        <el-pagination
-          v-model:current-page="changeLogPageNo"
-          layout="total, prev, pager, next"
-          :page-size="changeLogPageSize"
-          :total="changeLogTotal"
-          @current-change="fetchChangeLog"
-        />
-      </div>
-    </vab-dialog>
   </div>
 </template>
 
@@ -797,7 +775,6 @@ import {
   getProductSkuList,
   getProductSupplier,
   getSkuComponentInfo,
-  querySkuChangeLog,
   saveProductComponentSuitDetail,
   saveProductContractTerms,
   saveProductPurchaseMatters,
@@ -917,31 +894,6 @@ const confirmPriceChange = async () => {
     priceChangeReason.value = ''
     updating.value = false
   }
-}
-
-// ========== SKU变更日志相关 ==========
-const changeLogVisible = ref<boolean>(false)
-const changeLogList = ref<any[]>([])
-const changeLogTotal = ref<number>(0)
-const changeLogPageNo = ref<number>(1)
-const changeLogPageSize = ref<number>(20)
-
-const fetchChangeLog = async () => {
-  const { data } = await querySkuChangeLog({
-    skuId: Number(route.query.skuId),
-    pageNo: changeLogPageNo.value,
-    pageSize: changeLogPageSize.value,
-  })
-  if (data) {
-    changeLogList.value = data.list || []
-    changeLogTotal.value = data.total || 0
-  }
-}
-
-const showChangeLog = () => {
-  changeLogPageNo.value = 1
-  changeLogVisible.value = true
-  fetchChangeLog()
 }
 
 const showPrices = async (row: any) => {

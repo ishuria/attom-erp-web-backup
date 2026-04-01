@@ -6,6 +6,7 @@
         <el-button v-permissions="{ permission: [SkuPermission.SKU_COMPONENT_CREATE] }" type="primary" @click="showBatchPackingPrecautions">
           批量新增质检项
         </el-button>
+        <el-button type="primary" @click="showChangeLog">变更日志</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -299,6 +300,8 @@
     <vab-hts-dialog v-model="htsVisible" :readonly="true" :sku="currentSku" />
     <!-- Sku交期明细  -->
     <vab-sku-delivery-time-details v-model="skuDeliveryTimeVisible" :sku="sku" />
+    <!-- SKU变更日志 -->
+    <sku-change-log-dialog v-model="changeLogVisible" />
   </div>
 </template>
 
@@ -319,6 +322,13 @@ import { calculateBrColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'SkuInfomation',
 })
+
+// ========== SKU变更日志相关 ==========
+const changeLogVisible = ref<boolean>(false)
+
+const showChangeLog = () => {
+  changeLogVisible.value = true
+}
 
 const tableRef = ref()
 const packingTimeDetailsVisible = ref<boolean>(false)
