@@ -47,9 +47,11 @@ const handleCreateConversation = () => aiStore.createConversation()
 
 withDefaults(
   defineProps<{
+    fullscreen?: boolean
     showCreateButton?: boolean
   }>(),
   {
+    fullscreen: false,
     showCreateButton: true,
   }
 )

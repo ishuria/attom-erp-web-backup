@@ -3,7 +3,7 @@
     <el-input
       v-model="draft"
       type="textarea"
-      :rows="5"
+      :rows="fullscreen ? 8 : 5"
       resize="none"
       :maxlength="3000"
       :disabled="disabled"
@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 const props = defineProps<{
   disabled?: boolean
+  fullscreen?: boolean
   placeholder?: string
 }>()
 
@@ -32,6 +33,7 @@ defineOptions({
 })
 
 const draft = ref('')
+const textareaMinHeight = computed(() => (props.fullscreen ? '184px' : '120px'))
 
 const handleSend = () => {
   if (props.disabled) return
@@ -51,6 +53,7 @@ const handleSend = () => {
   border-top: 1px solid var(--el-border-color-lighter);
 
   :deep(.el-textarea__inner) {
+    min-height: v-bind(textareaMinHeight);
     font-size: 15px;
     line-height: 1.7;
   }

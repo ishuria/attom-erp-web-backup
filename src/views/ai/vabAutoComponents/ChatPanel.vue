@@ -15,6 +15,7 @@
 
     <message-input
       :disabled="inputDisabled"
+      :fullscreen="fullscreen"
       :placeholder="inputPlaceholder"
       @send="aiStore.sendMessage"
     />
@@ -25,6 +26,10 @@
 import { useAiStore } from '/@/store/modules/ai'
 import ChatPanelMessageInput from '/@/views/ai/vabAutoComponents/MessageInput.vue'
 import ChatPanelMessageList from '/@/views/ai/vabAutoComponents/MessageList.vue'
+
+defineProps<{
+  fullscreen?: boolean
+}>()
 
 defineOptions({
   name: 'ChatPanel',

@@ -6,11 +6,12 @@
     :destroy-on-close="false"
     :title="title"
     width="65vw"
+    @update:fullscreen="handleFullscreenChange"
   >
-    <div class="ai-chat-dialog">
+    <div :class="['ai-chat-dialog', { 'is-fullscreen': isFullscreen }]">
       <div class="dialog-body">
-        <conversation-sidebar :show-create-button="showCreateButton" />
-        <chat-panel />
+        <conversation-sidebar :fullscreen="isFullscreen" :show-create-button="showCreateButton" />
+        <chat-panel :fullscreen="isFullscreen" />
       </div>
     </div>
   </vab-dialog>
@@ -50,6 +51,7 @@ defineOptions({
 })
 
 const aiStore = useAiStore()
+const isFullscreen = ref(false)
 
 const dialogVisible = computed({
   get: () => props.modelValue,
@@ -57,6 +59,10 @@ const dialogVisible = computed({
     emit('update:modelValue', value)
   },
 })
+
+const handleFullscreenChange = (value: boolean) => {
+  isFullscreen.value = value
+}
 
 watch(
   () => props.modelValue,
@@ -100,6 +106,10 @@ watch(
   flex-direction: column;
   gap: 12px;
   height: min(82vh, 920px);
+
+  &.is-fullscreen {
+    height: calc(100vh - 156px);
+  }
 }
 
 .dialog-header-copy {
@@ -136,6 +146,10 @@ watch(
 @media screen and (max-width: 768px) {
   .ai-chat-dialog {
     height: 74vh;
+
+    &.is-fullscreen {
+      height: calc(100vh - 96px);
+    }
   }
 
   .dialog-body {

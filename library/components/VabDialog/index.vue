@@ -107,7 +107,7 @@ const props = defineProps({
     default: true,
   },
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:fullscreen', 'fullscreen-change'])
 
 const dialogVisible = useVModel(props, 'modelValue', emit)
 const isFullscreen = ref<any>(false)
@@ -116,6 +116,8 @@ const closeDialog = () => {
   const done = () => {
     dialogVisible.value = false
     isFullscreen.value = false
+    emit('update:fullscreen', false)
+    emit('fullscreen-change', false)
   }
 
   if (typeof props.beforeClose === 'function') {
@@ -128,12 +130,27 @@ const closeDialog = () => {
 
 const setFullscreen = () => {
   isFullscreen.value = !isFullscreen.value
+  emit('update:fullscreen', isFullscreen.value)
+  emit('fullscreen-change', isFullscreen.value)
 }
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (!value && isFullscreen.value) {
+      isFullscreen.value = false
+      emit('update:fullscreen', false)
+      emit('fullscreen-change', false)
+    }
+  }
+)
 
 watch(
   () => props.fullscreen,
   () => {
     isFullscreen.value = props.fullscreen
+    emit('update:fullscreen', props.fullscreen)
+    emit('fullscreen-change', props.fullscreen)
   },
   {
     immediate: true,
