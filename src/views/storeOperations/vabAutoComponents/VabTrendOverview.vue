@@ -123,8 +123,12 @@
         <el-table-column align="center" label="类型" prop="type" width="105" />
         <el-table-column label="内容" min-width="170" prop="content">
           <template #default="{ row }">
+            <!-- 手动输入 -->
+            <div v-if="row.rawType === 0">
+              <div v-html="row.content"></div>
+            </div>
             <!-- 系统抓取(type=1)时的解析展示 -->
-            <div v-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
+            <div v-else-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
             <!-- 其他情况保持原有逻辑 -->
             <div v-else-if="row.content">
               <el-link v-if="row.isAggregate" class="content-link" type="primary" @click="handleAggregateClick(row)">

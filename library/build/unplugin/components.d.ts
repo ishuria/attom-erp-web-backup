@@ -368,6 +368,7 @@ declare module 'vue' {
     VabRemarkDialog: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabRemarkDialog.vue')['default']
     VabRemittanceCheck: typeof import('./../../../src/views/purchase/vabAutoComponents/VabRemittanceCheck.vue')['default']
     VabReturnAnalysis: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabReturnAnalysis.vue')['default']
+    VabRichRemarkDialog: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabRichRemarkDialog.vue')['default']
     VabRightTools: typeof import('./../../components/VabRightTools/index.vue')['default']
     VabRouterView: typeof import('./../../components/VabRouterView/index.vue')['default']
     VabSample: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSample.vue')['default']

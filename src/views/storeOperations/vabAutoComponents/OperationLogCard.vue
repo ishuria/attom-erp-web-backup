@@ -54,8 +54,12 @@
       <el-table-column align="center" label="类型" prop="type" width="95" />
       <el-table-column label="内容" min-width="170">
         <template #default="{ row }">
+          <!-- 手动输入 -->
+          <div v-if="row.rawType === 0">
+            <div v-html="row.content"></div>
+          </div>
           <!-- 系统抓取(type=1)时的解析展示 -->
-          <div v-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
+          <div v-else-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
           <!-- 其他情况保持原有逻辑 -->
           <div v-else-if="row.content">
             <el-link v-if="row.isAggregate" class="content-link" type="primary" @click="handleAggregateClick(row)">
@@ -128,7 +132,7 @@
       @current-change="handleCurrentChange"
     />
 
-    <vab-remark-dialog v-model="remarkVisible" :remark="addRemark" title="新增操作日志" @update:remark="handleAddRemark" />
+    <vab-rich-remark-dialog v-model="remarkVisible" :remark="addRemark" title="新增操作日志" @update:remark="handleAddRemark" />
 
     <!-- 变化详情对话框 -->
     <vab-dialog v-model="changeDetailVisible" :title="changeDetailTitle">

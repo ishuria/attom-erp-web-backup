@@ -2,7 +2,7 @@
   <div>
     <vab-dialog v-model="visible" title="备注和日志" width="20%" @opened="handleDialogOpened">
       <div class="field-label">备注</div>
-      <el-input ref="inputRef" v-model="remark" class="log-input" placeholder="请输入运营备注" :rows="5" type="textarea" />
+      <el-input ref="remarkInputRef" v-model="remark" class="log-input" placeholder="请输入运营备注" :rows="5" type="textarea" />
       <div class="dialog-actions">
         <el-button @click="visible = false">取消</el-button>
         <el-button type="success" @click="confirmUpdateRemark">保存</el-button>
@@ -10,8 +10,19 @@
       </div>
       <el-divider />
       <div class="field-label">日志</div>
-      <!-- 输入区 -->
-      <el-input ref="inputRef" v-model="operationLog" class="log-input" placeholder="请输入操作日志" :rows="5" type="textarea" />
+      <!-- 格式化工具栏 -->
+      <div class="format-toolbar">
+        <el-button size="small" @click="applyFormat('bold')">
+          <strong>B</strong>
+          &nbsp;加粗
+        </el-button>
+        <el-button size="small" @click="applyFormat('red')">
+          <span style="color: red">A</span>
+          &nbsp;标红
+        </el-button>
+      </div>
+      <!-- 富文本编辑区 -->
+      <div ref="editorRef" class="rich-editor" contenteditable="true" data-placeholder="请输入操作日志"></div>
 
       <!-- 按钮区 -->
       <div class="dialog-actions">
@@ -26,7 +37,11 @@
       <!-- 历史表格 -->
       <el-table border :data="list" max-height="600" stripe>
         <el-table-column label="日期" prop="date" width="160" />
-        <el-table-column label="内容" prop="content" />
+        <el-table-column label="内容" prop="content">
+          <template #default="{ row }">
+            <div v-html="row.content"></div>
+          </template>
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
         </template>
@@ -53,26 +68,52 @@ const props = defineProps<{
 }>()
 const visible = defineModel({ default: false })
 const remark = ref<string>('')
-const operationLog = ref<string>('')
-const inputRef = ref<InstanceType<typeof ElInput> | null>(null)
+const remarkInputRef = ref<InstanceType<typeof ElInput> | null>(null)
+const editorRef = ref<HTMLDivElement | null>(null)
+
 const handleDialogOpened = () => {
-  const textarea = inputRef.value?.$el.querySelector('textarea') as HTMLTextAreaElement
+  const textarea = remarkInputRef.value?.$el.querySelector('textarea') as HTMLTextAreaElement
   if (textarea) {
     textarea.focus()
-    textarea.setSelectionRange(0, 0) // 光标定位到开头
+    textarea.setSelectionRange(0, 0)
+  }
+  if (editorRef.value) {
+    editorRef.value.innerHTML = ''
   }
 }
+
+const getEditorContent = () => editorRef.value?.innerHTML || ''
+
+const applyFormat = (type: 'bold' | 'red') => {
+  editorRef.value?.focus()
+  if (type === 'bold') {
+    document.execCommand('bold')
+  } else {
+    const currentColor = document.queryCommandValue('foreColor')
+    if (currentColor === 'rgb(255, 0, 0)') {
+      const wasBold = document.queryCommandState('bold')
+      document.execCommand('removeFormat')
+      if (wasBold) document.execCommand('bold')
+    } else {
+      document.execCommand('foreColor', false, 'red')
+    }
+  }
+}
+
 const confirmUpdateOperationLog = async () => {
-  const ok = await props.addLogApi(props.row, operationLog.value)
+  const ok = await props.addLogApi(props.row, getEditorContent())
   if (ok) {
     $baseMessage('操作日志新增成功！', 'success')
     visible.value = false
   }
 }
 const handleAdd = async () => {
-  const ok = await props.addLogApi(props.row, operationLog.value)
+  const ok = await props.addLogApi(props.row, getEditorContent())
   if (ok) {
     $baseMessage('操作日志新增成功！', 'success')
+    if (editorRef.value) {
+      editorRef.value.innerHTML = ''
+    }
     fetchHistoryLog()
   }
 }
@@ -102,7 +143,6 @@ watch(
   () => visible.value,
   (val) => {
     if (val) {
-      operationLog.value = ''
       remark.value = props.row.operationRemark || ''
       fetchHistoryLog()
     }
@@ -133,5 +173,35 @@ watch(
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 8px;
+}
+
+.format-toolbar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.rich-editor {
+  min-height: 120px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 8px 12px;
+  border: 1px solid var(--el-border-color);
+  border-radius: var(--el-border-radius-base);
+  font-size: 14px;
+  line-height: 1.5;
+  outline: none;
+  margin-bottom: 12px;
+  word-break: break-all;
+
+  &:focus {
+    border-color: var(--el-color-primary);
+  }
+
+  &:empty::before {
+    content: attr(data-placeholder);
+    color: var(--el-text-color-placeholder);
+    pointer-events: none;
+  }
 }
 </style>
