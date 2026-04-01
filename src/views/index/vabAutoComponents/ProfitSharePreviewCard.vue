@@ -6,6 +6,7 @@
       <div class="right-select">
         <slot name="select"></slot>
       </div>
+      <span style="padding-left: 10px; font-size: 14px; color: darkgray">更新时间：{{ updateTime }}</span>
     </template>
 
     <el-table v-loading="loading" border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }">
@@ -62,6 +63,7 @@ const props = defineProps<{
   pageNo: number
   pageSize: number
   total: number
+  updateTime: string
 }>()
 
 const handleCurrentChange = (val: number) => {

@@ -308,6 +308,7 @@ export interface IGetFrontPageAttendanceOverview {
 }
 export interface IGetFrontPageProfitScoreRes {
   total: number
+  updateDate: string
   list: IGetFrontPageProfitScoreItem[]
 }
 export interface IGetFrontPageProfitScoreItem {

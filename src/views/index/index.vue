@@ -305,6 +305,7 @@
           :page-no="profitSharePreviewQueryForm.pageNo"
           :page-size="profitSharePreviewQueryForm.pageSize"
           :total="profitSharePreviewTotal"
+          :update-time="profitShareDate"
           @current-change="handleProfitSharePreviewCurrentChange"
           @size-change="handleProfitSharePreviewSizeChange"
         >
@@ -370,19 +371,16 @@
       </el-col>
     </el-row>
 
-   
-    <el-row  class="row-spacing" :gutter="20">
-       <!-- 收发误差数 -->
+    <el-row class="row-spacing" :gutter="20">
+      <!-- 收发误差数 -->
       <el-col v-if="ableViewShippingErrorCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <shipping-error-chart />
       </el-col>
-          <!-- 上新天数销售额/利润图表 -->
+      <!-- 上新天数销售额/利润图表 -->
       <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <new-product-sale-day-chart :site-list="siteList" :user-list="newProductSaleDayChartUserList" />
       </el-col>
     </el-row>
-
-
 
     <!-- 第六层 -->
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
@@ -1429,6 +1427,7 @@ const handleAttendanceOverviewSortChange = (data: { column: any; prop: string; o
 }
 const profitSharePreviewList = ref<IGetFrontPageProfitScoreItem[]>([])
 const profitSharePreviewTotal = ref<number>(0)
+const profitShareDate = ref<string>('')
 // 构建一个只有本月和上月的数组
 const profitSharePreviewMonthList = ref<string[]>([getCurrentMonth(), getLastMonth()])
 // 初始化为当前月份，确保有值
@@ -1463,6 +1462,8 @@ const fetchProfitSharePreview = async () => {
   profitSharePreviewList.value = data.list
   profitSharePreviewTotal.value = data.total
   profitSharePreviewLoading.value = false
+  profitShareDate.value = data.updateDate
+
 }
 const siteList = ref<{ id: number; label: string }[]>([])
 const fbaSiteList = ref<{ id: number; label: string }[]>([])
@@ -1493,8 +1494,8 @@ onBeforeMount(async () => {
     await fetchAdjustDetailMonthList()
     fetchSiteList()
     fetchUserList()
-     // 上新天数销售额/利润图表数据获取
-     if (!siteList.value.length) {
+    // 上新天数销售额/利润图表数据获取
+    if (!siteList.value.length) {
       fetchSiteList()
     }
     fetchRankNewProductOneYearCommission()
@@ -1512,10 +1513,8 @@ onBeforeMount(async () => {
     await fetchRankNewProductCommission()
     // 初始化时获取利润分成预览数据
     await fetchProfitSharePreview()
-   
   }
-  
-  
+
   if (ableViewTop30ProductSaleCard) {
     fetchTop30ProductSale()
   }
