@@ -3,15 +3,15 @@
     <!-- 左侧按钮组 -->
     <div class="left-section">
       <!-- 特定标签页按钮 -->
-      <el-button
-        v-if="showPackageTaskButton"
-        v-permissions="{ permission: [PoPermission.PACKAGE_TASK_REPLEASE] }"
-        :loading="packageTaskLoading"
-        type="primary"
-        @click="$emit('packageTaskRelease')"
-      >
-        发布打包任务
-      </el-button>
+<!--      <el-button-->
+<!--        v-if="showPackageTaskButton"-->
+<!--        v-permissions="{ permission: [PoPermission.PACKAGE_TASK_REPLEASE] }"-->
+<!--        :loading="packageTaskLoading"-->
+<!--        type="primary"-->
+<!--        @click="$emit('packageTaskRelease')"-->
+<!--      >-->
+<!--        发布打包任务-->
+<!--      </el-button>-->
 
       <!-- 公共操作按钮 -->
       <el-button
