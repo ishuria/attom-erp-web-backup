@@ -133,10 +133,10 @@
       </el-table-column>
       <el-table-column align="center" label="状态" min-width="100" prop="approvalStatus">
         <template #default="{ row }">
-          <el-tag v-if="row.status === 2" type="success">已完成</el-tag>
+          <el-tag v-if="row.approvalStatus === 2" type="danger">审批不通过</el-tag>
           <el-tag v-else-if="row.approvalStatus === 0" type="warning">待审批</el-tag>
+          <el-tag v-else-if="row.status === 2" type="success">已完成</el-tag>
           <el-tag v-else-if="row.approvalStatus === 1" type="primary">审批通过</el-tag>
-          <el-tag v-else-if="row.approvalStatus === 2" type="danger">审批不通过</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="200">
