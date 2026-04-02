@@ -109,7 +109,9 @@
       </el-table-column>
       <el-table-column label="整改要求" min-width="160" prop="correctionRequirement">
         <template #default="{ row }">
-          <div v-html="row.correctionRequirement"></div>
+          <div v-if="row.correctionRequirement" class="correction-preview" @click="handleViewCorrection(row)">
+            {{ stripHtml(row.correctionRequirement) }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="计入返工数" min-width="120" prop="countAsRework">
@@ -142,7 +144,7 @@
       <el-table-column align="center" fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <div style="display: flex; justify-content: center; gap: 16px">
-            <template v-if="row.approvalStatus === 0">
+            <template v-if="row.approvalStatus === 0 && row.approvalUserName === userName">
               <el-link type="success" underline="never" @click="handlePass(row)">通过</el-link>
               <el-link type="danger" underline="never" @click="handleReject(row)">不通过</el-link>
             </template>
@@ -168,6 +170,15 @@
       @current-change="handlePageChange"
       @size-change="handleSizeChange"
     />
+
+    <!-- 查看整改要求弹窗 -->
+    <!-- <vab-dialog v-model="correctionVisible" title="整改要求" width="50%">
+      <div class="correction-detail" v-html="correctionContent"></div>
+    </vab-dialog> -->
+
+    <vab-dialog v-model="correctionVisible" title="整改要求" width="50%">
+      <wang-editor-viewer class="correction-detail" :content="correctionContent" />
+    </vab-dialog>
 
     <!-- 审批不通过弹窗 -->
     <reject-approval v-model:visible="rejectVisible" :row="rejectRow" @confirm="handleRejectConfirm" />
@@ -307,6 +318,20 @@ const handleUpdateProofreadingStatus = async (row: IArtDesignTaskApprovalPageIte
     fetchData()
   }
 }
+// 查看整改要求
+const stripHtml = (html: string) => {
+  const text = html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .trim()
+  return text.length > 50 ? text.slice(0, 50) + '...' : text
+}
+const correctionVisible = ref(false)
+const correctionContent = ref('')
+const handleViewCorrection = (row: IArtDesignTaskApprovalPageItem) => {
+  correctionContent.value = row.correctionRequirement || ''
+  correctionVisible.value = true
+}
 // 完成
 const handleFinish = async (row: IArtDesignTaskApprovalPageItem) => {
   $baseConfirm('确定要完成美工任务吗？', null, async () => {
@@ -408,6 +433,22 @@ onMounted(() => {
         }
       }
     }
+  }
+}
+
+.correction-preview {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.correction-detail {
+  max-height: 1000px;
+  overflow-y: auto;
+  padding: 10px;
+  :deep(img) {
+    max-width: 100%;
   }
 }
 </style>

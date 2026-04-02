@@ -156,6 +156,12 @@ onBeforeUnmount(() => {
 
   :deep(.w-e-text-container) {
     min-height: 500px;
+    .w-e-text-placeholder {
+      font-size: 16px;
+    }
+    p, span, li {
+      font-size: 16px;
+    }
   }
 }
 </style>
