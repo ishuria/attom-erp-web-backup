@@ -538,6 +538,7 @@
             </template>
           </el-table-column>
           <el-table-column label="任务总数" min-width="100" prop="totalTaskCount" sortable />
+          <el-table-column label="返工数" min-width="100" prop="reworkCount" sortable />
           <el-table-column
             label="总按时完成率"
             min-width="120"

@@ -236,12 +236,8 @@
                     <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
                       <el-link type="primary" underline="never">分配SKU</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_FINISH] })"
-                      :disabled="!canFinishTask(row)"
-                      @click="handleFinish(row)"
-                    >
-                      <el-link :disabled="!canFinishTask(row)" type="success" underline="never">完成</el-link>
+                    <el-dropdown-item v-if="isAssignedDesigner(row)" @click="handleShowSubmitApproval(row)">
+                      <el-link type="success" underline="never">提交审批</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
@@ -741,12 +737,8 @@
                     >
                       <el-link type="primary" underline="never">长期提成</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_FINISH] })"
-                      :disabled="!canFinishTask(row)"
-                      @click="handleFinish(row)"
-                    >
-                      <el-link :disabled="!canFinishTask(row)" type="success" underline="never">完成</el-link>
+                    <el-dropdown-item v-if="isAssignedDesigner(row)" @click="handleShowSubmitApproval(row)">
+                      <el-link type="success" underline="never">提交审批</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleDeadlineExtensionApplication(row)">
                       <el-link type="primary" underline="never">超时日期修改申请</el-link>
@@ -776,6 +768,9 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
+      </el-tab-pane>
+      <el-tab-pane label="已提交审批" :name="4">
+        <submitted-approval-tab ref="submittedApprovalTabRef" />
       </el-tab-pane>
       <el-tab-pane label="已完成" :name="2">
         <vab-query-form>
@@ -1282,6 +1277,8 @@
       :listing-task-id="longTaskApplicationListingTaskId"
       @success="fetchData"
     />
+    <!-- 提交审批 -->
+    <submit-approval v-model:visible="submitApprovalVisible" :row="submitApprovalRow" @confirm="fetchData" />
   </div>
 </template>
 
@@ -1297,6 +1294,7 @@ import {
   addArtDesignSelectionReasons,
   addArtDesignTask,
   allocateArtDesignTask,
+  approveArtDesignTask,
   delArtDesignSelectionReasons,
   delArtDesignTask,
   finishArtDesignTask,
@@ -1356,6 +1354,24 @@ const handleLongTaskApplication = (row: IGetArtDesignTaskList) => {
   longTaskApplicationListingTaskId.value = row.id!
 }
 const isBoss = currentRoleCode === ROLE_BOSS_CODE
+// 检查用户是否有权限审批任务（逻辑与 canFinishTask 一致）
+const canApproveTask = (row: any) => {
+  if (!userName) return false
+
+  const productManagers = row.productManager?.split(',').map((name: string) => name.trim()) || []
+  const isProductManager = productManagers.includes(userName)
+
+  const productDesigns = row.productDesign?.split(',').map((name: string) => name.trim()) || []
+  const isProductDesign = productDesigns.includes(userName)
+
+  const supervisors = row.supervisorNames?.split(',').map((name: string) => name.trim()) || []
+  const isSupervisor = supervisors.includes(userName)
+
+  const publishers = row.publisherPersonName?.split(',').map((name: string) => name.trim()) || []
+  const isPublisher = publishers.includes(userName)
+
+  return isProductManager || isProductDesign || isSupervisor || isPublisher || isBoss
+}
 // 检查用户是否有权限完成任务
 const canFinishTask = (row: any) => {
   if (!userName) return false
@@ -1468,6 +1484,18 @@ let copyRow: any
 
 const getHighlightClass = (username: string) => {
   return username === currentUser ? 'highlight' : ''
+}
+// 判断当前用户是否是该任务分配的美工
+const isAssignedDesigner = (row: IGetArtDesignTaskList) => {
+  const designerFields = ['basePicture', 'modeling', 'rendering', 'aAdd', 'video', 'instructionManual', 'colorDesign', 'productPlaneDesign']
+  return designerFields.some((field) => {
+    const val = row[field as keyof IGetArtDesignTaskList] as string | undefined
+    if (!val) return false
+    return val
+      .split(',')
+      .map((s: string) => s.trim())
+      .includes(userName)
+  })
 }
 const distributionSkusId = ref<number>(-1)
 const handleShowDistributeSkus = (row: IGetArtDesignTaskList) => {
@@ -1672,6 +1700,8 @@ const getCachedColumnWidth = (label: string, prop: string, fallback: number) => 
 }
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
+// 审批分页组件ref
+const submittedApprovalTabRef = ref(null)
 const siteList = ref<{ id: number; label: string }[]>([])
 const userList = ref<{ id: number; label: string }[]>([])
 const _id = ref<number>(0)
@@ -1891,7 +1921,11 @@ const handleTabClick = (tab: TabsPaneContext) => {
         pageSize: queryForm.pageSize,
       },
     })
-    fetchData()
+    if (queryForm.status === 4) {
+      //
+    } else {
+      fetchData()
+    }
   }
 }
 const handleLongTerm = async (row: IGetArtDesignTaskList) => {
@@ -1912,6 +1946,36 @@ const handleFinish = async (row: IGetArtDesignTaskList) => {
     }
   })
 }
+// 提交审批
+const submitApprovalVisible = ref<boolean>(false)
+const submitApprovalRow = ref<IGetArtDesignTaskList | null>(null)
+const handleShowSubmitApproval = (row: IGetArtDesignTaskList) => {
+  submitApprovalRow.value = row
+  submitApprovalVisible.value = true
+}
+
+// 审批通过
+const handleApprovePass = async (row: IGetArtDesignTaskList) => {
+  $baseConfirm('确定要审批通过该任务吗？', null, async () => {
+    const { data } = await approveArtDesignTask({
+      id: row.id!,
+      approvalStatus: 1,
+    })
+    if (data) {
+      $baseMessage('审批通过成功！', 'success')
+      fetchData()
+    }
+  })
+}
+
+// 审批记录
+const approvalRecordsVisible = ref<boolean>(false)
+const approvalRecordsTaskId = ref<number>(-1)
+const handleShowApprovalRecords = (row: IGetArtDesignTaskList) => {
+  approvalRecordsTaskId.value = row.id!
+  approvalRecordsVisible.value = true
+}
+
 const showTaskStatistics = async () => {
   taskStatisticsVisible.value = true
   // const { data } = await getArtDesignTaskStatistics()
@@ -2203,7 +2267,13 @@ onBeforeMount(async () => {
   }
 
   // 并发请求所有初始数据
-  await Promise.all([fetchOperationUserList(), fetchSiteList(), fetchUserList(), fetchData()])
+  const initPromises = [fetchOperationUserList(), fetchSiteList(), fetchUserList()]
+  if (activeName.value === 4) {
+    // tab4 组件自己会在 onMounted 时加载数据
+  } else {
+    initPromises.push(fetchData())
+  }
+  await Promise.all(initPromises)
 })
 
 // 清理资源

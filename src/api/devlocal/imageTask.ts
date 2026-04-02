@@ -5,10 +5,14 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IAddArtDesignTaskReq,
   IAllocateArtDesignTaskReq,
+  IArtDesignTaskApprovalReworkUpdateReqDTO,
+  IArtDesignTaskApproveReqDTO,
   IArtDesignTaskMargin,
   IClaimArtDesignTaskReq,
   IConfirmOtherSkuArtDesignSellingPointRes,
   IGetArtDesignSelectionReasonsList,
+  IGetArtDesignTaskApprovalPageReq,
+  IGetArtDesignTaskApprovalPageRes,
   IGetArtDesignTaskList,
   IGetArtDesignTaskListReq,
   IGetArtDesignTaskListRes,
@@ -21,6 +25,7 @@ import type {
   IQueryArtDesignTaskDistributionRes,
   ISaveArtDesignCopywritingReq,
   ISaveBatchSellingPointReq,
+  ISubmitApprovalArtDesignTaskReq,
   IUpdateArtDesignDemandAddressReq,
   IUpdateArtDesignTaskDistributeReq,
 } from '/@/type/listingTask/imageTaskType'
@@ -405,6 +410,58 @@ export function getArtDesignOverdueList(data: {
 export function approveArtDesignOverdue(data: { id: number; status: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/artdesign/overdue/approval`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 提交审批
+ * @param data ISubmitApprovalArtDesignTaskReq
+ * @returns { data: boolean }
+ */
+export function submitApprovalArtDesignTask(data: ISubmitApprovalArtDesignTaskReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/task/submit/approval`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 审批美工任务
+ * @param data IArtDesignTaskApproveReqDTO
+ * @returns { data: boolean }
+ */
+export function approveArtDesignTask(data: IArtDesignTaskApproveReqDTO): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/task/approve`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 更新审批记录返工数
+ * @param data IArtDesignTaskApprovalReworkUpdateReqDTO
+ * @returns { data: boolean }
+ */
+export function updateArtDesignTaskApprovalRework(data: IArtDesignTaskApprovalReworkUpdateReqDTO): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/task/approval/rework/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 分页查询审批记录（关联任务表）
+ * @param data IGetArtDesignTaskApprovalPageReq
+ * @returns { data: { list: IArtDesignTaskApprovalPageItem[], total: number } }
+ */
+export function getArtDesignTaskApprovalPage(data: IGetArtDesignTaskApprovalPageReq): Promise<IGetArtDesignTaskApprovalPageRes> {
+  return request({
+    url: `${BASE_API}/artdesign/task/approval/records`,
     method: 'post',
     data,
   })

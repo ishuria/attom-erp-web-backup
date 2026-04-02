@@ -79,6 +79,10 @@ export interface IGetArtDesignTaskList {
    * 任务类型
    */
   taskType?: string
+  /**
+   * 最新审批状态
+   */
+  latestApprovalStatus?: number
   [property: string]: any
 }
 export interface IAddArtDesignTaskReq {
@@ -423,4 +427,94 @@ export interface IGetArtDesignTaskUserListBySku {
    * true 不可选中 false 可选中
    */
   status: boolean
+}
+
+/**
+ * 提交审批请求参数
+ */
+export interface ISubmitApprovalArtDesignTaskReq {
+  id: number
+  filePath: string
+}
+
+export interface IArtDesignTaskApproveReqDTO {
+  id: number
+  approvalStatus: number
+  correctionRequirement?: string
+}
+
+export interface IArtDesignTaskApprovalReworkUpdateReqDTO {
+  id: number
+  countAsRework: number
+}
+
+export interface IArtDesignTaskApprovalRespDTO {
+  id: number
+  artDesignTaskId: number
+  filePath: string
+  approvalUserId: number
+  approvalUserName: string
+  approvalStatus: number
+  correctionRequirement: string
+  countAsRework: number
+  createTime: string
+}
+
+/**
+ * 审批记录分页查询请求
+ */
+export interface IGetArtDesignTaskApprovalPageReq {
+  keyword: string
+  pageNo: number
+  pageSize: number
+}
+
+/**
+ * 审批记录分页查询响应
+ */
+export interface IGetArtDesignTaskApprovalPageRes {
+  data: {
+    list: IArtDesignTaskApprovalPageItem[]
+    total: number
+  }
+}
+
+/**
+ * 审批记录分页查询项
+ */
+export interface IArtDesignTaskApprovalPageItem {
+  /** 审批记录id */
+  id: number
+  /** 美工任务id */
+  artDesignTaskId: number
+  /** SKU图片地址 */
+  skuImgUrl: string
+  /** SKU */
+  sku: string
+  /** 任务类型 */
+  taskType: string
+  /** 产品定位 */
+  positioning: string
+  /** 要求完成日期 */
+  finishDate: string
+  /** 提交人员（美工） */
+  artDesignName: string
+  /** 审批人姓名 */
+  approvalUserName: string
+  /** 提交的文件路径 */
+  filePath: string
+  /** 整改要求 */
+  correctionRequirement: string
+  /** 是否计入返工数 0否 1是 */
+  countAsRework: number
+  /** 审批状态 0待审批 1通过 2不通过 */
+  approvalStatus: number
+  /** 提交时间 */
+  createTime: string
+
+  actualFinishDate: string
+
+  operation: string
+
+  proofreadingStatus: number
 }
