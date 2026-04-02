@@ -361,7 +361,7 @@ const queryRightForm = reactive<any>({
   startTime: date.value[0],
   endTime: date.value[1],
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 50,
   orderByField: 'date',
   orderDirection: 'descending',
 })

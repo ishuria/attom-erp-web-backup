@@ -2012,6 +2012,16 @@ const showAssignTask = async () => {
     artDesignUserListByIds.value = userListData
   }
 
+  // 先清空表单，避免残留上一次的值
+  assignTaskForm.baseImageUrlPerson = []
+  assignTaskForm.moldingPerson = []
+  assignTaskForm.aPlus = []
+  assignTaskForm.videoPerson = []
+  assignTaskForm.instructionPerson = []
+  assignTaskForm.renderingPerson = []
+  assignTaskForm.colorDesignPerson = []
+  assignTaskForm.productPlaneDesignPerson = []
+
   // 如果只选择了一行，获取初始化值
   if (selectedRows.value.length === 1) {
     if (activeName.value === 1 || activeName.value === 3) {
@@ -2027,16 +2037,6 @@ const showAssignTask = async () => {
         assignTaskForm.productPlaneDesignPerson = data.productPlaneDesignPersons
       }
     }
-  } else {
-    // 如果选择了多行，初始化值都为空
-    assignTaskForm.baseImageUrlPerson = []
-    assignTaskForm.moldingPerson = []
-    assignTaskForm.aPlus = []
-    assignTaskForm.videoPerson = []
-    assignTaskForm.instructionPerson = []
-    assignTaskForm.renderingPerson = []
-    assignTaskForm.colorDesignPerson = []
-    assignTaskForm.productPlaneDesignPerson = []
   }
 
   assignTaskVisible.value = true
