@@ -105,6 +105,16 @@ export function reviewStepNo3VariantList(params?: IreviewId): Promise<IreviewSte
     params,
   })
 }
+
+/**
+ * 新品订货流程-零件信息完善与售价核对-直接提交给采购审批
+ */
+export function reviewToPurchase(reviewId: number): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/review/to/purchase/${reviewId}`,
+    method: 'post',
+  })
+}
 /**
  * 新品订货流程-完善新供应商信息与打包质检清单-查询新添加的供应商信息
  */

@@ -294,6 +294,14 @@ export interface IreviewStepNo3VariantList {
    */
   actualTotalCost: null
   /**
+   * 原审批毛利率
+   */
+  approvalGrossMarginRate?: number | null
+  /**
+   * 原审批售价
+   */
+  approvalSalsePrice?: number | null
+  /**
    * 外币币种
    */
   currencyType: string
@@ -349,6 +357,10 @@ export interface IreviewStepNo3VariantList {
    * 审核id
    */
   reviewMainId: number
+  /**
+   * 采购审批标记
+   */
+  purchaseAuditFlag?: number | null
   /**
    * ROI
    */

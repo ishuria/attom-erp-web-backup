@@ -599,9 +599,21 @@
       </vab-alert>
     </div>
     <div class="pay-button-group">
+      <div v-if="submitHint" :class="['submit-hint', { 'is-warning': !canDirectSubmitToPurchase }]" role="status">
+        {{ submitHint }}
+      </div>
       <el-button @click="handleGoback">上一步</el-button>
-      <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
-      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
+      <el-button :loading="saveLoading" native-type="submit" type="primary" @click="handleSave">保存</el-button>
+      <el-button
+        v-if="canDirectSubmitToPurchase"
+        :loading="directSubmitLoading"
+        native-type="submit"
+        type="success"
+        @click="handleDirectSubmitToPurchase"
+      >
+        提交给采购审批
+      </el-button>
+      <el-button v-else :loading="continueLoading" native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
     </div>
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
@@ -636,16 +648,19 @@ import {
   reviewStepNo3UpdatePurchaseMatters,
   reviewStepNo3VariantList,
   reviewStepNo3VariantUpdate,
+  reviewToPurchase,
   submitReviewComponent,
   submitReviewConsumable,
   updateReviewStepNo3ComponentSuitDetail,
 } from '/@/api/devlocal/orderProcess'
 import { getProductAllSupplier, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { addPurchaseRepository } from '/@/api/devlocal/purchase'
+import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { handleActivePath } from '/@/utils/routes'
 import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString, toPercentage } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -661,7 +676,10 @@ const getHtsName = (row: any) => {
 }
 
 const repositoryAddVisible = ref<boolean>(false)
+const router = useRouter()
 const route: any = useRoute()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 const props = defineProps<{ step1Data: number }>()
 
 const emit = defineEmits<{
@@ -672,6 +690,11 @@ const emit = defineEmits<{
 
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
+const saveLoading = ref(false)
+const continueLoading = ref(false)
+const directSubmitLoading = ref(false)
+const directSubmitStateReady = ref(false)
+const canDirectSubmitToPurchase = ref(false)
 
 const htsLoading = ref(false) //搜索SKU-loading
 const htsOptions = ref<any[]>([]) //搜索选项
@@ -701,6 +724,56 @@ const remoteHTSMethod = async (query: string, row: any) => {
 }
 const imageUploadVisible = ref<boolean>(false) // 图片上传弹窗显示与否
 let copyImgRow: any = null // 复制的行
+// 第3步既支持正常流程也支持从订大货编辑进入，这里统一收口 reviewId 来源。
+const resolveReviewId = () => (route.query.progressId ? props.step1Data : route.query.reviewId)
+
+const normalizeNumber = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === '') return null
+  const normalized = Number(value)
+  return Number.isFinite(normalized) ? normalized : null
+}
+
+const isSameNumericValue = (currentValue: unknown, snapshotValue: unknown) => {
+  const current = normalizeNumber(currentValue)
+  const snapshot = normalizeNumber(snapshotValue)
+
+  if (current === null || snapshot === null) return false
+
+  return Math.abs(current - snapshot) < 0.000001
+}
+
+// 严格按 PRD：只有全部变体都处于采购驳回且售价、毛利率与原审批快照一致时，才允许直提采购。
+const updateDirectSubmitState = () => {
+  canDirectSubmitToPurchase.value =
+    variantsList.value.length > 0 &&
+    variantsList.value.every(
+      (item) =>
+        item.purchaseAuditFlag === 1 &&
+        normalizeNumber(item.approvalSalsePrice) !== null &&
+        normalizeNumber(item.approvalGrossMarginRate) !== null &&
+        isSameNumericValue(item.finalSellingPrice, item.approvalSalsePrice) &&
+        isSameNumericValue(item.grossMarginRate, item.approvalGrossMarginRate)
+    )
+  directSubmitStateReady.value = true
+}
+
+const submitHint = computed(() =>
+  directSubmitStateReady.value
+    ? canDirectSubmitToPurchase.value
+      ? '当前售价和毛利率未变化，可直接提交给采购审批'
+      : '售价或毛利率已变更，需重新走审批流程'
+    : ''
+)
+
+// 直提采购成功后直接回列表，不再走“保存并继续”的后续步骤流转。
+const handleDirectSubmitSuccess = async () => {
+  $baseMessage('已提交给采购审批', 'success', 'hey')
+  await delVisitedRoute(handleActivePath(route, true))
+  router.push({
+    path: '/newProductDevelopment/newProductApprovalAndRecords',
+  })
+}
+
 // 打开上传图片弹窗
 const showUploadDialog = (row: any) => {
   imageUploadVisible.value = true
@@ -1388,17 +1461,17 @@ const clickVariantsCancel = async (event: any, value: any) => {
 
 // 当点击保存的时候
 const handleSave = async () => {
-  let classReviewId: number | undefined
-  if (route.query.progressId) {
-    //说明是订大货进去的,接受上一步传来的reviewId
-    classReviewId = props.step1Data
-  } else {
-    classReviewId = route.query.reviewId
-  }
-  const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
-  if (data === true) {
-    $baseMessage('当前信息已保存。', 'success', 'hey')
-    _setStepNo(Number(classReviewId), 2)
+  const classReviewId = resolveReviewId()
+  saveLoading.value = true
+  try {
+    const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
+    if (data === true) {
+      $baseMessage('当前信息已保存。', 'success', 'hey')
+      _setStepNo(Number(classReviewId), 2)
+      await fetchVariantsData()
+    }
+  } finally {
+    saveLoading.value = false
   }
 }
 
@@ -1510,22 +1583,50 @@ const validateSame = () => {
 }
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
-  let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId
+  const classReviewId = resolveReviewId()
 
   const allValid = componentList.value.every((item) => validateComponent(item))
   const allVariantsValid = variantsList.value.every((item) => validateVariants(item))
 
   if (allValid && allVariantsValid) {
     if (validateSame()) {
-      const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
-      if (data === true) {
-        $baseMessage('当前信息已保存。', 'success', 'hey')
-        emit('change-step', 3)
-        _setStepNo(Number(classReviewId), 2)
+      continueLoading.value = true
+      try {
+        const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
+        if (data === true) {
+          $baseMessage('当前信息已保存。', 'success', 'hey')
+          emit('change-step', 3)
+          _setStepNo(Number(classReviewId), 2)
+          await fetchVariantsData()
+        }
+      } finally {
+        continueLoading.value = false
       }
     } else {
       $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
     }
+  }
+}
+
+// “提交给采购审批”与“保存并继续”互斥显示，这里只负责直提采购接口调用和防重复提交。
+const handleDirectSubmitToPurchase = async () => {
+  if (directSubmitLoading.value) return
+
+  const classReviewId = resolveReviewId()
+  directSubmitLoading.value = true
+  try {
+    const { data } = await reviewToPurchase(Number(classReviewId))
+    if (data) {
+      await handleDirectSubmitSuccess()
+      return
+    }
+
+    $baseMessage('提交失败，请刷新页面后重试', 'error', 'hey')
+  } catch (error: any) {
+    if (!error?.msg) $baseMessage('提交失败，请刷新页面后重试', 'error', 'hey')
+    console.error(error)
+  } finally {
+    directSubmitLoading.value = false
   }
 }
 
@@ -1566,21 +1667,19 @@ const fetchDataComponent = async () => {
 // 获取变体列表
 const fetchVariantsData = async () => {
   variantLoading.value = true
-  let classReviewId: number | undefined
-  if (route.query.progressId) {
-    //说明是订大货进去的,接受上一步传来的reviewId
-    classReviewId = props.step1Data
-  } else {
-    classReviewId = route.query.reviewId
-  }
+  const classReviewId = resolveReviewId()
   try {
     if (route.query.progressId || route.query.reviewStatus === '0' || route.query.reviewStatus === '2') {
       const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
       variantsList.value = data
-      variantLoading.value = false
+      // 每次重新拉取变体后都要重算按钮状态，覆盖首次进入、编辑后、保存后的场景。
+      updateDirectSubmitState()
     }
   } catch (error) {
     console.error(error)
+    canDirectSubmitToPurchase.value = false
+    directSubmitStateReady.value = true
+  } finally {
     variantLoading.value = false
   }
 }
@@ -1653,6 +1752,17 @@ onMounted(() => {
   display: block;
   margin: 20px auto;
   text-align: center;
+}
+
+.submit-hint {
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--el-color-success);
+
+  &.is-warning {
+    color: var(--el-color-warning);
+  }
 }
 
 .container {
