@@ -1,6 +1,6 @@
 <template>
   <div class="ai-chat-panel">
-    <div class="toolbar">
+    <div v-if="busyMessage" class="toolbar">
       <div v-if="busyMessage" class="busy-banner">
         {{ busyMessage }}
       </div>
@@ -54,10 +54,10 @@ const MessageList = ChatPanelMessageList
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   min-width: 0;
   height: 100%;
-  padding: 18px 20px 16px;
+  padding: 4px 16px 2px;
 
   .toolbar {
     display: flex;

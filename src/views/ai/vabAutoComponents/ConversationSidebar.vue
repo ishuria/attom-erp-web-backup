@@ -11,9 +11,13 @@
         :class="['conversation-item', { active: String(item.id) === String(aiStore.activeConversationId) }]"
         @click="aiStore.switchConversation(item.id)"
       >
+        <span v-if="item.unreadCount" class="unread-count">
+          {{ formatUnreadCount(item.unreadCount) }}
+        </span>
         <div class="main">
-          <span class="name">{{ item.title }}</span>
-          <span class="time">{{ item.createdAt }}</span>
+          <div class="headline">
+            <span class="name">{{ item.title }}</span>
+          </div>
         </div>
         <el-dropdown placement="bottom-end" trigger="click" @command="(command) => handleCommand(command, item)">
           <button class="action-trigger" type="button" @click.stop>
@@ -44,6 +48,13 @@ defineOptions({
 
 const aiStore = useAiStore()
 const handleCreateConversation = () => aiStore.createConversation()
+
+const formatUnreadCount = (count?: number) => {
+  const normalizedCount = Math.max(0, Number(count) || 0)
+  if (!normalizedCount) return ''
+  if (normalizedCount > 99) return '99+'
+  return String(normalizedCount)
+}
 
 withDefaults(
   defineProps<{
@@ -136,12 +147,13 @@ const handleCommand = async (command: string, item: ChatConversation) => {
   }
 
   .conversation-item {
+    position: relative;
     display: flex;
     gap: 8px;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    padding: 16px 14px;
+    padding: 16px 44px 16px 14px;
     text-align: left;
     cursor: pointer;
     background: var(--el-bg-color);
@@ -166,7 +178,12 @@ const handleCommand = async (command: string, item: ChatConversation) => {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 4px;
+    min-width: 0;
+  }
+
+  .headline {
+    display: flex;
+    align-items: center;
     min-width: 0;
   }
 
@@ -191,8 +208,7 @@ const handleCommand = async (command: string, item: ChatConversation) => {
     }
   }
 
-  .name,
-  .time {
+  .name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -203,9 +219,23 @@ const handleCommand = async (command: string, item: ChatConversation) => {
     color: var(--el-text-color-primary);
   }
 
-  .time {
-    font-size: 14px;
-    color: var(--el-text-color-secondary);
+  .unread-count {
+    position: absolute;
+    top: 6px;
+    right: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--el-color-white);
+    background: var(--el-color-danger);
+    border-radius: 999px;
+    transform: translate(50%, 0);
   }
 }
 

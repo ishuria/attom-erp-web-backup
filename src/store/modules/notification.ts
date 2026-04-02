@@ -152,20 +152,6 @@ export const useNotificationStore = defineStore('notification', {
       this.subscribed = false
       if (socketClient) await socketClient.deactivate()
     },
-    async markAllRead(showSuccessMessage = false) {
-      if (this.unreadCount <= 0) return
-
-      try {
-        await markAllNotificationsRead()
-        this.syncUnreadCount(0)
-        this.broadcast({
-          type: 'notification-read-all',
-        })
-        if (showSuccessMessage) $baseMessage('已全部标记为已读', 'success')
-      } catch (error: any) {
-        $baseMessage(error?.msg ?? error?.message ?? '已读失败，请稍后重试', 'error')
-      }
-    },
     async initialize() {
       const userStore = useUserStore()
       if (!userStore.token) return

@@ -1,5 +1,12 @@
 import dayjs from 'dayjs'
-import { createAiConversation, deleteAiConversation, getAiConversationList, getAiMessageList, sendAiChatMessage } from '/@/api/devlocal/ai'
+import {
+  createAiConversation,
+  decreaseAiConversationUnreadCount,
+  deleteAiConversation,
+  getAiConversationList,
+  getAiMessageList,
+  sendAiChatMessage,
+} from '/@/api/devlocal/ai'
 
 import type {
   ChatConversation,
@@ -17,6 +24,7 @@ const normalizeConversation = (item: any): ChatConversation => ({
   id: item?.id ?? createLocalId('conv'),
   title: item?.title ?? '新建对话',
   createdAt: item?.createdAt ?? item?.createTime ?? dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  unreadCount: Math.max(0, Number(item?.unreadCount ?? item?.unreadNum ?? item?.noReadCount ?? 0) || 0),
 })
 
 // 消息列表也做同样的字段归一，减少视图层判断分支。
@@ -107,6 +115,18 @@ export const useAiStore = defineStore('ai', {
       }
       this.conversations = list
     },
+    setConversationUnreadCount(id: number | string, unreadCount: number) {
+      const key = String(id)
+      const conversationIndex = this.conversations.findIndex((item) => String(item.id) === key)
+      if (conversationIndex === -1) return
+
+      const list = [...this.conversations]
+      list[conversationIndex] = {
+        ...list[conversationIndex],
+        unreadCount: Math.max(0, Number(unreadCount) || 0),
+      }
+      this.conversations = list
+    },
     // 初始化只做一次；具体是否在空列表时自动创建会话，由 options 控制。
     async ensureInitialized(options?: EnsureConversationOptions) {
       if (this.initialized && !options?.forceRefresh) return
@@ -154,7 +174,28 @@ export const useAiStore = defineStore('ai', {
     async switchConversation(id: number | string) {
       this.activeConversationId = id
       const key = String(id)
+      const targetConversation = this.conversations.find((item) => String(item.id) === key)
+
+      if ((targetConversation?.unreadCount ?? 0) > 0) {
+        void this.decreaseConversationUnreadCount(id)
+      }
+
       if (!this.messages[key]) await this.loadMessages(id)
+    },
+    async decreaseConversationUnreadCount(id: number | string) {
+      const key = String(id)
+      const targetConversation = this.conversations.find((item) => String(item.id) === key)
+      const unreadCount = Math.max(0, Number(targetConversation?.unreadCount) || 0)
+      if (!unreadCount) return
+
+      try {
+        const response = await decreaseAiConversationUnreadCount(id)
+        const success = response?.data ?? response
+        if (success === false) return
+        this.setConversationUnreadCount(id, 0)
+      } catch {
+        // 未读数同步失败不阻断切换会话，保持当前角标以避免误清零。
+      }
     },
     // 消息接口失败时保留现有本地消息，避免把空态误写成欢迎语。
     async loadMessages(id: number | string) {

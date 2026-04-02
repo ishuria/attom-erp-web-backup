@@ -12,6 +12,7 @@ export interface ChatConversation {
   id: number | string
   title: string
   createdAt?: string
+  unreadCount?: number
 }
 
 export interface ChatConversationBusyState {

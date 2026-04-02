@@ -66,6 +66,17 @@ export const updateAiConversationTitle = (data: { id: number | string; title: st
 }
 
 /**
+ * 减少指定 AI 会话未读消息数量
+ * @param conversationId 会话 ID
+ */
+export const decreaseAiConversationUnreadCount = (conversationId: number | string) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/${conversationId}/unread-count/decrease`,
+    method: 'post',
+  })
+}
+
+/**
  * 发送 AI 对话消息
  * 当前方法用于非流式问答场景，流式能力由独立的 stream 方法处理。
  * @param data.conversationId 会话 ID

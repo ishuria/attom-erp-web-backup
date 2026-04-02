@@ -20,7 +20,6 @@ const dialogVisible = ref(false)
 
 const openChatDialog = () => {
   dialogVisible.value = true
-  void notificationStore.markAllRead()
 }
 </script>
 

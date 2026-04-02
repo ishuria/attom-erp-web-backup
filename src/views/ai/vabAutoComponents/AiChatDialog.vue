@@ -2,6 +2,7 @@
   <vab-dialog
     v-model="dialogVisible"
     append-to-body
+    class="ai-chat-dialog-shell"
     :close-on-click-modal="true"
     :destroy-on-close="false"
     :title="title"
@@ -154,6 +155,18 @@ watch(
 
   .dialog-body {
     flex-direction: column;
+  }
+}
+</style>
+
+<style lang="scss">
+.ai-chat-dialog-shell {
+  .el-dialog__body {
+    padding-bottom: 8px;
+  }
+
+  .el-dialog__footer {
+    padding: 4px 16px 6px;
   }
 }
 </style>
