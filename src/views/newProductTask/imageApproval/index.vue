@@ -1,5 +1,5 @@
 <template>
-  <div class="tabs-content">
+  <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -144,7 +144,7 @@
       <el-table-column align="center" fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <div style="display: flex; justify-content: center; gap: 16px">
-            <template v-if="row.approvalStatus === 0 && row.approvalUserName === userName">
+            <template v-if="row.approvalStatus === 0 && (row.approvalUserName === userName || canApprove)">
               <el-link type="success" underline="never" @click="handlePass(row)">通过</el-link>
               <el-link type="danger" underline="never" @click="handleReject(row)">不通过</el-link>
             </template>
@@ -172,10 +172,6 @@
     />
 
     <!-- 查看整改要求弹窗 -->
-    <!-- <vab-dialog v-model="correctionVisible" title="整改要求" width="50%">
-      <div class="correction-detail" v-html="correctionContent"></div>
-    </vab-dialog> -->
-
     <vab-dialog v-model="correctionVisible" title="整改要求" width="50%">
       <wang-editor-viewer class="correction-detail" :content="correctionContent" />
     </vab-dialog>
@@ -198,7 +194,13 @@ import {
   updateArtDesignTaskApprovalRework,
   updateProofreadingStatus,
 } from '/@/api/devlocal/imageTask'
-import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE, ROLE_GRAPHICDESIGNLEAD_CODE } from '/@/const/role'
+import {
+  ROLE_BOSS_CODE,
+  ROLE_ECOMMERCEOPERATIONLEAD_CODE,
+  ROLE_ECOMMERCEOPERATOR_CODE,
+  ROLE_GRAPHICDESIGNLEAD_CODE,
+  ROLE_PRODUCTMANNAGERLEAD_CODE,
+} from '/@/const/role'
 import ListingPermission from '/@/permissions/listing'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
@@ -208,13 +210,14 @@ import { hasPermission } from '/@/utils/permission'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'SubmittedApprovalTab',
+  name: 'ImageApproval',
 })
 
 // 角色判断：BOSS 和平面设计主管可修改返工数
 const currentRoleCode = useAclStore().getRole[0]
 const canEditRework = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE
 const ableCheck = currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE
+const canApprove = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 
 const useUser = useUserStore()
 const userName = useUser.getUsername
@@ -381,10 +384,6 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   }
   return ''
 }
-// 暴露给父组件
-defineExpose({
-  fetchData,
-})
 
 onMounted(() => {
   fetchData()
@@ -392,7 +391,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.tabs-content {
+.comprehensive-table-container {
   display: flex;
   flex-direction: column;
   height: 100%;

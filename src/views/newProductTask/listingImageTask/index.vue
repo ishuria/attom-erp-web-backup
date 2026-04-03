@@ -769,9 +769,6 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="已提交审批" :name="4">
-        <submitted-approval-tab ref="submittedApprovalTabRef" />
-      </el-tab-pane>
       <el-tab-pane label="已完成" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel>
@@ -1700,8 +1697,6 @@ const getCachedColumnWidth = (label: string, prop: string, fallback: number) => 
 }
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-// 审批分页组件ref
-const submittedApprovalTabRef = ref(null)
 const siteList = ref<{ id: number; label: string }[]>([])
 const userList = ref<{ id: number; label: string }[]>([])
 const _id = ref<number>(0)
@@ -1921,11 +1916,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
         pageSize: queryForm.pageSize,
       },
     })
-    if (queryForm.status === 4) {
-      //
-    } else {
-      fetchData()
-    }
+    fetchData()
   }
 }
 const handleLongTerm = async (row: IGetArtDesignTaskList) => {
@@ -2267,12 +2258,7 @@ onBeforeMount(async () => {
   }
 
   // 并发请求所有初始数据
-  const initPromises = [fetchOperationUserList(), fetchSiteList(), fetchUserList()]
-  if (activeName.value === 4) {
-    // tab4 组件自己会在 onMounted 时加载数据
-  } else {
-    initPromises.push(fetchData())
-  }
+  const initPromises = [fetchOperationUserList(), fetchSiteList(), fetchUserList(), fetchData()]
   await Promise.all(initPromises)
 })
 
