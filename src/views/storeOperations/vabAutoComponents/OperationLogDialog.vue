@@ -70,6 +70,7 @@ const visible = defineModel({ default: false })
 const remark = ref<string>('')
 const remarkInputRef = ref<InstanceType<typeof ElInput> | null>(null)
 const editorRef = ref<HTMLDivElement | null>(null)
+const draft = ref('')
 
 const handleDialogOpened = () => {
   const textarea = remarkInputRef.value?.$el.querySelector('textarea') as HTMLTextAreaElement
@@ -78,7 +79,7 @@ const handleDialogOpened = () => {
     textarea.setSelectionRange(0, 0)
   }
   if (editorRef.value) {
-    editorRef.value.innerHTML = ''
+    editorRef.value.innerHTML = draft.value
   }
 }
 
@@ -114,6 +115,7 @@ const handleAdd = async () => {
     if (editorRef.value) {
       editorRef.value.innerHTML = ''
     }
+    draft.value = ''
     fetchHistoryLog()
   }
 }
@@ -145,6 +147,8 @@ watch(
     if (val) {
       remark.value = props.row.operationRemark || ''
       fetchHistoryLog()
+    } else {
+      draft.value = getEditorContent()
     }
   }
 )
