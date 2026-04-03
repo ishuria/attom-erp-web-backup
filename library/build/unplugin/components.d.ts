@@ -312,6 +312,7 @@ declare module 'vue' {
     VabDialog: typeof import('./../../components/VabDialog/index.vue')['default']
     VabDialogOperationStockDefault: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/VabDialogOperationStockDefault.vue')['default']
     VabDialogOperationStockLog: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/VabDialogOperationStockLog.vue')['default']
+    VabDialogOperationStockPriceCalcLog: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/VabDialogOperationStockPriceCalcLog.vue')['default']
     VabDialogOperationStockUpdate: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/VabDialogOperationStockUpdate.vue')['default']
     VabDivider: typeof import('./../../components/VabDivider/index.vue')['default']
     VabDot: typeof import('./../../components/VabDot/index.vue')['default']

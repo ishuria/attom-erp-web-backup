@@ -14,6 +14,7 @@ import {
 import {
   IOperationStockDefaultParams,
   IOperationStockLogRules,
+  IOperationStockPriceCalcLogRules,
   IOperationStocksItem,
   IOperationStockUpdateReq,
 } from '/@/type/storeOperation/operationStock.ts'
@@ -247,6 +248,21 @@ export function syncAmazonPrice(data: {
 export function trialGrossMargin(data: { sku: string; site: number; newPrice: string }): Promise<{ data: { grossMarginRate: number } }> {
   return request({
     url: `${BASE_API}/operation/price/trial`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 运营自动化-价格变更日志查询
+ * @param data 查询参数
+ * @returns 价格变更日志列表
+ */
+export function queryOperationStockPriceCalcLogList(
+  data: IOperationStockPriceCalcLogReq
+): Promise<IOperationStockPriceCalcLogRules> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/price/logs`,
     method: 'post',
     data,
   })

@@ -209,3 +209,42 @@ export interface IOperationStockLog {
    */
   createTime?: string
 }
+
+/**
+ * 价格变更日志查询参数
+ */
+export interface IOperationStockPriceCalcLogReq {
+  keyWord?: string
+  pageNo?: number
+  pageSize?: number
+}
+
+/**
+ * 价格计算变更日志列表
+ */
+export interface IOperationStockPriceCalcLogRules {
+  data?: {
+    list: IOperationStockPriceCalcLog[]
+    total: number
+  }
+}
+
+/**
+ * 价格计算变更日志项
+ */
+export interface IOperationStockPriceCalcLog {
+  /** 主键id */
+  id?: number
+  /** 库存规则id */
+  stockRuleId?: number
+  /** 价格类型 0=最优价 1=最低价 2=最高价 */
+  priceType?: number
+  /** 变更前价格 */
+  beforePrice?: number
+  /** 变更后价格 */
+  afterPrice?: number
+  /** 操作人id */
+  operatorId?: number
+  /** 创建时间 */
+  createTime?: string
+}

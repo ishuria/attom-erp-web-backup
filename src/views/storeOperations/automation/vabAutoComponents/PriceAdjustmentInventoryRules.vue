@@ -6,6 +6,7 @@
           <el-form-item>
             <el-button type="primary" @click="updateBatch">批量修改</el-button>
             <el-button type="primary" @click="defaultVisible = true">新品默认参数</el-button>
+            <el-button type="primary" @click="handlerPriceCalcLog">价格变更日志</el-button>
           </el-form-item>
           <el-form-item label="站点">
             <el-select
@@ -521,6 +522,8 @@
     />
     <!-- 查询日志 -->
     <vab-dialog-operation-stock-log v-model:id="_rowId" v-model:operation-stock-visible="operationStockVisible" />
+    <!-- 价格变更日志 -->
+    <vab-dialog-operation-stock-price-calc-log v-model:visible="priceCalcLogVisible" />
 
     <!-- 销量趋势弹窗 -->
     <sale-trend-dialog v-model:visible="saleTrendVisible" :site="currentRowData?.site" :sku="currentRowData?.sku" />
@@ -663,12 +666,18 @@ const batchUpdateVisible = ref<boolean>(false)
 
 const operationStockVisible = ref<boolean>(false)
 
+const priceCalcLogVisible = ref<boolean>(false)
+
 const multipleSelection = ref<IOperationStocksItem[]>([])
 const _rowId = ref<number>()
 
 const handlerSysLog = (row: IOperationStocksItem) => {
   _rowId.value = row.id
   operationStockVisible.value = true
+}
+
+const handlerPriceCalcLog = () => {
+  priceCalcLogVisible.value = true
 }
 
 // 同步价格到亚马逊
