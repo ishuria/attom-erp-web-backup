@@ -100,11 +100,14 @@
       </el-table-column>
       <el-table-column label="内容" min-width="300" prop="content">
         <template #default="{ row }">
+          <!-- 手动输入 -->
+          <div v-if="row.type === 0">
+            <div v-html="row.content"></div>
+          </div>
           <!-- 系统抓取(type=1)时的解析展示 -->
-          <div v-if="row.type === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
+          <div v-else-if="row.type === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
           <div v-else>
-              {{ row.content }}
-          
+            {{ row.content }}
           </div>
         </template>
       </el-table-column>
