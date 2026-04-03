@@ -596,3 +596,93 @@ export function updateKeyProductsDefaultParams(data: { oemCount: number; nonOemC
     data,
   })
 }
+
+/**
+ * @description 获取亚马逊平台的运营
+ */
+export function getAmazonOptionUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/amazon/operation/user/list`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 获取沃尔玛的运营
+ */
+export function getWalmartOptionUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/walmart/operation/user/list`,
+    method: 'get',
+  })
+}
+
+// ------------------------------ 沃尔玛产品分配 ------------------------------
+export interface IGetWalmartAllocateListReq {
+  pageNo: number
+  pageSize: number
+  keyWord?: string
+  site?: number
+  operationUserId?: number
+  operationTypeId?: number
+  distributionStatus?: number
+}
+
+export interface IGetWalmartAllocateListRes {
+  data: {
+    total: number
+    list: IGetWalmartAllocateListItem[]
+  }
+}
+
+export interface IGetWalmartAllocateListItem {
+  id: number
+  sku: string
+  skuImgUrl: string
+  itemNumber: string
+  itemNumberAddress: string
+  upc: string
+  site: number
+  siteName?: string
+  operationUserId: number
+  operationUserName: string
+  operationTypeId: number
+  operationTypeName: string
+  distributionStatus: number
+  status: string
+  createTime: string
+  operationRemark: string
+}
+
+/**
+ * @description 沃尔玛产品分配-分页查询
+ */
+export function getWalmartAllocateList(data: IGetWalmartAllocateListReq): Promise<IGetWalmartAllocateListRes> {
+  return request({
+    url: `${BASE_API}/walmart/allocate/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 沃尔玛产品分配-修改运营负责人
+ */
+export function updateWalmartAllocateUser(data: { id: number; operationUserId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/walmart/allocate/update/user`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 沃尔玛产品分配-修改运营分类
+ */
+export function updateWalmartAllocateType(data: { id: number; operationTypeId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/walmart/allocate/update/type`,
+    method: 'post',
+    data,
+  })
+}

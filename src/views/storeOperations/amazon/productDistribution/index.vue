@@ -4,7 +4,9 @@
       <vab-query-form-left-panel>
         <el-form inline :model="queryForm">
           <el-form-item>
-            <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
+            <el-button type="primary" @click="handleHideStopProduction">
+              {{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}
+            </el-button>
           </el-form-item>
           <el-form-item label="站点">
             <el-select
@@ -26,7 +28,7 @@
           </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="queryForm.status" @change="queryData">
-              <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in allocationOption" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -36,21 +38,15 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="showAutoClaimSettings">自动分站点认领设定</el-button>
-            <el-button
-              :loading="markUnclaimedLoading"
-              type="primary"
-              @click="handleMarkUnclaimed"
-            >
-              申请老品认领
-            </el-button>
-<!--            <el-button-->
-<!--              v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"-->
-<!--              :disabled="markUnclaimedLoading"-->
-<!--              type="primary"-->
-<!--              @click="handleBatchClaim"-->
-<!--            >-->
-<!--              批量老品认领-->
-<!--            </el-button>-->
+            <el-button :loading="markUnclaimedLoading" type="primary" @click="handleMarkUnclaimed">申请老品认领</el-button>
+            <!--            <el-button-->
+            <!--              v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"-->
+            <!--              :disabled="markUnclaimedLoading"-->
+            <!--              type="primary"-->
+            <!--              @click="handleBatchClaim"-->
+            <!--            >-->
+            <!--              批量老品认领-->
+            <!--            </el-button>-->
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -223,11 +219,13 @@ import {
   updateDistributionAsinUser,
   updateDistributionUserType,
   updateOldStatus,
-} from '/src/api/devlocal/productDistribution'
-import { ROLE_BOSS_CODE } from '/src/const/role'
-import { useAclStore } from '/src/store/modules/acl'
-import type { IGetDistributionList, IGetDistributionProductList } from '/src/type/storeOperation/productDistributionType'
-import { flexColumnWidth } from '/src/utils/tableColum'
+} from '/@/api/devlocal/productDistribution'
+import { ROLE_BOSS_CODE } from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
+import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
+import { flexColumnWidth } from '/@/utils/tableColum'
+import { getAmazonOptionUserList } from '/@/api/devlocal/productPerformance.ts'
+import { allocationOption } from '/@/api/devlocal/openrationAllocate.ts'
 
 defineOptions({
   name: 'ProductDistribution',
@@ -448,20 +446,6 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-const statusOption = [
-  {
-    label: '所有',
-    value: -1,
-  },
-  {
-    label: '未认领',
-    value: 0,
-  },
-  {
-    label: '已认领',
-    value: 1,
-  },
-]
 
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
@@ -533,7 +517,7 @@ const fetchSiteList = async () => {
   siteList.value = data
 }
 const fetchUserList = async () => {
-  const { data } = await getDistributionOptionUserList()
+  const { data } = await getAmazonOptionUserList()
   userList.value = data
 }
 const fetchData = async () => {
