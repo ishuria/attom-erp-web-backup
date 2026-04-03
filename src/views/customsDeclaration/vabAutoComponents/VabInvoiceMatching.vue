@@ -12,9 +12,9 @@
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary" @click="showPathImport">发票路径导入</el-button>
-          <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>
-          <el-button type="primary" @click="showUploadInvoice('repeat')">多页发票导入</el-button>
+<!--          <el-button type="primary" @click="showPathImport">发票路径导入</el-button>-->
+<!--          <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>-->
+          <el-button type="primary" @click="showUploadInvoice('repeat')">发票导入</el-button>
           <h3>单价匹配勾选</h3>
           <el-switch
             v-model="unitPriceSameFlag"
@@ -272,7 +272,7 @@
     />
   </vab-dialog>
   <!-- 上传发票 -->
-  <vab-dialog v-model="uploadInvoiceVisible" :title="uploadType == 'import' ? '上传发票' : '上传多页发票'" width="25%">
+  <vab-dialog v-model="uploadInvoiceVisible" :title="uploadType == 'import' ? '上传发票' : '上传发票'" width="25%">
     <el-upload v-model:file-list="fileList" :auto-upload="false" drag multiple :show-file-list="true">
       <el-icon class="el-icon--upload">
         <upload-filled />
