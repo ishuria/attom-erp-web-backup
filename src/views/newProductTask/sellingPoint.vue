@@ -357,9 +357,30 @@ const autoSave = async () => {
   }
 }
 
-onBeforeMount(async () => {
-  fetchDifferencesOption()
-  fetchReasonsOption()
+// 加载卖点数据
+const fetchSellingPointData = async () => {
+  // 重置表单数据
+  Object.assign(form, {
+    productDifferences: 0,
+    summary: 0,
+    competitiveProductDifferences: '',
+    targetAudience: '',
+    usageScenario: '',
+    material: '',
+    brand: '',
+    competitiveAsin: '',
+    sameTrackAsin: '',
+    linkKeywords: '',
+    precautions: '',
+    sellingPointContent: '',
+    title1: '',
+    title2: '',
+    linkKeywordsTs: '',
+    sellingPointContentTs: '',
+    id: null,
+  })
+  _id.value = null
+
   const querySku = route.query.sku
   if (querySku) {
     // 单个SKU，直接从后端获取数据
@@ -378,7 +399,21 @@ onBeforeMount(async () => {
     })
     Object.assign(form, data)
   }
+}
+
+onBeforeMount(async () => {
+  fetchDifferencesOption()
+  fetchReasonsOption()
+  await fetchSellingPointData()
 })
+
+// 监听路由变化，切换产品时重新加载数据
+watch(
+  () => route.query,
+  async () => {
+    await fetchSellingPointData()
+  },
+)
 </script>
 
 <style lang="scss" scoped>
