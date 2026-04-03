@@ -214,7 +214,7 @@ const downloadDeal = (type: string, data: any, headers: any, defaultFileName = '
         if (fileNameMatch) {
           fileName = decodeURIComponent(fileNameMatch[1])
         } else {
-          const fallbackFileNameMatch = contentDisposition.match(/filename=['"]?([^;\r\n]+)['"]?/)
+          const fallbackFileNameMatch = contentDisposition.match(/filename=['"]?([^'";\r\n]+)['"]?/)
           if (fallbackFileNameMatch) {
             fileName = fallbackFileNameMatch[1]
           }
