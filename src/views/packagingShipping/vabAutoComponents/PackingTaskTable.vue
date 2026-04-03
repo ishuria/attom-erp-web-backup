@@ -222,10 +222,8 @@
                 >
                   <el-link type="primary" underline="never">任务数修改</el-link>
                 </el-dropdown-item>
-                <!-- v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_FEEDBACK] })" -->
-
                 <el-dropdown-item
-                v-if="currentRoleCode === ROLE_PACKAGER_CODE || currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE"
+                  v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_FEEDBACK] })"
                   @click="handleShowFeedback(row)"
                 >
                   <el-link type="primary" underline="never">打包反馈</el-link>
