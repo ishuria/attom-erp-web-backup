@@ -262,6 +262,10 @@
           </template>
         </rank>
       </el-col>
+      <!-- 运营考核指标公示 -->
+      <el-col v-if="ableViewAsinSummaryCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <asin-summary-card />
+      </el-col>
     </el-row>
     <!-- 第五层 -->
     <el-row class="row-spacing" :gutter="20">
@@ -598,6 +602,11 @@ const ableViewShippingErrorCard =
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewArtDesignDashboardCard = currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
+const ableViewAsinSummaryCard =
+  currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
+  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE ||
+  currentRoleCode === ROLE_BOSS_CODE
+
 const ableViewWarehouseCapacityCard =
   currentRoleCode === ROLE_BOSS_CODE ||
   currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE ||
@@ -1463,7 +1472,6 @@ const fetchProfitSharePreview = async () => {
   profitSharePreviewTotal.value = data.total
   profitSharePreviewLoading.value = false
   profitShareDate.value = data.updateDate
-
 }
 const siteList = ref<{ id: number; label: string }[]>([])
 const fbaSiteList = ref<{ id: number; label: string }[]>([])
