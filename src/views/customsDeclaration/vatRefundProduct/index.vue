@@ -1033,10 +1033,14 @@ const handleRowClick = (row: any, column: any, event: Event) => {
 }
 
 const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  const classes: string[] = []
   if (row.id === selectedRowIndex.value) {
-    return 'warning-row'
+    classes.push('warning-row')
   }
-  return ''
+  if (row.profitMargin != null && row.profitMargin < 3) {
+    classes.push('low-profit-row')
+  }
+  return classes.join(' ')
 }
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
@@ -1408,8 +1412,13 @@ onBeforeMount(() => {
             background-color: #7bddde !important;
           }
 
+          // 利润率小于3%标黄
+          .low-profit-row > td {
+            background-color: #fdf6ec !important;
+          }
+
           // 普通行hover时保持白色
-          .el-table__body tr:not(.warning-row) {
+          .el-table__body tr:not(.warning-row):not(.low-profit-row) {
             &.hover-row > td,
             &:hover > td {
               background-color: #ffffff !important;
