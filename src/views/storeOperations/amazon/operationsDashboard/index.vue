@@ -377,8 +377,8 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
-import { dateOption, storageAgeColorList } from '../constantOption'
-import { getWeekOfYear } from '/@/utils/dateUtils'
+import { dateOption, storageAgeColorList } from '../../constantOption.ts'
+import { getWeekOfYear } from '/src/utils/dateUtils'
 
 defineOptions({
   name: 'OperationsDashboard',

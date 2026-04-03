@@ -538,11 +538,11 @@ import type { CheckboxValueType, ElInput, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { addOperationLog, getOperationLog } from '~/src/api/devlocal/productAnalysis'
-import { months } from '../constantOption'
-import { createAiConversation, sendAiChatMessage } from '/@/api/devlocal/ai'
-import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
+import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis.ts'
+import { months } from '../../constantOption.ts'
+import { createAiConversation, sendAiChatMessage } from '/src/api/devlocal/ai'
+import { getDistributionOptionUserList, getDistributionSiteList } from '/src/api/devlocal/productDistribution'
+import { getOperationOrderSku, releaseOperationPlanPo } from '/src/api/devlocal/productOrdering'
 import {
   getCurrencyASINAmazonOperation,
   getCurrencyList,
@@ -572,12 +572,12 @@ import {
   updateOperationSKUOperateTypeList,
   updateRemarkAmazonOperation,
   updateSortOperationColumn,
-} from '/@/api/devlocal/productPerformance'
-import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
-import StoreOperationPermission from '/@/permissions/storeOperation'
-import { useAclStore } from '/@/store/modules/acl'
-import { useAiStore } from '/@/store/modules/ai'
-import { useUserStore } from '/@/store/modules/user'
+} from '/src/api/devlocal/productPerformance'
+import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/src/const/role'
+import StoreOperationPermission from '/src/permissions/storeOperation'
+import { useAclStore } from '/src/store/modules/acl'
+import { useAiStore } from '/src/store/modules/ai'
+import { useUserStore } from '/src/store/modules/user'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
@@ -585,10 +585,10 @@ import type {
   IGetOperationParentAsinList,
   IOperationAmazonSkuRankList,
   IOperationAmazonSkuVocList,
-} from '/@/type/storeOperation/productPerformanceType'
-import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
-import { _addData } from '/@/utils/skuOptions'
-import { processField } from '/@/utils/tableColum'
+} from '/src/type/storeOperation/productPerformanceType'
+import { getAmazonStars, handleImgUrl } from '/src/utils/rate'
+import { _addData } from '/src/utils/skuOptions'
+import { processField } from '/src/utils/tableColum'
 
 defineOptions({
   name: 'ProductPerformanceDashboard',

@@ -223,11 +223,11 @@ import {
   updateDistributionAsinUser,
   updateDistributionUserType,
   updateOldStatus,
-} from '/@/api/devlocal/productDistribution'
-import { ROLE_BOSS_CODE } from '/@/const/role'
-import { useAclStore } from '/@/store/modules/acl'
-import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
-import { flexColumnWidth } from '/@/utils/tableColum'
+} from '/src/api/devlocal/productDistribution'
+import { ROLE_BOSS_CODE } from '/src/const/role'
+import { useAclStore } from '/src/store/modules/acl'
+import type { IGetDistributionList, IGetDistributionProductList } from '/src/type/storeOperation/productDistributionType'
+import { flexColumnWidth } from '/src/utils/tableColum'
 
 defineOptions({
   name: 'ProductDistribution',

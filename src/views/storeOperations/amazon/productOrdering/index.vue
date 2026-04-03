@@ -488,9 +488,9 @@ import type { CheckboxValueType, ElInput, FormInstance, TableInstance } from 'el
 import { debounce } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { useUserStore } from '~/src/store/modules/user'
-import { adStatusOption, months } from '../constantOption'
-import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import { useUserStore } from '/@/store/modules/user.ts'
+import { adStatusOption, months } from '../../constantOption.ts'
+import { getDistributionOptionUserList, getDistributionSiteList } from '/src/api/devlocal/productDistribution'
 import {
   getOperationOrderList,
   getOperationOrderSku,
@@ -500,22 +500,22 @@ import {
   releaseOperationPlanPo,
   updateOperationOrderSmoothness,
   updateOperationOrderSpringFestival,
-} from '/@/api/devlocal/productOrdering'
+} from '/src/api/devlocal/productOrdering'
 import {
   getOperationColumnList,
   hideOrShowOperationColumn,
   updateOperationASINOperateTypeList,
   updateRemarkAmazonOperation,
   updateSortOperationColumn,
-} from '/@/api/devlocal/productPerformance'
-import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
-import { useAclStore } from '/@/store/modules/acl'
-import type { IGetOperationOrderList, IGetOperationOrderTable } from '/@/type/storeOperation/productOrdering'
-import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
-import { handleClip } from '/@/utils/clipboard'
-import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
-import { _addData } from '/@/utils/skuOptions'
-import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
+} from '/src/api/devlocal/productPerformance'
+import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/src/const/role'
+import { useAclStore } from '/src/store/modules/acl'
+import type { IGetOperationOrderList, IGetOperationOrderTable } from '/src/type/storeOperation/productOrdering'
+import { IGetOperationColumnList } from '/src/type/storeOperation/productPerformanceType'
+import { handleClip } from '/src/utils/clipboard'
+import { formatPercentage, getAmazonStars, handleImgUrl } from '/src/utils/rate'
+import { _addData } from '/src/utils/skuOptions'
+import { calculateBrColumnWidth, flexColumnWidth, processField } from '/src/utils/tableColum'
 
 defineOptions({
   name: 'ProductOrdering',
