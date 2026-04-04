@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-change="handleTabChange">
-      <el-tab-pane label="全员明细" :name="0">
+      <el-tab-pane v-if="hasTabPermission(0)" label="全员明细" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline @submit.prevent>
@@ -175,8 +175,12 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="全员概览" :name="1" />
-      <el-tab-pane label="产品经理" :name="2">
+      <el-tab-pane v-if="hasTabPermission(1)" label="全员概览" :name="1" />
+      <el-tab-pane
+        v-if="hasTabPermission(2)"
+        label="产品经理"
+        :name="2"
+      >
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline @submit.prevent>
@@ -311,7 +315,7 @@
           @size-change="handleAssessmentSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="打包" :name="3">
+      <el-tab-pane v-if="hasTabPermission(3)" label="打包" :name="3">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
@@ -361,7 +365,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="产品设计" :name="4">
+      <el-tab-pane v-if="hasTabPermission(4)" label="产品设计" :name="4">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker
@@ -436,7 +440,7 @@
           @size-change="handleProductDesignSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="平面设计" :name="5">
+      <el-tab-pane v-if="hasTabPermission(5)" label="平面设计" :name="5">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="artDesignQueryData" />
@@ -567,7 +571,7 @@
           @size-change="handleArtDesignSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="采购" :name="6">
+      <el-tab-pane v-if="hasTabPermission(6)" label="采购" :name="6">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
@@ -626,7 +630,11 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="主管" :name="7">
+      <el-tab-pane
+        v-if="hasTabPermission(7)"
+        label="主管"
+        :name="7"
+      >
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker
@@ -688,7 +696,7 @@
           @size-change="handleSupervisorSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="运营" :name="8">
+      <el-tab-pane v-if="hasTabPermission(8)" label="运营" :name="8">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="operationQueryData" />
@@ -906,6 +914,16 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  ROLE_BOSS_CODE,
+  ROLE_PRODUCTMANNAGERLEAD_CODE,
+  ROLE_WAREHOUSEMANNAGERlEAD_CODE,
+  ROLE_INDUSTRIAL_DESIGN_CODE,
+  ROLE_GRAPHICDESIGNLEAD_CODE,
+  ROLE_PURCHASER_CODE,
+  ROLE_ECOMMERCEOPERATIONLEAD_CODE,
+} from '/@/const/role.ts'
+import { useAclStore } from '/@/store/modules/acl.ts'
 import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash-es'
@@ -943,6 +961,23 @@ defineOptions({
   name: 'PerformanceStatistics',
 })
 
+const currentRoleCode = useAclStore().getRole[0]
+
+// Tab 权限配置表
+const TAB_PERMISSIONS: Record<number, string[]> = {
+  0: [ROLE_BOSS_CODE], // 全员明细
+  1: [ROLE_BOSS_CODE], // 全员概览
+  2: [ROLE_BOSS_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE], // 产品经理
+  3: [ROLE_BOSS_CODE, ROLE_WAREHOUSEMANNAGERlEAD_CODE], // 打包
+  4: [ROLE_BOSS_CODE, ROLE_INDUSTRIAL_DESIGN_CODE], // 产品设计
+  5: [ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNLEAD_CODE], // 平面设计
+  6: [ROLE_BOSS_CODE, ROLE_PURCHASER_CODE], // 采购
+  7: [ROLE_BOSS_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_GRAPHICDESIGNLEAD_CODE], // 主管
+  8: [ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE], // 运营
+}
+
+// 检查是否有 Tab 访问权限
+const hasTabPermission = (tabName: number) => TAB_PERMISSIONS[tabName]?.includes(currentRoleCode) ?? false
 // 对应调整明细
 const viewDetailVisible = ref<boolean>(false)
 const detailList = ref<IGetAdjustDetail[]>([])
