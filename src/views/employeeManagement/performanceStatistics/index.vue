@@ -1033,7 +1033,17 @@ const showParameterSettings = () => {
   parameterSettingsVisible.value = true
 }
 
-const activeName = ref<number>(0)
+// 根据当前角色获取默认激活的 tab
+const getDefaultTab = () => {
+  for (const tabName of Object.keys(TAB_PERMISSIONS).map(Number).sort((a, b) => a - b)) {
+    if (TAB_PERMISSIONS[tabName].includes(currentRoleCode)) {
+      return tabName
+    }
+  }
+  return 0
+}
+
+const activeName = ref<number>(getDefaultTab())
 /* ============================== 考勤明细变量 ============================== */
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -1693,8 +1703,8 @@ onBeforeMount(async () => {
   assessmentDate.value = [startOfMonth, endOfMonth]
   // 获取角色列表（用于平面设计 tab）
   await fetchArtDesignRoleList()
-  // 获取考勤明细数据
-  fetchData()
+  // 根据当前激活的 tab 获取对应数据
+  handleTabChange()
 })
 </script>
 
