@@ -611,7 +611,7 @@ import {
   updateCurrencyOperationAsinDetail,
   updateCurrencyOperationAsinSummary,
 } from '/@/api/devlocal/commission'
-import { getFrontPageProductManagerSelectOption } from '/@/api/devlocal/frontPage'
+import { getFrontPageProductManagerSelectOption, getOperationUserListByPlatform } from '/@/api/devlocal/frontPage'
 import { getCurrencyList } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE } from '/@/const/role'
@@ -619,6 +619,7 @@ import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import { formatAmount } from '/@/utils/convertToCamelCase'
 import { formatDate } from '/@/utils/dateUtils'
+import { Amazon } from '/@/type/storeOperation/platform.ts'
 
 defineOptions({
   name: 'CommissionOperationDetails',
@@ -1038,7 +1039,7 @@ const fetchSiteList = async () => {
 // 人员筛选
 const userLevelList = ref<{ id: number; label: string }[]>([])
 const fetchUserLevelList = async () => {
-  const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
+  const { data } = await getOperationUserListByPlatform(Amazon)
   userLevelList.value = data
   userLevelList.value.unshift({ id: -1, label: '全部' })
 

@@ -154,6 +154,14 @@ export function getFrontPageProductManagerSelectOption(params: { type: number })
     params,
   })
 }
+
+export function getOperationUserListByPlatform(type: string): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/user/operation/platform/select_option/${type}`,
+    method: 'get',
+  })
+}
+
 /**
  * 运营分类-用户列表
  * @param params { userId: number }
