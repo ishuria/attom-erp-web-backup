@@ -123,6 +123,19 @@ defineExpose({
 const close = () => {
   formRef.value?.clearValidate()
   formRef.value?.resetFields()
+  form.userId = ''
+  form.userName = ''
+  form.password = ''
+  form.currentYearSickLeave = null
+  form.nextYearSickLeave = null
+  form.currentYearAnnualLeave = null
+  form.nextYearAnnualLeave = null
+  form.proportion = null
+  form.affiliatedBranchCompany = ''
+  form.email = ''
+  form.roleName = ''
+  form.roleCode = ''
+  form.status = '0'
   emit('fetch-data')
 }
 
