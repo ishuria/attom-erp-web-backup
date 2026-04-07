@@ -414,7 +414,7 @@ const handleChangeOperationType = async () => {
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   router.push({
-    path: '/storeOperations/productPerformanceDashboard',
+    path: '/storeOperations/amazon/productPerformanceDashboard',
   })
 }
 const handleTabClick = (tab: TabsPaneContext) => {
