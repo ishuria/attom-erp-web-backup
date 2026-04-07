@@ -985,87 +985,7 @@
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 发布任务 -->
-    <vab-dialog v-model="postTaskVisible" title="发布任务" width="25%" @close="handleClosePostTask">
-      <el-form
-        ref="postTaskFormRef"
-        label-position="right"
-        label-width="auto"
-        :model="postTaskForm"
-        :rules="postTaskRules"
-        style="margin: 0 60px"
-      >
-        <el-form-item label="sku" prop="sku">
-          <div class="sku-select-container">
-            <el-select
-              v-model="postTaskForm.sku"
-              default-first-option
-              filterable
-              :loading="skuLoading"
-              placeholder="点击输入和搜索"
-              remote
-              :remote-method="remoteSKUMethod"
-              @change="handleFetchArtDesignUserList"
-            >
-              <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-            <el-button
-              v-if="postTaskForm.sku"
-              circle
-              class="copy-btn"
-              :icon="CopyDocument"
-              size="small"
-              type="primary"
-              @click="handleClip(postTaskForm.sku)"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="任务类型" prop="taskType">
-          <el-select v-model="postTaskForm.taskType" placeholder="请选择任务类型">
-            <el-option v-for="item in taskTypeOption" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="站点" prop="sites">
-          <el-select v-model="postTaskForm.sites" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择站点">
-            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="产品分类" prop="position">
-          <el-select v-model="postTaskForm.position" placeholder="请选择产品分类">
-            <el-option v-for="item in productPositionOption" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="要求完成日期" prop="finishDate">
-          <el-date-picker
-            v-model="postTaskForm.finishDate"
-            :disabled-date="(time: Date) => time.getTime() < Date.now() - 8.64e7"
-            type="date"
-            value-format="YYYY-MM-DD"
-          />
-        </el-form-item>
-        <el-form-item label="设计类型" prop="artDesignType">
-          <el-select v-model="postTaskForm.artDesignType" clearable multiple placeholder="请选择设计类型">
-            <el-option v-for="item in filteredDesignTypeOption" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="美工" prop="artDesign">
-          <el-select v-model="postTaskForm.artDesign" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
-            <el-option v-for="item in artDesignUserList" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="要求" prop="remark">
-          <el-input v-model="postTaskForm.remark" resize="none" :rows="3" type="textarea" />
-        </el-form-item>
-        <el-form-item label="需求文件共享文档地址" prop="linkAddress">
-          <el-input v-model="postTaskForm.linkAddress" clearable />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div style="margin-right: 60px">
-          <el-button type="danger" @click="handleClosePostTask">取消</el-button>
-          <el-button type="success" @click="handleSubmitPostTask">确定</el-button>
-        </div>
-      </template>
-    </vab-dialog>
+    <post-task-dialog v-model:visible="postTaskVisible" :site-list="siteList" @success="fetchData" />
     <!-- 任务认领 -->
     <!-- <vab-dialog
       v-model="missionClaimVisible"
@@ -1280,7 +1200,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, CopyDocument, Search } from '@element-plus/icons-vue'
+import { ArrowDown, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash-es'
@@ -1289,7 +1209,6 @@ import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistrib
 import { columnConfigs, designTypeOption, getTaskTypeColor, splitUsernames, taskTypeOption } from '../constantOption'
 import {
   addArtDesignSelectionReasons,
-  addArtDesignTask,
   allocateArtDesignTask,
   approveArtDesignTask,
   delArtDesignSelectionReasons,
@@ -1300,7 +1219,6 @@ import {
   getArtDesignTaskMargin,
   getArtDesignTaskUserList,
   getArtDesignTaskUserListByIds,
-  getArtDesignTaskUserListBySku,
   queryArtDesignTaskDistribution,
   updateArtDesignDemandAddress,
   updateArtDesignTaskDistribute,
@@ -1309,22 +1227,18 @@ import {
   updateLongTermArtDesignTask,
   updateProofreadingStatus,
 } from '/@/api/devlocal/imageTask'
-import { getProductPositionList } from '/@/api/devlocal/orderProcess'
-import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
 import ListingPermission from '/@/permissions/listing'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import type {
-  IAddArtDesignTaskReq,
   IArtDesignTaskMargin,
   IGetArtDesignSelectionReasonsList,
   IGetArtDesignTaskList,
   IGetArtDesignTaskListReq,
   IGetArtDesignTaskUserListBySku,
 } from '/@/type/listingTask/imageTaskType'
-import { handleClip } from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { hasPermission } from '/@/utils/permission'
@@ -1464,9 +1378,6 @@ const showDesignTaskFields = computed(() => {
 // const missionClaimForm = reactive<{ type: number }>({
 //   type: 0
 // })
-const skuLoading = ref(false) //搜索SKU-loading
-const skuOptions = ref<{ value: string; label: string }[]>([]) //搜索选项
-const skuList = ref<{ value: string; label: string }[]>([]) //搜索列表
 const reasonsVisible = ref<boolean>(false)
 const reasonsList = ref<IGetArtDesignSelectionReasonsList[]>([])
 const addReasonVisible = ref<boolean>(false)
@@ -1610,64 +1521,7 @@ const showBatchSellingPoint = () => {
     },
   })
 }
-const remoteSKUMethod = async (query: string) => {
-  if (query) {
-    const { data } = await getPoSkuList({ sku: query })
-
-    skuList.value = data.map((item: any) => {
-      return { value: `${item}`, label: `${item}` }
-    })
-    skuLoading.value = true
-    setTimeout(() => {
-      skuLoading.value = false
-      skuOptions.value = skuList.value.filter((item) => {
-        return item.label.toLowerCase().includes(query.toLowerCase())
-      })
-    }, 200)
-  } else {
-    skuOptions.value = []
-  }
-}
-const artDesignUserList = ref<IGetArtDesignTaskUserListBySku[]>([])
-const handleFetchArtDesignUserList = async (sku: string) => {
-  const { data } = await getArtDesignTaskUserListBySku({ sku: postTaskForm.sku })
-  artDesignUserList.value = data
-}
 const postTaskVisible = ref<boolean>(false)
-const postTaskFormRef = ref<FormInstance>()
-const postTaskForm = reactive<any>({
-  sku: '',
-  taskType: '老品优化',
-  sites: [],
-  position: 0,
-  finishDate: '',
-  artDesignType: [],
-  artDesign: [],
-  remark: '',
-  linkAddress: '',
-})
-
-// 根据任务类型过滤设计类型选项
-const filteredDesignTypeOption = computed(() => {
-  const taskType = postTaskForm.taskType
-  // 设计任务：只能有：说明书/包装，配色设计，产品平面设计
-  if (taskType === '设计任务') {
-    return designTypeOption.filter((item) => [4, 6, 7].includes(item.value))
-  }
-  // 新品任务、老品优化：只能有：基础图片，A+，视频，建模，渲染
-  if (taskType === '新品任务' || taskType === '老品优化') {
-    return designTypeOption.filter((item) => [0, 1, 2, 3, 5].includes(item.value))
-  }
-  // 临时任务 显示所有选项
-  return designTypeOption
-})
-const postTaskRules = reactive<FormRules<IAddArtDesignTaskReq>>({
-  taskType: [{ required: true, message: '请选择任务类型', trigger: 'change' }],
-  sites: [{ required: true, message: '请选择站点', trigger: 'change' }],
-  position: [{ required: true, message: '请选择产品分类', trigger: 'change' }],
-  finishDate: [{ required: true, message: '请选择要求完成日期', trigger: 'change' }],
-  artDesignType: [{ required: true, message: '请选择设计类型', trigger: 'change' }],
-})
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const list = ref<IGetArtDesignTaskList[]>([])
@@ -2060,29 +1914,8 @@ const handleDelArtDesignTask = async (row: IGetArtDesignTaskList) => {
     }
   })
 }
-const handleSubmitPostTask = async () => {
-  postTaskFormRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      const { data } = await addArtDesignTask({
-        ...postTaskForm,
-        sites: Array.isArray(postTaskForm.sites) ? postTaskForm.sites.join(',') : '',
-        artDesign: Array.isArray(postTaskForm.artDesign) ? postTaskForm.artDesign.join(',') : '',
-      })
-      if (data) {
-        $baseMessage('发布任务成功！', 'success')
-        handleClosePostTask()
-        fetchData()
-      }
-    }
-  })
-}
-const handleClosePostTask = () => {
-  postTaskFormRef.value?.resetFields()
-  postTaskVisible.value = false
-}
-const showPostTask = async () => {
+const showPostTask = () => {
   postTaskVisible.value = true
-  await fetchProductPositionOption()
 }
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
@@ -2233,11 +2066,6 @@ const fetchUserList = async () => {
 }
 const useUser = useUserStore()
 const currentUser = useUser.getUsername
-const productPositionOption = ref<{ id: number; label: string }[]>([])
-const fetchProductPositionOption = async () => {
-  const { data } = await getProductPositionList()
-  productPositionOption.value = data
-}
 const operationUserList = ref<{ id: number; label: string }[]>([])
 const fetchOperationUserList = async () => {
   const { data } = await getDistributionOptionUserList()
@@ -2275,26 +2103,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-// SKU选择框容器样式
-.sku-select-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-
-  .el-select {
-    flex: 1;
-  }
-
-  .copy-btn {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    font-size: 12px;
-  }
-}
-
 .tabs-table-container {
   :deep() {
     .el-tabs {

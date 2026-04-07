@@ -185,6 +185,7 @@ declare module 'vue' {
     PoQueryForm: typeof import('./../../../src/views/purchase/vabAutoComponents/PoQueryForm.vue')['default']
     PortalDivider: typeof import('./../../../src/views/portal/vabAutoComponents/PortalDivider.vue')['default']
     PortalHeader: typeof import('./../../../src/views/portal/vabAutoComponents/PortalHeader.vue')['default']
+    PostTaskDialog: typeof import('./../../../src/views/newProductTask/vabAutoComponents/PostTaskDialog.vue')['default']
     PoTable: typeof import('./../../../src/views/purchase/vabAutoComponents/PoTable.vue')['default']
     PriceAdjustmentInventoryRules: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/PriceAdjustmentInventoryRules.vue')['default']
     PriceProfitScatterChart: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/PriceProfitScatterChart.vue')['default']
