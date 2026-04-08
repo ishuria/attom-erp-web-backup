@@ -20,10 +20,11 @@ export function getOutBoundList(data: IGetOutBoundListReq): Promise<IGetOutBound
   })
 }
 
-export function getOutboundInventoryCheck(): Promise<IGetOutboundInventoryCheckRes> {
+export function getOutboundInventoryCheck(type: number): Promise<IGetOutboundInventoryCheckRes> {
   return request({
     url: `${BASE_API}/outbound/inventory/check`,
     method: 'get',
+    params: { type },
   })
 }
 

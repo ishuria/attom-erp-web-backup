@@ -166,7 +166,12 @@
     <!-- 入库核对 -->
     <vab-dialog v-model="whVerifyVisible" title="入库核对" width="60%">
       <vab-query-form>
-        <vab-query-form-right-panel :span="24">
+        <vab-query-form-left-panel :span="6">
+          <el-button type="primary" @click="toggleNotAllDeclared">
+            {{ showNotAllDeclared ? '隐藏未全部报关' : '展示未全部报关' }}
+          </el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel :span="18">
           <el-form inline :model="whVerifyForm" @submit.prevent>
             <el-form-item>
               <el-input
@@ -263,6 +268,7 @@ const paginatedList = computed(() => {
 })
 
 const whVerifyListLoading = ref<boolean>(false)
+const showNotAllDeclared = ref<boolean>(false)
 const whQueryData = () => {
   whVerifyForm.pageNo = 1
 }
@@ -276,11 +282,15 @@ const handleWhSizeChange = (value: number) => {
 }
 const showWhVerify = async () => {
   whVerifyVisible.value = true
-  const { data } = await getOutboundInventoryCheck()
+  const { data } = await getOutboundInventoryCheck(showNotAllDeclared.value ? 1 : 0)
   if (data) {
     checkList.value = data
     whTotal.value = data.length
   }
+}
+const toggleNotAllDeclared = async () => {
+  showNotAllDeclared.value = !showNotAllDeclared.value
+  await showWhVerify()
 }
 
 const showSummary = async () => {
