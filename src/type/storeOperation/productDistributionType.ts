@@ -92,7 +92,6 @@ export interface IUpdateDistributionUserType {
 }
 export interface IUpdateOldStatusReq {
   ids: number[]
-  oldStatus: number
 }
 
 export interface IMarkUnclaimedReq {

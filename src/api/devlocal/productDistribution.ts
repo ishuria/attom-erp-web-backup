@@ -116,7 +116,7 @@ export function getDistributionUserType() {
   })
 }
 /**
- * @description 批量老品认领
+ * @description 批量取消老品认领
  */
 export function updateOldStatus(data: IUpdateOldStatusReq): Promise<{ data: boolean }> {
   return request({

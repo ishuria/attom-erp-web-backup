@@ -47,6 +47,14 @@
             <!--            >-->
             <!--              批量老品认领-->
             <!--            </el-button>-->
+            <el-button
+              v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"
+              :disabled="markUnclaimedLoading"
+              type="primary"
+              @click="handleBatchClaim"
+            >
+              批量取消老品认领
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -226,6 +234,7 @@ import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { getAmazonOptionUserList } from '/@/api/devlocal/productPerformance.ts'
 import { allocationOption } from '/@/api/devlocal/openrationAllocate.ts'
+import StoreOperationPermission from '/@/permissions/storeOperation.ts'
 
 defineOptions({
   name: 'ProductDistribution',
@@ -246,7 +255,7 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
   }
   return ''
 }
-const handleBatchClaim = () => {
+const handleBatchClaim = async () => {
   if (markUnclaimedLoading.value) {
     return
   }
@@ -254,7 +263,17 @@ const handleBatchClaim = () => {
     $baseMessage('请先选择需要操作的数据！', 'warning')
     return
   }
-  batchClaimVisible.value = true
+  // batchClaimVisible.value = true
+  try {
+    const { data } = await updateOldStatus({
+      ids: selectedRows.value.map((item) => item.id),
+    })
+    if (data) {
+      $baseMessage('批量取消老品认领成功！', 'success')
+      handleCloseBatchClaim()
+      fetchData()
+    }
+  } catch {}
 }
 const markUnclaimedLoading = ref<boolean>(false)
 const extractErrorMessage = (error: unknown) => {
@@ -313,10 +332,9 @@ const handleConfirmBatchClaim = async () => {
       try {
         const { data } = await updateOldStatus({
           ids: selectedRows.value.map((item) => item.id),
-          oldStatus: batchClaimForm.claimType!,
         })
         if (data) {
-          $baseMessage('批量老品认领成功！', 'success')
+          $baseMessage('批量取消老品认领成功！', 'success')
           handleCloseBatchClaim()
           fetchData()
         }
