@@ -674,14 +674,14 @@ const contractCopy = ref<string>('')
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickAttentionConfirm = async (val: any) => {
-  const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val })
+  const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, text: val })
   if (data === true) {
     attentionCopy.value = val
     clickRow.value.purchaseMatters = val
   }
 }
 const clickContractConfirm = async (val: any) => {
-  const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val })
+  const { data } = await saveProductContractTerms({ id: clickRow.value.id, text: val })
   if (data === true) {
     contractCopy.value = val
     clickRow.value.contractTerms = val
