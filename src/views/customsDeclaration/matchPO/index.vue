@@ -41,6 +41,7 @@
         </el-button>
         <el-button type="primary" @click="uploadTaxRefundFielCheck">报关文件&合同校验上传</el-button>
         <el-button type="primary" @click="uploadPreOrderCheck">预入单校验</el-button>
+        <el-button type="primary" @click="contractTaxRefundVisible = true">合同号退税额更新</el-button>
         <el-space :size="16" style="align-items: center">
           <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxes" />
           <el-divider direction="vertical" style="height: 34px" />
@@ -565,6 +566,19 @@
       </template>
     </vab-dialog>
 
+    <!-- 合同号退税更新 -->
+    <vab-dialog v-model="contractTaxRefundVisible" title="合同号退税额更新" width="25%">
+      <el-form ref="contractTaxRefundFormRef" label-position="top" :model="contractTaxRefundForm" :rules="contractTaxRefundFormRules">
+        <el-form-item label="合同号" prop="contractNumber">
+          <el-input v-model.trim="contractTaxRefundForm.contractNumber" clearable placeholder="请输入合同号" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="contractTaxRefundVisible = false">取消</el-button>
+        <el-button :loading="contractTaxRefundLoading" type="primary" @click="handleContractTaxRefund">确认</el-button>
+      </template>
+    </vab-dialog>
+
     <!-- 预入单文件上传 -->
     <vab-dialog v-model="uploadPreOrderFormVisible" title="预入单校验文件上传" width="25%">
       <el-upload v-model:file-list="preOrderFiles" :auto-upload="false" drag multiple :show-file-list="true">
@@ -629,6 +643,7 @@ import {
   updateShipmentPay,
   uploadPreOrderFormCheckFile,
   uploadTaxRefundCheckFile,
+  updateContractNumberTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
 import { getChannelList, getSettlementObjectList } from '/@/api/devlocal/encasement'
@@ -674,6 +689,33 @@ const showTariffBillUpload = () => {
 }
 const uploadPDFVisible = ref<boolean>(false)
 const contractNumberImportVisible = ref<boolean>(false)
+// 合同号退税更新
+const contractTaxRefundVisible = ref<boolean>(false)
+const contractTaxRefundFormRef = ref<FormInstance>()
+const contractTaxRefundForm = reactive<any>({
+  contractNumber: '',
+})
+const contractTaxRefundFormRules = reactive<any>({
+  contractNumber: [{ required: true, message: '请输入合同号', trigger: 'blur' }],
+})
+const contractTaxRefundLoading = ref<boolean>(false)
+const handleContractTaxRefund = async () => {
+  contractTaxRefundFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
+      contractTaxRefundLoading.value = true
+      try {
+        const { data } = await updateContractNumberTaxRefund({ contractNumber: contractTaxRefundForm.contractNumber })
+        if (data) {
+          $baseMessage('合同号退税额更新成功！', 'success')
+          contractTaxRefundVisible.value = false
+          contractTaxRefundForm.contractNumber = ''
+        }
+      } finally {
+        contractTaxRefundLoading.value = false
+      }
+    }
+  })
+}
 const fileList = ref<any[]>([])
 const uploadLoading = ref<boolean>(false)
 // 退税报关文件校验
@@ -685,7 +727,7 @@ const uploadTaxRefundFielCheck = () => {
   uploadTaxRefundVisible.value = true
 }
 const handleTaxRefundUpload = async () => {
-  if (taxRefundFileList.value.length == 0){
+  if (taxRefundFileList.value.length == 0) {
     $baseMessage('必须先上传退税报关文件！', 'warning', 'hey')
     return
   }

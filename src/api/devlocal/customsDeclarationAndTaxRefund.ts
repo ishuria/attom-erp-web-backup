@@ -385,6 +385,16 @@ export const updateShipment = (data: IUpdateShipment): Promise<IBooleanRes> => {
   })
 }
 /**
+ * @description 合同号退税更新
+ */
+export const updateContractNumberTaxRefund = (params: { contractNumber: string }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/update/taxrefund`,
+    params,
+    method: 'post',
+  })
+}
+/**
  * @description 匹配PO、报关资料退税运费修改
  */
 export const updateShipmentFreightFee = (params: IUpdateShipmentFreightFee): Promise<IBooleanRes> => {
