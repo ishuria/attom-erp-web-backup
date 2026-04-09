@@ -27,7 +27,7 @@
         </div>
       </el-form-item>
       <el-form-item label="任务类型" prop="taskType">
-        <el-select v-model="form.taskType" placeholder="请选择任务类型">
+        <el-select v-model="form.taskType" placeholder="请选择任务类型" @change="fetchArtDesignUserList">
           <el-option v-for="item in taskTypeOption" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -79,7 +79,7 @@
 import { CopyDocument } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules } from 'element-plus'
 import { designTypeOption, taskTypeOption } from '../constantOption'
-import { addArtDesignTask, getArtDesignTaskUserListBySku } from '/@/api/devlocal/imageTask'
+import { addArtDesignTask, getArtDesignTaskUserList, getArtDesignTaskUserListBySku } from '/@/api/devlocal/imageTask'
 import { getProductPositionList } from '/@/api/devlocal/orderProcess'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import type { IAddArtDesignTaskReq, IGetArtDesignTaskUserListBySku } from '/@/type/listingTask/imageTaskType'
@@ -151,6 +151,12 @@ const artDesignUserList = ref<IGetArtDesignTaskUserListBySku[]>([])
 const handleFetchArtDesignUserList = async () => {
   const { data } = await getArtDesignTaskUserListBySku({ sku: form.sku })
   artDesignUserList.value = data
+}
+const fetchArtDesignUserList = async () => {
+  if (form.taskType === '设计任务') {
+    const { data } = await getArtDesignTaskUserList()
+    artDesignUserList.value = data
+  }
 }
 
 // 产品分类
