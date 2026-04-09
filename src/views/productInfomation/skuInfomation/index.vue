@@ -524,7 +524,7 @@ const handleCopySkuConfirm = async () => {
         })
         if (data) {
           if (copySkuForm.listingTask === 1) {
-            $baseMessage('Sku复制成功，美工图片任务发布成功！', 'success')
+            $baseMessage('Sku复制成功，已提交发布审批，等待直属上级审批！', 'success')
           } else {
             $baseMessage('Sku复制成功！', 'success')
           }

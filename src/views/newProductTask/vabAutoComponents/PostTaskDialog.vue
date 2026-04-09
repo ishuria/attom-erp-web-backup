@@ -195,7 +195,7 @@ const handleConfirm = async () => {
         artDesign: Array.isArray(form.artDesign) ? form.artDesign.join(',') : '',
       })
       if (data) {
-        $baseMessage('发布任务成功！', 'success')
+        $baseMessage('已提交发布审批，等待直属上级审批！', 'success')
         handleClose()
         emit('success')
       }

@@ -22,6 +22,9 @@ import type {
   IGetCopywritingRes,
   IGetSellingPoint,
   IGetSellingPointRes,
+  IPublishApprovalItem,
+  IPublishApprovalListReq,
+  IPublishApprovalReq,
   IQueryArtDesignTaskDistributionRes,
   ISaveArtDesignCopywritingReq,
   ISaveBatchSellingPointReq,
@@ -462,6 +465,30 @@ export function updateArtDesignTaskApprovalRework(data: IArtDesignTaskApprovalRe
 export function getArtDesignTaskApprovalPage(data: IGetArtDesignTaskApprovalPageReq): Promise<IGetArtDesignTaskApprovalPageRes> {
   return request({
     url: `${BASE_API}/artdesign/task/approval/records`,
+    method: 'post',
+    data,
+  })
+}
+
+// ===== 发布审批相关 =====
+
+/**
+ * 发布审批-审批通过/驳回
+ */
+export function approvePublishTask(data: IPublishApprovalReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/publish/approve`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 发布审批-查询审批列表
+ */
+export function getPublishApprovalList(data: IPublishApprovalListReq): Promise<{ data: { list: IPublishApprovalItem[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/artdesign/publish/approval/list`,
     method: 'post',
     data,
   })

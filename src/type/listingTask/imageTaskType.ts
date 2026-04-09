@@ -518,3 +518,48 @@ export interface IArtDesignTaskApprovalPageItem {
 
   proofreadingStatus: number
 }
+
+// ===== 发布审批相关 =====
+
+/** 发布审批请求 */
+export interface IPublishApprovalReq {
+  /** 审批记录id */
+  id: number
+  /** 审批状态 1通过 2驳回 */
+  approvalStatus: number
+  /** 驳回原因 */
+  rejectionReason?: string
+}
+
+/** 发布审批列表查询请求 */
+export interface IPublishApprovalListReq {
+  /** 搜索关键词 */
+  keyword?: string
+  pageNo: number
+  pageSize: number
+}
+
+/** 发布审批列表项 */
+export interface IPublishApprovalItem {
+  id: number
+  /** 美工任务ID */
+  artDesignTaskId: number
+  /** 发布人用户ID */
+  publisherUserId: number
+  /** 审批人用户ID */
+  approvalUserId: number
+  /** 审批状态 0待审批 1通过 2驳回 */
+  approvalStatus: number
+  /** 驳回原因 */
+  rejectionReason: string
+  /** 发布来源 0=发布任务按钮 1=SKU复制 */
+  publishSource: number
+  /** 原SKU */
+  oldSku: string
+  /** 发布人姓名 */
+  publisherPersonName: string
+  /** 创建时间 */
+  createTime: string
+  /** 审批时间 */
+  approvalTime: string
+}
