@@ -13,6 +13,17 @@
             <el-input v-model.trim="queryForm.userName" clearable placeholder="请输入用户名" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
+            <el-switch
+              v-model="statusSwitch"
+              active-text="正常"
+              :active-value="0"
+              inactive-text="禁用"
+              :inactive-value="1"
+              style="margin-left: 10px"
+              @change="handleStatusSwitch"
+            />
+          </el-form-item>
+          <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
           </el-form-item>
           <el-form-item>
@@ -91,10 +102,18 @@ const list = ref<IUserQuery[]>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
 const selectRows = ref<any>([])
+const statusSwitch = ref(0)
+
+const handleStatusSwitch = () => {
+  queryForm.status = statusSwitch.value
+  queryData()
+}
+
 const queryForm = reactive<IUserQueryReq>({
   pageNo: 1,
   pageSize: 20,
   userName: '',
+  status: 0,
 })
 
 const setSelectRows = (value: string) => {
@@ -158,6 +177,7 @@ const resetQueryForm = () => {
   ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
     if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
   })
+  queryForm.status = 0
   queryForm.pageNo = 1
   queryData()
 }

@@ -19,6 +19,7 @@ export interface IUserQueryReq {
   pageNo: number
   pageSize: number
   userName: string
+  status: number
 }
 
 export interface IUserDeleteReq {
