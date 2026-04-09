@@ -22,7 +22,7 @@
         </el-button>
       </div>
       <!-- 富文本编辑区 -->
-      <div ref="editorRef" class="rich-editor" contenteditable="true" data-placeholder="请输入操作日志"></div>
+      <div ref="editorRef" class="rich-editor" contenteditable="true" data-placeholder="请输入操作日志" @paste="handlePaste"></div>
 
       <!-- 按钮区 -->
       <div class="dialog-actions">
@@ -70,7 +70,7 @@ const visible = defineModel({ default: false })
 const remark = ref<string>('')
 const remarkInputRef = ref<InstanceType<typeof ElInput> | null>(null)
 const editorRef = ref<HTMLDivElement | null>(null)
-const draft = ref('')
+const draftMap = ref<Record<string | number, string>>({})
 
 const handleDialogOpened = () => {
   const textarea = remarkInputRef.value?.$el.querySelector('textarea') as HTMLTextAreaElement
@@ -79,7 +79,7 @@ const handleDialogOpened = () => {
     textarea.setSelectionRange(0, 0)
   }
   if (editorRef.value) {
-    editorRef.value.innerHTML = draft.value
+    editorRef.value.innerHTML = draftMap.value[props.row.id] || ''
   }
 }
 
@@ -101,6 +101,12 @@ const applyFormat = (type: 'bold' | 'red') => {
   }
 }
 
+const handlePaste = (e: ClipboardEvent) => {
+  e.preventDefault()
+  const text = e.clipboardData?.getData('text/plain') || ''
+  document.execCommand('insertText', false, text)
+}
+
 const confirmUpdateOperationLog = async () => {
   const ok = await props.addLogApi(props.row, getEditorContent())
   if (ok) {
@@ -115,7 +121,7 @@ const handleAdd = async () => {
     if (editorRef.value) {
       editorRef.value.innerHTML = ''
     }
-    draft.value = ''
+    draftMap.value[props.row.id] = ''
     fetchHistoryLog()
   }
 }
@@ -148,7 +154,7 @@ watch(
       remark.value = props.row.operationRemark || ''
       fetchHistoryLog()
     } else {
-      draft.value = getEditorContent()
+      draftMap.value[props.row.id] = getEditorContent()
     }
   }
 )
@@ -192,11 +198,18 @@ watch(
   padding: 8px 12px;
   border: 1px solid var(--el-border-color);
   border-radius: var(--el-border-radius-base);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
   outline: none;
   margin-bottom: 12px;
   word-break: break-all;
+
+  // 强制子元素继承统一字体大小，防止浏览器插入的内联 font-size 导致大小不一
+  &,
+  :deep(*) {
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
 
   &:focus {
     border-color: var(--el-color-primary);
