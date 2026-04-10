@@ -302,6 +302,7 @@ const fetchData = async () => {
   list.value = data.list
   list.value.forEach((item) => {
     item.taxRate = parseFloat((item.taxRate * 100).toFixed(2))
+    item.levyRate = parseFloat((item.levyRate * 100).toFixed(2))
   })
   listLoading.value = false
 }
