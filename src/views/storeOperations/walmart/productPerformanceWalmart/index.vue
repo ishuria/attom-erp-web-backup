@@ -379,11 +379,10 @@ import { CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getOperationTypeUserList } from '/@/api/devlocal/frontPage.ts'
-import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering.ts'
-import { useUserStore } from '/@/store/modules/user.ts'
 import { months } from '../../constantOption.ts'
-import { getDistributionOptionUserList } from '/src/api/devlocal/productDistribution'
+import { getOperationTypeUserList } from '/@/api/devlocal/frontPage.ts'
+import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
+import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering.ts'
 import {
   addWalmartOperationLog,
   getCurrencyWalmartOperation,
@@ -401,10 +400,11 @@ import {
   updateOperationWalmartOperateTypeList,
   updateRemarkWalmartOperation,
   updateSortOperationColumn,
-} from '/src/api/devlocal/productPerformance'
-import handleClipboard from '/src/utils/clipboard'
-import { getAmazonStars } from '/src/utils/rate'
-import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/src/utils/tableColum'
+} from '/@/api/devlocal/productPerformance'
+import { useUserStore } from '/@/store/modules/user.ts'
+import handleClipboard from '/@/utils/clipboard'
+import { getAmazonStars } from '/@/utils/rate'
+import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProductPerformanceWalmart',

@@ -27,17 +27,9 @@
               <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleOpenSmooth">平滑指数设定</el-button>
-          </el-form-item>
+
           <el-form-item>
             <el-button :icon="Filter" :type="hasFilter ? 'warning' : 'primary'" @click="filterVisible = true">筛选</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleOpenSpringFestival">春节备货</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -185,28 +177,10 @@
           <img
             v-else-if="item.label === '图片'"
             loading="lazy"
-            :src="row.asinImgUrl"
+            :src="row.skuImgUrl"
             style="object-fit: cover; width: 75px; height: 75px; cursor: pointer"
-            @click="imagePreviewShow(row.asinImgUrl)"
+            @click="imagePreviewShow(row.skuImgUrl)"
           />
-
-          <!-- ASIN 字段 -->
-          <template v-else-if="item.label === 'ASIN'">
-            <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
-            <el-tooltip effect="dark" placement="top">
-              <template #content><div class="custom-tooltip">复制SKU</div></template>
-              <vab-icon icon="file-copy-2-fill" @click="handleClip(row.sku.split(',')[0])" />
-            </el-tooltip>
-            <el-tooltip effect="dark" placement="top">
-              <template #content><div class="custom-tooltip">复制ASIN</div></template>
-              <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
-            </el-tooltip>
-            <div class="rate-wrapper">
-              <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-              <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
-              <span class="rate-count">{{ row.commentsNumbers }}</span>
-            </div>
-          </template>
 
           <!-- SKU 字段 -->
           <el-tooltip v-else-if="item.label === 'SKU'" content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
@@ -237,11 +211,6 @@
           <!-- 按钮字段 -->
           <el-button v-else-if="item.label === '操作'" type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
 
-          <!-- 标签字段 -->
-          <el-tag v-else-if="item.label === '广告'" :type="row.advertisementStatus === 0 ? 'danger' : 'success'">
-            {{ row.advertisementStatus === 0 ? '关' : '开' }}
-          </el-tag>
-
           <!-- 多行文本字段 -->
           <div v-else-if="item.label === '剩余库存'">
             {{ row.fbaCount }}
@@ -255,34 +224,9 @@
             <br />
             <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
           </div>
-          <div v-else-if="item.label === '最晚补货'">
-            {{ row.latestRestock }}
-            <br />
-            <span>{{ row.avgTime }}天</span>
-          </div>
 
           <!-- HTML 内容字段 -->
           <span v-else-if="item.label === '库龄'" v-html="row.storageAge"></span>
-
-          <!-- VOC 满意度字段 -->
-          <div v-else-if="item.label === 'VOC满意度'">
-            {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
-            <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">
-              极差 {{ formatPercentage(row.vocDefect, 2) }}
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">
-              一般 {{ formatPercentage(row.vocDefect, 2) }}
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">
-              不合格 {{ formatPercentage(row.vocDefect, 2) }}
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">
-              良好 {{ formatPercentage(row.vocDefect, 2) }}
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">
-              极好 {{ formatPercentage(row.vocDefect, 2) }}
-            </el-tag>
-          </div>
 
           <!-- 断货字段 -->
           <el-text v-else-if="item.label === '断货'" :type="getOutOfStockType(row.outOfStock)">{{ row.outOfStock }}天</el-text>
@@ -430,29 +374,7 @@
         <el-button type="primary" @click="handleConfirmUpdateSmooth">确定</el-button>
       </template>
     </vab-dialog>
-    <!-- 发货数检查 -->
-    <vab-shipment-quantity-inspection v-model="quantityCheckVisible" @confirm="fetchData" />
-    <!-- 春节备货 -->
-    <vab-dialog v-model="stockUpVisible" title="春节备货" width="20%">
-      <el-form class="noneHoverTable" style="margin: auto 0">
-        <el-form-item label="春节备货">
-          <el-checkbox v-model="stockUpForm.springFestivalStock" :false-value="0" :true-value="1" />
-        </el-form-item>
-        <el-form-item label="发货多发天数">
-          <el-input v-model="stockUpForm.shipmentOverDays" :min="0" style="flex: 1" type="number" />
-        </el-form-item>
-        <el-form-item label="春节订货截止日期" label-position="top">
-          <el-date-picker v-model="stockUpForm.springFestivalOrderDeadline" clearable type="date" value-format="YYYY-MM-DD" />
-        </el-form-item>
-        <el-form-item label="节后开工日期" label-position="top">
-          <el-date-picker v-model="stockUpForm.startDate" type="date" value-format="YYYY-MM-DD" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="stockUpVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirmSpringFestival">确定</el-button>
-      </template>
-    </vab-dialog>
+
     <!-- 发布订货 -->
     <vab-release-order-dialog
       ref="releaseOrderDialogRef"
@@ -482,29 +404,30 @@
 </template>
 
 <script setup lang="ts">
-import { Filter, QuestionFilled, Search, Star } from '@element-plus/icons-vue'
+import { Filter, QuestionFilled, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, ElInput, FormInstance, TableInstance } from 'element-plus'
 import { debounce } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { adStatusOption, months } from '../../constantOption.ts'
-import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
 import {
-  getOperationOrderList,
   getOperationOrderSku,
   getOperationOrderSmoothness,
   getOperationOrderSpringFestival,
   getOperationOrderTable,
+  getOperationWalmartOrderList,
   releaseOperationPlanPo,
   updateOperationOrderSmoothness,
   updateOperationOrderSpringFestival,
 } from '/@/api/devlocal/productOrdering'
 import {
   getOperationColumnList,
+  getWalmartSiteList,
   hideOrShowOperationColumn,
   updateOperationASINOperateTypeList,
-  updateRemarkAmazonOperation,
+  updateOrderRemarkWalmartOperation,
   updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
@@ -512,13 +435,12 @@ import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user.ts'
 import type { IGetOperationOrderList, IGetOperationOrderTable } from '/@/type/storeOperation/productOrdering'
 import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
-import { handleClip } from '/@/utils/clipboard'
-import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
+import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'ProductOrdering',
+  name: 'ProductOrderWalmart',
 })
 
 const productOrderTableList = ref<IGetOperationOrderTable[]>([])
@@ -821,11 +743,9 @@ const handleDialogOpened = () => {
   }
 }
 const confirmUpdateOrderRemark = async () => {
-  const { data } = await updateRemarkAmazonOperation({
-    site: _row.value.site,
-    asin: _row.value.asin,
+  const { data } = await updateOrderRemarkWalmartOperation({
+    id: _row.value.id,
     remark: remark.value,
-    type: 1,
   })
   if (data) {
     $baseMessage('订货备注修改成功！', 'success')
@@ -1342,14 +1262,8 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 }
 // 获取站点列表
 const fetchSiteList = async () => {
-  const { data } = await getDistributionSiteList()
+  const { data } = await getWalmartSiteList()
   siteList.value = data
-  // // 初始化时全选所有站点
-  // if (data && data.length > 0) {
-  //   site.value = data.map((item) => item.id)
-  //   checkAll.value = true
-  //   indeterminate.value = false
-  // }
 }
 // 获取运营列表
 const fetchOperateUserList = async () => {
@@ -1362,7 +1276,7 @@ const checkList = computed(() => {
   return columns.value.filter((_: any) => _.checked)
 })
 const fetchColumn = async () => {
-  const { data } = await getOperationColumnList({ type: 3 })
+  const { data } = await getOperationColumnList({ type: 20 })
   columns.value = data
   columns.value.forEach((item: IGetOperationColumnList) => {
     item.minWidth = item.width
@@ -1398,7 +1312,7 @@ const reorderSeasonalData = (data: number[]) => {
 const fetchData = async () => {
   listLoading.value = true
   queryForm.sites = site.value.join(',')
-  const { data } = await getOperationOrderList(queryForm)
+  const { data } = await getOperationWalmartOrderList(queryForm)
   total.value = data.total
   list.value = data.list
   list.value.forEach((item) => {
@@ -1456,13 +1370,6 @@ onActivated(() => {
 })
 
 onBeforeMount(async () => {
-  if (currentUser === '李慧婷') {
-    site.value = [1]
-  } else if (currentUser === '刘秋月') {
-    site.value = [2]
-  } else {
-    site.value = [0]
-  }
   await fetchColumn()
   fetchSiteList()
   fetchOperateUserList()

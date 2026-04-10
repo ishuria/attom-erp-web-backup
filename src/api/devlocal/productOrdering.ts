@@ -23,6 +23,15 @@ export function getOperationOrderList(data: IGetOperationOrderListReq): Promise<
     data,
   })
 }
+
+// 产品订货沃尔玛-查询列表
+export function getOperationWalmartOrderList(data: IGetOperationOrderListReq): Promise<IGetOperationOrderListRes> {
+  return request({
+    url: `${BASE_API}/operation/walmart/order/list`,
+    method: 'post',
+    data,
+  })
+}
 // 产品订货-平滑指数设定获取
 export function getOperationOrderSmoothness(): Promise<{ data: IGetOperationOrdersSmoothness }> {
   return request({

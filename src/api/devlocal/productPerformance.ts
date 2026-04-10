@@ -463,6 +463,14 @@ export function updateRemarkWalmartOperation(data: { id: number; remark: string 
   })
 }
 
+export function updateOrderRemarkWalmartOperation(data: { id: number; remark: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/order/remark/update`,
+    method: 'post',
+    data,
+  })
+}
+
 export function filterWalmartList(data: IFilterWalmartListReq): Promise<IGetOperationAmazonSKUListRes> {
   return request({
     url: `${BASE_API}/operation/walmart/screening/list`,
