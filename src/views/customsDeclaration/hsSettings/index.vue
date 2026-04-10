@@ -49,9 +49,25 @@
           <div class="none">
             <el-input v-model="row.taxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.taxRate ? row.taxRate + '%' : '' }}</span>
+          <span>{{ row.taxRate >= 0 ? row.taxRate + '%' : '' }}</span>
         </template>
       </el-table-column>
+
+      <el-table-column label="转内销" min-width="" prop="domesticSale">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.domesticSale" @change="checkboxChange(row)" />
+        </template>
+      </el-table-column>
+
+      <el-table-column label="征税率" min-width="" prop="levyRate">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.levyRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.levyRate >= 0 ? row.levyRate + '%' : '' }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作" min-width="" prop="">
         <template #default="{ row, $index }">
           <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
@@ -77,7 +93,15 @@
           <el-input v-model="addForm.statutoryUnit" />
         </el-form-item>
         <el-form-item label="出口退税税率" prop="taxRate">
-          <el-input v-model="addForm.taxRate" type="number">
+          <el-input v-model="addForm.taxRate" :disabled="addForm.domesticSale" type="number">
+            <template #append>%</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="转内销" prop="domesticSale">
+          <el-checkbox v-model="addForm.domesticSale" />
+        </el-form-item>
+        <el-form-item label="征税率" prop="levyRate">
+          <el-input v-model="addForm.levyRate" :disabled="!addForm.domesticSale" type="number">
             <template #append>%</template>
           </el-input>
         </el-form-item>
@@ -119,7 +143,6 @@ const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<FormRules<IAddHSListReq>>({
   hs: [{ required: true, message: '请输入HS', trigger: 'blur' }],
   statutoryCount: [{ required: true, message: '请输入每零件单位有多少个法定第1单位', trigger: 'blur' }],
-  taxRate: [{ required: true, message: '请输入出口退税税率', trigger: 'blur' }],
 })
 const handleCloseAdd = () => {
   addFormRef.value?.resetFields()
@@ -128,6 +151,16 @@ const handleCloseAdd = () => {
 const handleConfirmAdd = async () => {
   addFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
+      if (addForm.domesticSale && addForm.taxRate) {
+        $baseMessage('转内销不能填入出口退税率！', 'error')
+        return
+      }
+
+      if (!addForm.domesticSale && addForm.levyRate) {
+        $baseMessage('非转内销不能填入征税率！', 'error')
+        return
+      }
+
       const { data } = await addHSList({
         ...addForm,
         taxRate: addForm.taxRate / 100,
@@ -167,6 +200,31 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     focusAndSelectInput(cell)
   }
 }
+
+const checkboxChange = async (value: IGetHSList) => {
+  if (!value.domesticSale) {
+    await updateHSList({
+      id: value.id,
+      isKgFlag: value.isKgFlag,
+      statutoryUnit: value.statutoryUnit,
+      statutoryCount: value.statutoryCount,
+      domesticSale: value.domesticSale,
+      taxRate: value.taxRate / 100,
+      levyRate: 0,
+    })
+  } else {
+    await updateHSList({
+      id: value.id,
+      isKgFlag: value.isKgFlag,
+      statutoryUnit: value.statutoryUnit,
+      statutoryCount: value.statutoryCount,
+      domesticSale: value.domesticSale,
+      taxRate: value.taxRate / 100,
+      levyRate: value.levyRate / 100,
+    })
+  }
+}
+
 // table blur事件
 const clickCancel = async (event: any, value: IGetHSList) => {
   const rootElement = getRootElement(event.srcElement, '.cell')
@@ -187,6 +245,7 @@ const clickCancel = async (event: any, value: IGetHSList) => {
       await updateHSList({
         ...value,
         taxRate: value.taxRate / 100,
+        levyRate: value.levyRate / 100,
       })
     } catch {
       Object.assign(value, copyRow)

@@ -16,12 +16,17 @@ export interface IGetHSList {
   statutoryUnit: string
   statutoryCount: number
   taxRate: number
+  domesticSale: number
+  levyRate: number
 }
 export interface IUpdateHSListReq {
   id: number
+  isKgFlag?: boolean
   statutoryUnit?: string
   statutoryCount?: number
   taxRate?: number
+  domesticSale?: number
+  levyRate?: number | undefined
 }
 export interface IAddHSListReq {
   hs: string
