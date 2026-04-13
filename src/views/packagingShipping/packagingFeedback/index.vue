@@ -8,7 +8,7 @@
               v-model.trim="queryForm.keyWord"
               clearable
               placeholder="搜索PO/SKU/品名/人员"
-              style="width: 16em;"
+              style="width: 16em"
               @input="handleSearch"
               @keyup.enter="handleSearch"
             />
@@ -21,46 +21,7 @@
     </vab-query-form>
 
     <el-table v-loading="loading" border :data="tableData" stripe @sort-change="handleSortChange">
-      <el-table-column label="反馈日期" prop="feedbackDate" sortable="custom" width="170">
-        <template #default="{ row }">
-          {{ row.feedbackDate ? formatDateTime(row.feedbackDate) : '' }}
-        </template>
-      </el-table-column>
-      <el-table-column label="反馈人员" prop="feedbackUserName" width="100" />
-      <el-table-column label="PO" prop="po" width="120" />
-      <el-table-column label="产品图片" width="90">
-        <template #default="{ row }">
-          <el-image v-if="row.skuImageUrl" fit="fill" :src="row.skuImageUrl" style="width: 60px; height: 60px" @click="imagePreviewShow(row.skuImageUrl)">
-            <template #error>
-              <el-icon />
-            </template>
-          </el-image>
-        </template>
-      </el-table-column>
-      <el-table-column label="SKU/品名" prop="sku" :width="Math.max(flexColumnWidth(tableData, 'SKU/品名', 'sku', 50), flexColumnWidth(tableData, 'SKU/品名', 'productName', 50))">
-        <template #default="{ row }">
-          {{ row.sku }}
-          <br />
-          {{ row.productName }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="打包反馈内容" min-width="300">
-        <template #default="{ row }">
-          <div class="feedback-content-cell" @click="handleEditFeedbackContent(row)" v-html="row.feedbackContent" />
-        </template>
-      </el-table-column>
-
-      <el-table-column label="讨论结果" min-width="250">
-        <template #default="{ row }">
-          <div class="discussion-cell" @click="handleEditDiscussion(row)">
-            <div v-if="row.discussionResult" v-html="row.discussionResult" />
-            <el-link v-else type="primary">点击编辑讨论结果</el-link>
-          </div>
-        </template>
-      </el-table-column>
-
-      <el-table-column fixed="right" label="状态" width="120">
+      <el-table-column align="center" label="状态" width="120">
         <template #default="{ row }">
           <el-dropdown trigger="click" @command="(cmd: number) => handleStatusChange(row, cmd)">
             <el-tag style="cursor: pointer" :type="statusTagType(row.status)">
@@ -84,6 +45,57 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="反馈日期" prop="feedbackDate" sortable="custom" width="170">
+        <template #default="{ row }">
+          {{ row.feedbackDate ? formatDateTime(row.feedbackDate) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="反馈人员" prop="feedbackUserName" width="100" />
+      <el-table-column label="PO" prop="po" width="120" />
+      <el-table-column label="产品图片" width="90">
+        <template #default="{ row }">
+          <el-image
+            v-if="row.skuImageUrl"
+            fit="fill"
+            :src="row.skuImageUrl"
+            style="width: 60px; height: 60px"
+            @click="imagePreviewShow(row.skuImageUrl)"
+          >
+            <template #error>
+              <el-icon />
+            </template>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="SKU/品名"
+        prop="sku"
+        :width="Math.max(flexColumnWidth(tableData, 'SKU/品名', 'sku', 50), flexColumnWidth(tableData, 'SKU/品名', 'productName', 50))"
+      >
+        <template #default="{ row }">
+          {{ row.sku }}
+          <br />
+          {{ row.productName }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="打包反馈内容" min-width="300">
+        <template #default="{ row }">
+          <div class="feedback-content-cell" @click="handleEditFeedbackContent(row)" v-html="row.feedbackContent" />
+        </template>
+      </el-table-column>
+
+      <el-table-column label="讨论结果" min-width="250">
+        <template #default="{ row }">
+          <div class="discussion-cell" @click="handleEditDiscussion(row)">
+            <div v-if="row.discussionResult" v-html="row.discussionResult" />
+            <el-link v-else type="primary">点击编辑讨论结果</el-link>
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="产品经理" min-width="100" prop="productManager" />
+
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -98,65 +110,30 @@
     />
 
     <!-- 编辑打包反馈内容弹窗 -->
-    <el-dialog
+    <package-editor-dialog
       v-model="feedbackContentDialogVisible"
-      :before-close="handleCloseFeedbackContent"
-      :close-on-click-modal="false"
+      :initial-html="feedbackContentHtml"
+      :loading="feedbackContentLoading"
+      placeholder="请输入打包反馈内容..."
       title="打包反馈内容"
-      width="60%"
-      @opened="handleFeedbackContentOpened"
-    >
-      <div v-if="feedbackContentDialogVisible" class="wang-editor-container">
-        <toolbar :default-config="toolbarConfig" :editor="feedbackEditorRef" style="border-bottom: 1px solid var(--el-border-color)" />
-        <editor
-          v-model="feedbackContentHtml"
-          class="wang-editor-content"
-          :default-config="editorConfig"
-          mode="default"
-          @on-created="handleFeedbackEditorCreated"
-        />
-      </div>
-      <template #footer>
-        <el-button @click="handleCloseFeedbackContent">取消</el-button>
-        <el-button :loading="feedbackContentLoading" type="primary" @click="handleSaveFeedbackContent">保存</el-button>
-      </template>
-    </el-dialog>
+      @save="handleSaveFeedbackContent"
+    />
 
     <!-- 讨论结果编辑弹窗 -->
-    <el-dialog
+    <package-editor-dialog
       v-model="discussionDialogVisible"
-      :before-close="handleCloseDiscussion"
-      :close-on-click-modal="false"
+      :initial-html="discussionHtml"
+      :loading="discussionLoading"
+      placeholder="请输入讨论结果..."
       title="编辑讨论结果"
-      width="60%"
-      @opened="handleDiscussionOpened"
-    >
-      <div v-if="discussionDialogVisible" class="wang-editor-container">
-        <toolbar :default-config="toolbarConfig" :editor="discussionEditorRef" style="border-bottom: 1px solid var(--el-border-color)" />
-        <editor
-          v-model="discussionHtml"
-          class="wang-editor-content"
-          :default-config="editorConfig"
-          mode="default"
-          @on-created="handleDiscussionEditorCreated"
-        />
-      </div>
-      <template #footer>
-        <el-button @click="handleCloseDiscussion">取消</el-button>
-        <el-button :loading="discussionLoading" type="primary" @click="handleSaveDiscussion">保存</el-button>
-      </template>
-    </el-dialog>
+      @save="handleSaveDiscussion"
+    />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
-
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import type { IDomEditor, IToolbarConfig } from '@wangeditor/editor'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import '@wangeditor/editor/dist/css/style.css'
-import { flexColumnWidth } from '~/src/utils/tableColum'
 import {
   getPackageFeedbackList,
   updatePackageFeedbackContent,
@@ -164,11 +141,11 @@ import {
   updatePackageFeedbackStatus,
 } from '/@/api/devlocal/packagingShipping'
 import type { IPackageFeedbackItem } from '/@/type/packagingShipping/packagingType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackagingFeedback',
 })
-
 
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
@@ -257,40 +234,10 @@ const handleStatusChange = async (row: IPackageFeedbackItem, status: number) => 
   }
 }
 
-// -------------------- 共用 wangEditor 配置 --------------------
-const toolbarConfig: Partial<IToolbarConfig> = {
-  excludeKeys: ['group-video', 'codeBlock'],
-}
-
-const editorConfig = reactive<any>({
-  placeholder: '请输入内容...',
-  readOnly: false,
-  MENU_CONF: {
-    uploadImage: {
-      allowedFileTypes: ['image/*'],
-      maxFileSize: 2 * 1024 * 1024,
-      async customUpload(file: File, insertFn: (url: string, alt?: string, href?: string) => void) {
-        try {
-          const { uploadEditorImage } = await import('/@/api/devlocal/progress')
-          const formData = new FormData()
-          formData.append('file', file)
-          const { data } = await uploadEditorImage(formData)
-          const imageUrl = data?.url ?? (typeof data === 'string' ? data : '')
-          if (!imageUrl) throw new Error('上传失败')
-          insertFn(imageUrl, file.name, imageUrl)
-        } catch (error: any) {
-          $baseMessage(error?.message || '图片上传失败', 'error', 'hey')
-        }
-      },
-    },
-  },
-})
-
 // -------------------- 打包反馈内容 编辑 --------------------
 const feedbackContentDialogVisible = ref(false)
 const feedbackContentHtml = ref('')
 const feedbackContentLoading = ref(false)
-const feedbackEditorRef = shallowRef<IDomEditor | undefined>()
 const currentFeedbackRow = ref<IPackageFeedbackItem | null>(null)
 
 const handleEditFeedbackContent = (row: IPackageFeedbackItem) => {
@@ -299,23 +246,10 @@ const handleEditFeedbackContent = (row: IPackageFeedbackItem) => {
   feedbackContentDialogVisible.value = true
 }
 
-const handleFeedbackEditorCreated = (editor: IDomEditor) => {
-  feedbackEditorRef.value = Object.seal(editor)
-}
-
-const handleFeedbackContentOpened = async () => {
-  await nextTick()
-  if (feedbackEditorRef.value && feedbackContentHtml.value) {
-    feedbackEditorRef.value.setHtml(feedbackContentHtml.value)
-  }
-  feedbackEditorRef.value?.focus()
-}
-
-const handleSaveFeedbackContent = async () => {
-  if (!currentFeedbackRow.value?.id || !feedbackEditorRef.value) return
+const handleSaveFeedbackContent = async (content: string) => {
+  if (!currentFeedbackRow.value?.id) return
   feedbackContentLoading.value = true
   try {
-    const content = feedbackEditorRef.value.getHtml()
     const { data } = await updatePackageFeedbackContent({
       id: currentFeedbackRow.value.id,
       feedbackContent: content,
@@ -323,23 +257,17 @@ const handleSaveFeedbackContent = async () => {
     if (data) {
       $baseMessage('反馈内容保存成功', 'success', 'hey')
       currentFeedbackRow.value.feedbackContent = content
-      handleCloseFeedbackContent()
+      feedbackContentDialogVisible.value = false
     }
   } finally {
     feedbackContentLoading.value = false
   }
 }
 
-const handleCloseFeedbackContent = () => {
-  feedbackContentDialogVisible.value = false
-  feedbackContentHtml.value = ''
-}
-
 // -------------------- 讨论结果 编辑 --------------------
 const discussionDialogVisible = ref(false)
 const discussionHtml = ref('')
 const discussionLoading = ref(false)
-const discussionEditorRef = shallowRef<IDomEditor | undefined>()
 const currentDiscussionRow = ref<IPackageFeedbackItem | null>(null)
 
 const handleEditDiscussion = (row: IPackageFeedbackItem) => {
@@ -348,23 +276,10 @@ const handleEditDiscussion = (row: IPackageFeedbackItem) => {
   discussionDialogVisible.value = true
 }
 
-const handleDiscussionEditorCreated = (editor: IDomEditor) => {
-  discussionEditorRef.value = Object.seal(editor)
-}
-
-const handleDiscussionOpened = async () => {
-  await nextTick()
-  if (discussionEditorRef.value && discussionHtml.value) {
-    discussionEditorRef.value.setHtml(discussionHtml.value)
-  }
-  discussionEditorRef.value?.focus()
-}
-
-const handleSaveDiscussion = async () => {
-  if (!currentDiscussionRow.value?.id || !discussionEditorRef.value) return
+const handleSaveDiscussion = async (content: string) => {
+  if (!currentDiscussionRow.value?.id) return
   discussionLoading.value = true
   try {
-    const content = discussionEditorRef.value.getHtml()
     const { data } = await updatePackageFeedbackDiscussion({
       id: currentDiscussionRow.value.id,
       discussionResult: content,
@@ -372,22 +287,12 @@ const handleSaveDiscussion = async () => {
     if (data) {
       $baseMessage('讨论结果保存成功', 'success', 'hey')
       currentDiscussionRow.value.discussionResult = content
-      handleCloseDiscussion()
+      discussionDialogVisible.value = false
     }
   } finally {
     discussionLoading.value = false
   }
 }
-
-const handleCloseDiscussion = () => {
-  discussionDialogVisible.value = false
-  discussionHtml.value = ''
-}
-
-onBeforeUnmount(() => {
-  feedbackEditorRef.value?.destroy()
-  discussionEditorRef.value?.destroy()
-})
 
 onMounted(() => {
   fetchData()
@@ -413,16 +318,6 @@ onMounted(() => {
   :deep(img) {
     max-width: 100%;
     max-height: 80px;
-  }
-}
-
-.wang-editor-container {
-  border: 1px solid var(--el-border-color);
-  border-radius: 4px;
-
-  .wang-editor-content {
-    height: 350px;
-    overflow-y: auto;
   }
 }
 </style>

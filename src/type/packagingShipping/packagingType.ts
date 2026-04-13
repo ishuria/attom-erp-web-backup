@@ -1237,6 +1237,7 @@ export interface IPackageFeedbackItem {
   lastFeedbackTime?: string
   /** 0=待讨论 1=待执行 2=已解决 */
   status?: number
+  productManager?: string
 }
 
 export interface IPackageFeedbackListResp {

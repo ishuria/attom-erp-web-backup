@@ -8,7 +8,7 @@
         <el-input v-model.trim="form.password" clearable type="password" />
       </el-form-item>
 
-      <el-form-item label="今年病假" prop="currentYearSickLeave">
+      <!-- <el-form-item label="今年病假" prop="currentYearSickLeave">
         <el-input v-model.trim="form.currentYearSickLeave" clearable />
       </el-form-item>
       <el-form-item label="明年病假" prop="nextYearSickLeave">
@@ -24,7 +24,7 @@
         <el-select v-model="form.affiliatedBranchCompany" clearable filterable placeholder="请选择分公司">
           <el-option v-for="item in form.companies" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="所属主管" prop="supervisorIds">
         <el-select v-model="form.supervisorId" placeholder="请选择所属主管">
           <el-option v-for="item in supervisorList" :key="item.id" :label="item.label" :value="item.id"/>
