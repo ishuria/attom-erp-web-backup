@@ -78,9 +78,11 @@ const editorConfig = reactive<any>({
         try {
           const formData = new FormData()
           formData.append('file', file)
-          const { data } = await uploadEditorImage(formData)
+          const res = await uploadEditorImage(formData)
+          const { data } = res
           const imageUrl = data?.url ?? (typeof data === 'string' ? data : '')
           if (!imageUrl) throw new Error('上传失败')
+          await nextTick()
           insertFn(imageUrl, file.name, imageUrl)
         } catch (error: any) {
           $baseMessage(error?.message || '图片上传失败', 'error', 'hey')
