@@ -113,15 +113,11 @@
               v-model="row[prop]"
               class="center-input"
               clearable
-              default-first-option
               filterable
-              :loading="peopleLoading"
-              placeholder="点击输入和搜索"
-              remote
-              :remote-method="remotePeopleMethod"
+              placeholder="点击输入或搜索设计人员"
               @change="handleChangeProductDesign(row, prop)"
             >
-              <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in productDesignList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </template>
           <template v-if="row['column0'] === 'sampleRetention'">
@@ -287,6 +283,7 @@ import {
   reviewStepNo5VariantImgUpload,
 } from '/@/api/devlocal/orderProcess'
 import { getAllName, getUserProcurementName } from '/@/api/devlocal/user'
+import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import type { IGetSelectVariantsList, IOperationDistributionList } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
@@ -1105,6 +1102,12 @@ const fetchProcurementManagerList = async () => {
   })
   procurementManagerList.value = data
 }
+/** 获取产品设计人员列表（仅工业设计和平面设计角色） */
+const productDesignList = ref<{ id: number; label: string }[]>([])
+const fetchProductDesignList = async () => {
+  const { data } = await getArtDesignTaskUserList()
+  productDesignList.value = data
+}
 const operationUserList = ref<{ id: number; label: string }[]>([])
 const fetchOperationUserList = async () => {
   const { data } = await getDistributionOptionUserList()
@@ -1127,6 +1130,7 @@ onMounted(() => {
   fetchPackagePositionOption()
   fetchVariantList()
   fetchProcurementManagerList()
+  fetchProductDesignList()
   fetchOperationUserList()
   fetchDistributionList()
 })
