@@ -15,8 +15,22 @@
         class="wang-editor-content"
         :default-config="editorConfig"
         mode="default"
-        @click="handleClick"
+        @click="
+          (e: MouseEvent) => {
+            handleEditorImageClick(e)
+            handleClick()
+          }
+        "
         @on-created="handleCreated"
+      />
+
+      <!-- 图片点击放大预览 -->
+      <el-image-viewer
+        v-if="showViewer"
+        hide-on-click-modal
+        :initial-index="viewerIndex"
+        :url-list="viewerList"
+        @close="showViewer = false"
       />
     </div>
     <template #footer>
@@ -339,6 +353,27 @@ const handleConfirmDialog = () => {
 const handleCreated = (editor: IDomEditor) => {
   editorRef.value = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
 }
+
+// 图片点击放大
+const showViewer = ref(false)
+const viewerList = ref<string[]>([])
+const viewerIndex = ref(0)
+
+const handleEditorImageClick = (e: MouseEvent) => {
+  const target = e.target as HTMLElement
+  if (target.tagName === 'IMG') {
+    const src = (target as HTMLImageElement).src
+    if (src) {
+      const container = (e.currentTarget as HTMLElement).closest('.wang-editor-content') as HTMLElement
+      if (!container) return
+      const allImgs = Array.from(container.querySelectorAll('img'))
+      const urls = allImgs.map((img) => img.src).filter(Boolean)
+      viewerList.value = urls
+      viewerIndex.value = Math.max(urls.indexOf(src), 0)
+      showViewer.value = true
+    }
+  }
+}
 onBeforeUnmount(() => {
   clearTimer()
   const editor = editorRef.value
@@ -440,6 +475,7 @@ onUnmounted(() => {
 .wang-editor-dialog {
   img {
     max-width: 100%;
+    cursor: zoom-in;
   }
 }
 

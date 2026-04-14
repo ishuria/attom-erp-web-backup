@@ -1,9 +1,18 @@
 <template>
   <div class="wang-editor-viewer">
-    <div v-if="content && content.trim()" class="editor-container">
+    <div v-if="content && content.trim()" class="editor-container" @click="handleImageClick">
       <editor v-model="html" class="wang-editor-content" :default-config="editorConfig" mode="default" @on-created="handleCreated" />
     </div>
     <el-empty v-else description="暂无内容" />
+
+    <!-- 图片点击放大预览 -->
+    <el-image-viewer
+      v-if="showViewer"
+      hide-on-click-modal
+      :initial-index="viewerIndex"
+      :url-list="viewerList"
+      @close="showViewer = false"
+    />
   </div>
 </template>
 
@@ -53,6 +62,26 @@ const handleCreated = (editor: IDomEditor) => {
   editorRef.value = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
 }
 
+// 图片点击放大
+const showViewer = ref(false)
+const viewerList = ref<string[]>([])
+const viewerIndex = ref(0)
+
+const handleImageClick = (e: MouseEvent) => {
+  const target = e.target as HTMLElement
+  if (target.tagName === 'IMG') {
+    const src = (target as HTMLImageElement).src
+    if (src) {
+      const container = e.currentTarget as HTMLElement
+      const allImgs = Array.from(container.querySelectorAll('img'))
+      const urls = allImgs.map((img) => img.src).filter(Boolean)
+      viewerList.value = urls
+      viewerIndex.value = Math.max(urls.indexOf(src), 0)
+      showViewer.value = true
+    }
+  }
+}
+
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor) editor.destroy()
@@ -79,6 +108,11 @@ onBeforeUnmount(() => {
     // 隐藏工具栏
     :deep(.w-e-toolbar) {
       display: none !important;
+    }
+
+    // 图片可点击提示
+    :deep(img) {
+      cursor: zoom-in;
     }
   }
 }
