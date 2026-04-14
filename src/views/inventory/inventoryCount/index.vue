@@ -125,7 +125,17 @@
       </el-table-column>
       <el-table-column align="right" label="计算" min-width="110" prop="totalSendCount">
         <template #default="{ row }">
-          {{ row.totalOrderCount - row.totalSendCount - row.notYetArrived }}
+          {{ formatNumber((Number(row.totalOrderCount) || 0) - (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="总调整数量" min-width="110" prop="adjustCount">
+        <template #default="{ row }">
+          {{ formatNumber(row.adjustCount) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="调整后订货数" min-width="110" prop="adjustedOrderCount">
+        <template #default="{ row }">
+          {{ formatNumber((Number(row.totalOrderCount) || 0) - (Number(row.adjustCount) || 0)) }}
         </template>
       </el-table-column>
       <el-table-column align="right" label="总接收数" min-width="110" prop="totalReceiveCount">
@@ -470,6 +480,7 @@ const mergeColumnProps = new Set([
   'lackCount',
   'totalSendCount',
   'totalReceiveCount',
+  'adjustCount',
   'noEncasementCount',
   'remark',
   'createTime',
