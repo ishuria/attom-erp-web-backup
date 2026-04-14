@@ -452,6 +452,7 @@ const handleShowReleaseOrder = async (row: any) => {
     }
   }
 }
+
 // 确认发布订货
 const handleReleaseOrder = async (formData: any) => {
   if (!formData.sku) {
@@ -482,6 +483,10 @@ const handleReleaseOrder = async (formData: any) => {
 
     if (data) {
       $baseMessage('发布订货成功！', 'success')
+      // 延迟一小段时间后再更新数据，给UI足够的时间响应
+      setTimeout(() => {
+        skuRow.nowSupplementCalcu = data.nowSupplementCalcu
+      }, 100)
     }
   } catch (error) {
     console.error('发布订货失败:', error)
