@@ -31,42 +31,68 @@
       :header-cell-style="{ textAlign: 'center' }"
       stripe
     >
-      <el-table-column label="添加日期" min-width="120" prop="createTime" >
+      <el-table-column label="添加日期" min-width="120" prop="createTime">
         <template #default="{ row }">
           {{ row.createTime.split(' ')[0] }}
         </template>
       </el-table-column>
       <el-table-column label="站点" min-width="130" prop="siteName" />
-      <el-table-column label="ASIN" min-width="110" prop="asin" />
+      <el-table-column label="ASIN" min-width="130" prop="asin" />
       <el-table-column label="SKU" :min-width="flexColumnWidth(list, 'SKU', 'sku')" prop="sku" />
       <el-table-column label="运营" min-width="100" prop="operationUserName" />
-      <el-table-column label="小类排名(添加时)" :min-width="flexColumnWidth(list, '小类排名(添加时)', 'initialSubcategoryCategory', 50)" prop="initialSubcategoryRank" >
-        <template #default="{ row }">
-          #{{ row.initialSubcategoryRank }} {{ row.initialSubcategoryCategory }}
-        </template>
+      <el-table-column
+        label="小类排名(添加时)"
+        :min-width="flexColumnWidth(list, '小类排名(添加时)', 'initialSubcategoryCategory', 50)"
+        prop="initialSubcategoryRank"
+      >
+        <template #default="{ row }">#{{ row.initialSubcategoryRank }} {{ row.initialSubcategoryCategory }}</template>
       </el-table-column>
-      <el-table-column label="同类竞品小类最高排名" min-width="160" prop="competitorHighestRank" />
+      <el-table-column label="同类竞品小类最高排名" min-width="180" prop="competitorHighestRank" />
       <el-table-column label="目标小类排名" min-width="120" prop="targetSubcategoryRank" />
-      <el-table-column label="30天父体销量(添加时)" min-width="160" prop="initialParentSales" />
-      <el-table-column label="目标竞品" min-width="120" prop="targetCompetitor" />
+      <el-table-column label="30天父体销量(添加时)" min-width="180" prop="initialParentSales" />
+      <el-table-column label="目标竞品" min-width="130" prop="targetCompetitor" />
       <el-table-column label="目标竞品父体月销量" min-width="160" prop="targetCompetitorParentSales" />
-      <el-table-column label="目标父体月销量" min-width="120" prop="targetParentSales" />
+      <el-table-column label="目标父体月销量" min-width="130" prop="targetParentSales" />
       <el-table-column label="当前30天销量" min-width="120">
         <template #default="{ row }">
-          <span :style="{ color: row.current30DaysSales != null && row.targetParentSales != null ? (row.current30DaysSales >= row.targetParentSales ? '#67C23A' : '#F56C6C') : '' }">
+          <span
+            :style="{
+              color:
+                row.current30DaysSales != null && row.targetParentSales != null
+                  ? row.current30DaysSales >= row.targetParentSales
+                    ? '#67C23A'
+                    : '#F56C6C'
+                  : '',
+            }"
+          >
             {{ row.current30DaysSales }}
           </span>
         </template>
       </el-table-column>
       <el-table-column label="当前小类排名" min-width="120">
         <template #default="{ row }">
-          <span :style="{ color: row.currentSubcategoryRank != null && row.targetSubcategoryRank != null ? (row.currentSubcategoryRank <= row.targetSubcategoryRank ? '#67C23A' : '#F56C6C') : '' }">
+          <span
+            :style="{
+              color:
+                row.currentSubcategoryRank != null && row.targetSubcategoryRank != null
+                  ? row.currentSubcategoryRank <= row.targetSubcategoryRank
+                    ? '#67C23A'
+                    : '#F56C6C'
+                  : '',
+            }"
+          >
             {{ row.currentSubcategoryRank }}
           </span>
         </template>
       </el-table-column>
       <el-table-column label="已运营天数" min-width="100" prop="operationDays" />
-    
+      <el-table-column fixed="right" label="操作" min-width="120">
+        <template #default="{ row }">
+          <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>
+          <!-- <el-button link type="danger" @click="handleDelete(row.id)">删除</el-button> -->
+        </template>
+      </el-table-column>
+
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -84,22 +110,12 @@
       <el-form ref="formRef" label-width="180px" :model="formData" :rules="formRules">
         <el-form-item label="运营" prop="operationUserId">
           <el-select v-model="formData.operationUserId" clearable :disabled="isEdit || isOperationRole" filterable placeholder="请选择运营">
-            <el-option
-              v-for="item in operationUserList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+            <el-option v-for="item in operationUserList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="站点" prop="site">
           <el-select v-model="formData.site" clearable :disabled="isEdit" placeholder="请选择站点">
-            <el-option
-              v-for="item in siteList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="SKU" prop="sku">
@@ -114,18 +130,13 @@
             :remote-method="remoteMethod"
             reserve-keyword
           >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="ASIN" prop="asin">
           <el-input v-model.trim="formData.asin" placeholder="根据SKU和站点自动获取" readonly />
         </el-form-item>
-        <el-form-item label="当前后小类排名" prop="initialSubcategoryRank">
+        <el-form-item label="当前小类排名" prop="initialSubcategoryRank">
           <el-input v-model.number="formData.initialSubcategoryRank" placeholder="根据SKU和站点自动获取" readonly />
         </el-form-item>
         <el-form-item label="30天父体销量(添加时)" prop="initialParentSales">
@@ -167,12 +178,11 @@ import {
   deleteSubCategoryTracking,
   getProductInfoBySkuAndSite,
   getSubCategoryTrackingList,
-  updateSubCategoryTracking
+  updateSubCategoryTracking,
 } from '/@/api/devlocal/subCategoryTracking'
 import { ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
-
 
 defineOptions({
   name: 'SubCategoryTracking',
@@ -227,13 +237,13 @@ const formRules = {
 const listLoading = ref<boolean>(false)
 const list = ref<any>([])
 const total = ref<number>(0)
-const operationUserList = ref<{ id: number,label:string }[]>([])
-const siteList = ref<{ id: number,label:string }[]>([])
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const options = ref<{ value: string; label: string }[]>([])
 const skuLoading = ref<boolean>(false)
 const loadOperationUserList = async () => {
   try {
-    const { data } = await getFrontPageProductManagerSelectOption({ type: 3})
+    const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
     const allList = data || []
     if (isOperationRole) {
       // 运营或运营主管只能选择自己
@@ -435,12 +445,9 @@ const fetchData = async () => {
   listLoading.value = false
 }
 
-watch(
-  [() => formData.sku, () => formData.site],
-  () => {
-    loadProductInfo()
-  }
-)
+watch([() => formData.sku, () => formData.site], () => {
+  loadProductInfo()
+})
 
 onBeforeMount(() => {
   fetchData()
