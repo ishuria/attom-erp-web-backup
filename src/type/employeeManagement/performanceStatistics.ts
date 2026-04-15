@@ -313,6 +313,10 @@ export interface IGetUserAttendanceManagementList {
   jobTitle?: string
   roleName?: string
   month?: string
+  avgSixMonthManagementBonus?: number
+  avgSixMonthNewBonus?: number
+  subAvgSixMonthManagementBonus?: number
+  subAvgSixMonthNewBonus?: number
 }
 
 export interface IGetOperationCommissionReq {

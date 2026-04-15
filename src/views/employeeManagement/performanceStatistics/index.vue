@@ -176,11 +176,7 @@
         />
       </el-tab-pane>
       <el-tab-pane v-if="hasTabPermission(1)" label="全员概览" :name="1" />
-      <el-tab-pane
-        v-if="hasTabPermission(2)"
-        label="产品经理"
-        :name="2"
-      >
+      <el-tab-pane v-if="hasTabPermission(2)" label="产品经理" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline @submit.prevent>
@@ -630,11 +626,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane
-        v-if="hasTabPermission(7)"
-        label="主管"
-        :name="7"
-      >
+      <el-tab-pane v-if="hasTabPermission(7)" label="主管" :name="7">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker
@@ -679,9 +671,14 @@
             <el-table-column label="直属下级" min-width="130" prop="userName" />
             <el-table-column label="直属下级新品提成" min-width="130" prop="newCommissionBonus" />
             <el-table-column label="新品管理奖金" min-width="130" prop="newBonus" />
+            <el-table-column label="下级6个月月均新品管理奖金" min-width="180" prop="subAvgSixMonthNewBonus" />
             <el-table-column label="直属下级总提成" min-width="130" prop="totalCommissionBonus" />
+            <el-table-column label="下级6个月月均管理奖金" min-width="170" prop="subAvgSixMonthManagementBonus" />
+
             <el-table-column label="管理奖金比例" min-width="130" prop="proportion" />
             <el-table-column label="管理奖金明细" min-width="130" prop="managementBonus" />
+            <el-table-column label="6个月月均管理奖金" min-width="170" prop="avgSixMonthManagementBonus" />
+            <el-table-column label="6个月月均新品管理奖金" min-width="180" prop="avgSixMonthNewBonus" />
             <el-table-column label="管理奖金" min-width="130" prop="totalManagementBonus" />
           </el-table-column>
           <template #empty>
@@ -914,16 +911,6 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  ROLE_BOSS_CODE,
-  ROLE_PRODUCTMANNAGERLEAD_CODE,
-  ROLE_WAREHOUSEMANNAGERlEAD_CODE,
-  ROLE_INDUSTRIAL_DESIGN_CODE,
-  ROLE_GRAPHICDESIGNLEAD_CODE,
-  ROLE_PURCHASER_CODE,
-  ROLE_ECOMMERCEOPERATIONLEAD_CODE,
-} from '/@/const/role.ts'
-import { useAclStore } from '/@/store/modules/acl.ts'
 import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash-es'
@@ -943,7 +930,17 @@ import {
   updateProductManagerAssessment,
   updateProductManagerNoAssessment,
 } from '/@/api/devlocal/performanceStatistics'
+import {
+  ROLE_BOSS_CODE,
+  ROLE_ECOMMERCEOPERATIONLEAD_CODE,
+  ROLE_GRAPHICDESIGNLEAD_CODE,
+  ROLE_INDUSTRIAL_DESIGN_CODE,
+  ROLE_PRODUCTMANNAGERLEAD_CODE,
+  ROLE_PURCHASER_CODE,
+  ROLE_WAREHOUSEMANNAGERlEAD_CODE,
+} from '/@/const/role.ts'
 import PerformanceStatisticsPermission from '/@/permissions/performanceStatistics'
+import { useAclStore } from '/@/store/modules/acl.ts'
 import {
   IGetAdjustDetail,
   IGetAssessmentList,
@@ -1035,7 +1032,9 @@ const showParameterSettings = () => {
 
 // 根据当前角色获取默认激活的 tab
 const getDefaultTab = () => {
-  for (const tabName of Object.keys(TAB_PERMISSIONS).map(Number).sort((a, b) => a - b)) {
+  for (const tabName of Object.keys(TAB_PERMISSIONS)
+    .map(Number)
+    .sort((a, b) => a - b)) {
     if (TAB_PERMISSIONS[tabName].includes(currentRoleCode)) {
       return tabName
     }
@@ -1629,7 +1628,15 @@ const fetchArtDesignRoleList = async () => {
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
   const label = column.label
-  if (columnIndex === 0 || label === '姓名' || label === '职级' || label === '角色' || label === '管理奖金') {
+  if (
+    columnIndex === 0 ||
+    label === '姓名' ||
+    label === '职级' ||
+    label === '角色' ||
+    label === '管理奖金' ||
+    label === '6个月月均管理奖金' ||
+    label === '6个月月均新品管理奖金'
+  ) {
     const id = row.managementId
 
     for (let i = rowIndex + 1; i < list.value.length; i++) {
