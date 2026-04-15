@@ -2,6 +2,8 @@ export interface InventoryCountQuery {
   keyWord: string
   pageNo: number
   pageSize: number
+  orderByField?: string
+  orderDirection?: string
 }
 
 export interface InventoryHistoryQuery extends InventoryCountQuery {

@@ -40,9 +40,12 @@
       :data="tableData"
       :header-cell-style="{ textAlign: 'center' }"
       row-key="rowKey"
+      show-summary
+      :summary-method="getSummaryRow"
       :span-method="tableSpanMethod"
+      @sort-change="handleSortChange"
     >
-      <el-table-column align="center" label="SKU图片" min-width="100" prop="skuImg">
+      <el-table-column align="center" fixed="left" label="SKU图片" min-width="100" prop="skuImg">
         <template #default="{ row }">
           <div class="sku-image-cell">
             <el-image
@@ -58,7 +61,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" min-width="180" prop="sku" show-overflow-tooltip>
+      <el-table-column fixed="left" label="SKU" min-width="180" prop="sku" show-overflow-tooltip>
         <template #default="{ row }">
           <div class="sku-copy-cell">
             <span>{{ row.sku || '-' }}</span>
@@ -66,120 +69,137 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="产品名称" min-width="220" prop="productName" show-overflow-tooltip />
+      <el-table-column fixed="left" label="产品名称" min-width="220" prop="productName" show-overflow-tooltip />
       <el-table-column label="PO" min-width="140" prop="po" show-overflow-tooltip />
       <el-table-column align="center" label="订货日期" min-width="160" prop="orderDate">
         <template #default="{ row }">
           {{ formatDisplayDateTime(row.orderDate) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="实际完成数" min-width="110" prop="actualCount">
+      <el-table-column align="right" label="完成数" min-width="90" prop="actualCount">
         <template #default="{ row }">
           {{ formatNumber(row.actualCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="打包任务数" min-width="110" prop="taskCount">
+      <el-table-column align="right" label="打包数" min-width="90" prop="taskCount">
         <template #default="{ row }">
           {{ formatNumber(row.taskCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="待售后数量(坏+缺)" min-width="120" prop="afterCount">
+      <el-table-column align="right" label="待售后(坏+缺)" min-width="110" prop="afterCount">
         <template #default="{ row }">
           {{ formatNumber(row.afterCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总装箱数量" min-width="110" prop="encasementCount">
+      <el-table-column align="right" label="装箱数" min-width="110" prop="encasementCount" sortable="custom">
         <template #default="{ row }">
           {{ formatNumber(row.encasementCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总打包任务数" min-width="120" prop="totalTaskCount">
+      <el-table-column align="right" label="总打包数" min-width="120" prop="totalTaskCount" sortable="custom">
         <template #default="{ row }">
           {{ formatNumber(getTotalTaskCount(row)) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总待售后数" min-width="120" prop="totalAfterCount">
+      <el-table-column align="right" label="总待售后" min-width="110" prop="totalAfterCount" sortable="custom">
         <template #default="{ row }">
           {{ formatNumber(getTotalAfterCount(row)) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="缺数" min-width="100" prop="lackCount">
+      <el-table-column align="right" label="缺数" min-width="100" prop="lackCount" sortable="custom">
         <template #default="{ row }">
-          {{ formatNumber(row.lackCount) }}
+          <span :class="Number(row.lackCount) < 0 ? 'text-green' : Number(row.lackCount) > 0 ? 'text-red' : ''">
+            {{ formatNumber(-(Number(row.lackCount) || 0)) }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总订货数" min-width="110" prop="totalOrderCount">
-        <template #default="{ row }">
-          {{ formatNumber(row.totalOrderCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="未到货数" min-width="110" prop="notYetArrived">
+
+      <el-table-column align="right" label="未到货" min-width="110" prop="notYetArrived" sortable="custom">
         <template #default="{ row }">
           {{ formatNumber(row.notYetArrived) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总发货数" min-width="110" prop="totalSendCount">
+      <el-table-column align="right" label="订货数" min-width="110" prop="totalOrderCount" sortable="custom">
+        <template #default="{ row }">
+          {{ formatNumber(row.totalOrderCount) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="right" label="发货数" min-width="90" prop="totalSendCount">
         <template #default="{ row }">
           {{ formatNumber(row.totalSendCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="计算" min-width="110" prop="totalSendCount">
-        <template #default="{ row }">
-          {{ formatNumber((Number(row.totalOrderCount) || 0) - (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="总调整数量" min-width="110" prop="adjustCount">
+      <el-table-column align="right" label="调整数" min-width="110" prop="adjustCount" sortable="custom">
         <template #default="{ row }">
           {{ formatNumber(row.adjustCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="调整后订货数" min-width="110" prop="adjustedOrderCount">
+      <el-table-column align="right" min-width="140" prop="adjustedOrderCount">
+        <template #header>
+          <el-tooltip placement="top" content="总订货数 + 总调整数">
+            <span>调整订货数 <el-icon><question-filled /></el-icon></span>
+          </el-tooltip>
+        </template>
         <template #default="{ row }">
-          {{ formatNumber((Number(row.totalOrderCount) || 0) - (Number(row.adjustCount) || 0)) }}
+          <el-tooltip
+            placement="top"
+            :content="`${formatNumber(row.totalOrderCount)} + ${formatNumber(row.adjustCount)}`"
+          >
+            <span>{{ formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0)) }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column align="right" label="总接收数" min-width="110" prop="totalReceiveCount">
+      <el-table-column align="right" min-width="110" prop="orderDiffCount">
+        <template #header>
+          <el-tooltip placement="top" content="调整订货数 - 总发货数">
+            <span>订发差值 <el-icon><question-filled /></el-icon></span>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <el-tooltip
+            placement="top"
+            :content="`${formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0))} - ${formatNumber(row.totalSendCount)}`"
+          >
+            <span :class="(Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) < 0 ? 'text-red' : (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) > 0 ? 'text-green' : ''">{{
+              formatNumber(
+                (Number(row.totalOrderCount) || 0) +
+                  (Number(row.adjustCount) || 0) -
+                  (Number(row.totalSendCount) || 0)
+              )
+            }}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="right" label="接收数" min-width="110" prop="totalReceiveCount" sortable="custom">
         <template #default="{ row }">
           {{ formatNumber(row.totalReceiveCount) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="未装箱数量" min-width="160" prop="noEncasementCount">
+      <el-table-column align="center" label="未装箱" min-width="140" prop="noEncasementCount">
         <template #default="{ row }">
           <el-input-number
             v-if="isEditingRow(row.id)"
+            ref="noEncasementInputRef"
             v-model="rowEditForm.noEncasementCount"
             :controls="false"
             :min="0"
             :precision="0"
             style="width: 120px"
+            @blur="handleSaveRow"
+            @keyup.enter="handleSaveRow"
           />
           <span v-else class="editable-text" @click="handleStartEdit(row)">{{ formatNumber(row.noEncasementCount) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="盘点备注" min-width="220" prop="remark" show-overflow-tooltip>
         <template #default="{ row }">
-          <el-input
-            v-if="isEditingRow(row.id)"
-            v-model.trim="rowEditForm.remark"
-            maxlength="500"
-            placeholder="请输入盘点备注"
-            show-word-limit
-          />
-          <span v-else class="editable-text editable-text--left" @click="handleStartEdit(row)">{{ row.remark || '-' }}</span>
+          <span class="editable-text editable-text--left" @click="openRemarkDialog(row)">{{ row.remark || '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间" min-width="160" prop="createTime">
+      <el-table-column align="center" label="创建时间" min-width="120" prop="createTime">
         <template #default="{ row }">
           {{ formatDisplayDateTime(row.createTime) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" min-width="160" prop="operation">
-        <template #default="{ row }">
-          <template v-if="isEditingRow(row.id)">
-            <el-button :loading="rowSavingId === row.id" text type="primary" @click="handleSaveRow">保存</el-button>
-            <el-button :disabled="rowSavingId === row.id" text @click="handleCancelEdit">取消</el-button>
-          </template>
-          <el-button v-else text type="primary" @click="handleStartEdit(row)">编辑</el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -327,6 +347,22 @@
         <el-button :loading="marginSaving" type="primary" @click="handleSaveMargin">确定</el-button>
       </template>
     </vab-dialog>
+
+    <vab-dialog v-model="remarkDialogVisible" title="盘点备注" width="520px" @close="handleRemarkDialogClose">
+      <el-input
+        ref="remarkTextareaRef"
+        v-model="remarkDialogForm.remark"
+        :maxlength="500"
+        placeholder="请输入盘点备注"
+        :rows="6"
+        show-word-limit
+        type="textarea"
+      />
+      <template #footer>
+        <el-button @click="remarkDialogVisible = false">取消</el-button>
+        <el-button :loading="remarkSaving" type="primary" @click="handleSaveRemark">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -351,11 +387,7 @@ import {
 } from '/@/api/devlocal/inventoryCount'
 import { $baseConfirm, $baseMessage } from '/@/hooks'
 import InventoryPermission from '/@/permissions/inventory'
-import type {
-  InventoryAdjustAddForm,
-  InventoryAdjustPackingTaskOption,
-  InventoryAdjustPoOption,
-} from '/@/type/inventory/adjust'
+import type { InventoryAdjustAddForm, InventoryAdjustPackingTaskOption, InventoryAdjustPoOption } from '/@/type/inventory/adjust'
 import type {
   InventoryCountItem,
   InventoryCountMargin,
@@ -379,6 +411,8 @@ const createDefaultQueryForm = (): InventoryCountQuery => ({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  orderByField: '',
+  orderDirection: '',
 })
 
 const createDefaultMarginForm = (): InventoryCountMargin => ({
@@ -464,6 +498,16 @@ const cancelLoading = ref(false)
 const finishLoading = ref(false)
 
 const editingRowId = ref<number | string>('')
+const noEncasementInputRef = ref<any>(null)
+
+const remarkDialogVisible = ref(false)
+const remarkSaving = ref(false)
+const remarkTextareaRef = ref<any>(null)
+const remarkDialogForm = reactive<{ id: number | string; remark: string; noEncasementCount: number | undefined }>({
+  id: '',
+  remark: '',
+  noEncasementCount: undefined,
+})
 const rowSavingId = ref<number | string>('')
 const rowEditForm = reactive<InventoryCountRowEditForm>(createDefaultRowEditForm())
 
@@ -481,10 +525,11 @@ const mergeColumnProps = new Set([
   'totalSendCount',
   'totalReceiveCount',
   'adjustCount',
+  'adjustedOrderCount',
+  'orderDiffCount',
   'noEncasementCount',
   'remark',
   'createTime',
-  'operation',
 ])
 
 const buildTableRows = (item: InventoryCountItem): InventoryCountTableRow[] => {
@@ -616,6 +661,47 @@ const isEditingRow = (id: number | string) => editingRowId.value === id
 const getPackageTaskList = (row: InventoryCountItem): InventoryCountPackageTaskItem[] =>
   Array.isArray(row.packageTaskList) ? row.packageTaskList : []
 
+const summaryCalcMap: Record<string, (row: any) => number> = {
+  actualCount: (row) => Number(row.actualCount) || 0,
+  taskCount: (row) => Number(row.taskCount) || 0,
+  afterCount: (row) => Number(row.afterCount) || 0,
+  encasementCount: (row) => Number(row.encasementCount) || 0,
+  totalTaskCount: (row) => Number(getTotalTaskCount(row)) || 0,
+  totalAfterCount: (row) => Number(getTotalAfterCount(row)) || 0,
+  lackCount: (row) => -(Number(row.lackCount) || 0),
+  notYetArrived: (row) => Number(row.notYetArrived) || 0,
+  totalOrderCount: (row) => Number(row.totalOrderCount) || 0,
+  totalSendCount: (row) => Number(row.totalSendCount) || 0,
+  adjustCount: (row) => Number(row.adjustCount) || 0,
+  adjustedOrderCount: (row) => (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0),
+  orderDiffCount: (row) => -((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)),
+  totalReceiveCount: (row) => Number(row.totalReceiveCount) || 0,
+  noEncasementCount: (row) => Number(row.noEncasementCount) || 0,
+}
+
+const getSummaryRow = ({ columns, data }: { columns: any[]; data: any[] }) => {
+  const sums: string[] = []
+  let hasFirstColumn = false
+
+  columns.forEach((column) => {
+    if (!hasFirstColumn) {
+      sums.push('合计')
+      hasFirstColumn = true
+      return
+    }
+
+    const calc = summaryCalcMap[column.property]
+    if (calc) {
+      const total = data.reduce((sum, row) => sum + calc(row), 0)
+      sums.push(formatNumber(total))
+    } else {
+      sums.push('')
+    }
+  })
+
+  return sums
+}
+
 const getTotalAfterCount = (row: InventoryCountItem) => {
   const packageTaskList = getPackageTaskList(row)
   if (!packageTaskList.length) return row.afterCount
@@ -647,6 +733,12 @@ const tableSpanMethod = ({
   const rowspan = rowSpanMap.value.get(rowIndex) ?? 1
   if (rowspan === 0) return { rowspan: 0, colspan: 0 }
   return { rowspan, colspan: 1 }
+}
+
+const handleSortChange = ({ prop, order }: { prop: string; order: string | null }) => {
+  queryForm.orderByField = prop || ''
+  queryForm.orderDirection = order === 'ascending' ? 'asc' : order === 'descending' ? 'desc' : ''
+  fetchList()
 }
 
 const fetchList = async () => {
@@ -849,7 +941,9 @@ const handleSubmitAdjustAdd = async () => {
       po: String(adjustAddForm.type) === '1' ? selectedPo?.po : undefined,
       packageTaskId: adjustAddForm.packingTaskId,
       packageTaskCount:
-        adjustAddForm.currentTaskCount == null || adjustAddForm.currentTaskCount === '' ? undefined : Number(adjustAddForm.currentTaskCount),
+        adjustAddForm.currentTaskCount == null || adjustAddForm.currentTaskCount === ''
+          ? undefined
+          : Number(adjustAddForm.currentTaskCount),
       shipmentId: adjustAddForm.shipmentId.trim() || undefined,
       boxNumber: adjustAddForm.boxNumber.trim() || undefined,
       count: Number(adjustAddForm.count),
@@ -954,13 +1048,18 @@ const handleFinish = () => {
   })
 }
 
-const handleStartEdit = (row: InventoryCountTableRow) => {
+const handleStartEdit = async (row: InventoryCountTableRow) => {
   if (rowSavingId.value) return
   const targetRow = getGroupLeadRow(row)
   editingRowId.value = targetRow.id
   rowEditForm.id = targetRow.id
   rowEditForm.noEncasementCount = normalizeNumberValue(targetRow.noEncasementCount)
   rowEditForm.remark = targetRow.remark ?? ''
+
+  await nextTick()
+  const inputEl = noEncasementInputRef.value?.$el?.querySelector('input') as HTMLInputElement | undefined
+  inputEl?.focus()
+  inputEl?.select()
 }
 
 const handleCancelEdit = () => {
@@ -992,8 +1091,58 @@ const validateRowEditForm = () => {
   return true
 }
 
+const openRemarkDialog = async (row: InventoryCountTableRow) => {
+  if (rowSavingId.value) return
+  const targetRow = getGroupLeadRow(row)
+  remarkDialogForm.id = targetRow.id
+  remarkDialogForm.remark = targetRow.remark ?? ''
+  remarkDialogForm.noEncasementCount = normalizeNumberValue(targetRow.noEncasementCount)
+  remarkDialogVisible.value = true
+  await nextTick()
+  remarkTextareaRef.value?.focus()
+}
+
+const handleRemarkDialogClose = () => {
+  remarkDialogForm.id = ''
+  remarkDialogForm.remark = ''
+  remarkDialogForm.noEncasementCount = undefined
+}
+
+const handleSaveRemark = async () => {
+  if (remarkSaving.value) return
+
+  if (remarkDialogForm.remark.length > 500) {
+    $baseMessage('盘点备注长度不能超过500', 'warning', 'hey')
+    return
+  }
+
+  remarkSaving.value = true
+  try {
+    await updateInventoryCountRow({
+      id: remarkDialogForm.id,
+      noEncasementCount: remarkDialogForm.noEncasementCount ?? 0,
+      remark: remarkDialogForm.remark.trim() || undefined,
+    })
+    $baseMessage('保存成功', 'success', 'hey')
+    remarkDialogVisible.value = false
+    await fetchList()
+  } finally {
+    remarkSaving.value = false
+  }
+}
+
 const handleSaveRow = async () => {
-  if (!editingRowId.value || rowSavingId.value || !validateRowEditForm()) return
+  if (!editingRowId.value || rowSavingId.value) return
+
+  const noEncasementCount = rowEditForm.noEncasementCount
+  const hasValue = noEncasementCount !== undefined && noEncasementCount !== null && !Number.isNaN(Number(noEncasementCount))
+
+  if (!hasValue) {
+    resetRowEditForm()
+    return
+  }
+
+  if (!validateRowEditForm()) return
 
   rowSavingId.value = rowEditForm.id
   try {
@@ -1064,7 +1213,24 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.text-red {
+  color: var(--el-color-danger);
+}
+
+.text-green {
+  color: var(--el-color-success);
+}
+
 .inventory-count-page {
+  :deep(.el-table .el-table__header th .cell) {
+    white-space: normal;
+    word-break: break-all;
+    line-height: 1.3;
+  }
+
+  :deep(.el-table .el-table__header th .caret-wrapper) {
+    margin-left: 2px;
+  }
   display: flex;
   flex-direction: column;
   gap: 16px;
