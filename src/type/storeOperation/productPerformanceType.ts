@@ -446,6 +446,10 @@ export interface IFilterAmazonSKUListReq {
    * 当前售价最大值
    */
   sellPriceMax?: number
+  /** 销量趋势天数：7/14/30 */
+  salesTrendDays?: number
+  /** 销量趋势方向：1=上升 2=下降 */
+  salesTrendDirection?: number
 }
 export interface IGetOperationAsinListRes {
   data: {

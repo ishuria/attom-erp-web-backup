@@ -574,12 +574,14 @@ import type { CheckboxValueType, ElInput, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis.ts'
 import { months } from '../../constantOption.ts'
+import { useUserStore } from '/@//store/modules/user'
 import { createAiConversation, sendAiChatMessage } from '/@/api/devlocal/ai'
-import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis.ts'
+import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
 import {
+  getAmazonOptionUserList,
   getCurrencyASINAmazonOperation,
   getCurrencyList,
   getCurrencyParentASINAmazonOperation,
@@ -608,13 +610,11 @@ import {
   updateOperationSKUOperateTypeList,
   updateRemarkAmazonOperation,
   updateSortOperationColumn,
-  getAmazonOptionUserList,
 } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
 import StoreOperationPermission from '/@/permissions/storeOperation'
 import { useAclStore } from '/@/store/modules/acl'
 import { useAiStore } from '/@/store/modules/ai'
-import { useUserStore } from '/@//store/modules/user'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
@@ -877,6 +877,8 @@ const queryForm = reactive<any>({
   sellPriceMin: '',
   sellPriceMax: '',
   warehouseAge: '',
+  salesTrendDays: null,
+  salesTrendDirection: null,
 })
 const asinQueryForm = reactive<any>({
   keyword: '',

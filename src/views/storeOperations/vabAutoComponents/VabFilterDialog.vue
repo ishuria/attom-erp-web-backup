@@ -114,6 +114,19 @@
           <el-radio :value="2">361+</el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-form-item label="销量趋势">
+        <div style="display: flex; gap: 10px; width: 100%">
+          <el-select v-model="filterForm.salesTrendDays" placeholder="时间范围" clearable style="flex: 1">
+            <el-option label="近7天" :value="7" />
+            <el-option label="近14天" :value="14" />
+            <el-option label="近30天" :value="30" />
+          </el-select>
+          <el-select v-model="filterForm.salesTrendDirection" placeholder="趋势方向" clearable style="flex: 1">
+            <el-option label="上升" :value="1" />
+            <el-option label="下降" :value="2" />
+          </el-select>
+        </div>
+      </el-form-item>
     </el-form>
     <template #footer>
       <div style="text-align: center">
@@ -248,6 +261,8 @@ const filterForm = reactive<any>({
   availableRateMin: null,
   availableRateMax: null,
   operationUserId: null,
+  salesTrendDays: null,
+  salesTrendDirection: null,
 })
 const filterFormRef = ref<FormInstance>()
 const handleConfirmFilter = () => {
@@ -277,6 +292,8 @@ const clearFilterForm = () => {
     warehouseAge: null,
     availableRateMin: null,
     availableRateMax: null,
+    salesTrendDays: null,
+    salesTrendDirection: null,
   })
 
   emit('updateFilter', filterForm)
