@@ -45,8 +45,11 @@
                   <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
+
               <el-form-item>
-                <el-button :loading="filterLoading" type="primary" @click="filterVisible = true">筛选</el-button>
+                <el-button :icon="Filter" :loading="filterLoading" :type="hasFilter ? 'warning' : 'primary'" @click="filterVisible = true">
+                  筛选
+                </el-button>
               </el-form-item>
               <el-form-item>
                 <el-button
@@ -213,7 +216,9 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button :loading="filterLoading" type="primary" @click="filterVisible = true">筛选</el-button>
+                <el-button :icon="Filter" :loading="filterLoading" :type="hasFilter ? 'warning' : 'primary'" @click="filterVisible = true">
+                  筛选
+                </el-button>
               </el-form-item>
               <el-form-item>
                 <el-button
@@ -567,7 +572,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Filter, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, ElInput, TabsPaneContext } from 'element-plus'
@@ -1555,6 +1560,35 @@ const filterVisible = ref<boolean>(false)
 const handleCloseFilterDialog = (value: boolean) => {
   filterVisible.value = value
 }
+// 判断当前 tab 是否有筛选条件
+const hasFilter = computed(() => {
+  const form = activeName.value === 0 ? queryForm : asinQueryForm
+  const filterKeys = [
+    'advStatus',
+    'artLongTermFlag',
+    'esTotalMin', 'esTotalMax',
+    'fbaMin', 'fbaMax',
+    'outOfStockMin', 'outOfStockMax',
+    'estimateNextMonthStorageFeeMin', 'estimateNextMonthStorageFeeMax',
+    'availableRateMin', 'availableRateMax',
+    'monthInterestRateMin', 'monthInterestRateMax',
+    'monthProfitMin', 'monthProfitMax',
+    'monthSalesVolumeMin', 'monthSalesVolumeMax',
+    'newArrivalMinDay', 'newArrivalMaxDay',
+    'operationTypeId',
+    'signCountMin', 'signCountMax',
+    'sellPriceMin', 'sellPriceMax',
+    'warehouseAge',
+    'salesTrendDays',
+    'salesTrendDirection',
+  ]
+  return filterKeys.some((key) => {
+    const val = form[key]
+    if (val === '' || val === null || val === undefined) return false
+    if (Array.isArray(val)) return val.length > 0
+    return true
+  })
+})
 // 关键词趋势
 const keyWordTrendVisible = ref<boolean>(false)
 const handleCloseKeyWordTrend = (value: boolean) => {

@@ -114,7 +114,7 @@
           <el-radio :value="2">361+</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="销量趋势">
+      <el-form-item v-if="props.classify === 0" label="销量趋势">
         <div style="display: flex; gap: 10px; width: 100%">
           <el-select v-model="filterForm.salesTrendDays" placeholder="时间范围" clearable style="flex: 1">
             <el-option label="近7天" :value="7" />
