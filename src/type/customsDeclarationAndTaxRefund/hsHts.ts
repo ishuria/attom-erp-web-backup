@@ -17,7 +17,11 @@ export interface IGetHSList {
   statutoryCount: number
   taxRate: number
   domesticSale: number
+  typeName?: string
   levyRate: number
+  taxDate?: string
+  refundDate?: string
+  taxExemptionDate?: string
 }
 export interface IUpdateHSListReq {
   id: number

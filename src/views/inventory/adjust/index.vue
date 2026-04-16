@@ -13,7 +13,7 @@
             <el-form-item>
               <el-date-picker
                 v-model="queryForm.dateRange"
-                :clearable="false"
+                :clearable="true"
                 end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"

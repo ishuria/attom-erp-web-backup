@@ -53,9 +53,24 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="转内销" min-width="" prop="domesticSale">
+      <el-table-column label="类型" min-width="" prop="typeName">
         <template #default="{ row }">
-          <el-checkbox v-model="row.domesticSale" @change="checkboxChange(row)" />
+          <el-tag v-if="row.typeName" :type="typeNameTagType(row.typeName)">{{ row.typeName }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="退税生效日" min-width="" prop="taxDate">
+        <template #default="{ row }">
+          <el-date-picker v-model="row.taxDate" type="date" value-format="YYYY-MM-DD" @focus="copyRow = JSON.parse(JSON.stringify(row))" @change="handleDateChange($event, row)" />
+        </template>
+      </el-table-column>
+      <el-table-column label="征税生效日" min-width="" prop="refundDate">
+        <template #default="{ row }">
+          <el-date-picker v-model="row.refundDate" type="date" value-format="YYYY-MM-DD" @focus="copyRow = JSON.parse(JSON.stringify(row))" @change="handleDateChange($event, row)" />
+        </template>
+      </el-table-column>
+      <el-table-column label="免税生效日" min-width="" prop="taxExemptionDate">
+        <template #default="{ row }">
+          <el-date-picker v-model="row.taxExemptionDate" type="date" value-format="YYYY-MM-DD" @focus="copyRow = JSON.parse(JSON.stringify(row))" @change="handleDateChange($event, row)" />
         </template>
       </el-table-column>
 
@@ -93,15 +108,21 @@
           <el-input v-model="addForm.statutoryUnit" />
         </el-form-item>
         <el-form-item label="出口退税税率" prop="taxRate">
-          <el-input v-model="addForm.taxRate" :disabled="addForm.domesticSale" type="number">
+          <el-input v-model="addForm.taxRate" type="number">
             <template #append>%</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="转内销" prop="domesticSale">
-          <el-checkbox v-model="addForm.domesticSale" />
+        <el-form-item label="退税生效日" prop="taxDate">
+          <el-date-picker v-model="addForm.taxDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="征税生效日" prop="refundDate">
+          <el-date-picker v-model="addForm.refundDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="免税生效日" prop="taxExemptionDate">
+          <el-date-picker v-model="addForm.taxExemptionDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" />
         </el-form-item>
         <el-form-item label="征税率" prop="levyRate">
-          <el-input v-model="addForm.levyRate" :disabled="!addForm.domesticSale" type="number">
+          <el-input v-model="addForm.levyRate" type="number">
             <template #append>%</template>
           </el-input>
         </el-form-item>
@@ -151,13 +172,8 @@ const handleCloseAdd = () => {
 const handleConfirmAdd = async () => {
   addFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      if (addForm.domesticSale && addForm.taxRate) {
-        $baseMessage('转内销不能填入出口退税率！', 'error')
-        return
-      }
-
-      if (!addForm.domesticSale && addForm.levyRate) {
-        $baseMessage('非转内销不能填入征税率！', 'error')
+      if (!addForm.taxDate && !addForm.refundDate && !addForm.taxExemptionDate) {
+        $baseMessage('退税生效日、征税生效日、免税生效日必须填一个', 'warning')
         return
       }
 
@@ -183,6 +199,29 @@ const checkIsKgFlg = async (val: IGetHSList) => {
     Object.assign(val, copyRow)
   }
 }
+const typeNameTagType = (name: string): 'success' | 'warning' | 'info' | 'danger' | 'primary' => {
+  const map: Record<string, 'success' | 'warning' | 'info' | 'danger' | 'primary'> = { 征税: 'danger', 退税: 'success', 免税: 'primary' }
+  return map[name] ?? 'primary'
+}
+
+const handleDateChange = async (val: string | null, row: IGetHSList) => {
+  if (!row.taxDate && !row.refundDate && !row.taxExemptionDate) {
+    $baseMessage('退税生效日、征税生效日、免税生效日不能全部为空', 'warning')
+    Object.assign(row, copyRow)
+    return
+  }
+  try {
+    await updateHSList({
+      ...row,
+      taxRate: row.taxRate / 100,
+      levyRate: row.levyRate / 100,
+    })
+    fetchData()
+  } catch {
+    Object.assign(row, copyRow)
+  }
+}
+
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
@@ -201,29 +240,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   }
 }
 
-const checkboxChange = async (value: IGetHSList) => {
-  if (!value.domesticSale) {
-    await updateHSList({
-      id: value.id,
-      isKgFlag: value.isKgFlag,
-      statutoryUnit: value.statutoryUnit,
-      statutoryCount: value.statutoryCount,
-      domesticSale: value.domesticSale,
-      taxRate: value.taxRate / 100,
-      levyRate: 0,
-    })
-  } else {
-    await updateHSList({
-      id: value.id,
-      isKgFlag: value.isKgFlag,
-      statutoryUnit: value.statutoryUnit,
-      statutoryCount: value.statutoryCount,
-      domesticSale: value.domesticSale,
-      taxRate: value.taxRate / 100,
-      levyRate: value.levyRate / 100,
-    })
-  }
-}
 
 // table blur事件
 const clickCancel = async (event: any, value: IGetHSList) => {
@@ -317,5 +333,16 @@ onBeforeMount(() => {
 <style lang="scss" scoped>
 .none {
   display: none;
+}
+
+:deep(.el-table) {
+  --el-table-row-hover-bg-color: transparent;
+}
+
+:deep(.el-table .cell) {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 4px;
+  overflow: hidden;
 }
 </style>
