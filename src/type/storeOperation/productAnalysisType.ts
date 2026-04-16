@@ -282,6 +282,10 @@ export interface IGetTrendOverviewChartRes {
     /** 卡片汇总数据 Map<字段名, ICardSummary> */
     summary?: Record<string, ICardSummary>
     symbol?: string
+    /** 系统计算季节系数（周维度），key=周编号, value=ratio */
+    systemSeasonalCoefficientWeekly?: Record<string, number>
+    /** 系统计算季节系数（月维度），key=月份("01"-"12"), value=ratio */
+    systemSeasonalCoefficientMonthly?: Record<string, number>
   }
 }
 
@@ -365,6 +369,8 @@ export interface ITrendOverview {
   currencyIcon?: string
   /** 季节系数 */
   seasonalCoefficient?: number
+  /** 季节系数（系统计算） */
+  seasonalCoefficientSystem?: number
 }
 export interface IGetExpenseCompositionRes {
   data: {

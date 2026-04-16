@@ -408,6 +408,44 @@ const groups = trendOverviewGroups
 const nameMapProp: Record<string, IDataProp> = trendOverviewNameMapProp as Record<string, IDataProp>
 
 const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week' | 'month' | 'day'): any[] => {
+  // 季节系数（系统计算）：周/月模式下直接使用后端预计算值，不从日数据平均
+  if (type === 'seasonalCoefficientSystem' && groupBy !== 'day') {
+    const result: Record<string, number> = {}
+    if (groupBy === 'week') {
+      // 收集所有周 key，然后用后端周表数据匹配
+      const weekKeys = new Set<string>()
+      data.forEach((item) => {
+        if (item.date) weekKeys.add(getWeekOfYear(item.date))
+      })
+      weekKeys.forEach((weekKey) => {
+        // weekKey 格式 "YYYY-Wxx"，提取周编号并补零（后端 WEEK() 返回 "01"-"53"）
+        const weekNum = weekKey.split('-W')[1].padStart(2, '0')
+        const ratio = systemSeasonalCoefficientWeekly.value[weekNum]
+        if (ratio !== undefined) {
+          result[weekKey] = ratio
+        }
+      })
+    } else {
+      // month: 收集所有月 key，用后端月表数据匹配
+      const monthKeys = new Set<string>()
+      data.forEach((item) => {
+        if (item.date) monthKeys.add(item.date.slice(0, 7))
+      })
+      monthKeys.forEach((monthKey) => {
+        // monthKey 格式 "YYYY-MM"，提取月份
+        const monthNum = monthKey.slice(5, 7) // "01"-"12"
+        const ratio = systemSeasonalCoefficientMonthly.value[monthNum]
+        if (ratio !== undefined) {
+          result[monthKey] = ratio
+        }
+      })
+    }
+    return Object.keys(result).map((key) => ({
+      date: key,
+      seasonalCoefficientSystem: result[key],
+    }))
+  }
+
   const groupedData: Record<string, number> = {}
   const spendData: Record<string, number> = {} // ∑广告花费
   const amountData: Record<string, number> = {} // ∑销售额(订单)
@@ -631,7 +669,12 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
         }
         const value = item[type] ?? 0
         // 预计下月仓储费、库存和季节系数需要计算平均值
-        if (type === 'estimatedStorageCostNextMonth' || type === 'stock' || type === 'seasonalCoefficient') {
+        if (
+          type === 'estimatedStorageCostNextMonth' ||
+          type === 'stock' ||
+          type === 'seasonalCoefficient' ||
+          type === 'seasonalCoefficientSystem'
+        ) {
           groupedData[timeKey] += value
           // 计数
           if (countData[timeKey] === undefined || countData[timeKey] === null) {
@@ -652,7 +695,10 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
     let value = groupedData[timeKey]
     // 预计下月仓储费、库存和季节系数需要计算平均值
     if (
-      (type === 'estimatedStorageCostNextMonth' || type === 'stock' || type === 'seasonalCoefficient') &&
+      (type === 'estimatedStorageCostNextMonth' ||
+        type === 'stock' ||
+        type === 'seasonalCoefficient' ||
+        type === 'seasonalCoefficientSystem') &&
       countData[timeKey] !== undefined &&
       countData[timeKey] !== null &&
       countData[timeKey] > 0
@@ -1626,7 +1672,7 @@ const initChart = () => {
         })
 
         return `
-          <div style="padding: 0px; border-radius: 20px; width: 180px;">
+          <div style="padding: 0px; border-radius: 20px; width: 200px;">
             ${titleHtmlStr}
             ${otherHtmlArr.join('')}
             ${salesGroupHtml}
@@ -2006,6 +2052,8 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     }
   }
   updateYAxisData(fullTrendList.value)
+  // 数据更新后重新计算 Y 轴范围（季节系数系统计算等字段依赖预计算数据）
+  applyAlignedYAxisRanges()
   // 更新图表（内部会更新 markPoint）
   updateChart()
   return false
@@ -2205,6 +2253,9 @@ const handleSizeChange = (value: number) => {
 const trendList = ref<ITrendOverview[]>([]) // 表格显示的数据（分页数据）
 const fullTrendList = ref<ITrendOverview[]>([]) // 完整数据（用于图表计算）
 const cardSummary = ref<Record<string, ICardSummary>>({})
+// 系统计算的季节系数（周/月维度，直接使用后端预计算值）
+const systemSeasonalCoefficientWeekly = ref<Record<string, number>>({})
+const systemSeasonalCoefficientMonthly = ref<Record<string, number>>({})
 
 // 获取请求参数（公共部分）
 const getRequestParams = () => {
@@ -2308,6 +2359,9 @@ const fetchChartData = async () => {
     // 图表数据（完整数据）
     fullTrendList.value = data.list || []
     currencySymbol.value = data.symbol || ''
+    // 存储系统计算的季节系数（周/月维度）
+    systemSeasonalCoefficientWeekly.value = data.systemSeasonalCoefficientWeekly || {}
+    systemSeasonalCoefficientMonthly.value = data.systemSeasonalCoefficientMonthly || {}
     // 更新卡片数据（在图表数据加载完成后更新）
     updateCardsData()
     // 操作日志与图表渲染并行，加载完成后仅更新 markPoint
