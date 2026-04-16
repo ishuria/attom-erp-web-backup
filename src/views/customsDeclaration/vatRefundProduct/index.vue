@@ -477,7 +477,13 @@
     <!-- 云舟催票文件 -->
     <vab-dialog v-model="ticketReminderVisible" title="生成云舟催票文件" width="25%" @close="closeTicketReminder">
       <el-form ref="ticketReminderFormRef" label-position="top" :model="ticketReminderForm" :rules="ticketReminderFormRules">
-        <el-form-item label="发货日期" prop="shipmentDate">
+        <el-form-item prop="shipmentDate">
+          <template #label>
+            <span>发货日期</span>
+            <el-tooltip content="只会导出已发货且填了出口报关单日期的数据" placement="top">
+              <el-icon style="margin-left: 4px; cursor: pointer; vertical-align: middle"><question-filled /></el-icon>
+            </el-tooltip>
+          </template>
           <el-date-picker
             v-model="ticketReminderForm.shipmentDate"
             :clearable="true"
@@ -580,7 +586,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CopyDocument, Delete, Document, Download, Search } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, Document, Download, QuestionFilled, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import {

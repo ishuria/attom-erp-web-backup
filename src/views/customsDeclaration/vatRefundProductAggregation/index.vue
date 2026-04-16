@@ -61,6 +61,11 @@
             {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
           </template>
         </el-table-column>
+        <el-table-column label="报关单出口日" min-width="130" prop="exportDate">
+          <template #default="{ row }">
+            {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
+          </template>
+        </el-table-column>
         <el-table-column label="合同编号" min-width="140" prop="contractNumber" sortable />
         <el-table-column label="报关品名" min-width="110" prop="customsDeclarationName" sortable />
         <el-table-column label="报关数量" min-width="90" prop="customsDeclarationCount" />
@@ -129,7 +134,13 @@
     <!-- 云舟催票文件 -->
     <vab-dialog v-model="ticketReminderVisible" title="聚合生成云舟催票文件" width="25%" @close="closeTicketReminder">
       <el-form ref="ticketReminderFormRef" label-position="top" :model="ticketReminderForm" :rules="ticketReminderFormRules">
-        <el-form-item label="发货日期" prop="shipmentDate">
+        <el-form-item prop="shipmentDate">
+          <template #label>
+            <span>发货日期</span>
+            <el-tooltip content="只会导出已发货且填了出口报关单日期的数据" placement="top">
+              <el-icon style="margin-left: 4px; cursor: pointer; vertical-align: middle"><question-filled /></el-icon>
+            </el-tooltip>
+          </template>
           <el-date-picker
             v-model="ticketReminderForm.shipmentDate"
             :clearable="true"
@@ -200,7 +211,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CopyDocument, Document, Download, Search } from '@element-plus/icons-vue'
+import { CopyDocument, Document, Download, QuestionFilled, Search } from '@element-plus/icons-vue'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { getTaxRefundMainList, taxRefundInvoiceBeforeCheck } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
