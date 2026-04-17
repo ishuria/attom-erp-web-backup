@@ -3,15 +3,15 @@
     <!-- 左侧按钮组 -->
     <div class="left-section">
       <!-- 特定标签页按钮 -->
-<!--      <el-button-->
-<!--        v-if="showPackageTaskButton"-->
-<!--        v-permissions="{ permission: [PoPermission.PACKAGE_TASK_REPLEASE] }"-->
-<!--        :loading="packageTaskLoading"-->
-<!--        type="primary"-->
-<!--        @click="$emit('packageTaskRelease')"-->
-<!--      >-->
-<!--        发布打包任务-->
-<!--      </el-button>-->
+      <!--      <el-button-->
+      <!--        v-if="showPackageTaskButton"-->
+      <!--        v-permissions="{ permission: [PoPermission.PACKAGE_TASK_REPLEASE] }"-->
+      <!--        :loading="packageTaskLoading"-->
+      <!--        type="primary"-->
+      <!--        @click="$emit('packageTaskRelease')"-->
+      <!--      >-->
+      <!--        发布打包任务-->
+      <!--      </el-button>-->
 
       <!-- 公共操作按钮 -->
       <el-button
@@ -203,6 +203,14 @@
       >
         批量退全款
       </el-button>
+      <el-button
+        v-permissions="{ permission: [PoPermission.NOT_BG_RELEASE] }"
+        :loading="notBgLoading"
+        type="success"
+        @click="$emit('notBgRelease')"
+      >
+        不报关审批
+      </el-button>
     </div>
   </div>
 </template>
@@ -227,6 +235,7 @@ defineProps<{
   installmentLoading?: boolean
   refundLoading?: boolean
   batchRefundFullLoading?: boolean
+  notBgLoading?: boolean
   packageTaskLoading?: boolean
   procurementBonus?: string | number
   procurementBonusCrossMonth?: string | number
@@ -252,6 +261,7 @@ defineEmits<{
   addAutomaticPayment: []
   automaticPaymentPreview: []
   remittanCheck: []
+  notBgRelease: []
 }>()
 </script>
 

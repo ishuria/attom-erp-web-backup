@@ -14,6 +14,7 @@
               :installment-loading="installmentLoading"
               :merge-contract-loading="mergeContractLoading"
               :money-transfer-loading="moneyTransferLoading"
+              :not-bg-loading="notBgLoading"
               :package-task-loading="releasePackageTaskLoading"
               :price-sharing-loading="priceSharingLoading"
               :procurement-bonus="procurementBonus"
@@ -35,6 +36,7 @@
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
               @installment="handleShowInstallment"
               @merge-contract="handleShowMergeContract"
+              @not-bg-release="handleNotBgRelease"
               @package-task-release="handlePackageTaskRelease"
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
@@ -235,6 +237,7 @@
               :installment-loading="installmentLoading"
               :merge-contract-loading="mergeContractLoading"
               :money-transfer-loading="moneyTransferLoading"
+              :not-bg-loading="notBgLoading"
               :price-sharing-loading="priceSharingLoading"
               :procurement-bonus="procurementBonus"
               :procurement-bonus-cross-month="procurementBonusCrossMonth"
@@ -255,6 +258,7 @@
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
               @installment="handleShowInstallment"
               @merge-contract="handleShowMergeContract"
+              @not-bg-release="handleNotBgRelease"
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
@@ -315,6 +319,7 @@
               :installment-loading="installmentLoading"
               :merge-contract-loading="mergeContractLoading"
               :money-transfer-loading="moneyTransferLoading"
+              :not-bg-loading="notBgLoading"
               :price-sharing-loading="priceSharingLoading"
               :procurement-bonus="procurementBonus"
               :procurement-bonus-cross-month="procurementBonusCrossMonth"
@@ -335,6 +340,7 @@
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
               @installment="handleShowInstallment"
               @merge-contract="handleShowMergeContract"
+              @not-bg-release="handleNotBgRelease"
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
@@ -394,6 +400,7 @@
               :installment-loading="installmentLoading"
               :merge-contract-loading="mergeContractLoading"
               :money-transfer-loading="moneyTransferLoading"
+              :not-bg-loading="notBgLoading"
               :price-sharing-loading="priceSharingLoading"
               :procurement-bonus="procurementBonus"
               :procurement-bonus-cross-month="procurementBonusCrossMonth"
@@ -414,6 +421,7 @@
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
               @installment="handleShowInstallment"
               @merge-contract="handleShowMergeContract"
+              @not-bg-release="handleNotBgRelease"
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
@@ -471,6 +479,7 @@
               :installment-loading="installmentLoading"
               :merge-contract-loading="mergeContractLoading"
               :money-transfer-loading="moneyTransferLoading"
+              :not-bg-loading="notBgLoading"
               :price-sharing-loading="priceSharingLoading"
               :procurement-bonus="procurementBonus"
               :procurement-bonus-cross-month="procurementBonusCrossMonth"
@@ -491,6 +500,7 @@
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
               @installment="handleShowInstallment"
               @merge-contract="handleShowMergeContract"
+              @not-bg-release="handleNotBgRelease"
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
@@ -548,6 +558,7 @@
               :installment-loading="installmentLoading"
               :merge-contract-loading="mergeContractLoading"
               :money-transfer-loading="moneyTransferLoading"
+              :not-bg-loading="notBgLoading"
               :price-sharing-loading="priceSharingLoading"
               :procurement-bonus="procurementBonus"
               :procurement-bonus-cross-month="procurementBonusCrossMonth"
@@ -568,6 +579,7 @@
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
               @installment="handleShowInstallment"
               @merge-contract="handleShowMergeContract"
+              @not-bg-release="handleNotBgRelease"
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
@@ -988,6 +1000,7 @@ import {
   getPoPublisherList,
   getPurchaseBonus,
   getPurchaseCostReduction,
+  poNbgFlagHandler,
   purchaseAutoPaySubmit,
   purchaseTotalAp,
   releasePackageTask,
@@ -1097,7 +1110,7 @@ const confirmReductionCost = async () => {
           poComponentId: _poComponentId.value,
           beforePrice: Number(reductionCostForm.beforePrice),
           afterPrice: Number(reductionCostForm.afterPrice),
-          remark: reductionCostForm.remark
+          remark: reductionCostForm.remark,
         })
         if (data) {
           $baseMessage('降本提成申请成功！', 'success')
@@ -1395,6 +1408,26 @@ const handlePaymentPaid = async () => {
     console.error(error)
   } finally {
     fullPaymentLoading.value = false
+  }
+}
+// 不报关可发布
+const notBgLoading = ref<boolean>(false)
+const handleNotBgRelease = async () => {
+  if (selectedPORow.value.size === 0) {
+    $baseMessage('您未选中任何PO行', 'warning')
+    return
+  }
+  try {
+    notBgLoading.value = true
+    const ids = selectedPOArray.value.join(',')
+    const { data } = await poNbgFlagHandler({ ids })
+    if (data === true) {
+      $baseMessage('不报关审批通过！', 'success', 'hey')
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    notBgLoading.value = false
   }
 }
 // 展示分批付款弹窗

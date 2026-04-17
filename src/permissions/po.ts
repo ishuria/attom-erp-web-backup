@@ -37,6 +37,8 @@ class PoPermission {
   static readonly REMITTANCE_CHECK = 'purchase:remittance:check'
   /** 特殊Po删除权限 */
   static readonly SPECIAL_DELETE = 'purchase:po:special:delete'
+  /** 不报关可发布 */
+  static readonly NOT_BG_RELEASE = 'purchase:po:notBg:Flag'
 }
 
 export default PoPermission

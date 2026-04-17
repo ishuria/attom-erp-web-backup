@@ -848,3 +848,12 @@ export function getSkuMonthlyTrend(data: { skuList: string[]; startDate: string;
     data,
   })
 }
+
+// 采购订单-不报关可发布
+export function poNbgFlagHandler(params?: IIds): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/po/nbg/flag`,
+    method: 'post',
+    params,
+  })
+}
