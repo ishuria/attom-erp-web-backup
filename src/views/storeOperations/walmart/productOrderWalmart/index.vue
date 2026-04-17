@@ -618,7 +618,7 @@ const releaseOrderVisible = ref<boolean>(false)
 
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
-const asinId = ref<number>(-1)
+
 const smoothForm = reactive<any>({})
 const orderListLoading = ref<boolean>(false)
 
@@ -894,7 +894,7 @@ const handleReleaseOrder = async (formData: any) => {
     releaseOrderVisible.value = false
 
     const { data } = await releaseOperationPlanPo({
-      asinId: asinId.value,
+      asinId: null,
       sku: formData.sku,
       number: formData.number,
       asin: copyRow.asin,
@@ -973,8 +973,6 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
         if (releaseOrderDialogRef.value) {
           releaseOrderDialogRef.value.setFormData(data)
         }
-
-        asinId.value = row.id!
       } else {
         // 如果没有匹配的SKU，重置表单
         if (releaseOrderDialogRef.value) {
