@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="全部" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel :span="16">
+          <vab-query-form-left-panel :span="15">
             <!-- 使用按钮组件 -->
             <po-action-buttons
               :batch-refund-full-loading="batchRefundFullLoading"
@@ -46,7 +46,7 @@
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="8">
+          <vab-query-form-right-panel :span="9">
             <!-- 列设置面板 -->
             <div class="column-settings">
               <el-popover popper-style="max-height: 550px; overflow: auto;" :width="250">
@@ -188,6 +188,7 @@
               :list-loading="listLoading"
               :publisher-options="publisherOptions"
               :query-form="queryForm"
+              :site-list="siteList"
               @input="debouncedQueryData"
               @query="queryData"
             />
@@ -273,6 +274,7 @@
               :list-loading="listLoading"
               :publisher-options="publisherOptions"
               :query-form="queryForm"
+              :site-list="siteList"
               @input="debouncedQueryData"
               @query="queryData"
             />
@@ -355,6 +357,7 @@
               :list-loading="listLoading"
               :publisher-options="publisherOptions"
               :query-form="queryForm"
+              :site-list="siteList"
               @input="debouncedQueryData"
               @query="queryData"
             />
@@ -435,6 +438,7 @@
               :list-loading="listLoading"
               :publisher-options="publisherOptions"
               :query-form="queryForm"
+              :site-list="siteList"
               @input="debouncedQueryData"
               @query="queryData"
             />
@@ -514,6 +518,7 @@
               :list-loading="listLoading"
               :publisher-options="publisherOptions"
               :query-form="queryForm"
+              :site-list="siteList"
               @input="debouncedQueryData"
               @query="queryData"
             />
@@ -593,6 +598,7 @@
               :list-loading="listLoading"
               :publisher-options="publisherOptions"
               :query-form="queryForm"
+              :site-list="siteList"
               @input="debouncedQueryData"
               @query="queryData"
             />
@@ -629,6 +635,7 @@
               :list-loading="listLoading"
               :publisher-options="publisherOptions"
               :query-form="queryForm"
+              :site-list="siteList"
               @input="debouncedQueryData"
               @query="queryData"
             />
@@ -1017,6 +1024,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import handleClipboard from '/@/utils/clipboard'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 
 defineOptions({
   name: 'Po',
@@ -2363,6 +2371,7 @@ const queryForm = reactive<any>({
   status: 0, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
   customsStatus: -1,
   publisher: deraltPublisher,
+  site: -1,
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -2408,6 +2417,7 @@ const fetchData = async () => {
       pageSize: queryForm.pageSize,
       customsStatus: queryForm.customsStatus,
       publisherId: queryForm.publisher.userId,
+      site: queryForm.site,
     }
     const { data } = await getPoList(params)
     if (data) {
@@ -2586,73 +2596,18 @@ const queryPublisherData = async () => {
   data.unshift(deraltPublisher)
   publisherOptions.value = data
 }
-// const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
-//   if (scrollBarPosition) {
-//     const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-//     const wrapRef = scrollBarRef.wrapRef
-//     setTimeout(() => {
-//       wrapRef.scrollTop = scrollBarPosition
-//     }, 50)
-//   }
-// }
+const siteList = ref<{ id: number; label: string }[]>([])
+// 获取站点信息
+const fetchSiteData = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+  siteList.value.unshift({ id: -1, label: '全部站点' })
+}
 onMounted(() => {
   initColumnConfig()
   queryPublisherData()
-  // nextTick(() => {
-  //   const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
-  //   const scrollBarPosition = savedStatus.scrollTop
-  //   const scrollBarPosition2 = savedStatus.scrollTop2
-  //   const scrollBarPosition3 = savedStatus.scrollTop3
-  //   const scrollBarPosition4 = savedStatus.scrollTop4
-  //   const scrollBarPosition5 = savedStatus.scrollTop5
-  //   const scrollBarPosition6 = savedStatus.scrollTop6
-  //   if (scrollBarPosition) {
-  //     setScrollPosition(scrollBarPosition, tableRef)
-  //   }
-  //   if (scrollBarPosition2) {
-  //     setScrollPosition(scrollBarPosition2, tableRef2)
-  //   }
-  //   if (scrollBarPosition3) {
-  //     setScrollPosition(scrollBarPosition3, tableRef3)
-  //   }
-  //   if (scrollBarPosition4) {
-  //     setScrollPosition(scrollBarPosition4, tableRef4)
-  //   }
-  //   if (scrollBarPosition5) {
-  //     setScrollPosition(scrollBarPosition5, tableRef5)
-  //   }
-  //   if (scrollBarPosition6) {
-  //     setScrollPosition(scrollBarPosition6, tableRef6)
-  //   }
-  //   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
-  //   const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
-  //   const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
-  //   const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef;
-  //   const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef;
-  //   const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef;
-  //   const wrapRef = scrollBarRef.wrapRef
-  //   const wrapRef2 = scrollBarRef2.wrapRef
-  //   const wrapRef3 = scrollBarRef3.wrapRef
-  //   const wrapRef4 = scrollBarRef4.wrapRef
-  //   const wrapRef5 = scrollBarRef5.wrapRef
-  //   const wrapRef6 = scrollBarRef6.wrapRef
-  //   setTimeout(() => {
-  //     wrapRef.scrollTop = scrollBarPosition;
-  //     wrapRef2.scrollTop = scrollBarPosition2;
-  //     wrapRef3.scrollTop = scrollBarPosition3;
-  //     wrapRef4.scrollTop = scrollBarPosition4;
-  //     wrapRef5.scrollTop = scrollBarPosition5;
-  //     wrapRef6.scrollTop = scrollBarPosition6;
-  //   }, 50)
-  // })
+  fetchSiteData()
 })
-
-// onUnmounted(() => {
-//   let length = tabsStore.getVisitedRoutes.length
-//   if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {
-//     sessionStorage.removeItem('poStatus')
-//   }
-// })
 </script>
 
 <style lang="scss" scoped>

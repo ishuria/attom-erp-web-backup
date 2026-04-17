@@ -393,6 +393,7 @@ export interface IGetPoListQuery {
   pageSize: number
   customsStatus?: number
   procurementManagerId?: number
+  site: number
 }
 export interface IGetPoList {
   componentId?: number
