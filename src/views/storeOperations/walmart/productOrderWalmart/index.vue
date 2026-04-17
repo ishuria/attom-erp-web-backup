@@ -540,12 +540,16 @@ const getSimpleTextContent = (row: any, item: any) => {
       : ''
   }
 
+  if (label === '毛利率') {
+    return row.grossProfit !== null && row.grossProfit !== undefined ? (row.grossProfit * 100).toFixed(2) + '%' : ''
+  }
+
   if (label === '半年有货率') {
     return row.availableRate !== null && row.availableRate !== undefined ? row.availableRate.toFixed(0) + '%' : ''
   }
 
   // 其他百分比字段
-  if (['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%'].includes(label)) {
+  if (['月广告%', '月ACOS', '月TACOS', '月退货%'].includes(label)) {
     const propKey = labelMap.get(label)
     const value = propKey ? row[propKey] : null
     return value !== null && value !== undefined ? value.toFixed(2) + '%' : ''
