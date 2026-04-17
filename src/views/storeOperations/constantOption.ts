@@ -11,6 +11,9 @@ export const filterShowOption = [
     label: '广告',
     value: 2,
   },
+  { label: '补货设定', value: 3 },
+  { label: '季节系数', value: 4 },
+  { label: '自动化价格', value: 5 },
 ]
 
 export const levelOption = [

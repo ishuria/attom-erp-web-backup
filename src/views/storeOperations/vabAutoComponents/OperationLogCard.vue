@@ -58,6 +58,9 @@
           <div v-if="row.rawType === 0">
             <div v-html="row.content"></div>
           </div>
+          <div v-else-if="row.rawType === 3 || row.rawType === 4 || row.rawType === 5">
+            <div style="white-space: pre-line">{{ row.content }}</div>
+          </div>
           <!-- 系统抓取(type=1)时的解析展示 -->
           <div v-else-if="row.rawType === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
           <!-- 其他情况保持原有逻辑 -->
@@ -300,6 +303,9 @@ const props = withDefaults(defineProps<Props>(), {
     { label: '手动输入', value: 0 },
     { label: '系统抓取', value: 1 },
     { label: '广告', value: 2 },
+    { label: '补货设定', value: 3 },
+    { label: '季节系数', value: 4 },
+    { label: '自动化价格', value: 5 },
   ],
   changeDetailConfig: () => ({}),
 })
@@ -329,6 +335,9 @@ const typeMap: Record<number, string> = {
   0: '手动输入',
   1: '系统抓取',
   2: '广告',
+  3: '补货设定',
+  4: '季节系数',
+  5: '自动化价格',
 }
 
 // 获取操作日志数据
