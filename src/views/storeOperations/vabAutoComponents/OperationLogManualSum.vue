@@ -73,7 +73,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" min-width="200">
+      <el-table-column label="SKU/品类名" min-width="200">
         <template #default="{ row }">
           <div v-if="row.sku">
             <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
@@ -95,7 +95,10 @@
       <el-table-column align="center" label="类型" min-width="100" prop="type">
         <template #default="{ row }">
           <el-tag v-if="row.type === 0" type="primary">手动输入</el-tag>
-          <el-tag v-else type="success">系统抓取</el-tag>
+          <el-tag v-else-if="row.type === 1" type="success">系统抓取</el-tag>
+          <el-tag v-else-if="row.type === 3" type="warning">补货设定</el-tag>
+          <el-tag v-else-if="row.type === 4" type="info">季节系数</el-tag>
+          <el-tag v-else-if="row.type === 5" type="danger">自动化价格</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="内容" min-width="300" prop="content">
@@ -103,6 +106,9 @@
           <!-- 手动输入 -->
           <div v-if="row.type === 0">
             <div v-html="row.content"></div>
+          </div>
+          <div v-else-if="row.type === 3 || row.type === 4">
+            <div style="white-space: pre-line">{{ row.content }}</div>
           </div>
           <!-- 系统抓取(type=1)时的解析展示 -->
           <div v-else-if="row.type === 1 && row.content" class="parsed-content" v-html="parseSystemContent(row.content)"></div>
@@ -173,6 +179,9 @@ const queryForm = reactive({
 const filterOptions = [
   { label: '手动输入', value: 0 },
   { label: '系统抓取', value: 1 },
+  { label: '补货设定', value: 3 },
+  { label: '季节系数', value: 4 },
+  { label: '自动化价格', value: 5 },
 ]
 
 // 解析系统抓取的 content
