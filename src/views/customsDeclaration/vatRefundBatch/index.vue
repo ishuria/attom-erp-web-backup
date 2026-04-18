@@ -76,6 +76,13 @@
               </el-tag>
             </template>
           </el-table-column>
+          <el-table-column label="领星上传状态" min-width="110" prop="lingxingUploadStatus">
+            <template #default="{ row }">
+              <el-tag :type="row.lingxingUploadStatus === 1 ? 'success' : 'danger'">
+                {{ row.lingxingUploadStatus === 1 ? '已上传' : '未上传' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column fixed="right" label="操作" width="560">
             <template #default="{ row }">
               <el-link type="primary" underline="never" @click="showFreightFee(row)">退税运费</el-link>
@@ -88,6 +95,8 @@
               <el-link type="primary" underline="never" @click="showInvoiceCollection(row)">发票归集</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showSummaryDetail(row)">汇总明细</el-link>
+              <span style="margin: 0 5px"></span>
+              <el-link type="primary" underline="never" @click="handleUploadLingxing(row)">上传领星</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="handleArchiveOutbound(row)">出库归档</el-link>
               <span style="margin: 0 5px"></span>
@@ -165,6 +174,13 @@
                 </template>
                 <div class="multi-line-ellipsis-1">{{ row.remark }}</div>
               </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="领星上传状态" min-width="110" prop="lingxingUploadStatus">
+            <template #default="{ row }">
+              <el-tag :type="row.lingxingUploadStatus === 1 ? 'success' : 'danger'">
+                {{ row.lingxingUploadStatus === 1 ? '已上传' : '未上传' }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="380">
@@ -267,6 +283,7 @@ import {
   updateTaxRefundBatchFreightFee,
   updateTaxRefundBatchRemark,
   updateTaxRefundBatchStatus,
+  uploadLingxing,
   validateTaxRefundBatchContract,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
@@ -326,6 +343,11 @@ const setSelectRows = (value: IGetTaxRefundBatchList[]) => {
 }
 
 const handleArchiveOutbound = async (row: any) => {
+  // todo 暂时注释，待领星接口部分完善
+  // if (row.lingxingUploadStatus !== 1) {
+  //   $baseMessage('领星未上传，无法进行出口归档！', 'warning')
+  //   return
+  // }
   const { data } = await archiveTaxRefundBatchOutbound({ contractNumber: row.contractNumber })
   if (data) {
     ElMessageBox({
@@ -341,6 +363,7 @@ const handleArchiveOutbound = async (row: any) => {
     $baseMessage('出库归档成功!', 'success')
   }
 }
+
 const handleTabClick = (pane: TabsPaneContext) => {
   if (pane.props.name != undefined) {
     queryForm.status = Number(pane.props.name)
@@ -509,6 +532,20 @@ const confirmInvoiceCollection = async () => {
         $baseMessage('发票归集成功！', 'success')
         closeInvoiceCollection()
       }
+    }
+  })
+}
+
+const handleUploadLingxing = async (row: any) => {
+  if (!row.exportDate) {
+    $baseMessage('请先填写报关单出口日期！', 'warning')
+    return
+  }
+  $baseConfirm('确定要上传领星吗？', null, async () => {
+    const { data } = await uploadLingxing({ id: row.id! })
+    if (data) {
+      $baseMessage('上传领星成功！', 'success')
+      fetchData()
     }
   })
 }

@@ -1260,3 +1260,11 @@ export const dealTaxRefundInvoicePath = (params: { path: string }): Promise<{ da
     params,
   })
 }
+
+export const uploadLingxing = (params: { id: number }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/lingxing/status`,
+    method: 'post',
+    params,
+  })
+}
