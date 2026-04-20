@@ -383,8 +383,8 @@ const initData = () => {
   }
 
   // 处理其他图片
-  if (qualityInspectionForm.otherImgList && qualityInspectionForm.otherImgList.length > 0) {
-    otherImgList.value = qualityInspectionForm.otherImgList.map((item: any) => ({
+  if (qualityInspectionForm.otherPictureImgList && qualityInspectionForm.otherPictureImgList.length > 0) {
+    otherImgList.value = qualityInspectionForm.otherPictureImgList.map((item: any) => ({
       imgUrl: item.imgUrl || '',
       id: item.id || '',
     }))
