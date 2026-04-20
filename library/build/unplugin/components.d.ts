@@ -148,6 +148,7 @@ declare module 'vue' {
     ImageBasicUsage: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageBasicUsage.vue')['default']
     ImageLoadFailed: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageLoadFailed.vue')['default']
     ImagePlaceholder: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImagePlaceholder.vue')['default']
+    ImportSizeDialog: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/ImportSizeDialog.vue')['default']
     IncentivePolicyCard: typeof import('./../../../src/views/index/vabAutoComponents/IncentivePolicyCard.vue')['default']
     InProgressProjectsBar: typeof import('./../../../src/views/index/vabAutoComponents/InProgressProjectsBar.vue')['default']
     InventoryProductsTotalValue: typeof import('./../../../src/views/index/vabAutoComponents/InventoryProductsTotalValue.vue')['default']

@@ -584,9 +584,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" fixed="right" label="操作" width="100">
+        <el-table-column align="center" fixed="right" label="操作" width="130">
           <template #default="{ row }">
-            <el-link type="primary" underline="never" @click="handleCalculate(row)">逆算</el-link>
+            <el-space :size="20">
+              <el-link type="primary" underline="never" @click="handleImportFromProgress(row)">导入</el-link>
+              <el-link type="primary" underline="never" @click="handleCalculate(row)">逆算</el-link>
+            </el-space>
           </template>
         </el-table-column>
         <template #empty>
@@ -617,6 +620,18 @@
     </div>
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
+
+    <!-- 从新品进度导入利润核算数据 -->
+    <import-size-dialog
+      v-model="importDialogVisible"
+      :channel-list="channelList"
+      :list="importCostAccountingList"
+      :loading="importLoading"
+      :site-list="siteList"
+      :submitting="importSubmitting"
+      @confirm="handleConfirmImport"
+      @image-preview="handlePictureCardPreview"
+    />
   </div>
 </template>
 
@@ -628,9 +643,11 @@ import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getChannelList, getCostAccountingChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
+import { getCostAccountingList } from '/@/api/devlocal/progressSample'
 import {
   getReviewVariantHts,
   reverseCalculateReview,
+  reviewProgressId,
   reviewStepNo3ComponentAdd,
   reviewStepNo3ComponentCopy,
   reviewStepNo3ComponentDel,
@@ -669,6 +686,11 @@ defineOptions({
 })
 
 const variantLoading = ref<boolean>(false)
+const importDialogVisible = ref(false)
+const importLoading = ref(false)
+const importSubmitting = ref(false)
+const importCostAccountingList = ref<any[]>([])
+const importTargetVariant = ref<IreviewStepNo3VariantList | null>(null)
 // 获取HTS名称的辅助函数
 const getHtsName = (row: any) => {
   if (!row.hts) return ''
@@ -812,6 +834,66 @@ const isValueAllInput = (row: IreviewStepNo3VariantList) => {
     return false
   }
   return true
+}
+
+const handleImportFromProgress = async (row: IreviewStepNo3VariantList) => {
+  importTargetVariant.value = row
+  importCostAccountingList.value = []
+  importDialogVisible.value = true
+  importLoading.value = true
+
+  try {
+    let progressId: number | undefined
+    if (route.query.progressId) {
+      progressId = Number(route.query.progressId)
+    } else {
+      const classReviewId = resolveReviewId()
+      const { data: pid } = await reviewProgressId({ reviewId: classReviewId! })
+      progressId = pid
+    }
+
+    if (!progressId) {
+      $baseMessage('无法获取新品进度信息，请确认关联关系', 'warning', 'hey')
+      importDialogVisible.value = false
+      return
+    }
+
+    const { data } = await getCostAccountingList({ progressId: String(progressId) })
+    importCostAccountingList.value = data || []
+  } catch (error) {
+    console.error(error)
+    $baseMessage('获取利润核算数据失败', 'error', 'hey')
+  } finally {
+    importLoading.value = false
+  }
+}
+
+const handleConfirmImport = async (src: any) => {
+  const variant = importTargetVariant.value
+  if (!src || !variant) return
+
+  importSubmitting.value = true
+  try {
+    const updateData: any = {
+      orderEntryId: variant.orderEntryId,
+      site: src.site != null ? Number(src.site) : variant.site,
+      packagingLength: src.length != null ? Number(src.length) : variant.packagingLength,
+      packagingWidth: src.width != null ? Number(src.width) : variant.packagingWidth,
+      packagingHeight: src.height != null ? Number(src.height) : variant.packagingHeight,
+      weight: src.weight != null ? Number(src.weight) : variant.weight,
+    }
+    await reviewStepNo3VariantUpdate(updateData)
+
+    $baseMessage('导入成功，已刷新利润率', 'success', 'hey')
+    importDialogVisible.value = false
+    importTargetVariant.value = null
+    await fetchVariantsData()
+  } catch (error) {
+    console.error(error)
+    $baseMessage('导入失败，请重试', 'error', 'hey')
+  } finally {
+    importSubmitting.value = false
+  }
 }
 // 收货仓库提交新增
 const handleWarehouseSubmit = async (formData: any) => {
@@ -1718,6 +1800,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     textAlign: 'center',
   }
 }
+
 onMounted(() => {
   fetchDataComponent()
   fetchVariantsData()
