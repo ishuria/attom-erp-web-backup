@@ -71,3 +71,11 @@ export function updateInventoryCountRow(data: InventoryCountUpdateReq): Promise<
     data,
   })
 }
+
+export function getInventoryCountDetail(data: { sku: string; keyWord: string; pageNo: number; pageSize: number }) {
+  return request({
+    url: `${BASE_API}/stock/detail`,
+    method: 'post',
+    data,
+  })
+}

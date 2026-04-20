@@ -30,6 +30,7 @@ export interface InventoryCountItem {
   lackCount?: number
   totalSendCount?: number
   totalReceiveCount?: number
+  adjustCount?: number
   remark?: string
   createTime?: string
   packageTaskList?: InventoryCountPackageTaskItem[]
@@ -85,4 +86,19 @@ export interface InventoryCountRowEditForm {
   id: number | string
   noEncasementCount?: number
   remark: string
+}
+
+export interface InventoryCountDetailQuery {
+  id: number | string
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface InventoryCountDetailItem {
+  po?: string
+  sku?: string
+  totalOrderCount?: number
+  shipmentCount?: number
+  packagingCompletionCount?: number
 }

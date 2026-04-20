@@ -106,7 +106,15 @@
           {{ formatNumber(getTotalAfterCount(row)) }}
         </template>
       </el-table-column>
-      <el-table-column align="right" label="缺数" min-width="100" prop="lackCount" sortable="custom">
+      <el-table-column align="right" min-width="100" prop="lackCount" sortable="custom">
+        <template #header>
+          <el-tooltip placement="top" content="待打包盘点数">
+            <span>
+              应有库存数
+              <el-icon><question-filled /></el-icon>
+            </span>
+          </el-tooltip>
+        </template>
         <template #default="{ row }">
           <span :class="Number(row.lackCount) < 0 ? 'text-green' : Number(row.lackCount) > 0 ? 'text-red' : ''">
             {{ formatNumber(-(Number(row.lackCount) || 0)) }}
@@ -137,14 +145,14 @@
       <el-table-column align="right" min-width="140" prop="adjustedOrderCount">
         <template #header>
           <el-tooltip placement="top" content="总订货数 + 总调整数">
-            <span>调整订货数 <el-icon><question-filled /></el-icon></span>
+            <span>
+              调整订货数
+              <el-icon><question-filled /></el-icon>
+            </span>
           </el-tooltip>
         </template>
         <template #default="{ row }">
-          <el-tooltip
-            placement="top"
-            :content="`${formatNumber(row.totalOrderCount)} + ${formatNumber(row.adjustCount)}`"
-          >
+          <el-tooltip placement="top" :content="`${formatNumber(row.totalOrderCount)} + ${formatNumber(row.adjustCount)}`">
             <span>{{ formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0)) }}</span>
           </el-tooltip>
         </template>
@@ -152,7 +160,10 @@
       <el-table-column align="right" min-width="110" prop="orderDiffCount">
         <template #header>
           <el-tooltip placement="top" content="调整订货数 - 总发货数">
-            <span>订发差值 <el-icon><question-filled /></el-icon></span>
+            <span>
+              订发差值
+              <el-icon><question-filled /></el-icon>
+            </span>
           </el-tooltip>
         </template>
         <template #default="{ row }">
@@ -160,14 +171,38 @@
             placement="top"
             :content="`${formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0))} - ${formatNumber(row.totalSendCount)}`"
           >
-            <span :class="(Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) < 0 ? 'text-red' : (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) > 0 ? 'text-green' : ''">{{
-              formatNumber(
-                (Number(row.totalOrderCount) || 0) +
-                  (Number(row.adjustCount) || 0) -
-                  (Number(row.totalSendCount) || 0)
-              )
-            }}</span>
+            <span
+              :class="
+                (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) < 0
+                  ? 'text-red'
+                  : (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) > 0
+                    ? 'text-green'
+                    : ''
+              "
+            >
+              {{ formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)) }}
+            </span>
           </el-tooltip>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="right" min-width="130" prop="anomalyCount">
+        <template #header>
+          <el-tooltip placement="top" content="订发差值 - 总待售后数 - 未到货数">
+            <span>
+              异常数
+              <el-icon><question-filled /></el-icon>
+            </span>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <span
+            :class="
+              getAnomalyCount(row) < 0 ? 'text-red' : getAnomalyCount(row) > 0 ? 'text-green' : ''
+            "
+          >
+            {{ formatNumber(getAnomalyCount(row)) }}
+          </span>
         </template>
       </el-table-column>
 
@@ -200,6 +235,11 @@
       <el-table-column align="center" label="创建时间" min-width="120" prop="createTime">
         <template #default="{ row }">
           {{ formatDisplayDateTime(row.createTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" fixed="right" label="操作" width="80">
+        <template #default="{ row }">
+          <el-button link type="primary" @click="handleView(row)">查看</el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -235,7 +275,7 @@
             <el-input
               v-model.trim="adjustAddForm.sku"
               clearable
-              placeholder="请输入 SKU"
+              placeholder="请输入关键词检索"
               @blur="handleAdjustSearchSku"
               @keyup.enter="handleAdjustSearchSku"
             />
@@ -363,6 +403,65 @@
         <el-button :loading="remarkSaving" type="primary" @click="handleSaveRemark">确定</el-button>
       </template>
     </vab-dialog>
+
+    <vab-dialog v-model="viewVisible" title="盘点明细" width="1200px" @close="handleViewDialogClose">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 12px">
+        <el-input
+          v-model.trim="viewQuery.keyWord"
+          clearable
+          placeholder="请输入关键词搜索"
+          style="width: 280px; margin-right: 8px"
+          @clear="handleViewQuery"
+          @keyup.enter="handleViewQuery"
+        />
+        <el-button :loading="viewLoading" type="primary" @click="handleViewQuery">查询</el-button>
+      </div>
+      <el-table v-loading="viewLoading" border :data="viewList" :header-cell-style="{ textAlign: 'center' }">
+        <el-table-column align="center" label="PO" min-width="160" prop="po" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span v-if="row.po" class="copyable-text" @click="handleClip(row.po)">
+              {{ row.po }}
+              <el-icon style="margin-left: 4px"><copy-document /></el-icon>
+            </span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="SKU" min-width="200" prop="sku" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span v-if="row.sku" class="copyable-text" @click="handleClip(row.sku)">
+              {{ row.sku }}
+              <el-icon style="margin-left: 4px"><copy-document /></el-icon>
+            </span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="订货数" min-width="110" prop="totalOrderCount">
+          <template #default="{ row }">
+            {{ formatNumber(row.totalOrderCount) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="发货数" min-width="110" prop="shipmentCount">
+          <template #default="{ row }">
+            {{ formatNumber(row.shipmentCount) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="总打包完成数" min-width="130" prop="packagingCompletionCount">
+          <template #default="{ row }">
+            {{ formatNumber(row.packagingCompletionCount) }}
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无盘点明细数据" />
+        </template>
+      </el-table>
+      <vab-pagination
+        :current-page="viewQuery.pageNo"
+        :page-size="viewQuery.pageSize"
+        :total="viewTotal"
+        @current-change="handleViewCurrentChange"
+        @size-change="handleViewSizeChange"
+      />
+    </vab-dialog>
   </div>
 </template>
 
@@ -380,6 +479,7 @@ import {
   addInventoryCount,
   cancelInventoryCount,
   finishInventoryCount,
+  getInventoryCountDetail,
   getInventoryCountList,
   getInventoryCountMargin,
   updateInventoryCountMargin,
@@ -389,6 +489,7 @@ import { $baseConfirm, $baseMessage } from '/@/hooks'
 import InventoryPermission from '/@/permissions/inventory'
 import type { InventoryAdjustAddForm, InventoryAdjustPackingTaskOption, InventoryAdjustPoOption } from '/@/type/inventory/adjust'
 import type {
+  InventoryCountDetailItem,
   InventoryCountItem,
   InventoryCountMargin,
   InventoryCountPackageTaskItem,
@@ -511,6 +612,17 @@ const remarkDialogForm = reactive<{ id: number | string; remark: string; noEncas
 const rowSavingId = ref<number | string>('')
 const rowEditForm = reactive<InventoryCountRowEditForm>(createDefaultRowEditForm())
 
+const viewVisible = ref(false)
+const viewLoading = ref(false)
+const viewList = ref<InventoryCountDetailItem[]>([])
+const viewTotal = ref(0)
+const viewQuery = reactive({
+  sku: '',
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+})
+
 const hasListData = computed(() => list.value.length > 0)
 const mergeColumnProps = new Set([
   'skuImg',
@@ -527,6 +639,7 @@ const mergeColumnProps = new Set([
   'adjustCount',
   'adjustedOrderCount',
   'orderDiffCount',
+  'anomalyCount',
   'noEncasementCount',
   'remark',
   'createTime',
@@ -634,6 +747,8 @@ const formatNumber = (value?: number | string) => {
   return Number.isInteger(normalizedValue) ? `${normalizedValue}` : normalizedValue.toFixed(2)
 }
 
+const isDash = (value: unknown) => value === null || value === undefined || value === ''
+
 const formatPercent = (value?: number) => {
   if (value === null || value === undefined) return '-'
   return `${Number(value)}%`
@@ -675,6 +790,7 @@ const summaryCalcMap: Record<string, (row: any) => number> = {
   adjustCount: (row) => Number(row.adjustCount) || 0,
   adjustedOrderCount: (row) => (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0),
   orderDiffCount: (row) => -((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)),
+  anomalyCount: (row) => getAnomalyCount(row),
   totalReceiveCount: (row) => Number(row.totalReceiveCount) || 0,
   noEncasementCount: (row) => Number(row.noEncasementCount) || 0,
 }
@@ -716,6 +832,12 @@ const getTotalTaskCount = (row: InventoryCountItem) => {
 
   return packageTaskList.reduce((sum, item) => sum + Number(item.taskCount || 0), 0)
 }
+
+const getOrderDiffCount = (row: InventoryCountItem) =>
+  (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)
+
+const getAnomalyCount = (row: InventoryCountItem) =>
+  getOrderDiffCount(row) - (Number(getTotalAfterCount(row)) || 0) - (Number(row.notYetArrived) || 0)
 
 const getGroupLeadRow = (row: InventoryCountTableRow) => tableData.value.find((item) => item.parentId === row.parentId) || row
 
@@ -1000,6 +1122,59 @@ const handleSaveMargin = async () => {
   } finally {
     marginSaving.value = false
   }
+}
+
+const fetchViewList = async () => {
+  viewLoading.value = true
+  try {
+    const response = await getInventoryCountDetail({
+      sku: viewQuery.sku,
+      keyWord: viewQuery.keyWord,
+      pageNo: viewQuery.pageNo,
+      pageSize: viewQuery.pageSize,
+    })
+    viewList.value = pickArray<InventoryCountDetailItem>(response)
+    viewTotal.value = pickTotal(response)
+  } catch {
+    viewList.value = []
+    viewTotal.value = 0
+  } finally {
+    viewLoading.value = false
+  }
+}
+
+const handleView = (row: InventoryCountTableRow) => {
+  viewQuery.sku = row.sku || ''
+  viewQuery.keyWord = ''
+  viewQuery.pageNo = 1
+  viewQuery.pageSize = 20
+  viewVisible.value = true
+  fetchViewList()
+}
+
+const handleViewDialogClose = () => {
+  viewQuery.sku = ''
+  viewQuery.keyWord = ''
+  viewQuery.pageNo = 1
+  viewQuery.pageSize = 20
+  viewList.value = []
+  viewTotal.value = 0
+}
+
+const handleViewQuery = () => {
+  viewQuery.pageNo = 1
+  fetchViewList()
+}
+
+const handleViewCurrentChange = (value: number) => {
+  viewQuery.pageNo = value
+  fetchViewList()
+}
+
+const handleViewSizeChange = (value: number) => {
+  viewQuery.pageSize = value
+  viewQuery.pageNo = 1
+  fetchViewList()
 }
 
 const handleAdd = () => {
@@ -1328,6 +1503,15 @@ watch(
     min-width: 80px;
     cursor: pointer;
     color: var(--el-color-primary);
+  }
+
+  .copyable-text {
+    cursor: pointer;
+    color: var(--el-color-primary);
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .editable-text--left {
