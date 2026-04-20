@@ -962,7 +962,7 @@ const currentRoleCode = useAclStore().getRole[0]
 
 // Tab 权限配置表
 const TAB_PERMISSIONS: Record<number, string[]> = {
-  0: [ROLE_BOSS_CODE], // 全员明细
+  0: [ROLE_BOSS_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE], // 全员明细
   1: [ROLE_BOSS_CODE], // 全员概览
   2: [ROLE_BOSS_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE], // 产品经理
   3: [ROLE_BOSS_CODE, ROLE_WAREHOUSEMANNAGERlEAD_CODE], // 打包
