@@ -884,7 +884,7 @@ const handleConfirmImport = async (src: any) => {
     }
     await reviewStepNo3VariantUpdate(updateData)
 
-    $baseMessage('导入成功，已刷新利润率', 'success', 'hey')
+    $baseMessage('尺寸导入成功', 'success', 'hey')
     importDialogVisible.value = false
     importTargetVariant.value = null
     await fetchVariantsData()
