@@ -87,7 +87,7 @@
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
                 <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="() => onEnd(row)">
-                  <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
+                  <div v-for="(image, index) in row.imageList" :key="image.imageId" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
                       <div class="image-actions">
@@ -313,7 +313,7 @@
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
                 <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="() => onEnd(row)">
-                  <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
+                  <div v-for="(image, index) in row.imageList" :key="image.imageId" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
                       <div class="image-actions">
