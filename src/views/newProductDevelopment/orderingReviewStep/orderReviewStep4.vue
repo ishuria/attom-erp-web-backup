@@ -31,6 +31,9 @@
             <template v-if="scope.row['column0'] === 'vineSite'">
               {{ siteList.find((item) => item.id === scope.row[prop])?.label }}
             </template>
+            <template v-if="scope.row['column0'] === 'vineCount'">
+              {{ scope.row[prop] }}
+            </template>
             <template v-if="scope.row['column0'] === 'productPosition'">
               {{ productPositionOption.find((item) => item.id === scope.row[prop])?.label }}
             </template>
@@ -44,7 +47,9 @@
                 scope.row['column0'] !== 'variantImg' &&
                 scope.row['column0'] !== 'productPosition' &&
                 scope.row['column0'] !== 'graphicDesign' &&
-                scope.row['column0'] !== 'vineSite'
+                scope.row['column0'] !== 'vineSite' &&
+                scope.row['column0'] !== 'vineCount' &&
+                scope.row['column0'] !== 'approvalBusinessId'
               "
             >
               {{ scope.row[prop] }}
@@ -201,7 +206,7 @@ const fetchData = async () => {
 
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
-    let n: IReviewCommonItem = {
+    let n: any = {
       column0: `${index + 1}`,
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
@@ -212,8 +217,10 @@ const fetchData = async () => {
       productPosition: item.productPosition,
       graphicDesign: item.graphicDesign,
       oem: item.oem === undefined || item.oem === null ? 0 : item.oem,
-      vineSite: item.vineSite,
-      vineCount: item.vineCount,
+    }
+    if (item.approvalBusinessId) {
+      n.vineSite = item.vineSite
+      n.vineCount = item.vineCount
     }
     arr.push(n)
   })
@@ -225,6 +232,7 @@ const fetchSiteList = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
+
 const productPositionOption = ref<{ id: number; label: string }[]>([])
 const packageSampleOption = ref<{ id: number; label: string }[]>([])
 const fetchProductPositionOption = async () => {

@@ -246,6 +246,18 @@
               <el-option v-for="item in procurementManagerList" :key="item.userId" :label="item.userName" :value="item.userId" />
             </el-select>
           </template>
+          <template v-if="row['column0'] === 'approvalBusinessId'">
+            <el-select
+              v-model="row[prop]"
+              class="center-input"
+              clearable
+              filterable
+              placeholder="请选择"
+              @change="handleUpdateApprovalBusinessId(row, prop)"
+            >
+              <el-option v-for="item in approvalBusinessList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </template>
         </template>
       </el-table-column>
 
@@ -273,6 +285,7 @@ import {
   getOperationDistributionList,
   getProductPositionList,
   getReviewVariantPackageSampleList,
+  getReviewVineSelectList,
   reviewGetSkuList,
   reviewInsertSkuInfo,
   reviewProductManager,
@@ -496,15 +509,16 @@ const FIELD_INDEX_MAP = {
   PRODUCT_DESIGN: 19,
   PROCUREMENT_MANAGER: 20,
   SAMPLE_RETENTION: 21,
-  PACKING_GROUP: 22,
-  MANUFACTURER_EN_NAME: 23,
-  CERTIFICATE_UPLOAD: 24,
-  SKU_MERGE: 25,
-  OPERATE: 26,
-  ORDER_ENTRY_ID: 27,
-  PRODUCT_MANAGER_ID: 28,
-  PRODUCT_DESIGN_ID: 29,
-  PROCUREMENT_MANAGER_ID: 30,
+  APPROVAL_BUSINESS_ID: 22,
+  PACKING_GROUP: 23,
+  MANUFACTURER_EN_NAME: 24,
+  CERTIFICATE_UPLOAD: 25,
+  SKU_MERGE: 26,
+  OPERATE: 27,
+  ORDER_ENTRY_ID: 28,
+  PRODUCT_MANAGER_ID: 29,
+  PRODUCT_DESIGN_ID: 30,
+  PROCUREMENT_MANAGER_ID: 31,
 } as const
 
 const labelMap: Record<string, string> = {
@@ -530,6 +544,7 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
   procurementManager: '采购负责人',
+  approvalBusinessId: '匹配飞书Vine审批',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
   manufacturerEnName: '制造商英文名称<br>需认证产品必填(CPC/FCC/UL等)',
@@ -578,6 +593,7 @@ const buildParams = (key: string) => {
     checkStatus: exchangeList.value[FIELD_INDEX_MAP.PACKING_GROUP][key],
     manufacturerEnName: exchangeList.value[FIELD_INDEX_MAP.MANUFACTURER_EN_NAME][key],
     orderEntryId: exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][key],
+    approvalBusinessId: exchangeList.value[FIELD_INDEX_MAP.APPROVAL_BUSINESS_ID][key],
   }
   return params
 }
@@ -698,6 +714,7 @@ const clickCancel = async (event: any, prop: any) => {
     update(prop)
   }
 }
+
 // 修改打包小组
 const handlePackingUpdate = async (row: any, prop: any) => {
   if (row.variantsSame) {
@@ -793,6 +810,21 @@ const handleChangeProcurementManager = async (row: any, prop: any) => {
     })
   } else {
     exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER_ID][prop] = exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER][prop]
+    update(prop)
+  }
+}
+
+// 修改匹配飞书Vine审批
+const handleUpdateApprovalBusinessId = async (row: any, prop: any) => {
+  if (row.variantsSame) {
+    const newValue = row[prop]
+    Object.keys(row).forEach(async (key) => {
+      if (key !== 'column0' && key !== 'variantsSame') {
+        row[key] = newValue
+        update(key)
+      }
+    })
+  } else {
     update(prop)
   }
 }
@@ -1051,11 +1083,13 @@ const fetchVariantList = async () => {
           productDesign: item.productDesign,
           procurementManager: item.procurementManager || defaultProcurementManager?.userName,
           sampleRetention: item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number),
+          approvalBusinessId: item.approvalBusinessId,
           packingGroup: item.checkStatus,
           manufacturerEnName: item.manufacturerEnName,
           certificateUpload: item.certificateUpload,
           skuMerge: item.variantSku,
           operate: '操作',
+
           orderEntryId: undefined,
           productManagerId: item.productManagerId,
           productDesignId: item.productDesignId,
@@ -1102,6 +1136,18 @@ const fetchProcurementManagerList = async () => {
   })
   procurementManagerList.value = data
 }
+const approvalBusinessList = ref<{ id: number; label: string }[]>([])
+const fetchApprovalBusinessList = async () => {
+  let classReviewId: number | undefined
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
+  } else {
+    classReviewId = route.query.reviewId
+  }
+  const { data } = await getReviewVineSelectList(classReviewId!)
+  approvalBusinessList.value = data
+}
 /** 获取产品设计人员列表（仅工业设计和平面设计角色） */
 const productDesignList = ref<{ id: number; label: string }[]>([])
 const fetchProductDesignList = async () => {
@@ -1133,6 +1179,7 @@ onMounted(() => {
   fetchProductDesignList()
   fetchOperationUserList()
   fetchDistributionList()
+  fetchApprovalBusinessList()
 })
 </script>
 

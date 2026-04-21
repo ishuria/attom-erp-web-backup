@@ -62,6 +62,9 @@
             <template v-if="row['column0'] === 'patent'">
               <span style="white-space: pre-line">{{ row[prop] }}</span>
             </template>
+            <template v-if="row['column0'] === 'approvalBusinessId'">
+              {{ approvalBusinessList.find((item) => item.id === row[prop])?.label }}
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -75,7 +78,8 @@
                 row['column0'] !== 'seasonal' &&
                 row['column0'] !== 'patentFlag' &&
                 row['column0'] !== 'moq' &&
-                row['column0'] !== 'patent'
+                row['column0'] !== 'patent' &&
+                row['column0'] !== 'approvalBusinessId'
               "
             >
               {{ row[prop] }}
@@ -145,18 +149,19 @@
 </template>
 
 <script lang="ts" setup>
-import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
-import { updateBulkGoodsStatusByReviewId } from '~/src/api/devlocal/progress'
-import { IOperationDistributionList } from '~/src/type/orderProcess/orderProcessType'
 import {
   getOperationDistributionList,
   getProductPositionList,
   getReviewVariantPackageSampleList,
+  getReviewVineSelectList,
   reviewStepNo6CheckGet,
   reviewStepNo6PersonList,
   reviewStepNo6SaveSix,
 } from '/@/api/devlocal/orderProcess'
+import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
+import { updateBulkGoodsStatusByReviewId } from '/@/api/devlocal/progress'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { IOperationDistributionList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 
@@ -239,6 +244,7 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
   procurementManager: '采购负责人',
+  approvalBusinessId: '匹配飞书Vine审批',
   certification: '证书',
   variantSku: '合并变体的SKU',
 }
@@ -357,6 +363,7 @@ const fetchData = async () => {
       productManager: item.productManager,
       productDesign: item.productDesign,
       procurementManager: item.procurementManager,
+      approvalBusinessId: item.approvalBusinessId,
       certification: '',
       variantSku: item.variantSku,
       orderEntryId: item.orderEntryId,
@@ -412,6 +419,18 @@ const fetchDistributionList = async () => {
   const { data } = await getOperationDistributionList({ reviewId: classReviewId! })
   distributionList.value = data
 }
+const approvalBusinessList = ref<{ id: number; label: string }[]>([])
+const fetchApprovalBusinessList = async () => {
+  let classReviewId: number | undefined
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
+  } else {
+    classReviewId = route.query.reviewId
+  }
+  const { data } = await getReviewVineSelectList(classReviewId!)
+  approvalBusinessList.value = data
+}
 onMounted(() => {
   if (route.query.progressId) {
     //说明是订大货进去的,接受上一步传来的reviewId
@@ -419,6 +438,7 @@ onMounted(() => {
   } else {
     classReviewId = route.query.reviewId
   }
+  fetchApprovalBusinessList()
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchData()

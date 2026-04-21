@@ -556,3 +556,15 @@ export function updateOperationDistribution(data: { id: number; operationUserId:
     data,
   })
 }
+
+/**
+ * 查询新品审批的 reviewId 做Vine 列表
+ * @param params
+ * @returns
+ */
+export function getReviewVineSelectList(reviewId: number): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/review/stepsNo3/getSelect/vine/${reviewId}`,
+    method: 'get',
+  })
+}

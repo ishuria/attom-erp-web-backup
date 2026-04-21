@@ -79,6 +79,9 @@
             <template v-if="row['column0'] === 'patent'">
               <span style="white-space: pre-line">{{ row[prop] }}</span>
             </template>
+            <template v-if="row['column0'] === 'approvalBusinessId'">
+              {{ approvalBusinessList.find((item) => item.id === row[prop])?.label }}
+            </template>
             <template
               v-if="
                 row['column0'] !== 'oem' &&
@@ -93,7 +96,8 @@
                 row['column0'] !== 'seasonal' &&
                 row['column0'] !== 'patentFlag' &&
                 row['column0'] !== 'moq' &&
-                row['column0'] !== 'patent'
+                row['column0'] !== 'patent' &&
+                row['column0'] !== 'approvalBusinessId'
               "
             >
               {{ row[prop] }}
@@ -233,7 +237,7 @@
 <script lang="ts" setup>
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
-import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
+import { getProductPositionList, getReviewVariantPackageSampleList, getReviewVineSelectList } from '/@/api/devlocal/orderProcess'
 import {
   getReviewByReviewId,
   getVariantList,
@@ -307,6 +311,7 @@ const labelMap: Record<string, string> = {
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
+  approvalBusinessId: '匹配飞书Vine审批',
 }
 const handleUpdateOEM = (row: any, prop: string) => {
   // console.log(row, prop)
@@ -492,6 +497,7 @@ const fetchData = async () => {
       sampleRetention: item.sampleRetention.split(',').map(Number),
       productManager: item.productManager,
       productDesign: item.productDesign,
+      approvalBusinessId: item.approvalBusinessId,
     }
     arr.push(n)
   })
@@ -525,7 +531,13 @@ const fetchSubmittedStatus = async () => {
     editDisabled.value = true
   }
 }
+const approvalBusinessList = ref<{ id: number; label: string }[]>([])
+const fetchApprovalBusinessList = async () => {
+  const { data } = await getReviewVineSelectList(Number(props.reviewId))
+  approvalBusinessList.value = data
+}
 onMounted(() => {
+  fetchApprovalBusinessList()
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchData()

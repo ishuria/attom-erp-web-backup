@@ -95,6 +95,11 @@
             <template v-if="row['column0'] === 'patent'">
               <span style="white-space: pre-line">{{ row[prop] }}</span>
             </template>
+            <template v-if="row['column0'] === 'moq'">{{ row[prop] }} 套</template>
+            <template v-if="row['column0'] === 'fullCaseQty'">{{ row[prop] }}套</template>
+            <template v-if="row['column0'] === 'approvalBusinessId'">
+              {{ approvalBusinessList.find((item) => item.id === row[prop])?.label }}
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -109,7 +114,10 @@
                 row['column0'] !== 'toy' &&
                 row['column0'] !== 'seasonal' &&
                 row['column0'] !== 'patentFlag' &&
-                row['column0'] !== 'patent'
+                row['column0'] !== 'patent' &&
+                row['column0'] !== 'moq' &&
+                row['column0'] !== 'fullCaseQty' &&
+                row['column0'] !== 'approvalBusinessId'
               "
             >
               {{ row[prop] }}
@@ -167,7 +175,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
+import { getProductPositionList, getReviewVariantPackageSampleList, getReviewVineSelectList } from '/@/api/devlocal/orderProcess'
 import { getSkuVariantList, reviewStepNo2Fail, reviewStepNo2Pass, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
@@ -233,6 +241,9 @@ const labelMap: Record<string, string> = {
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
+  moq: '起订量',
+  fullCaseQty: '整箱数',
+  approvalBusinessId: '匹配飞书Vine审批',
 }
 const handleUpdateOEM = (row: any, prop: string) => {
   // console.log(row, prop)
@@ -377,6 +388,9 @@ const fetchData = async () => {
       sampleRetention: item.sampleRetention.split(',').map(Number),
       productManager: item.productManager,
       productDesign: item.productDesign,
+      moq: item.moq,
+      fullCaseQty: item.fullCaseQty,
+      approvalBusinessId: item.approvalBusinessId,
     }
     arr.push(n)
   })
@@ -406,7 +420,13 @@ const fetchSubmittedStatus = async () => {
     editDisabled.value = true
   }
 }
+const approvalBusinessList = ref<{ id: number; label: string }[]>([])
+const fetchApprovalBusinessList = async () => {
+  const { data } = await getReviewVineSelectList(Number(props.reviewId))
+  approvalBusinessList.value = data
+}
 onMounted(async () => {
+  fetchApprovalBusinessList()
   fetchProductPositionOption()
   fetchPackagePositionOption()
   // fetchMoldData()

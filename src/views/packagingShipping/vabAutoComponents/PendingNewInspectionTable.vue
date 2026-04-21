@@ -40,6 +40,12 @@
         {{ row.desc }}
       </template>
     </el-table-column>
+    <el-table-column label="签收状态" prop="signStatus">
+      <template #default="{ row }">
+        <el-tag :type="row.signStatus === 1 ? 'success' : 'danger'">{{ row.signStatus === 1 ? '已签收' : '未签收' }}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column label="签收日期" prop="signDate" />
     <el-table-column label="操作">
       <template #default="{ row }">
         <el-button

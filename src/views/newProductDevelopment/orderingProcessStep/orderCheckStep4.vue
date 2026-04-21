@@ -72,6 +72,9 @@
           <template v-if="row['column0'] === 'patent'">
             <span style="white-space: pre-line">{{ row[prop] }}</span>
           </template>
+          <template v-if="row['column0'] === 'approvalBusinessId'">
+            {{ approvalBusinessList.find((item) => item.id === row[prop])?.label }}
+          </template>
           <template
             v-if="
               row['column0'] !== 'productImgUrl' &&
@@ -86,7 +89,8 @@
               row['column0'] !== 'seasonal' &&
               row['column0'] !== 'patentFlag' &&
               row['column0'] !== 'moq' &&
-              row['column0'] !== 'patent'
+              row['column0'] !== 'patent' &&
+              row['column0'] !== 'approvalBusinessId'
             "
           >
             {{ row[prop] }}
@@ -113,6 +117,7 @@ import {
   getOperationDistributionList,
   getProductPositionList,
   getReviewVariantPackageSampleList,
+  getReviewVineSelectList,
   reviewGetSkuList,
   reviewProductManager,
   reviewStepNo3GetSelectVariantList,
@@ -160,6 +165,7 @@ const labelMap: Record<string, string> = {
   productDesign: '产品设计',
   procurementManager: '采购负责人',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
+  approvalBusinessId: '匹配飞书Vine审批',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
   manufacturerEnName: '制造商英文名称<br>需认证产品必填(CPC/FCC/UL等)',
   certificateUpload: '证书上传',
@@ -286,6 +292,7 @@ const fetchVariantList = async () => {
       productDesign: item.productDesign,
       procurementManager: item.procurementManager,
       sampleRetention: item.sampleRetention.split(',').map(Number),
+      approvalBusinessId: item.approvalBusinessId,
       packingGroup: item.checkStatus,
       manufacturerEnName: item.manufacturerEnName,
       certificateUpload: item.certificateUpload,
@@ -328,7 +335,13 @@ const fetchDistributionList = async () => {
   const { data } = await getOperationDistributionList({ reviewId: route.query.reviewId! })
   distributionList.value = data
 }
+const approvalBusinessList = ref<{ id: number; label: string }[]>([])
+const fetchApprovalBusinessList = async () => {
+  const { data } = await getReviewVineSelectList(route.query.reviewId)
+  approvalBusinessList.value = data
+}
 onMounted(async () => {
+  fetchApprovalBusinessList()
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchVariantList()

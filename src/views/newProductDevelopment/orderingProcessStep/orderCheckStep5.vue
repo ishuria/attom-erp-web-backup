@@ -75,6 +75,9 @@
             <template v-if="row['column0'] === 'patent'">
               <span style="white-space: pre-line">{{ row[prop] }}</span>
             </template>
+            <template v-if="row['column0'] === 'approvalBusinessId'">
+              {{ approvalBusinessList.find((item) => item.id === row[prop])?.label }}
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -90,7 +93,8 @@
                 row['column0'] !== 'seasonal' &&
                 row['column0'] !== 'patentFlag' &&
                 row['column0'] !== 'moq' &&
-                row['column0'] !== 'patent'
+                row['column0'] !== 'patent' &&
+                row['column0'] !== 'approvalBusinessId'
               "
             >
               {{ row[prop] }}
@@ -152,6 +156,7 @@
 import {
   getProductPositionList,
   getReviewVariantPackageSampleList,
+  getReviewVineSelectList,
   reviewProductManager,
   reviewStepNo6CheckGet,
 } from '/@/api/devlocal/orderProcess'
@@ -255,6 +260,7 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
   procurementManager: '采购负责人',
+  approvalBusinessId: '匹配飞书Vine审批',
   certification: '证书',
   variantSku: '合并变体的SKU',
 }
@@ -374,6 +380,7 @@ const fetchData = async () => {
     productManager: item.productManager === '' ? productManager : item.productManager,
     productDesign: item.productDesign,
     procurementManager: item.procurementManager,
+    approvalBusinessId: item.approvalBusinessId,
     certification: '',
     variantSku: item.variantSku,
     orderEntryId: item.orderEntryId,
@@ -401,7 +408,13 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
+const approvalBusinessList = ref<{ id: number; label: string }[]>([])
+const fetchApprovalBusinessList = async () => {
+  const { data } = await getReviewVineSelectList(route.query.reviewId)
+  approvalBusinessList.value = data
+}
 onMounted(async () => {
+  fetchApprovalBusinessList()
   await fetchProductPositionOption()
   await fetchPackagePositionOption()
   await fetchData()
