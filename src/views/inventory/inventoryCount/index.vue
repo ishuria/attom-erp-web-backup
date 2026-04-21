@@ -11,26 +11,58 @@
         </div>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
-        <div class="query-actions-row">
-          <el-form inline :model="queryForm" @submit.prevent>
-            <el-form-item>
-              <el-input
-                v-model.trim="queryForm.keyWord"
-                clearable
-                placeholder="请输入关键词"
-                style="width: 280px"
-                @clear="handleQuery"
-                @keyup.enter="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="handleQuery">查询</el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-button :icon="RefreshRight" :disabled="listLoading" @click="handleReset">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
+              </template>
+              <vab-draggable
+                v-model="columns"
+                :animation="600"
+                filter=".non-draggable"
+                handle=".handle"
+                :on-end="handleEnd"
+                :on-move="handleMove"
+              >
+                <div
+                  v-for="item in columns"
+                  :key="item.label"
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon icon="eye-line" />
+                  </span>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
+          </el-form-item>
+          <el-form-item>
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入关键词"
+              style="width: 280px"
+              @clear="handleQuery"
+              @keyup.enter="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="handleQuery">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button :disabled="listLoading" :icon="RefreshRight" @click="handleReset">重置</el-button>
+          </el-form-item>
+        </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
@@ -41,200 +73,133 @@
       :header-cell-style="{ textAlign: 'center' }"
       row-key="rowKey"
       show-summary
-      :summary-method="getSummaryRow"
       :span-method="tableSpanMethod"
+      :summary-method="getSummaryRow"
       @sort-change="handleSortChange"
     >
-      <el-table-column align="center" fixed="left" label="SKU图片" min-width="100" prop="skuImg">
-        <template #default="{ row }">
-          <div class="sku-image-cell">
-            <el-image
-              v-if="row.skuImg"
-              :preview-src-list="[row.skuImg]"
-              :preview-teleported="true"
-              :src="row.skuImg"
-              fit="cover"
-              preview-class-name="inventory-count-image-viewer"
-              @click.stop
-            />
-            <span v-else>-</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column fixed="left" label="SKU" min-width="180" prop="sku" show-overflow-tooltip>
-        <template #default="{ row }">
-          <div class="sku-copy-cell">
-            <span>{{ row.sku || '-' }}</span>
-            <el-button v-if="row.sku" :icon="CopyDocument" link type="primary" @click.stop="handleClip(row.sku)" />
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column fixed="left" label="产品名称" min-width="220" prop="productName" show-overflow-tooltip />
-      <el-table-column label="PO" min-width="140" prop="po" show-overflow-tooltip />
-      <el-table-column align="center" label="订货日期" min-width="160" prop="orderDate">
-        <template #default="{ row }">
-          {{ formatDisplayDateTime(row.orderDate) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="完成数" min-width="90" prop="actualCount">
-        <template #default="{ row }">
-          {{ formatNumber(row.actualCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="打包数" min-width="90" prop="taskCount">
-        <template #default="{ row }">
-          {{ formatNumber(row.taskCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="待售后(坏+缺)" min-width="110" prop="afterCount">
-        <template #default="{ row }">
-          {{ formatNumber(row.afterCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="装箱数" min-width="110" prop="encasementCount" sortable="custom">
-        <template #default="{ row }">
-          {{ formatNumber(row.encasementCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="总打包数" min-width="120" prop="totalTaskCount" sortable="custom">
-        <template #default="{ row }">
-          {{ formatNumber(getTotalTaskCount(row)) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="总待售后" min-width="110" prop="totalAfterCount" sortable="custom">
-        <template #default="{ row }">
-          {{ formatNumber(getTotalAfterCount(row)) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" min-width="100" prop="lackCount" sortable="custom">
+      <el-table-column
+        v-for="(col, index) in checkList"
+        :key="index"
+        :align="col.align"
+        :fixed="col.isFixed"
+        :label="col.label"
+        :min-width="handleWidth(col)"
+        :prop="col.prop"
+        :show-overflow-tooltip="col.showOverflowTooltip"
+        :sortable="col.sortable ? 'custom' : false"
+        :width="col.width"
+      >
         <template #header>
-          <el-tooltip placement="top" content="待打包盘点数">
-            <span>
-              应有库存数
-              <el-icon><question-filled /></el-icon>
-            </span>
-          </el-tooltip>
+          <template v-if="col.prop === 'lackCount'">
+            <el-tooltip content="待打包盘点数" placement="top">
+              <span>
+                应有库存数
+                <el-icon><question-filled /></el-icon>
+              </span>
+            </el-tooltip>
+          </template>
+          <template v-else-if="col.prop === 'adjustedOrderCount'">
+            <el-tooltip content="总订货数 + 总调整数" placement="top">
+              <span>
+                调整订货数
+                <el-icon><question-filled /></el-icon>
+              </span>
+            </el-tooltip>
+          </template>
+          <template v-else-if="col.prop === 'orderDiffCount'">
+            <el-tooltip content="调整订货数 - 总发货数" placement="top">
+              <span>
+                订发差值
+                <el-icon><question-filled /></el-icon>
+              </span>
+            </el-tooltip>
+          </template>
+          <template v-else-if="col.prop === 'anomalyCount'">
+            <el-tooltip content="订发差值 - 总待售后数 - 未到货数" placement="top">
+              <span>
+                异常数
+                <el-icon><question-filled /></el-icon>
+              </span>
+            </el-tooltip>
+          </template>
+          <template v-else>{{ col.label }}</template>
         </template>
-        <template #default="{ row }">
-          <span :class="Number(row.lackCount) < 0 ? 'text-green' : Number(row.lackCount) > 0 ? 'text-red' : ''">
-            {{ formatNumber(-(Number(row.lackCount) || 0)) }}
-          </span>
-        </template>
-      </el-table-column>
 
-      <el-table-column align="right" label="未到货" min-width="110" prop="notYetArrived" sortable="custom">
         <template #default="{ row }">
-          {{ formatNumber(row.notYetArrived) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="订货数" min-width="110" prop="totalOrderCount" sortable="custom">
-        <template #default="{ row }">
-          {{ formatNumber(row.totalOrderCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="发货数" min-width="90" prop="totalSendCount">
-        <template #default="{ row }">
-          {{ formatNumber(row.totalSendCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" label="调整数" min-width="110" prop="adjustCount" sortable="custom">
-        <template #default="{ row }">
-          {{ formatNumber(row.adjustCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="right" min-width="140" prop="adjustedOrderCount">
-        <template #header>
-          <el-tooltip placement="top" content="总订货数 + 总调整数">
-            <span>
-              调整订货数
-              <el-icon><question-filled /></el-icon>
+          <template v-if="col.prop === 'skuImg'">
+            <div class="sku-image-cell">
+              <el-image
+                v-if="row.skuImg"
+                fit="cover"
+                preview-class-name="inventory-count-image-viewer"
+                :preview-src-list="[row.skuImg]"
+                :preview-teleported="true"
+                :src="row.skuImg"
+                @click.stop
+              />
+              <span v-else>-</span>
+            </div>
+          </template>
+          <template v-else-if="col.prop === 'sku'">
+            <div class="sku-copy-cell">
+              <span>{{ row.sku || '-' }}</span>
+              <el-button v-if="row.sku" :icon="CopyDocument" link type="primary" @click.stop="handleClip(row.sku)" />
+            </div>
+          </template>
+          <template v-else-if="col.prop === 'orderDate' || col.prop === 'createTime'">
+            {{ formatDisplayDateTime(row[col.prop]) }}
+          </template>
+          <template v-else-if="col.prop === 'totalTaskCount'">
+            {{ formatNumber(getTotalTaskCount(row)) }}
+          </template>
+          <template v-else-if="col.prop === 'totalAfterCount'">
+            {{ formatNumber(getTotalAfterCount(row)) }}
+          </template>
+          <template v-else-if="col.prop === 'lackCount'">
+            <span :class="Number(row.lackCount) < 0 ? 'text-green' : Number(row.lackCount) > 0 ? 'text-red' : ''">
+              {{ formatNumber(-(Number(row.lackCount) || 0)) }}
             </span>
-          </el-tooltip>
-        </template>
-        <template #default="{ row }">
-          <el-tooltip placement="top" :content="`${formatNumber(row.totalOrderCount)} + ${formatNumber(row.adjustCount)}`">
-            <span>{{ formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0)) }}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column align="right" min-width="110" prop="orderDiffCount">
-        <template #header>
-          <el-tooltip placement="top" content="调整订货数 - 总发货数">
-            <span>
-              订发差值
-              <el-icon><question-filled /></el-icon>
-            </span>
-          </el-tooltip>
-        </template>
-        <template #default="{ row }">
-          <el-tooltip
-            placement="top"
-            :content="`${formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0))} - ${formatNumber(row.totalSendCount)}`"
-          >
-            <span
-              :class="
-                (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) < 0
-                  ? 'text-red'
-                  : (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0) > 0
-                    ? 'text-green'
-                    : ''
-              "
+          </template>
+          <template v-else-if="col.prop === 'adjustedOrderCount'">
+            <el-tooltip :content="`${formatNumber(row.totalOrderCount)} + ${formatNumber(row.adjustCount)}`" placement="top">
+              <span>{{ formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0)) }}</span>
+            </el-tooltip>
+          </template>
+          <template v-else-if="col.prop === 'orderDiffCount'">
+            <el-tooltip
+              :content="`${formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0))} - ${formatNumber(row.totalSendCount)}`"
+              placement="top"
             >
-              {{ formatNumber((Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)) }}
+              <span :class="getOrderDiffCount(row) < 0 ? 'text-red' : getOrderDiffCount(row) > 0 ? 'text-green' : ''">
+                {{ formatNumber(getOrderDiffCount(row)) }}
+              </span>
+            </el-tooltip>
+          </template>
+          <template v-else-if="col.prop === 'anomalyCount'">
+            <span :class="getAnomalyCount(row) < 0 ? 'text-red' : getAnomalyCount(row) > 0 ? 'text-green' : ''">
+              {{ formatNumber(getAnomalyCount(row)) }}
             </span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="right" min-width="130" prop="anomalyCount">
-        <template #header>
-          <el-tooltip placement="top" content="订发差值 - 总待售后数 - 未到货数">
-            <span>
-              异常数
-              <el-icon><question-filled /></el-icon>
-            </span>
-          </el-tooltip>
-        </template>
-        <template #default="{ row }">
-          <span
-            :class="
-              getAnomalyCount(row) < 0 ? 'text-red' : getAnomalyCount(row) > 0 ? 'text-green' : ''
-            "
-          >
-            {{ formatNumber(getAnomalyCount(row)) }}
-          </span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="right" label="接收数" min-width="110" prop="totalReceiveCount" sortable="custom">
-        <template #default="{ row }">
-          {{ formatNumber(row.totalReceiveCount) }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="未装箱" min-width="140" prop="noEncasementCount">
-        <template #default="{ row }">
-          <el-input-number
-            v-if="isEditingRow(row.id)"
-            ref="noEncasementInputRef"
-            v-model="rowEditForm.noEncasementCount"
-            :controls="false"
-            :min="0"
-            :precision="0"
-            style="width: 120px"
-            @blur="handleSaveRow"
-            @keyup.enter="handleSaveRow"
-          />
-          <span v-else class="editable-text" @click="handleStartEdit(row)">{{ formatNumber(row.noEncasementCount) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="盘点备注" min-width="220" prop="remark" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span class="editable-text editable-text--left" @click="openRemarkDialog(row)">{{ row.remark || '-' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="创建时间" min-width="120" prop="createTime">
-        <template #default="{ row }">
-          {{ formatDisplayDateTime(row.createTime) }}
+          </template>
+          <template v-else-if="col.prop === 'noEncasementCount'">
+            <el-input-number
+              v-if="isEditingRow(row.id)"
+              ref="noEncasementInputRef"
+              v-model="rowEditForm.noEncasementCount"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 120px"
+              @blur="handleSaveRow"
+              @keyup.enter="handleSaveRow"
+            />
+            <span v-else class="editable-text" @click="handleStartEdit(row)">{{ formatNumber(row.noEncasementCount) }}</span>
+          </template>
+          <template v-else-if="col.prop === 'remark'">
+            <span class="editable-text editable-text--left" @click="openRemarkDialog(row)">{{ row.remark || '-' }}</span>
+          </template>
+          <template v-else>
+            {{ formatNumber(row[col.prop]) }}
+          </template>
         </template>
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="80">
@@ -260,10 +225,10 @@
         ref="adjustAddFormRef"
         v-loading="adjustSkuInfoLoading || adjustAddLoading || adjustPriceCalcLoading || adjustPackingTaskLoading"
         class="dialog-form"
-        :model="adjustAddForm"
-        :rules="adjustAddRules"
         label-position="right"
         label-width="96px"
+        :model="adjustAddForm"
+        :rules="adjustAddRules"
       >
         <div class="dialog-grid">
           <el-form-item label="类型" prop="type">
@@ -286,10 +251,10 @@
                 v-model="adjustAddForm.poId"
                 clearable
                 filterable
-                remote
                 :loading="adjustPoLoading"
-                :remote-method="handleAdjustSearchPo"
                 placeholder="请输入 PO 搜索"
+                remote
+                :remote-method="handleAdjustSearchPo"
                 style="width: 80%"
               >
                 <el-option v-for="item in adjustPoOptions" :key="item.poId" :label="item.po" :value="item.poId" />
@@ -298,11 +263,11 @@
             </template>
           </el-form-item>
           <el-form-item label="产品信息">
-            <el-input :model-value="adjustAddForm.productDesc" disabled />
+            <el-input disabled :model-value="adjustAddForm.productDesc" />
           </el-form-item>
           <el-form-item label="SKU 图片">
             <div class="sku-image-preview">
-              <el-image v-if="adjustAddForm.skuImg" :preview-src-list="[adjustAddForm.skuImg]" :src="adjustAddForm.skuImg" fit="cover" />
+              <el-image v-if="adjustAddForm.skuImg" fit="cover" :preview-src-list="[adjustAddForm.skuImg]" :src="adjustAddForm.skuImg" />
             </div>
           </el-form-item>
           <el-form-item v-if="showAdjustPackingTaskFields" prop="packingTaskId">
@@ -333,7 +298,7 @@
             </el-select>
           </el-form-item>
           <el-form-item v-if="showAdjustPackingTaskFields" label="打包任务数" prop="currentTaskCount">
-            <el-input :model-value="adjustAddForm.currentTaskCount" disabled />
+            <el-input disabled :model-value="adjustAddForm.currentTaskCount" />
           </el-form-item>
           <el-form-item label="货件编号">
             <el-input v-model.trim="adjustAddForm.shipmentId" clearable placeholder="请输入货件编号" />
@@ -351,8 +316,8 @@
             <el-input
               v-model.trim="adjustAddForm.remark"
               :maxlength="500"
-              :rows="4"
               placeholder="请输入备注"
+              :rows="4"
               show-word-limit
               type="textarea"
             />
@@ -370,10 +335,10 @@
         ref="marginFormRef"
         v-loading="marginLoading || marginSaving"
         class="margin-dialog-form"
-        :model="marginForm"
-        :rules="marginRules"
         label-position="right"
         label-width="110px"
+        :model="marginForm"
+        :rules="marginRules"
       >
         <el-form-item label="数量阈值" prop="count">
           <el-input-number v-model="marginForm.count" :controls="false" :min="0" :precision="0" style="width: 100%" />
@@ -485,8 +450,8 @@ import {
   updateInventoryCountMargin,
   updateInventoryCountRow,
 } from '/@/api/devlocal/inventoryCount'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import { $baseConfirm, $baseMessage } from '/@/hooks'
-import InventoryPermission from '/@/permissions/inventory'
 import type { InventoryAdjustAddForm, InventoryAdjustPackingTaskOption, InventoryAdjustPoOption } from '/@/type/inventory/adjust'
 import type {
   InventoryCountDetailItem,
@@ -496,6 +461,7 @@ import type {
   InventoryCountQuery,
   InventoryCountRowEditForm,
 } from '/@/type/inventory/count'
+import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
 import { handleClip } from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 
@@ -1334,8 +1300,102 @@ const handleSaveRow = async () => {
   }
 }
 
+const COLUMN_META: Record<string, { align?: string; showOverflowTooltip?: boolean }> = {
+  skuImg: { align: 'center' },
+  sku: { showOverflowTooltip: true },
+  productName: { showOverflowTooltip: true },
+  po: { showOverflowTooltip: true },
+  orderDate: { align: 'center' },
+  actualCount: { align: 'right' },
+  taskCount: { align: 'right' },
+  afterCount: { align: 'right' },
+  encasementCount: { align: 'right' },
+  totalTaskCount: { align: 'right' },
+  totalAfterCount: { align: 'right' },
+  lackCount: { align: 'right' },
+  notYetArrived: { align: 'right' },
+  totalOrderCount: { align: 'right' },
+  totalSendCount: { align: 'right' },
+  adjustCount: { align: 'right' },
+  adjustedOrderCount: { align: 'right' },
+  orderDiffCount: { align: 'right' },
+  anomalyCount: { align: 'right' },
+  totalReceiveCount: { align: 'right' },
+  noEncasementCount: { align: 'center' },
+  remark: { showOverflowTooltip: true },
+  createTime: { align: 'center' },
+}
+
+const handleWidth = (col: any) => col.minWidth
+
+const columns = ref<any>([])
+const checkList = computed(() => {
+  return columns.value.filter((_: any) => _.checked)
+})
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 21 })
+  columns.value = data
+  columns.value.forEach((item: IGetOperationColumnList) => {
+    item.minWidth = item.width
+    if (item.prop !== 'asinImgUrl') {
+      delete item.width
+    }
+    if (
+      [
+        'encasementCount',
+        'totalTaskCount',
+        'totalOrderCount',
+        'totalAfterCount',
+        'lackCount',
+        'notYetArrived',
+        'totalReceiveCount',
+        'adjustCount',
+      ].includes(item.prop)
+    ) {
+      item.sortable = true
+    }
+    if (['skuImg', 'sku', 'productName'].includes(item.prop)) {
+      item.isFixed = true
+    }
+    const meta = COLUMN_META[item.prop]
+    if (meta?.align) item.align = meta.align
+    if (meta?.showOverflowTooltip) item.showOverflowTooltip = meta.showOverflowTooltip
+  })
+}
+
+// 处理列是否隐藏
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: IGetOperationColumnList, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
 onMounted(async () => {
-  await Promise.allSettled([fetchMargin(), fetchList()])
+  await Promise.allSettled([fetchColumn(), fetchMargin(), fetchList()])
 })
 
 watch(
@@ -1406,21 +1466,10 @@ watch(
   :deep(.el-table .el-table__header th .caret-wrapper) {
     margin-left: 2px;
   }
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 
   .table-header-actions {
     display: flex;
     gap: 12px;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .query-actions-row {
-    display: flex;
-    gap: 16px;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
@@ -1534,10 +1583,6 @@ watch(
 
 @media screen and (max-width: 768px) {
   .inventory-count-page {
-    .query-actions-row {
-      align-items: stretch;
-    }
-
     .dialog-grid {
       grid-template-columns: 1fr;
     }
@@ -1571,5 +1616,23 @@ watch(
     border-radius: 12px;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
   }
+}
+.handle {
+  cursor: grab;
+}
+.disabled-handle {
+  cursor: not-allowed;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 </style>
