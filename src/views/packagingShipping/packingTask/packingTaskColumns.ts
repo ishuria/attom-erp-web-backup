@@ -14,6 +14,7 @@ export interface PackingTaskColumn {
   type?: 'selection'
   visibleInTabs: number[] // 在哪些tab中显示
   customSlot?: boolean // 是否需要自定义插槽
+  sortable?: boolean | 'custom'
 }
 
 export const packingTaskColumns: PackingTaskColumn[] = [
@@ -124,8 +125,9 @@ export const packingTaskColumns: PackingTaskColumn[] = [
     key: 'recommendCount',
     label: '推荐数量',
     prop: 'recommendCount',
-    width: 100,
+    width: 120,
     visibleInTabs: [7, 1, 5, 2, 3, 4, 0],
+    sortable: 'custom',
   },
   {
     key: 'productCount',

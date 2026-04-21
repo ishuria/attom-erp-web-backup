@@ -75,6 +75,7 @@
           @show-parts-list="handleShowPartsList"
           @show-quality-inspection-report="handleShowQualityInspectionReport"
           @show-split-task="showSplitTask"
+          @sort-change="handleAllTaskSortChange"
         />
         <vab-pagination
           :current-page="allTaskForm.pageNo"
@@ -1915,6 +1916,12 @@ const queryAllTaskData = () => {
   fetchAllTaskData()
 }
 
+const handleAllTaskSortChange = (orderByField: string, orderDirection: string) => {
+  allTaskForm.orderByField = orderByField
+  allTaskForm.orderDirection = orderDirection
+  fetchAllTaskData()
+}
+
 // 监听日期变化，确保数据及时更新
 watch(
   () => allTaskForm.releaseDate,
@@ -1989,6 +1996,8 @@ const allTaskForm = reactive<any>({
   releaseDate: null, // 日期范围，格式为 [startDate, endDate]
   pageNo: 1,
   pageSize: 20,
+  orderByField: '',
+  orderDirection: '',
 })
 const allTaskList = ref<any>([])
 const allTaskTotal = ref<number>(0)

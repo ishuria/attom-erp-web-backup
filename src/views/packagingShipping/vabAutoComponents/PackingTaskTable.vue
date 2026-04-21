@@ -13,6 +13,7 @@
     @cell-click="handleCellClick"
     @row-click="handleRowClick"
     @selection-change="handleSelectionChange"
+    @sort-change="handleSortChange"
   >
     <template v-for="column in visibleColumns" :key="column.key">
       <!-- 选择列 -->
@@ -247,6 +248,7 @@
         :label="column.label"
         :min-width="column.minWidth"
         :prop="column.prop"
+        :sortable="column.sortable"
         :width="column.width"
       />
     </template>
@@ -304,6 +306,7 @@ const emit = defineEmits<{
   qualityCheckChange: [row: any]
   deleteTask: [row: any]
   showFeedback: [row: any]
+  sortChange: [orderByField: string, orderDirection: string]
 }>()
 
 // 过滤出可见的列
@@ -377,6 +380,19 @@ const handleDelete = (row: any) => {
 
 const handleShowFeedback = (row: any) => {
   emit('showFeedback', row)
+}
+
+const handleSortChange = ({ prop, order }: { prop: string | null; order: string | null }) => {
+  const fieldMap: Record<string, string> = {
+    recommendCount: 'recommendCount',
+  }
+  const directionMap: Record<string, string> = {
+    ascending: 'asc',
+    descending: 'desc',
+  }
+  const orderByField = prop ? (fieldMap[prop] ?? '') : ''
+  const orderDirection = order ? (directionMap[order] ?? '') : ''
+  emit('sortChange', orderByField, orderDirection)
 }
 
 // 修改可认领
