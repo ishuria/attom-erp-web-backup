@@ -286,12 +286,34 @@ export interface IGetAdjustDetail {
   parent?: string
   source?: string
   userName: string
+  beforeQuantity: number | null
+  afterQuantity: number | null
 }
 
 export interface ICheckoutReq {
   userIdList: number[]
 
   checkoutMonth: string
+}
+
+export interface IVerifyBrokenItem {
+  id: number
+  userId: number
+  userName: string
+  month: string
+  type: number
+  oem: number
+  beforeQuantity: number | null
+  adjustQuantity: number | null
+  afterQuantity: number | null
+  selfCheckPassed: boolean
+  chainCheckPassed: boolean
+  prevAfter: number | null
+}
+
+export interface ICheckoutVerifyResp {
+  passed: boolean
+  brokenList: IVerifyBrokenItem[]
 }
 
 export interface IMinimumMonthlyAssessment {

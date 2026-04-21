@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="调整明细" top="5%" width="55%">
+    <vab-dialog v-model="visible" title="调整明细" top="5%" width="60%">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button v-if="!editDisabled" type="primary" @click="showAdd">新增</el-button>
@@ -22,7 +22,14 @@
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="800" stripe>
+      <el-table
+        border
+        :cell-style="cellStyle"
+        :data="list"
+        :header-cell-style="{ textAlign: 'center' }"
+        max-height="800"
+        stripe
+      >
         <el-table-column label="月份" prop="month" width="100" />
         <el-table-column
           column-key="userName"
@@ -30,7 +37,7 @@
           :filters="filterProductManagerList"
           label="被调整人"
           prop="userName"
-          width="100"
+          width="110"
         />
         <el-table-column
           column-key="type"
@@ -65,7 +72,9 @@
             <span v-show="row.detailType === 2">考核数调整</span>
           </template>
         </el-table-column>
+        <el-table-column label="调整前" prop="beforeQuantity" width="90" />
         <el-table-column label="调整数量" prop="adjustQuantity" width="100" />
+        <el-table-column label="调整后" prop="afterQuantity" width="90" />
         <el-table-column label="OEM" width="100">
           <template #default="{ row }">
             <el-checkbox v-model="row.oem" disabled :false-value="0" :true-value="1" />
@@ -153,7 +162,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { FormInstance, TableColumnCtx } from 'element-plus'
-import { CSSProperties } from 'vue'
+import { computed, CSSProperties } from 'vue'
 import {
   addAdjustDetail,
   deleteAdjustDetail,
@@ -252,6 +261,7 @@ const queryForm = reactive<IGetAdjustDetailReq>({
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const list = ref<IGetAdjustDetail[]>([])
+
 const productManagerList = ref<{ id: number; label: string }[]>([])
 const filterProductManagerList = ref<{ text: string; value: string }[]>([])
 const filterHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
@@ -379,4 +389,5 @@ const deleteDetail = async (row: IGetAdjustDetail) => {
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
 }
+
 </style>

@@ -218,6 +218,13 @@
                 >
                   考核数结账
                 </el-button>
+                <el-button
+                  v-permissions="{ permission: [PerformanceStatisticsPermission.ASSESSMENT_CHECKOUT] }"
+                  type="info"
+                  @click="showVerify"
+                >
+                  结账验证
+                </el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -905,6 +912,26 @@
         <el-button type="primary" @click="handleCheckout">结账</el-button>
       </template>
     </vab-dialog>
+    <!-- 结账验证 -->
+    <vab-dialog v-model="verifyVisible" title="结账验证" width="15%" @close="closeVerify">
+      <el-form label-position="top">
+        <el-form-item label="请选择人员">
+          <el-select v-model="verifyUserIdList" multiple placeholder="请选择人员" style="width: 100%">
+            <el-option v-for="item in productManagerList" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="请选择月份">
+          <el-date-picker v-model="verifyDate" placeholder="请选择月份" style="width: 100%" type="month" value-format="YYYY-MM" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button :loading="verifyLoading" type="primary" @click="handleVerify">验证</el-button>
+      </template>
+    </vab-dialog>
+
+    <!-- 验证结果 -->
+    <verify-result-dialog v-model="verifyResultVisible" :verify-result="verifyResult" />
+
     <!-- 任务明细 -->
     <art-design-task-detail-dialog v-model="artDesignTaskDetailVisible" :list="artDesignTaskDetailList" />
   </div>
@@ -929,6 +956,7 @@ import {
   getUserAttendanceListBySupervisor,
   updateProductManagerAssessment,
   updateProductManagerNoAssessment,
+  verifyCheckout,
 } from '/@/api/devlocal/performanceStatistics'
 import {
   ROLE_BOSS_CODE,
@@ -942,6 +970,7 @@ import {
 import PerformanceStatisticsPermission from '/@/permissions/performanceStatistics'
 import { useAclStore } from '/@/store/modules/acl.ts'
 import {
+  ICheckoutVerifyResp,
   IGetAdjustDetail,
   IGetAssessmentList,
   IGetAssessmentListReq,
@@ -986,6 +1015,47 @@ const showViewDetail = async (row: IGetProductManagerAssessmentList) => {
   detailList.value = data
   viewDetailVisible.value = true
 }
+// 结账验证
+const verifyVisible = ref<boolean>(false)
+const verifyResultVisible = ref<boolean>(false)
+const verifyLoading = ref<boolean>(false)
+const verifyUserIdList = ref<number[]>([])
+const verifyDate = ref<string | null>(null)
+const verifyResult = ref<ICheckoutVerifyResp | null>(null)
+
+const showVerify = async () => {
+  const { data } = await getProductManager()
+  productManagerList.value = data
+  verifyVisible.value = true
+}
+
+const closeVerify = () => {
+  verifyVisible.value = false
+}
+
+const handleVerify = async () => {
+  if (verifyUserIdList.value.length === 0) {
+    $baseMessage('请选择人员！', 'warning')
+    return
+  }
+  if (!verifyDate.value) {
+    $baseMessage('请选择月份！', 'warning')
+    return
+  }
+  verifyLoading.value = true
+  try {
+    const { data } = await verifyCheckout({
+      userIdList: verifyUserIdList.value,
+      checkoutMonth: verifyDate.value,
+    })
+    verifyResult.value = data
+    verifyVisible.value = false
+    verifyResultVisible.value = true
+  } finally {
+    verifyLoading.value = false
+  }
+}
+
 // 考核数结账
 const checkoutVisible = ref<boolean>(false)
 const productManagerList = ref<{ id: number; label: string }[]>([])

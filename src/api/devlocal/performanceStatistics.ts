@@ -5,6 +5,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IAddAdjustDetailReq,
   ICheckoutReq,
+  ICheckoutVerifyResp,
   IGetAdjustDetail,
   IGetAdjustDetailReq,
   IGetAdjustDetailRes,
@@ -196,6 +197,17 @@ export function updateMaximumOverfulfillment(params: { number: number }): Promis
 export function checkoutAssessmentNumber(data: ICheckoutReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/assessment/number/checkout`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 考核数结账验证（只读，检查 before/after 一致性）
+ */
+export function verifyCheckout(data: ICheckoutReq): Promise<{ data: ICheckoutVerifyResp }> {
+  return request({
+    url: `${BASE_API}/assessment/number/checkout/verify`,
     method: 'post',
     data,
   })
