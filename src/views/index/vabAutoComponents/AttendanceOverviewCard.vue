@@ -18,10 +18,11 @@
     >
       <el-table-column label="月份" min-width="100" prop="month" sortable="custom" />
       <el-table-column label="姓名" min-width="100" prop="userName" />
-      <el-table-column label="餐补次数" min-width="100" prop="count" sortable="custom" />
+      <el-table-column label="餐补次数" min-width="110" prop="count" sortable="custom" />
       <el-table-column label="缺卡" min-width="100" prop="sWorkCount" sortable="custom" />
-      <el-table-column label="迟到次数" min-width="100" prop="lateCount" sortable="custom" />
-      <el-table-column label="迟到时长" min-width="100" prop="lateDuration" sortable="custom" />
+      <el-table-column label="补贴工时" min-width="110" prop="overtimeHours" sortable="custom" />
+      <el-table-column label="迟到次数" min-width="110" prop="lateCount" sortable="custom" />
+      <el-table-column label="迟到时长" min-width="110" prop="lateDuration" sortable="custom" />
       <el-table-column
         v-if="roleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || roleCode === ROLE_ECOMMERCEOPERATOR_CODE"
         align="center"

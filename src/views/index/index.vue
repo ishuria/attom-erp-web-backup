@@ -521,6 +521,7 @@ import {
   ROLE_WAREHOUSEMANNAGERlEAD_CODE,
 } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
+import { FBA_CORE_SITE_LIST, SiteEnum, SITE_NAME_MAP } from '/@/const/site'
 import { useUserStore } from '/@/store/modules/user'
 import {
   IGetFrontPageAttendanceOverview,
@@ -1474,14 +1475,11 @@ const fetchProfitSharePreview = async () => {
   profitShareDate.value = data.updateDate
 }
 const siteList = ref<{ id: number; label: string }[]>([])
-const fbaSiteList = ref<{ id: number; label: string }[]>([])
+const fbaSiteList = ref<{ id: number; label: string }[]>([{ id: SiteEnum.ALL, label: SITE_NAME_MAP[SiteEnum.ALL] }, ...FBA_CORE_SITE_LIST])
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
   siteList.value.unshift({ id: -1, label: '全部' })
-  const siteIds = [0, 1, 2, 3, 15]
-  fbaSiteList.value = data.filter((item) => siteIds.includes(item.id))
-  fbaSiteList.value.unshift({ id: -1, label: '全部' })
 }
 onBeforeMount(async () => {
   if (ableViewPerformanceSummaryCard) {

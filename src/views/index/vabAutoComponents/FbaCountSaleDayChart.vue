@@ -166,33 +166,42 @@ const fetchData = async () => {
       return
     }
 
-    // 获取 X 轴数据（后端已排序好，直接取第一个日期的数据即可）
-
     const dates = Object.keys(data)
     if (dates.length === 0) {
       resetChart()
       return
     }
-    const firstDateData = data[dates[0] as keyof typeof data] as any[]
-    if (!Array.isArray(firstDateData) || firstDateData.length === 0) {
+
+    // 收集所有日期中出现的 saleDayRange，保证 X 轴完整
+    const allRanges = new Set<string>()
+    dates.forEach((date) => {
+      const dateData = data[date as keyof typeof data] as any[]
+      if (Array.isArray(dateData)) {
+        dateData.forEach((item: any) => allRanges.add(item.saleDayRange))
+      }
+    })
+    if (allRanges.size === 0) {
       resetChart()
       return
     }
 
-    option.xAxis.data = firstDateData.map((i) => i.saleDayRange)
+    // 固定排序：按区间起始数值排列
+    const rangeOrder = ['0-30', '30-60', '60-90', '90-120', '120-150', '150-180', '180-210', '210-240', '240-270', '270-300', '300-330', '330-360', '>360']
+    option.xAxis.data = rangeOrder.filter((r) => allRanges.has(r))
 
     // 构建多条折线数据
     const series: any[] = []
     const legendData: string[] = []
 
     dates.forEach((date, index) => {
-      const dateData = data[date as keyof typeof data] as any
-      if (!Array.isArray(dateData)) return
+      const dateData = data[date as keyof typeof data] as any[]
+      if (!Array.isArray(dateData) || dateData.length === 0) return
 
       legendData.push(date)
 
-      // 构建该日期的数据
-      const seriesData = dateData.map((item: any) => item.fbaCount)
+      // 按 X 轴顺序对齐数据，缺失的区间补 0
+      const dataMap = new Map(dateData.map((item: any) => [item.saleDayRange, item.fbaCount]))
+      const seriesData = (option.xAxis.data as string[]).map((range) => dataMap.get(range) ?? 0)
 
       const color = colorPalette[index % colorPalette.length]
 
