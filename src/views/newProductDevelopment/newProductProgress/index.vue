@@ -110,9 +110,14 @@
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
+                  <div class="custom-tooltip">
+                    {{ removeHtmlTags(row.progressLog) }}
+                    <span v-if="row.progressLog?.length >= 300">...</span>
+                  </div>
                 </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
+                <div class="multi-line-ellipsis">
+                  {{ removeHtmlTags(row.progressLog) }}
+                </div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -336,9 +341,14 @@
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
+                  <div class="custom-tooltip">
+                    {{ removeHtmlTags(row.progressLog) }}
+                    <span v-if="row.progressLog?.length >= 300">...</span>
+                  </div>
                 </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
+                <div class="multi-line-ellipsis">
+                  {{ removeHtmlTags(row.progressLog) }}
+                </div>
               </el-tooltip>
             </template>
           </el-table-column>
