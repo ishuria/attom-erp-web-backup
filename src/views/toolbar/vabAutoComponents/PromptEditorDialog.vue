@@ -26,7 +26,21 @@
       <div class="dialog-footer">
         <el-button @click="handleClose">取消</el-button>
         <el-button :loading="saving" type="primary" @click="handleSave">保存</el-button>
+        <el-button type="success" @click="handleSaveToNewVersion">保存为新版本</el-button>
       </div>
+    </template>
+  </el-dialog>
+
+  <!-- 备注输入弹窗 -->
+  <el-dialog v-model="remarkDialogVisible" append-to-body title="保存为新版本" width="400px">
+    <el-form>
+      <el-form-item label="版本备注">
+        <el-input v-model="remark" clearable maxlength="200" placeholder="选填，如：测试版A" show-word-limit />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="remarkDialogVisible = false">取消</el-button>
+      <el-button :loading="saving" type="success" @click="handleRemarkConfirm">确认保存</el-button>
     </template>
   </el-dialog>
 </template>
@@ -50,6 +64,7 @@ interface Props {
 interface Emits {
   (e: 'update:modelValue', value: boolean): void
   (e: 'save', data: { prompt: string }): void
+  (e: 'saveToNewVersion', data: { prompt: string; remark: string }): void
 }
 
 const props = defineProps<Props>()
@@ -57,6 +72,8 @@ const emit = defineEmits<Emits>()
 
 const editorContent = ref<string>('')
 const saving = ref<boolean>(false)
+const remarkDialogVisible = ref<boolean>(false)
+const remark = ref<string>('')
 
 const visible = computed({
   get: () => props.modelValue,
@@ -81,10 +98,30 @@ const handleSave = () => {
   })
 }
 
+// 保存为新版本 - 打开备注弹窗
+const handleSaveToNewVersion = () => {
+  if (!editorContent.value.trim()) {
+    ElMessage.warning('请输入提示词内容')
+    return
+  }
+  remark.value = ''
+  remarkDialogVisible.value = true
+}
+
+// 备注弹窗确认
+const handleRemarkConfirm = () => {
+  emit('saveToNewVersion', {
+    prompt: editorContent.value,
+    remark: remark.value,
+  })
+}
+
 // 关闭弹窗
 const handleClose = () => {
   visible.value = false
   editorContent.value = ''
+  remarkDialogVisible.value = false
+  remark.value = ''
 }
 
 // 监听弹窗打开，初始化编辑器内容
@@ -102,6 +139,9 @@ defineExpose({
   setSaving: (value: boolean) => {
     saving.value = value
   },
+  closeRemarkDialog: () => {
+    remarkDialogVisible.value = false
+  },
 })
 </script>
 
@@ -111,6 +151,7 @@ defineExpose({
     margin-bottom: 20px;
   }
 }
+
 
 .dialog-footer {
   display: flex;

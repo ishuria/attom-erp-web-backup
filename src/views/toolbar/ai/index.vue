@@ -67,8 +67,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="100">
+      <el-table-column label="操作" width="200">
         <template #default="{ row }">
+          <el-button text type="primary" @click="handleShowHistoryList(row)">历史</el-button>
+
           <el-button text type="primary" @click="handleEdit(row)">修改</el-button>
         </template>
       </el-table-column>
@@ -118,7 +120,53 @@
     </el-dialog>
 
     <!-- 编辑提示词弹窗组件 -->
-    <prompt-editor-dialog v-model="editorDialogVisible" :current-row="currentEditRow" :role-list="roleList" @save="handleSavePrompt" />
+    <prompt-editor-dialog
+      ref="editorDialogRef"
+      v-model="editorDialogVisible"
+      :current-row="currentEditRow"
+      :role-list="roleList"
+      @save="handleSavePrompt"
+      @save-to-new-version="handleSaveToNewVersion"
+    />
+
+    <!-- 历史版本抽屉 -->
+    <el-drawer v-model="historyDrawerVisible" size="700px" title="历史版本" @close="historyList = []">
+      <el-table v-loading="historyLoading" border :data="historyList" :header-cell-style="{ textAlign: 'center' }">
+        <el-table-column align="center" label="版本" min-width="70">
+          <template #default="{ row }">
+            <el-tag :type="row.isCurrent ? 'success' : 'info'">v{{ row.versionNo }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="保存时间" min-width="170" prop="createTime" />
+        <el-table-column label="备注" min-width="120" prop="remark" show-overflow-tooltip>
+          <template #default="{ row }">{{ row.remark || '—' }}</template>
+        </el-table-column>
+        <el-table-column align="center" label="操作" min-width="250">
+          <template #default="{ row }">
+            <el-button text type="primary" @click="handlePreviewHistory(row)">预览</el-button>
+            <el-popconfirm :title="`确认回滚到 v${row.versionNo} 吗？`" @confirm="handleRollback(row)">
+              <template #reference>
+                <el-button text type="success">回滚</el-button>
+              </template>
+            </el-popconfirm>
+            <el-popconfirm title="确认删除该版本吗？" @confirm="handleDeleteHistory(row)">
+              <template #reference>
+                <el-button text type="danger">删除</el-button>
+              </template>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
+      </el-table>
+    </el-drawer>
+
+    <!-- 历史版本预览弹窗 -->
+    <el-dialog v-model="previewDialogVisible" title="提示词预览" width="60%">
+      <pre class="history-preview-content">{{ previewPrompt }}</pre>
+      <template #footer></template>
+    </el-dialog>
   </div>
 </template>
 
@@ -130,7 +178,15 @@ import githubTheme from '@kangc/v-md-editor/lib/theme/github'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
 import type { FormInstance, FormRules } from 'element-plus'
 import { debounce } from 'lodash-es'
-import { addAiPrompt, getAiPromptList, updateUserPrompt } from '/@/api/devlocal/aiPrompt'
+import {
+  addAiPrompt,
+  deletePromptConfigHistory,
+  getAiPromptList,
+  getPromptConfigHistory,
+  rollbackPromptConfig,
+  savePromptConfigVersion,
+  updateUserPrompt,
+} from '/@/api/devlocal/aiPrompt'
 import { getAllList } from '/@/api/devlocal/role'
 import { getPersonLevelDropdownList } from '/@/api/devlocal/user'
 import { ROLE_BOSS_CODE } from '/@/const/role'
@@ -146,6 +202,7 @@ defineOptions({
 
 const tableRef = ref<any>()
 const addFormRef = ref<FormInstance>()
+const editorDialogRef = ref<any>()
 const list = ref<any[]>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
@@ -157,6 +214,16 @@ const currentRoleCode = useAclStore().getRole[0]
 
 // 当前编辑的行数据
 const currentEditRow = ref<any>(null)
+
+// 历史版本
+const historyDrawerVisible = ref<boolean>(false)
+const historyLoading = ref<boolean>(false)
+const historyList = ref<any[]>([])
+const historyCurrentRow = ref<any>(null)
+
+// 预览
+const previewDialogVisible = ref<boolean>(false)
+const previewPrompt = ref<string>('')
 
 const queryForm = reactive<any>({
   pageNo: 1,
@@ -314,7 +381,6 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
 const handleSavePrompt = async (data: { prompt: string }) => {
   try {
     submitLoading.value = true
-    // 使用当前编辑行的 id 和新的 prompt 内容
     await updateUserPrompt({
       id: currentEditRow.value.id,
       prompt: data.prompt,
@@ -327,6 +393,78 @@ const handleSavePrompt = async (data: { prompt: string }) => {
     console.error('修改失败:', error)
   } finally {
     submitLoading.value = false
+  }
+}
+
+// 保存为新版本（从编辑弹窗组件触发）
+const handleSaveToNewVersion = async (data: { prompt: string; remark: string }) => {
+  try {
+    submitLoading.value = true
+    editorDialogRef.value?.setSaving(true)
+    await savePromptConfigVersion({
+      configId: currentEditRow.value.id,
+      prompt: data.prompt,
+      remark: data.remark,
+    })
+    $baseMessage('保存为新版本成功', 'success')
+    editorDialogRef.value?.closeRemarkDialog()
+    editorDialogVisible.value = false
+    currentEditRow.value = null
+    fetchData()
+  } catch (error) {
+    console.error('保存版本失败:', error)
+  } finally {
+    submitLoading.value = false
+    editorDialogRef.value?.setSaving(false)
+  }
+}
+
+const handleShowHistoryList = async (row: any) => {
+  historyCurrentRow.value = row
+  historyDrawerVisible.value = true
+  try {
+    historyLoading.value = true
+    const { data } = await getPromptConfigHistory(row.id)
+    // 最大版本号即为当前生效版本
+    const maxVersionNo = Math.max(...(data || []).map((item: any) => item.versionNo), 0)
+    historyList.value = (data || []).map((item: any) => ({
+      ...item,
+      isCurrent: item.versionNo === maxVersionNo,
+    }))
+  } catch (error) {
+    console.error('获取历史版本失败:', error)
+  } finally {
+    historyLoading.value = false
+  }
+}
+
+const handlePreviewHistory = (row: any) => {
+  previewPrompt.value = row.prompt
+  previewDialogVisible.value = true
+}
+
+const handleRollback = async (row: any) => {
+  try {
+    await rollbackPromptConfig({
+      configId: historyCurrentRow.value.id,
+      historyId: row.id,
+    })
+    $baseMessage(`已回滚到 v${row.versionNo}`, 'success')
+    // 重新加载历史列表（因为回滚会生成新版本记录）
+    await handleShowHistoryList(historyCurrentRow.value)
+    fetchData()
+  } catch (error) {
+    console.error('回滚失败:', error)
+  }
+}
+
+const handleDeleteHistory = async (row: any) => {
+  try {
+    await deletePromptConfigHistory(row.id)
+    $baseMessage('删除成功', 'success')
+    historyList.value = historyList.value.filter((item) => item.id !== row.id)
+  } catch (error) {
+    console.error('删除失败:', error)
   }
 }
 
@@ -501,5 +639,18 @@ onMounted(() => {
   max-width: 100%;
   white-space: pre-wrap;
   word-break: break-all;
+}
+
+.history-preview-content {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--el-fill-color-light);
+  border-radius: var(--el-border-radius-base);
 }
 </style>

@@ -44,3 +44,46 @@ export function deleteAiPrompt(id: number) {
     method: 'delete',
   })
 }
+
+/**
+ * 保存为新版本
+ */
+export function savePromptConfigVersion(data: { configId: number; prompt: string; remark?: string }) {
+  return request({
+    url: `${BASE_API}/prompt/config/save-version`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 查询历史版本列表
+ */
+export function getPromptConfigHistory(configId: number) {
+  return request({
+    url: `${BASE_API}/prompt/config/history`,
+    method: 'get',
+    params: { configId },
+  })
+}
+
+/**
+ * 删除历史版本
+ */
+export function deletePromptConfigHistory(id: number) {
+  return request({
+    url: `${BASE_API}/prompt/config/history/${id}`,
+    method: 'delete',
+  })
+}
+
+/**
+ * 回滚历史版本
+ */
+export function rollbackPromptConfig(data: { configId: number; historyId: number }) {
+  return request({
+    url: `${BASE_API}/prompt/config/rollback`,
+    method: 'post',
+    data,
+  })
+}
