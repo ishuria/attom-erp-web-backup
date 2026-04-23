@@ -352,6 +352,11 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.table-wrapper {
+  background: #f5f7fa;
+  padding: 16px;
+}
+
 // ── 统计卡片 ──────────────────────────────────────
 .stat-section {
   margin-bottom: 16px;
@@ -362,7 +367,6 @@ onMounted(async () => {
   width: 420px;
   overflow: hidden;
   background: #fff;
-  border: 1px solid #e8e8e8;
   border-radius: 10px;
   border: none;
 
@@ -476,7 +480,6 @@ onMounted(async () => {
   overflow: visible;
   background: #fff;
   border-radius: 10px;
-  border: 1px solid #e8e8e8;
 
   border: none;
 

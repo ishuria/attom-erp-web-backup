@@ -53,9 +53,9 @@
 </template>
 
 <script lang="ts" setup>
-import { flexColumnWidth } from '~/src/utils/tableColum'
 import { queryOperationStockPriceCalcLogList } from '/@/api/devlocal/operationAutoMation'
 import { IOperationStockPriceCalcLog } from '/@/type/storeOperation/operationStock.ts'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'VabDialogOperationStockPriceCalcLog',
