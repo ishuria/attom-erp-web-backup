@@ -182,3 +182,45 @@ export interface IUpdateSeasonalCoefficientReq {
   novPeakDay?: number
   decPeakDay?: number
 }
+
+export interface ISeasonalCoefficientDashboardReq {
+  platformId: number
+  site: number
+  kindId: number
+  month: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  orderByField?: string
+  orderDirection?: string
+}
+
+export interface ISeasonalCoefficientDashboardItem {
+  month: string
+  salesVolume: number
+  ratio: number
+  actual: number
+  estimate: number
+  diff: number
+  kindId: number
+  asin: string
+  asinUrl: string
+  kindName: string
+}
+
+export interface ISeasonalCoefficientDashboardRes {
+  data: {
+    productCount: number
+    barChart: { x: string; y: number }[]
+    list: {
+      tota: number
+      list: ISeasonalCoefficientDashboardItem[]
+    }
+    top10List: ISeasonalCoefficientDashboardItem[]
+  }
+}
+
+export interface IPlatFormItem {
+  platformId: number
+  platformName: string
+}

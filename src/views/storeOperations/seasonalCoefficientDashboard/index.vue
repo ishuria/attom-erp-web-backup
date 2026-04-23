@@ -1,0 +1,609 @@
+<template>
+  <div class="comprehensive-table-container">
+    <!-- 筛选区 -->
+    <vab-query-form>
+      <vab-query-form-left-panel>
+        <el-form inline>
+          <el-form-item label="平台">
+            <el-select v-model="queryForm.platformId" disabled placeholder="请选择平台" style="width: 120px" @change="handlePlatformChange">
+              <el-option v-for="item in platformList" :key="item.platformId" :label="item.platformName" :value="item.platformId" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="站点">
+            <el-select
+              v-model="queryForm.site"
+              :disabled="!queryForm.platformId"
+              placeholder="请选择站点"
+              style="width: 160px"
+              @change="handleSiteChange"
+            >
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="种类">
+            <el-select
+              v-model="queryForm.kindId"
+              :disabled="kindList.length === 0"
+              placeholder="请选择种类"
+              style="width: 150px"
+              @change="fetchData"
+            >
+              <el-option v-for="item in kindList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="月份">
+            <el-date-picker
+              v-model="pickerMonths"
+              clearable
+              placeholder="请选择月份"
+              style="width: 150px"
+              type="month"
+              value-format="MM"
+              @change="fetchData"
+            />
+          </el-form-item>
+        </el-form>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline @submit.prevent>
+          <el-form-item>
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="fetchData"
+              @keydown.enter="fetchData"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="loading" type="primary" @click="fetchData" />
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+
+    <!-- 统计卡片 -->
+    <div class="stat-section">
+      <div class="stat-card" :class="{ 'stat-card--alert': productCount != null && productCount > 0 }">
+        <div class="stat-card-content">
+          <div class="stat-card-header">
+            <span class="stat-name">偏差产品数</span>
+            <span class="stat-threshold">≥ 20%</span>
+            <el-tooltip content="偏差率绝对值超过 20% 的产品数量" placement="top">
+              <el-icon class="stat-help"><question-filled /></el-icon>
+            </el-tooltip>
+            <el-icon class="stat-warn-icon" :class="{ 'stat-warn-icon--alert': productCount != null && productCount > 0 }">
+              <warning />
+            </el-icon>
+          </div>
+          <div class="stat-number" :class="{ 'stat-number--alert': productCount != null && productCount > 0 }">
+            <el-skeleton v-if="loading" animated>
+              <template #template>
+                <el-skeleton-item style="width: 60px; height: 40px" variant="text" />
+              </template>
+            </el-skeleton>
+            <template v-else>{{ productCount ?? '—' }}</template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 柱状图 + Top10 -->
+    <el-row class="chart-row" :gutter="16">
+      <!-- 偏差率分布 -->
+      <el-col :span="15">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">偏差率分布（产品数量）</span>
+          </div>
+          <div v-loading="loading" class="chart-body">
+            <vab-chart v-if="hasBarData" :option="barChartOption" style="height: 100%; width: 100%" />
+            <el-empty v-else description="暂无数据" :image-size="60" />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- Top10 排行榜 -->
+      <el-col :span="9">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Top 10 高偏差产品</span>
+          </div>
+          <div v-loading="loading" class="ranking-body">
+            <div v-if="!top10List.length && !loading" class="ranking-empty">暂无数据</div>
+            <div v-for="(row, index) in top10List" :key="row.asin + index" class="ranking-row">
+              <span class="rank-badge" :class="`rank-badge--${index < 2 ? index + 1 : 'rest'}`">{{ index + 1 }}</span>
+              <div class="rank-info">
+                <el-link v-if="row.asinUrl" :href="row.asinUrl" target="_blank" type="primary">{{ row.asin }}</el-link>
+                <span v-else class="rank-asin">{{ row.asin }}</span>
+                <span class="rank-kind">{{ row.kindName }}</span>
+              </div>
+              <span class="rank-diff" :class="row.diff != null && Math.abs(row.diff) >= 20 ? 'rank-diff--danger' : 'rank-diff--safe'">
+                {{ row.diff != null ? (row.diff > 0 ? '+' : '') + Number(row.diff).toFixed(2) + '%' : '—' }}
+                <el-icon v-if="row.diff != null" :size="10">
+                  <component :is="row.diff >= 0 ? 'ArrowUp' : 'ArrowDown'" />
+                </el-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <!-- 详情表格 -->
+    <div class="panel detail-panel">
+      <div class="panel-head">
+        <span class="panel-title">季节系数详情</span>
+      </div>
+      <el-table v-loading="loading" :data="tableList" style="width: 100%" @sort-change="handleSortChange">
+        <el-table-column label="ASIN" min-width="110">
+          <template #default="{ row }">
+            <el-link v-if="row.asinUrl" :href="row.asinUrl" target="_blank" type="primary">{{ row.asin }}</el-link>
+            <span v-else>{{ row.asin }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="品类" min-width="130" prop="kindName" show-overflow-tooltip />
+        <el-table-column label="系统系数" min-width="100" prop="estimate" />
+        <el-table-column label="实际系数" min-width="100" prop="actual" />
+        <el-table-column label="偏差率" min-width="100" sortable="custom">
+          <template #default="{ row }">
+            <span :style="getDiffStyle(row.diff)">{{ formatPercent(row.diff) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="偏差图示" min-width="150">
+          <template #default="{ row }">
+            <div class="diff-viz-track">
+              <div class="diff-viz-fill" :style="getDiffBarStyle(row.diff)" />
+            </div>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" />
+        </template>
+      </el-table>
+      <div class="pagination">
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { Search, Warning } from '@element-plus/icons-vue'
+import {
+  getSeasonalCoefficientDashboard,
+  getSeasonalCoefficientKindList,
+  getSeasonalCoefficientPlatformList,
+  getSeasonalCoefficientSiteListByPlatform,
+} from '/@/api/devlocal/seasonalCoefficient'
+import type {
+  IPlatFormItem,
+  ISeasonalCoefficientDashboardItem,
+  ISeasonalCoefficientDashboardReq,
+  ISiteList,
+} from '/@/type/storeOperation/seasonalCoefficientType'
+
+defineOptions({ name: 'SeasonalCoefficientDashboard' })
+
+const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0')
+const pickerMonths = ref<string | null>(currentMonth)
+watch(pickerMonths, (val) => {
+  queryForm.month = val ? Number(val) : 0
+})
+
+const loading = ref(false)
+const platformList = ref<IPlatFormItem[]>([])
+const siteList = ref<ISiteList[]>([])
+const kindList = ref<ISiteList[]>([])
+const productCount = ref<number | null>(null)
+const top10List = ref<ISeasonalCoefficientDashboardItem[]>([])
+const tableList = ref<ISeasonalCoefficientDashboardItem[]>([])
+const total = ref(0)
+
+const queryForm = reactive<ISeasonalCoefficientDashboardReq>({
+  platformId: 0,
+  site: 0,
+  kindId: 0,
+  month: new Date().getMonth() + 1,
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  orderByField: 'diff',
+  orderDirection: 'desc',
+})
+
+const barChartOption = reactive<any>({
+  grid: { top: 50, right: 60, bottom: 30, left: 60 },
+  tooltip: { trigger: 'axis' },
+  xAxis: {
+    type: 'category',
+    data: [],
+    name: '偏差率',
+    nameLocation: 'end',
+    nameTextStyle: { color: '#8c8c8c', fontSize: 12 },
+    axisLabel: { fontSize: 11, color: '#595959' },
+    axisLine: { lineStyle: { color: '#e8e8e8' } },
+    axisTick: { show: false },
+  },
+  yAxis: {
+    type: 'value',
+    name: '产品数量',
+    nameTextStyle: { color: '#8c8c8c', fontSize: 12 },
+    minInterval: 1,
+    axisLabel: { fontSize: 11, color: '#595959' },
+    splitLine: { lineStyle: { color: '#f0f0f0', type: 'dashed' } },
+  },
+  series: [
+    {
+      type: 'bar',
+      data: [],
+      barMaxWidth: 48,
+      label: { show: true, position: 'top', fontSize: 12, color: '#595959' },
+    },
+  ],
+})
+
+const hasBarData = computed(() => barChartOption.xAxis.data?.length > 0)
+
+const formatPercent = (val: number | null | undefined) => {
+  if (val == null) return '-'
+  return `${val > 0 ? '+' : ''}${Number(val).toFixed(2)}%`
+}
+
+const getDiffStyle = (val: number | null | undefined) => {
+  if (val == null) return {}
+  if (Math.abs(val) >= 20) return { color: '#e53935', fontWeight: '600' }
+  return { color: '#52c41a' }
+}
+
+const getDiffBarStyle = (diff: number | null | undefined) => {
+  if (diff == null) return {}
+  return { width: Math.min(Math.abs(diff), 100) + '%' }
+}
+
+const handlePlatformChange = async (platformId: number) => {
+  queryForm.site = 0
+  queryForm.kindId = 0
+  siteList.value = []
+  kindList.value = []
+  if (!platformId) return
+  const { data } = await getSeasonalCoefficientSiteListByPlatform(platformId)
+  siteList.value = data
+}
+
+const handleSiteChange = async (site: number) => {
+  queryForm.kindId = 0
+  kindList.value = []
+  if (site == null) return
+  const { data } = await getSeasonalCoefficientKindList(site)
+  kindList.value = data
+  kindList.value.unshift({ id: 0, label: '全部种类' })
+  await fetchData()
+}
+
+const fetchData = async () => {
+  loading.value = true
+  try {
+    const { data } = await getSeasonalCoefficientDashboard(queryForm)
+    productCount.value = data.productCount
+    top10List.value = data.top10List || []
+    tableList.value = data.list?.list || []
+    total.value = data.list?.tota || 0
+    barChartOption.xAxis.data = (data.barChart || []).map((item: any) => item.x)
+    barChartOption.series[0].data = (data.barChart || []).map((item: any) => item.y)
+    // 0~10%、10~20% 绿色；20~30%、30~50% 橙色；>50% 红色
+    const colors = ['#22c55e', '#22c55e', '#f97316', '#f97316', '#ef4444']
+    barChartOption.series[0].itemStyle = {
+      color: (params: any) => colors[params.dataIndex] ?? '#ef4444',
+      borderRadius: [3, 3, 0, 0],
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleCurrentChange = (page: number) => {
+  queryForm.pageNo = page
+  fetchData()
+}
+
+const handleSizeChange = (size: number) => {
+  queryForm.pageSize = size
+  queryForm.pageNo = 1
+  fetchData()
+}
+const handleSortChange = ({ prop, order }: { prop: string | null; order: string | null }) => {
+  const directionMap: Record<string, string> = {
+    ascending: 'asc',
+    descending: 'desc',
+  }
+
+  queryForm.orderByField = prop ? prop : ''
+  queryForm.orderDirection = order ? (directionMap[order] ?? '') : ''
+  fetchData()
+}
+
+onMounted(async () => {
+  const { data } = await getSeasonalCoefficientPlatformList()
+  platformList.value = data
+  if (!data.length) return
+  queryForm.platformId = data[0].platformId
+  const { data: sites } = await getSeasonalCoefficientSiteListByPlatform(data[0].platformId)
+  siteList.value = sites
+  if (!sites.length) return
+  queryForm.site = sites[0].id
+  await handleSiteChange(sites[0].id)
+})
+</script>
+
+<style lang="scss" scoped>
+// ── 统计卡片 ──────────────────────────────────────
+.stat-section {
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  position: relative;
+  width: 380px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  cursor: default;
+  transition:
+    box-shadow 0.25s,
+    transform 0.25s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &--alert {
+    border-color: #ffd6d5;
+    background: linear-gradient(135deg, #fff 40%, #fff5f5 100%);
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(229, 57, 53, 0.1);
+    }
+  }
+
+  &-content {
+    padding: 14px 16px 16px;
+  }
+
+  &-header {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .stat-name {
+      font-size: 13px;
+      color: #595959;
+    }
+
+    .stat-threshold {
+      padding: 1px 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #e53935;
+      background: #fff1f0;
+      border: 1px solid #ffd6d5;
+      border-radius: 8px;
+    }
+
+    .stat-help {
+      font-size: 13px;
+      color: #bfbfbf;
+      cursor: help;
+    }
+
+    .stat-warn-icon {
+      margin-left: auto;
+      font-size: 18px;
+      color: #d9d9d9;
+      transition: color 0.3s;
+
+      &--alert {
+        color: #e53935;
+        animation: warn-pulse 2s ease-in-out infinite;
+      }
+    }
+  }
+
+  .stat-number {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1;
+    color: #bfbfbf;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s;
+
+    &--alert {
+      color: #e53935;
+    }
+  }
+}
+
+@keyframes warn-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+// ── 等高行 ────────────────────────────────────────
+.chart-row {
+  margin-bottom: 16px;
+
+  :deep(.el-col) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// ── 通用面板 ──────────────────────────────────────
+.panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: visible;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+
+  &-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  &-title {
+    font-weight: 600;
+    color: #262626;
+  }
+}
+
+// ── 柱状图 ────────────────────────────────────────
+.chart-body {
+  flex: 1;
+  min-height: 200px;
+  padding: 8px 8px 12px;
+}
+
+// ── Top10 排行榜 ──────────────────────────────────
+.ranking {
+  &-body {
+    flex: 1;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e8e8e8;
+      border-radius: 2px;
+    }
+  }
+
+  &-empty {
+    padding: 40px 0;
+    color: #999;
+    text-align: center;
+  }
+
+  &-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 7px 16px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background 0.15s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #fafafa;
+    }
+  }
+}
+
+.rank {
+  &-badge {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    font-weight: 700;
+    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+
+    &--1 {
+      background: #fffbe6;
+      color: #d48806;
+    }
+    &--2 {
+      background: #f5f5f5;
+      color: #595959;
+    }
+    &--rest {
+      color: #bfbfbf;
+    }
+  }
+
+  &-info {
+    display: flex;
+    flex: 1;
+    gap: 6px;
+    align-items: baseline;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  &-kind {
+    color: #8c8c8c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-diff {
+    display: flex;
+    flex-shrink: 0;
+    gap: 2px;
+    align-items: center;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+
+    &--danger {
+      color: #e53935;
+    }
+    &--safe {
+      color: #52c41a;
+    }
+  }
+}
+
+// ── 详情表格 ──────────────────────────────────────
+.detail-panel {
+  :deep(.el-table__header-wrapper th) {
+    background-color: #f7f8fa;
+    color: #595959;
+    font-weight: 600;
+  }
+}
+
+.diff-viz-track {
+  width: 100%;
+  height: 6px;
+  background: #f5f5f5;
+  border-radius: 3px;
+
+  .diff-viz-fill {
+    height: 100%;
+    background: #e53935;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+}
+.pagination {
+  margin-bottom: 20px;
+}
+</style>
