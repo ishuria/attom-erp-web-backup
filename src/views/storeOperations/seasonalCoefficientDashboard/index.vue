@@ -51,12 +51,12 @@
               v-model.trim="queryForm.keyWord"
               clearable
               placeholder="请输入搜索关键词"
-              @input="fetchData"
-              @keydown.enter="fetchData"
+              @input="fetchDataDebounce"
+              @keydown.enter="fetchDataDebounce"
             />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="loading" type="primary" @click="fetchData" />
+            <el-button :icon="Search" :loading="loading" type="primary" @click="fetchDataDebounce" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
@@ -176,6 +176,7 @@
 
 <script lang="ts" setup>
 import { Search, Warning } from '@element-plus/icons-vue'
+import { debounce } from 'lodash-es'
 import {
   getSeasonalCoefficientDashboard,
   getSeasonalCoefficientKindList,
@@ -307,7 +308,7 @@ const fetchData = async () => {
     loading.value = false
   }
 }
-
+const fetchDataDebounce = debounce(fetchData, 300)
 const handleCurrentChange = (page: number) => {
   queryForm.pageNo = page
   fetchData()
@@ -350,11 +351,14 @@ onMounted(async () => {
 
 .stat-card {
   position: relative;
-  width: 380px;
+  width: 420px;
   overflow: hidden;
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 10px;
+  border: none;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   cursor: default;
   transition:
     box-shadow 0.25s,
@@ -419,7 +423,8 @@ onMounted(async () => {
   }
 
   .stat-number {
-    font-size: 38px;
+    font-size: 44px;
+    letter-spacing: 1px;
     font-weight: 700;
     line-height: 1;
     color: #bfbfbf;
@@ -444,30 +449,41 @@ onMounted(async () => {
 
 // ── 等高行 ────────────────────────────────────────
 .chart-row {
-  margin-bottom: 16px;
-
+  margin-bottom: 20px;
   :deep(.el-col) {
     display: flex;
     flex-direction: column;
   }
 }
 
+.panel + .panel {
+  margin-top: 16px;
+}
 // ── 通用面板 ──────────────────────────────────────
 .panel {
   display: flex;
+
   flex-direction: column;
   flex: 1;
   overflow: visible;
   background: #fff;
-  border: 1px solid #e8e8e8;
   border-radius: 10px;
+  border: 1px solid #e8e8e8;
 
+  border: none;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
   &-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px 12px;
     border-bottom: 1px solid #f0f0f0;
+
+    padding: 16px;
   }
 
   &-title {
@@ -480,7 +496,7 @@ onMounted(async () => {
 .chart-body {
   flex: 1;
   min-height: 200px;
-  padding: 8px 8px 12px;
+  padding: 12px 16px;
 }
 
 // ── Top10 排行榜 ──────────────────────────────────
@@ -580,13 +596,18 @@ onMounted(async () => {
     }
   }
 }
-
+.ranking-row:hover {
+  background: #f6faff;
+}
 // ── 详情表格 ──────────────────────────────────────
 .detail-panel {
   :deep(.el-table__header-wrapper th) {
-    background-color: #f7f8fa;
-    color: #595959;
-    font-weight: 600;
+    background-color: #fafafa;
+
+    font-weight: 500;
+  }
+  :deep(.el-table__body tr:hover > td) {
+    background: #fafcff !important;
   }
 }
 
@@ -603,6 +624,7 @@ onMounted(async () => {
     transition: width 0.4s ease;
   }
 }
+
 .pagination {
   margin-bottom: 20px;
 }
