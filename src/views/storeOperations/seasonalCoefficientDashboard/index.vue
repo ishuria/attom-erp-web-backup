@@ -143,6 +143,11 @@
           </template>
         </el-table-column>
         <el-table-column label="品类" min-width="130" prop="kindName" show-overflow-tooltip />
+        <el-table-column label="月份" min-width="100" prop="month">
+          <template #default="{ row }">
+            {{ formatMonth(row.month) }}
+          </template>
+        </el-table-column>
         <el-table-column label="系统系数" min-width="100" prop="estimate" />
         <el-table-column label="实际系数" min-width="100" prop="actual" />
         <el-table-column label="偏差率" min-width="100" sortable="custom">
@@ -197,7 +202,10 @@ const pickerMonths = ref<string | null>(currentMonth)
 watch(pickerMonths, (val) => {
   queryForm.month = val ? Number(val) : 0
 })
-
+const formatMonth = (month: string | number) => {
+  if (!month) return '-'
+  return `${Number(month)}月`
+}
 const loading = ref(false)
 const platformList = ref<IPlatFormItem[]>([])
 const siteList = ref<ISiteList[]>([])
