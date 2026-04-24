@@ -81,7 +81,7 @@ export const useAiStore = defineStore('ai', {
     },
     activeConversationBusyState(state) {
       const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
-      return key ? state.conversationBusyMap[key] ?? null : null
+      return key ? (state.conversationBusyMap[key] ?? null) : null
     },
     // 没有激活会话或请求进行中时，不允许发送。
     canSend(state) {
@@ -370,7 +370,12 @@ export const useAiStore = defineStore('ai', {
         await sleep(interval)
       }
 
-      this.failConversationBusy(conversationId, '标题优化结果等待超时，请稍后重新进入会话查看。')
+      const busyState = this.conversationBusyMap[key]
+      const timeoutMessage =
+        busyState?.reason === 'evaluation-research-report'
+          ? 'AI调研报告结果等待超时，请稍后重新进入会话查看。'
+          : '标题优化结果等待超时，请稍后重新进入会话查看。'
+      this.failConversationBusy(conversationId, timeoutMessage)
     },
     failConversationBusy(conversationId: number | string, errorMessage: string) {
       const key = String(conversationId)

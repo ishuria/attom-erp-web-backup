@@ -1,7 +1,7 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import type { CreateConversationPayload } from '/@/type/ai/chat'
+import type { CreateConversationPayload, EvaluationResearchReportPayload } from '/@/type/ai/chat'
 
 const AI_BASE_API = `${BASE_API}/ai`
 
@@ -23,6 +23,17 @@ export const getAiConversationList = () => {
 export const createAiConversation = (data?: CreateConversationPayload) => {
   return request({
     url: `${AI_BASE_API}/conversations/add`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 新款评估-生成 AI 调研报告会话
+ */
+export const createEvaluationResearchReportConversation = (data: EvaluationResearchReportPayload) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/evaluation/add`,
     method: 'post',
     data,
   })

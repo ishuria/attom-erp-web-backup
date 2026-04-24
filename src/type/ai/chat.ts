@@ -16,7 +16,7 @@ export interface ChatConversation {
 }
 
 export interface ChatConversationBusyState {
-  reason: 'chat' | 'title-optimization'
+  reason: 'chat' | 'title-optimization' | 'evaluation-research-report'
   message: string
   placeholderMessageId?: number | string
 }
@@ -24,6 +24,15 @@ export interface ChatConversationBusyState {
 export interface CreateConversationPayload {
   operationSkuId?: number | string
   [key: string]: any
+}
+
+export interface EvaluationResearchReportPayload {
+  evaluationId: number
+  productName: string
+  competitorAsin?: string
+  coreKeyWord?: string
+  count: number
+  userIdea?: string
 }
 
 export interface CreateConversationOptions {

@@ -121,6 +121,9 @@
                 <el-dropdown-item @click="toUpdateEvaluation(row)">
                   <el-link type="primary" underline="never">查看和修改</el-link>
                 </el-dropdown-item>
+                <el-dropdown-item @click="showAIReport(row)">
+                  <el-link type="primary" underline="never">生成AI调研报告</el-link>
+                </el-dropdown-item>
                 <el-dropdown-item @click="cliekFontSearchKeyWord(row)">
                   <el-link v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }" type="primary" underline="never">
                     关键词趋势
@@ -153,6 +156,13 @@
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
+    />
+
+    <!-- 生成AI调研报告 -->
+    <a-i-report-form-dialog
+      v-model:visible="aiReportVisible"
+      :evaluation-id="aiReportRow?.idNo ?? null"
+      :product-name="aiReportRow?.amazonFrontendKeywords ?? ''"
     />
 
     <!-- 关键词趋势图表 -->
@@ -486,6 +496,14 @@ const queryForm = reactive<IEvaluationQueryReq>({
 })
 
 const fixed = ref<string>('right')
+
+const aiReportVisible = ref<boolean>(false)
+const aiReportRow = ref<IEvaluation | null>(null)
+
+const showAIReport = (row: IEvaluation) => {
+  aiReportRow.value = row
+  aiReportVisible.value = true
+}
 
 /**
  * 获取初始新款评估数据
