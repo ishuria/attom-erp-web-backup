@@ -115,7 +115,7 @@
             </el-tooltip>
           </template>
           <template v-else-if="col.prop === 'anomalyCount'">
-            <el-tooltip content="订发差值 - 总待售后数 - 未到货数" placement="top">
+            <el-tooltip content="订发差值 - 总待售后数 - 未到货数 - 未装箱数" placement="top">
               <span>
                 异常数
                 <el-icon><question-filled /></el-icon>
@@ -804,7 +804,7 @@ const getOrderDiffCount = (row: InventoryCountItem) =>
   (Number(row.totalOrderCount) || 0) + (Number(row.adjustCount) || 0) - (Number(row.totalSendCount) || 0)
 
 const getAnomalyCount = (row: InventoryCountItem) =>
-  getOrderDiffCount(row) - (Number(getTotalAfterCount(row)) || 0) - (Number(row.notYetArrived) || 0)
+  getOrderDiffCount(row) - (Number(getTotalAfterCount(row)) || 0) - (Number(row.notYetArrived) || 0) - (Number(row.noEncasementCount) || 0)
 
 const getGroupLeadRow = (row: InventoryCountTableRow) => tableData.value.find((item) => item.parentId === row.parentId) || row
 
