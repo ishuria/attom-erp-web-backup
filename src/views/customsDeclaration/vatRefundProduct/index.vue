@@ -255,6 +255,7 @@
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :page-sizes="[20, 50, 100, 400]"
           :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
@@ -461,6 +462,7 @@
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :page-sizes="[20, 50, 100, 400]"
           :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
