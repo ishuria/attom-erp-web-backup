@@ -121,6 +121,17 @@ export function checkPlagiarisme(params: { amazonFrontendKeywords: string; amazo
     params,
   })
 }
+
+/**
+ * 获取国家列表
+ * @returns Promise
+ */
+export function getCountryList(): Promise<{ data: { countryId: number; countryName: string }[] }> {
+  return request({
+    url: `${BASE_API}/country/list`,
+    method: 'get',
+  })
+}
 /**
  * 复制新款评估
  * @param params 参数

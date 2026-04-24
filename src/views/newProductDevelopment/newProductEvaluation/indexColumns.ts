@@ -20,6 +20,11 @@ export const indexColumns: ColumnConfig[] = [
     minWidth: 115,
   },
   {
+    label: '国家',
+    prop: 'countryDisplay',
+    minWidth: 115,
+  },
+  {
     label: '中文品名',
     prop: 'productNameZh',
     minWidth: 100,

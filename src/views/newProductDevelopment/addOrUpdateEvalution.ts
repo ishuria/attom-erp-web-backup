@@ -2,6 +2,7 @@ import type { FormRules } from 'element-plus'
 
 export const rules = reactive<FormRules<any>>({
   productSource: [{ required: true, message: '产品来源是必填项', trigger: 'blur' }],
+  countryId: [{ required: true, message: '国家是必填项', trigger: 'change' }],
   productNameZh: [
     {
       required: true,
