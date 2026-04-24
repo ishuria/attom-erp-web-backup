@@ -433,6 +433,7 @@
 <script lang="ts" setup>
 import { CopyDocument, Plus, QuestionFilled, RefreshRight, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import {
   addInventoryAdjust,
   getInventoryAdjustPackingTaskList,
@@ -1620,9 +1621,6 @@ watch(
 .handle {
   cursor: grab;
 }
-.disabled-handle {
-  cursor: not-allowed;
-}
 .icon-dis {
   padding: 6px;
 }
@@ -1634,5 +1632,8 @@ watch(
 .icon-hover:hover {
   color: var(--el-color-primary);
   background-color: #f2f2f2; /* 浅灰色背景 */
+}
+.disabled-handle {
+  cursor: not-allowed;
 }
 </style>
