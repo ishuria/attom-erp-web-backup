@@ -17,16 +17,9 @@
               <div class="readonly-label">{{ field.label }}</div>
               <div class="readonly-box">
                 <div v-if="field.list.length" class="asin-list">
-                  <el-link
-                    v-for="asin in field.list"
-                    :key="asin"
-                    :href="getAmazonAsinUrl(asin)"
-                    target="_blank"
-                    type="primary"
-                    underline="never"
-                  >
+                  <span v-for="asin in field.list" :key="asin" target="_blank" type="primary" underline="never">
                     {{ asin }}
-                  </el-link>
+                  </span>
                 </div>
                 <span v-else>暂无</span>
               </div>
