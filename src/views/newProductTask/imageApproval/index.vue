@@ -35,8 +35,9 @@
       </el-table-column>
       <el-table-column
         label="SKU"
+        min-width="180"
         prop="sku"
-        :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
+        :width="Math.max(180, flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
       >
         <template #default="{ row }">
           {{ row.sku }}
@@ -95,9 +96,28 @@
           {{ '' }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="提交人员" min-width="100" prop="artDesignName" />
+      <el-table-column align="center" label="提交人员" min-width="140" prop="artDesignName">
+        <template #default="{ row }">
+          <div class="person-list">
+            <el-tag
+              v-for="username in splitUsernames(row.artDesignName)"
+              :key="username"
+              class="person-tag"
+              effect="plain"
+              :type="username === currentUser ? 'danger' : 'primary'"
+            >
+              {{ username }}
+            </el-tag>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="审批人" min-width="100" prop="approvalUserName" />
-      <el-table-column label="提交的文件路径" min-width="160" prop="filePath">
+      <el-table-column align="center" label="卖点" min-width="100" prop="sellingPoint">
+        <template #default="{ row }">
+          <el-link type="primary" underline="never" @click="handleViewSellingPoint(row)">查看卖点</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="提交的文件路径" min-width="220" prop="filePath">
         <template #default="{ row }">
           <el-tooltip v-if="row.filePath" effect="dark" placement="top">
             <template #content>
@@ -107,7 +127,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="整改要求" min-width="160" prop="correctionRequirement">
+      <el-table-column label="整改要求" min-width="220" prop="correctionRequirement">
         <template #default="{ row }">
           <div v-if="row.correctionRequirement" class="correction-preview" @click="handleViewCorrection(row)">
             {{ stripHtml(row.correctionRequirement) }}
@@ -179,6 +199,9 @@
     <!-- 审批不通过弹窗 -->
     <reject-approval v-model:visible="rejectVisible" :row="rejectRow" @confirm="handleRejectConfirm" />
 
+    <!-- 卖点详情 -->
+    <selling-point-viewer-dialog v-model:visible="sellingPointVisible" :sku="sellingPointSku" />
+
     <!-- 图片预览 -->
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
@@ -234,6 +257,8 @@ const queryForm = reactive({
 const loading = ref<boolean>(false)
 const list = ref<IArtDesignTaskApprovalPageItem[]>([])
 const total = ref<number>(0)
+const sellingPointVisible = ref(false)
+const sellingPointSku = ref('')
 
 // 数据加载
 const fetchData = async () => {
@@ -334,6 +359,11 @@ const correctionContent = ref('')
 const handleViewCorrection = (row: IArtDesignTaskApprovalPageItem) => {
   correctionContent.value = row.correctionRequirement || ''
   correctionVisible.value = true
+}
+
+const handleViewSellingPoint = (row: IArtDesignTaskApprovalPageItem) => {
+  sellingPointSku.value = row.sku
+  sellingPointVisible.value = true
 }
 // 完成
 const handleFinish = async (row: IArtDesignTaskApprovalPageItem) => {
@@ -449,5 +479,17 @@ onMounted(() => {
   :deep(img) {
     max-width: 100%;
   }
+}
+
+.person-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.person-tag {
+  max-width: 100%;
 }
 </style>

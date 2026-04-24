@@ -491,6 +491,8 @@ export interface IArtDesignTaskApprovalPageItem {
   skuImgUrl: string
   /** SKU */
   sku: string
+  /** 产品描述 */
+  productDesc: string
   /** 任务类型 */
   taskType: string
   /** 产品定位 */
@@ -509,8 +511,12 @@ export interface IArtDesignTaskApprovalPageItem {
   countAsRework: number
   /** 审批状态 0待审批 1通过 2不通过 */
   approvalStatus: number
+  /** 任务状态 */
+  status: number
   /** 提交时间 */
   createTime: string
+  /** 卖点摘要 */
+  sellingPoint: string
 
   actualFinishDate: string
 

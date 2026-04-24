@@ -219,6 +219,7 @@ declare module 'vue' {
     SegmentedBlock: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedBlock.vue')['default']
     SegmentedCustomContent: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedCustomContent.vue')['default']
     SegmentedCustomStyle: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedCustomStyle.vue')['default']
+    SellingPointViewerDialog: typeof import('./../../../src/views/newProductTask/vabAutoComponents/SellingPointViewerDialog.vue')['default']
     SentButNotReported: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/SentButNotReported.vue')['default']
     ShippingErrorChart: typeof import('./../../../src/views/index/vabAutoComponents/ShippingErrorChart.vue')['default']
     SkuChangeLogDialog: typeof import('./../../../src/views/productInfomation/vabAutoComponents/skuChangeLogDialog.vue')['default']

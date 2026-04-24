@@ -76,6 +76,9 @@ export const approvalFlowColumnConfigs: ColumnConfig[] = [
   },
 ]
 
-export const splitUsernames = (usernames: string) => {
-  return usernames.split(',').map((username) => username.trim())
+export const splitUsernames = (usernames = '') => {
+  return usernames
+    .split(/[,，、]+/)
+    .map((username) => username.trim())
+    .filter(Boolean)
 }
