@@ -36,10 +36,10 @@
  */
 
 import { FallMenu } from '@opentiny/vue'
-import { isHashRouterMode } from '/@/config'
 import { translate } from '/@/i18n'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
+import { openRouteInNewTab } from '/@/utils/routes'
 import { isExternal } from '/@/utils/validate'
 
 defineOptions({
@@ -62,33 +62,28 @@ const handleRoutes = computed(() =>
 )
 
 const handleLink = (slotScope: any) => {
-  nextTick(() => {
-    const routePath = slotScope.path
-    const target = slotScope.meta.target
-    const fullscreen = slotScope.meta.fullscreen
+  const routePath = slotScope.path
+  const target = slotScope.meta.target
+  const fullscreen = slotScope.meta.fullscreen
 
-    if (target === '_blank') {
-      if (isExternal(routePath)) {
-        window.open(routePath)
-        router.push('/redirect')
-      } else if (route.path !== routePath) isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
-      router.push('/redirect')
+  if (target === '_blank') {
+    openRouteInNewTab(routePath)
+    router.push('/redirect')
+  } else {
+    if (isExternal(routePath)) globalThis.location.href = routePath
+    else if (route.path === routePath) {
+      $pub('reload-router-view')
     } else {
-      if (isExternal(routePath)) globalThis.location.href = routePath
-      else if (route.path === routePath) {
-        $pub('reload-router-view')
-      } else {
-        if (device.value === 'mobile') foldSideBar()
-        if (slotScope.children) router.push(slotScope.redirect)
-        else router.push(slotScope.path)
-      }
+      if (device.value === 'mobile') foldSideBar()
+      if (slotScope.children) router.push(slotScope.redirect)
+      else router.push(slotScope.path)
     }
+  }
 
-    setTimeout(() => {
-      if (fullscreen) enter()
-      else exit()
-    }, 1000)
-  })
+  setTimeout(() => {
+    if (fullscreen) enter()
+    else exit()
+  }, 1000)
 }
 
 useEventListener('mousemove', (e: MouseEvent) => {

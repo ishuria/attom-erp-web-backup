@@ -34,6 +34,7 @@ import { openFirstMenu } from '/@/config'
 import { translate } from '/@/i18n'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
+import { openRouteInNewTab } from '/@/utils/routes'
 import { isExternal } from '/@/utils/validate'
 
 defineOptions({
@@ -53,18 +54,17 @@ const { getTab: tab, getTabMenu: tabMenu, getRoutes: routes } = storeToRefs(rout
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 
-const handleTabClick = () => {
-  nextTick(() => {
-    if (!tabMenu.value) return
-    const path = (tabMenu.value as any).path
-    if (path && isExternal(path)) {
-      window.open(path)
-      router.push('/redirect')
-    } else if (openFirstMenu) {
-      const redirect = (tabMenu.value as any).redirect
-      router.push(redirect || tabMenu.value)
-    }
-  })
+const handleTabClick = (pane: any) => {
+  const currentTabMenu = routes.value.find((item: any) => item.name === pane.props.name) || tabMenu.value
+  if (!currentTabMenu) return
+  const path = (currentTabMenu as any).path
+  if (path && isExternal(path)) {
+    openRouteInNewTab(path)
+    router.push('/redirect')
+  } else if (openFirstMenu) {
+    const redirect = (currentTabMenu as any).redirect
+    router.push(redirect || currentTabMenu)
+  }
 }
 
 watch(

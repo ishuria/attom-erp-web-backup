@@ -1,8 +1,18 @@
 import { stringify } from 'qs'
-import { recordRoute } from '/@/config'
+import { isHashRouterMode, recordRoute } from '/@/config'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { hasPermission } from '/@/utils/permission'
 import { isExternal } from '/@/utils/validate'
+
+export const getNewTabPath = (path: string) => {
+  if (isExternal(path)) return path
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return isHashRouterMode ? `#${normalizedPath}` : normalizedPath
+}
+
+export const openRouteInNewTab = (path: string) => {
+  window.open(getNewTabPath(path), '_blank', 'noopener')
+}
 
 /**
  * @description all模式渲染后端返回路由,支持包含views路径的所有页面

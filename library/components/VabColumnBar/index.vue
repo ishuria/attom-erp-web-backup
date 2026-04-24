@@ -65,10 +65,11 @@
 </template>
 
 <script lang="ts" setup>
-import { defaultOpeneds, isHashRouterMode, openFirstMenu, uniqueOpened } from '/@/config'
+import { defaultOpeneds, openFirstMenu, uniqueOpened } from '/@/config'
 import { translate } from '/@/i18n'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
+import { openRouteInNewTab } from '/@/utils/routes'
 import { isExternal } from '/@/utils/validate'
 
 defineOptions({
@@ -104,17 +105,14 @@ const setDefaultOpeneds = () => {
   }, 0)
 }
 
-const handleTabClick = () => {
-  nextTick(() => {
-    const openPath = (path: any, target: string) => (target === '_blank' ? window.open(path) : (location.href = path))
-    if (isExternal(tabMenu.value.path) || tabMenu.value.meta.target === '_blank') {
-      openPath(
-        isExternal(tabMenu.value.path) ? tabMenu.value.path : isHashRouterMode ? `#${tabMenu.value.path}` : tabMenu.value.path,
-        '_blank'
-      )
-      router.push('/redirect')
-    } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
+const handleTabClick = (pane: any) => {
+  const currentTabMenu = routes.value.find((item: any) => item.name === pane.props.name) || tabMenu.value
+  if (isExternal(currentTabMenu.path) || currentTabMenu.meta.target === '_blank') {
+    openRouteInNewTab(currentTabMenu.path)
+    router.push('/redirect')
+  } else if (openFirstMenu) router.push(currentTabMenu.redirect || currentTabMenu)
 
+  nextTick(() => {
     setDefaultOpeneds()
   })
 }

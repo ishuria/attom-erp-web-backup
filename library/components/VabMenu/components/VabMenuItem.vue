@@ -20,9 +20,9 @@
 </template>
 
 <script lang="ts" setup>
-import { isHashRouterMode } from '/@/config'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
+import { openRouteInNewTab } from '/@/utils/routes'
 import { isExternal } from '/@/utils/validate'
 
 defineOptions({
@@ -45,30 +45,25 @@ const { foldSideBar } = settingsStore
 const { enter, exit } = useFullscreen()
 
 const handleLink = () => {
-  nextTick(() => {
-    const routePath = props.itemOrMenu.path
-    const target = props.itemOrMenu.meta.target
-    const fullscreen = props.itemOrMenu.meta.fullscreen
+  const routePath = props.itemOrMenu.path
+  const target = props.itemOrMenu.meta.target
+  const fullscreen = props.itemOrMenu.meta.fullscreen
 
-    if (target === '_blank') {
-      if (isExternal(routePath)) {
-        window.open(routePath)
-        router.push('/redirect')
-      } else if (route.path !== routePath) isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
-      router.push('/redirect')
-    } else {
-      if (isExternal(routePath)) globalThis.location.href = routePath
-      else if (route.path !== routePath) {
-        if (device.value === 'mobile') foldSideBar()
-        router.push(props.itemOrMenu.path)
-      }
+  if (target === '_blank') {
+    openRouteInNewTab(routePath)
+    router.push('/redirect')
+  } else {
+    if (isExternal(routePath)) globalThis.location.href = routePath
+    else if (route.path !== routePath) {
+      if (device.value === 'mobile') foldSideBar()
+      router.push(props.itemOrMenu.path)
     }
+  }
 
-    setTimeout(() => {
-      if (fullscreen) enter()
-      else exit()
-    }, 1000)
-  })
+  setTimeout(() => {
+    if (fullscreen) enter()
+    else exit()
+  }, 1000)
 }
 </script>
 
