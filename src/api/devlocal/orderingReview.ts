@@ -100,11 +100,11 @@ export function reviewStepNo2Pass(data?: IReviewStep2Req): Promise<IReviewStepRe
  * @param params
  * @returns
  */
-export function reviewStepNo2Fail(params: { reviewId: number }): Promise<IReviewStepResp> {
+export function reviewStepNo2Fail(data: { reviewId: number; reason: string }): Promise<IReviewStepResp> {
   return request({
     url: `${BASE_API}/review/stepNo2/failed`,
     method: 'post',
-    params,
+    data,
   })
 }
 

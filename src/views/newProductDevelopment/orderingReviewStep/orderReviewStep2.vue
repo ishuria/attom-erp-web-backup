@@ -170,6 +170,7 @@
       <el-button :disabled="editDisabled" type="danger" @click="goBackToStep1">不通过</el-button>
       <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
+    <vab-remark-dialog v-model="reasonVisible" :remark="reasonText" title="填写审核不通过原因" @update:remark="handleNotPassSubmit" />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
@@ -339,12 +340,33 @@ const handleSaveAndContinue = async () => {
   })
 }
 // 当点击不通过
+const reasonVisible = ref<boolean>(false)
+const reasonText = ref<string>('')
 const goBackToStep1 = () => {
-  $baseConfirm('确定要点击审核不通过吗？', null, async () => {
-    // 发送链接不通过
-    const { data } = await reviewStepNo2Fail({ reviewId: Number(props.reviewId) })
+  reasonVisible.value = true
+  reasonText.value = ''
+}
+const handleNotPassSubmit = (reason: string) => {
+  if (reason.trim() === '') {
+    $baseMessage('请填写审核不通过原因', 'error', 'hey')
+    return
+  }
+  const deleteVNode = h('div', {}, [
+    h(
+      'p',
+      {
+        style: {
+          color: 'red',
+        },
+      },
+      '确认要点击审核不通过吗？'
+    ),
+  ])
+  $baseConfirm(deleteVNode, '系统提示', async () => {
+    const { data } = await reviewStepNo2Fail({ reviewId: Number(props.reviewId), reason })
     if (data === true) {
       $baseMessage('审核不通过提交成功', 'success', 'hey')
+      reasonVisible.value = false
       await delVisitedRoute(handleActivePath(route, true))
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords',
