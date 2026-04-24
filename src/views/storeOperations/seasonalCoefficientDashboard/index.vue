@@ -148,9 +148,23 @@
             {{ formatMonth(row.month) }}
           </template>
         </el-table-column>
-        <el-table-column label="系统系数" min-width="100" prop="estimate" />
+        <el-table-column label="预估系数" min-width="100" prop="estimate" />
+        <el-table-column label="系统计算系数" min-width="100" prop="ratio" />
         <el-table-column label="实际系数" min-width="100" prop="actual" />
         <el-table-column label="偏差率" min-width="100" sortable="custom">
+          <template #header>
+            <div class="cell-header">
+              <el-tooltip effect="dark" placement="top">
+                <span class="cell-header-label">
+                  偏差率
+                  <el-icon class="cell-header-icon"><question-filled /></el-icon>
+                </span>
+                <template #content>
+                  <div class="custom-tooltip">| (系统计算的季节系数 - 系统设置的季节系数) | /系统设置的季节系数</div>
+                </template>
+              </el-tooltip>
+            </div>
+          </template>
           <template #default="{ row }">
             <span :style="getDiffStyle(row.diff)">{{ formatPercent(row.diff) }}</span>
           </template>
@@ -180,7 +194,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, Warning } from '@element-plus/icons-vue'
+import { QuestionFilled, Search, Warning } from '@element-plus/icons-vue'
 import { debounce } from 'lodash-es'
 import {
   getSeasonalCoefficientDashboard,
@@ -633,6 +647,24 @@ onMounted(async () => {
     background: #e53935;
     border-radius: 3px;
     transition: width 0.4s ease;
+  }
+}
+
+.cell-header {
+  display: inline-flex;
+  align-items: center;
+
+  .cell-header-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+  }
+
+  .cell-header-icon {
+    font-size: 17px;
+    margin-top: -1px;
+    color: #bfbfbf;
   }
 }
 
