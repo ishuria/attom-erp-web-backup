@@ -16,26 +16,31 @@
           <span class="hint">Shift+Enter 换行</span>
           <span class="count">{{ draft.length }}/3000</span>
         </div>
-        <el-button type="primary" round :disabled="disabled || !draft.trim()" @click="handleSend">发送</el-button>
+        <div class="action-buttons">
+          <el-button round :disabled="disabled || feishuLoading" :loading="feishuLoading" @click="handleCreateFeishuDoc">创建飞书文档</el-button>
+          <el-button type="primary" round :disabled="disabled || !draft.trim()" @click="handleSend">发送</el-button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{
-  disabled?: boolean
-  fullscreen?: boolean
-  placeholder?: string
-}>()
-
 const emit = defineEmits<{
   send: [value: string]
+  createFeishuDoc: []
 }>()
 
 defineOptions({
   name: 'MessageInput',
 })
+
+const props = defineProps<{
+  disabled?: boolean
+  fullscreen?: boolean
+  placeholder?: string
+  feishuLoading?: boolean
+}>()
 
 const draft = ref('')
 const autosizeConfig = computed(() => ({
@@ -49,6 +54,11 @@ const handleSend = () => {
   if (!value) return
   emit('send', value)
   draft.value = ''
+}
+
+const handleCreateFeishuDoc = () => {
+  if (props.disabled) return
+  emit('createFeishuDoc')
 }
 </script>
 
@@ -115,6 +125,13 @@ const handleSend = () => {
     align-items: center;
     justify-content: space-between;
     min-height: 30px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
   }
 
   .meta {

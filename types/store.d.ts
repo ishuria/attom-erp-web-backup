@@ -63,6 +63,7 @@ declare interface TabsModuleType {
 declare interface UserModuleType {
   avatar: string
   token: string | boolean
+  userId: string | number
   username: string
 }
 

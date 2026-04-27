@@ -101,3 +101,15 @@ export const sendAiChatMessage = (data: { conversationId: number | string; conte
     data,
   })
 }
+
+export const checkFeishuDoc = () => {
+  return request({ url: `${AI_BASE_API}/conversations/create/feishu/doc/check`, method: 'get' })
+}
+
+export const getFeishuUrl = (id: number | string = 1) => {
+  return request({ url: `${BASE_API}/btn/fei_shu/url/${id}`, method: 'get' })
+}
+
+export const createFeishuDoc = (conversationId: number | string) => {
+  return request({ url: `${AI_BASE_API}/conversations/create/feishu/doc/${conversationId}`, method: 'post' })
+}

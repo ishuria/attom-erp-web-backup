@@ -17,7 +17,9 @@
       :disabled="inputDisabled"
       :fullscreen="fullscreen"
       :placeholder="inputPlaceholder"
+      :feishu-loading="aiStore.feishuDocCreating"
       @send="aiStore.sendMessage"
+      @create-feishu-doc="aiStore.handleCreateFeishuDoc"
     />
   </div>
 </template>

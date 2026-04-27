@@ -1,10 +1,13 @@
 import dayjs from 'dayjs'
 import {
+  checkFeishuDoc,
   createAiConversation,
+  createFeishuDoc,
   decreaseAiConversationUnreadCount,
   deleteAiConversation,
   getAiConversationList,
   getAiMessageList,
+  getFeishuUrl,
   sendAiChatMessage,
 } from '/@/api/devlocal/ai'
 
@@ -68,6 +71,7 @@ export const useAiStore = defineStore('ai', {
     // 按 conversationId 缓存消息，切换会话时无需反复清空重建。
     messages: {} as Record<string, ChatMessage[]>,
     conversationBusyMap: {} as Record<string, ChatConversationBusyState>,
+    feishuDocCreating: false,
   }),
   getters: {
     // 当前激活会话对象。
@@ -396,6 +400,32 @@ export const useAiStore = defineStore('ai', {
 
       delete this.conversationBusyMap[key]
     },
+    async handleCreateFeishuDoc() {
+      if (this.feishuDocCreating) return
+
+      try {
+        const response = await checkFeishuDoc()
+        const canCreate = response?.data ?? response
+        if (!canCreate) {
+          const urlResponse = await getFeishuUrl(1)
+          const url = urlResponse?.data ?? urlResponse
+          window.open(url, '_blank')
+          return
+        }
+
+        if (!this.activeConversationId) return
+
+        this.feishuDocCreating = true
+        ElMessage.info('飞书文档创建中')
+        this.closeModal()
+
+        await createFeishuDoc(this.activeConversationId)
+        this.feishuDocCreating = false
+      } catch {
+        this.feishuDocCreating = false
+        ElMessage.error('操作失败')
+      }
+    },
     // 供页面卸载或重新进入时重置 AI 模块状态。
     resetState() {
       this.isOpen = true
@@ -407,6 +437,7 @@ export const useAiStore = defineStore('ai', {
       this.activeConversationId = null
       this.messages = {}
       this.conversationBusyMap = {}
+      this.feishuDocCreating = false
     },
   },
 })

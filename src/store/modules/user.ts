@@ -13,11 +13,13 @@ import { gp } from '/@vab/plugins/vab'
 export const useUserStore = defineStore('user', {
   state: (): UserModuleType => ({
     token: getToken() as string,
+    userId: '',
     username: '游客',
     avatar: './static/svg/avatar.svg',
   }),
   getters: {
     getToken: (state) => state.token,
+    getUserId: (state) => state.userId,
     getUsername: (state) => state.username,
     getAvatar: (state) => state.avatar,
   },
@@ -43,6 +45,9 @@ export const useUserStore = defineStore('user', {
      */
     setAvatar(avatar: string) {
       this.avatar = avatar
+    },
+    setUserId(userId: string | number) {
+      this.userId = userId
     },
     /**
      * @description 登录拦截放行时，设置虚拟角色
@@ -89,7 +94,7 @@ export const useUserStore = defineStore('user', {
      */
     async getUserInfo() {
       const {
-        data: { username, avatar, roles, permissions },
+        data: { username, avatar, roles, permissions, id },
       } = await getUserInfo()
       /**
        * 检验返回数据是否正常，无对应参数，将使用默认用户名,头像,Roles和Permissions
@@ -109,6 +114,7 @@ export const useUserStore = defineStore('user', {
         throw err
       } else {
         const aclStore = useAclStore()
+        if (id) this.setUserId(id)
         // 如不使用username用户名,可删除以下代码
         if (username) this.setUsername(username)
         // 如不使用avatar头像,可删除以下代码

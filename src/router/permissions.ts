@@ -5,6 +5,7 @@ import VabProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import type { Router } from 'vue-router'
 import { authentication, loginInterception, routesWhiteList, supportVisit } from '/@/config'
+import { exchangeLarkToken } from '/@/api/lark'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
@@ -23,7 +24,26 @@ export const setupPermissions = (router: Router) => {
       getTheme: { showProgressBar },
     } = useSettingsStore()
     const { routes, setRoutes } = useRoutesStore()
-    const { token, getUserInfo, setVirtualRoles, resetAll } = useUserStore()
+    const { token, getUserId, getUserInfo, setVirtualRoles, resetAll } = useUserStore()
+
+    // code 参数检测（参数可能在 # 前面，需从 window.location.search 读取）
+    const urlParams = new URLSearchParams(window.location.search)
+    const code = urlParams.get('code')
+    if (to.path === '/index' && code) {
+      if (showProgressBar) VabProgress.start()
+      try {
+        const userId = getUserId
+        if (userId) {
+          await exchangeLarkToken({ authorization_code: code, user_id: userId })
+        }
+        window.close()
+        document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#666;">操作完成，请手动关闭此页面</div>`
+      } catch (error) {
+        console.error('[路由守卫] 飞书 token 交换失败:', error)
+      }
+      if (showProgressBar) VabProgress.done()
+      return next(false)
+    }
 
     if (showProgressBar) VabProgress.start()
 
