@@ -144,6 +144,7 @@ const submitAIReport = async () => {
     if (conversationId == null || conversationId === '') {
       throw new Error('会话创建成功但未返回有效会话ID')
     }
+    visible.value = false
 
     await aiStore.ensureInitialized({
       createIfEmpty: false,
@@ -161,9 +162,7 @@ const submitAIReport = async () => {
     })
     void aiStore.waitForConversationReply(conversationId)
 
-    visible.value = false
     $baseMessage('已开始生成AI调研报告', 'success')
-    await router.push('/chat/ai')
   } catch (error: any) {
     const errorMessage = error?.msg ?? error?.message ?? '生成AI调研报告失败'
     if (conversationId != null && conversationId !== '') {
