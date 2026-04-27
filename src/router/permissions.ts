@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css'
 import type { Router } from 'vue-router'
 import { authentication, loginInterception, routesWhiteList, supportVisit } from '/@/config'
 import { exchangeLarkToken } from '/@/api/lark'
+import { createFeishuDoc } from '/@/api/devlocal/ai'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
@@ -36,12 +37,22 @@ export const setupPermissions = (router: Router) => {
         if (userId) {
           await exchangeLarkToken({ authorization_code: code, user_id: userId })
         }
-        window.close()
+        debugger
+        const pendingConversationId = localStorage.getItem('feishu_doc_conversation_id')
+        if (pendingConversationId) {
+          try {
+            await createFeishuDoc(pendingConversationId)
+          } catch (e) {
+            console.error('[路由守卫] 创建飞书文档失败:', e)
+          }
+          localStorage.removeItem('feishu_doc_conversation_id')
+        }
         document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#666;">操作完成，请手动关闭此页面</div>`
       } catch (error) {
         console.error('[路由守卫] 飞书 token 交换失败:', error)
       }
       if (showProgressBar) VabProgress.done()
+      window.close()
       return next(false)
     }
 

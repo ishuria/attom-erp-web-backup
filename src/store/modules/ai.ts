@@ -409,6 +409,12 @@ export const useAiStore = defineStore('ai', {
         if (!canCreate) {
           const urlResponse = await getFeishuUrl(1)
           const url = urlResponse?.data ?? urlResponse
+          if (this.activeConversationId) {
+            localStorage.setItem('feishu_doc_conversation_id', String(this.activeConversationId))
+          }
+          this.feishuDocCreating = true
+          ElMessage.info('飞书文档创建中')
+          this.closeModal()
           window.open(url, '_blank')
           return
         }
