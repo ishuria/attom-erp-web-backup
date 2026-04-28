@@ -664,9 +664,9 @@ export function addOperationSubcategoryRanking(data: IAddOperationSubcategoryRan
 /**
  * @description 获取ASIN汇总-月份列表
  */
-export function getAsinSummaryMonthList(): Promise<{ data: string[] }> {
+export function getAsinSummaryMonthList(type: string): Promise<{ data: string[] }> {
   return request({
-    url: `${BASE_API}/operation/asin/summary/month`,
+    url: `${BASE_API}/operation/asin/summary/month/${type}`,
     method: 'get',
   })
 }

@@ -120,7 +120,7 @@ const queryData = async () => {
 }
 
 const fetchMonthList = async () => {
-  const { data } = await getAsinSummaryMonthList()
+  const { data } = await getAsinSummaryMonthList('Amazon')
   monthOption.value = data.map((month: string, index: number) => ({ id: index, label: month }))
   if (data.length > 0) {
     queryForm.month = data[0]

@@ -1058,7 +1058,7 @@ const fetchUserLevelList = async () => {
 // ASIN汇总月份筛选
 const asinSummaryMonthOption = ref<{ id: number; label: string }[]>([])
 const fetchAsinSummaryMonthList = async () => {
-  const { data } = await getAsinSummaryMonthList()
+  const { data } = await getAsinSummaryMonthList('Amazon')
   asinSummaryMonthOption.value = data.map((month, index) => ({ id: index, label: month }))
   asinSummaryQueryForm.month = data[0]
 }
