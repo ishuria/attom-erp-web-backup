@@ -80,6 +80,8 @@ const list = ref<IRole[]>([])
 
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
+  checkMenuList.value = []
+  childMenuBtnList.value = []
 
   nextTick(async () => {
     if (row) {
@@ -100,8 +102,18 @@ const showEdit = (row: any) => {
       Object.assign(form, row)
     } else {
       disableRoleCode.value = false
+      Object.assign(form, {
+        roleId: '',
+        menuIds: '',
+        permissionIds: '',
+        roleCode: '',
+        roleName: '',
+        roleNameEn: '',
+        status: '0',
+      })
       form.menuCheckedList.length = 0
       form.menuCheckedList = []
+      treeRef.value?.setCheckedKeys([])
       title.value = '添加'
     }
   })
@@ -114,8 +126,13 @@ defineExpose({
 const close = () => {
   formRef.value?.clearValidate()
   formRef.value?.resetFields()
+  checkMenuList.value = []
+  childMenuBtnList.value = []
+  form.menuIds = ''
+  form.permissionIds = ''
+  form.menuCheckedList = []
   // 清空tree勾选
-  treeRef.value.setCheckedKeys([])
+  treeRef.value?.setCheckedKeys([])
   emit('fetch-data')
 }
 
@@ -140,11 +157,13 @@ const fetchData = async () => {
 const save = () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      if (checkMenuList.value.length === 0) {
-        checkMenuList.value = [...treeRef.value.getCheckedKeys(), ...treeRef.value.getHalfCheckedKeys()]
+      const checkedMenuKeys = [...treeRef.value.getCheckedKeys(), ...treeRef.value.getHalfCheckedKeys()]
+      if (checkedMenuKeys.length === 0) {
+        await $baseMessage('请至少选择一个菜单', 'warning', 'hey')
+        return
       }
 
-      const menuIdsStr = checkMenuList.value.map(String).join(',')
+      const menuIdsStr = checkedMenuKeys.map(String).join(',')
       // tree菜单对应的keys
       form.menuIds = menuIdsStr
 
@@ -170,9 +189,11 @@ const save = () => {
       dialogFormVisible.value = false
 
       // 清空
-      treeRef.value.setCheckedKeys([])
+      treeRef.value?.setCheckedKeys([])
       form.menuIds = ''
       form.permissionIds = ''
+      checkMenuList.value = []
+      childMenuBtnList.value = []
     }
   })
 }
