@@ -536,6 +536,7 @@ export function getOperationBonusAsinSummaryList(data: {
   pageSize: number
   orderByField: string
   orderDirection: string
+  platformCode: string
 }): Promise<{ data: { list: any[]; total: number } }> {
   return request({
     url: `${BASE_API}/operation/asin/summary`,

@@ -100,6 +100,7 @@ const queryForm = reactive({
   orderByField: 'adSpend',
   orderDirection: 'descending',
   currency: -1,
+  platformCode: 'Amazon',
 })
 const list = ref<any[]>([])
 const loading = ref<boolean>(false)

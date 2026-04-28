@@ -675,6 +675,7 @@ const asinSummaryQueryForm = reactive({
   orderByField: 'adSpend',
   orderDirection: 'descending',
   currency: -1,
+  platformCode: 'Amazon',
 })
 const asinSummaryList = ref<any[]>([])
 const asinSummaryTotal = ref<number>(0)
