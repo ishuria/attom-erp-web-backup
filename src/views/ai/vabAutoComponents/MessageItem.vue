@@ -16,6 +16,13 @@
         <template v-else>
           <typing-indicator v-if="message.status === 'loading' && !message.content" />
           <div v-else class="markdown-body" @click="handleMarkdownAction" v-html="htmlContent" />
+          <el-image-viewer
+            v-if="showViewer"
+            hide-on-click-modal
+            :initial-index="viewerIndex"
+            :url-list="viewerList"
+            @close="showViewer = false"
+          />
         </template>
       </div>
     </div>
@@ -53,6 +60,10 @@ const roleText = computed(() => {
 
 const htmlContent = computed(() => renderAiMarkdown(props.message.content))
 
+const showViewer = ref(false)
+const viewerList = ref<string[]>([])
+const viewerIndex = ref(0)
+
 const fallbackCopyText = async (text: string) => {
   const textarea = document.createElement('textarea')
   textarea.value = text
@@ -77,9 +88,34 @@ const copyCodeText = async (text: string) => {
   }
 }
 
+// 亚马逊图片 URL 去除缩略图后缀，展示原图
+const toFullSizeUrl = (url: string) => {
+  if (url.startsWith('https://m.media-amazon.com/images')) {
+    return url.replace(/\._[A-Za-z0-9_]+(?=\.[^.]+$)/, '')
+  }
+  return url
+}
+
 const handleMarkdownAction = async (event: MouseEvent) => {
   const target = event.target as HTMLElement | null
-  if (!target?.closest('.markdown-code-copy')) return
+  if (!target) return
+
+  // 图片点击预览
+  if (target.tagName === 'IMG') {
+    const src = (target as HTMLImageElement).src
+    if (src) {
+      const container = event.currentTarget as HTMLElement
+      const allImgs = Array.from(container.querySelectorAll('img'))
+      const urls = allImgs.map((img) => img.src).filter(Boolean).map(toFullSizeUrl)
+      viewerList.value = urls
+      viewerIndex.value = Math.max(urls.indexOf(toFullSizeUrl(src)), 0)
+      showViewer.value = true
+    }
+    return
+  }
+
+  // 代码复制
+  if (!target.closest('.markdown-code-copy')) return
 
   const codeElement = target.closest('.markdown-code-block')?.querySelector('code')
   const codeText = codeElement?.textContent ?? ''
@@ -260,6 +296,13 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       &:hover {
         text-decoration-color: currentColor;
       }
+    }
+
+    :deep(img) {
+      max-width: 100%;
+      height: auto;
+      cursor: zoom-in;
+      border-radius: 8px;
     }
 
     :deep(blockquote) {
