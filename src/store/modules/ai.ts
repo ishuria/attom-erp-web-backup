@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import {
   checkFeishuDoc,
   createAiConversation,
+  createCommonChatConversation,
   createFeishuDoc,
   decreaseAiConversationUnreadCount,
   deleteAiConversation,
@@ -12,6 +13,7 @@ import {
 } from '/@/api/devlocal/ai'
 
 import type {
+  ChatAttachment,
   ChatConversation,
   ChatConversationBusyState,
   ChatMessage,
@@ -28,6 +30,7 @@ const normalizeConversation = (item: any): ChatConversation => ({
   title: item?.title ?? '新建对话',
   createdAt: item?.createdAt ?? item?.createTime ?? dayjs().format('YYYY-MM-DD HH:mm:ss'),
   unreadCount: Math.max(0, Number(item?.unreadCount ?? item?.unreadNum ?? item?.noReadCount ?? 0) || 0),
+  messageCount: Math.max(0, Number(item?.messageCount ?? item?.msgCount ?? 0) || 0),
 })
 
 // 消息列表也做同样的字段归一，减少视图层判断分支。
@@ -72,6 +75,11 @@ export const useAiStore = defineStore('ai', {
     messages: {} as Record<string, ChatMessage[]>,
     conversationBusyMap: {} as Record<string, ChatConversationBusyState>,
     feishuDocCreating: false,
+    searchKeyword: '',
+    pendingAttachments: [] as ChatAttachment[],
+    networkOnline: true,
+    // 新建聊天模式：无激活会话，输入框可用，发送时才创建会话。
+    isNewChatMode: false,
   }),
   getters: {
     // 当前激活会话对象。
@@ -91,6 +99,33 @@ export const useAiStore = defineStore('ai', {
     canSend(state) {
       const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
       return !state.loading && !state.isStreaming && !state.conversationBusyMap[key] && !!state.activeConversationId
+    },
+    // 基于搜索关键词过滤会话列表。
+    filteredConversations(state) {
+      const keyword = state.searchKeyword.trim().toLowerCase()
+      if (!keyword) return state.conversations
+      return state.conversations.filter((item) => item.title.toLowerCase().includes(keyword))
+    },
+    // 按 createdAt 分为今天/昨天/更早三组。
+    groupedConversations() {
+      const list = this.filteredConversations
+      const now = dayjs()
+      const today: ChatConversation[] = []
+      const yesterday: ChatConversation[] = []
+      const earlier: ChatConversation[] = []
+
+      for (const item of list) {
+        const d = dayjs(item.createdAt)
+        if (d.isSame(now, 'day')) today.push(item)
+        else if (d.isSame(now.subtract(1, 'day'), 'day')) yesterday.push(item)
+        else earlier.push(item)
+      }
+
+      const groups: { label: string; items: ChatConversation[] }[] = []
+      if (today.length) groups.push({ label: '今天', items: today })
+      if (yesterday.length) groups.push({ label: '昨天', items: yesterday })
+      if (earlier.length) groups.push({ label: '更早', items: earlier })
+      return groups
     },
   },
   actions: {
@@ -118,6 +153,28 @@ export const useAiStore = defineStore('ai', {
         title,
       }
       this.conversations = list
+    },
+    setSearchKeyword(keyword: string) {
+      this.searchKeyword = keyword
+    },
+    setNetworkOnline(online: boolean) {
+      this.networkOnline = online
+    },
+    addPendingAttachment(attachment: ChatAttachment) {
+      this.pendingAttachments = [...this.pendingAttachments, attachment]
+    },
+    updatePendingAttachment(id: string, patch: Partial<ChatAttachment>) {
+      const index = this.pendingAttachments.findIndex((a) => a.id === id)
+      if (index === -1) return
+      const list = [...this.pendingAttachments]
+      list[index] = { ...list[index], ...patch }
+      this.pendingAttachments = list
+    },
+    removePendingAttachment(id: string) {
+      this.pendingAttachments = this.pendingAttachments.filter((a) => a.id !== id)
+    },
+    clearPendingAttachments() {
+      this.pendingAttachments = []
     },
     setConversationUnreadCount(id: number | string, unreadCount: number) {
       const key = String(id)
@@ -174,8 +231,14 @@ export const useAiStore = defineStore('ai', {
       await this.switchConversation(conversation.id)
       return conversation
     },
+    // 进入新建聊天模式：取消激活会话，展示空白对话窗口，等用户发送时再建会话。
+    enterNewChatMode() {
+      this.isNewChatMode = true
+      this.activeConversationId = null
+    },
     // 切换会话时按需懒加载消息，避免初次进入一次性拉取全部历史。
     async switchConversation(id: number | string) {
+      this.isNewChatMode = false
       this.activeConversationId = id
       const key = String(id)
       const targetConversation = this.conversations.find((item) => String(item.id) === key)
@@ -230,16 +293,33 @@ export const useAiStore = defineStore('ai', {
       const question = content.trim()
       if (!question) return
 
+      // 新建聊天模式：先调用创建接口，拿到真实 id 后再发送。
+      if (!this.activeConversationId && this.isNewChatMode) {
+        try {
+          const response = await createCommonChatConversation()
+          const conversation = normalizeConversation(pickObject(response))
+          this.conversations.unshift(conversation)
+          this.activeConversationId = conversation.id
+          this.isNewChatMode = false
+        } catch (err: any) {
+          ElMessage.error(`创建会话失败：${err?.msg ?? err?.message ?? '请稍后重试'}`)
+          return
+        }
+      }
+
       if (!this.activeConversationId) return
       if (this.conversationBusyMap[String(this.activeConversationId)]) return
       const conversationId = this.activeConversationId
       const key = String(conversationId)
+      const attachments = this.pendingAttachments.length > 0 ? [...this.pendingAttachments] : undefined
+      const attachmentUrls = attachments?.filter((a) => a.url).map((a) => a.url!)
       const userMessage: ChatMessage = {
         id: createLocalId('msg'),
         role: 'user',
         content: question,
         createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         status: 'success',
+        attachments,
       }
       const assistantMessage: ChatMessage = {
         id: createLocalId('msg'),
@@ -250,6 +330,7 @@ export const useAiStore = defineStore('ai', {
       }
       this.messages[key] = this.messages[key] ?? []
       this.messages[key].push(userMessage, assistantMessage)
+      this.clearPendingAttachments()
       const updateAssistantMessage = (patch: Partial<ChatMessage>) => {
         const lastIndex = this.messages[key].length - 1
         const list = [...this.messages[key]]
@@ -268,6 +349,7 @@ export const useAiStore = defineStore('ai', {
             conversationId,
             content: question,
             model: this.currentModel,
+            attachments: attachmentUrls,
           })
           const payload = pickObject(response)
           if (typeof payload === 'string') {
@@ -432,6 +514,31 @@ export const useAiStore = defineStore('ai', {
         ElMessage.error('操作失败')
       }
     },
+    // 重试发送失败的消息：移除失败的 assistant 消息，重新发送对应的 user 消息。
+    async retryMessage(messageId: number | string) {
+      if (!this.activeConversationId) return
+      const key = String(this.activeConversationId)
+      const list = [...(this.messages[key] ?? [])]
+      const targetIndex = list.findIndex((item) => String(item.id) === String(messageId))
+      if (targetIndex === -1) return
+
+      // 找到对应的前一条 user 消息
+      let userContent = ''
+      for (let i = targetIndex - 1; i >= 0; i--) {
+        if (list[i].role === 'user') {
+          userContent = list[i].content
+          break
+        }
+      }
+      if (!userContent) return
+
+      // 移除失败的 assistant 消息
+      list.splice(targetIndex, 1)
+      this.messages[key] = list
+
+      // 重新发送
+      await this.sendMessage(userContent)
+    },
     // 供页面卸载或重新进入时重置 AI 模块状态。
     resetState() {
       this.isOpen = true
@@ -444,6 +551,10 @@ export const useAiStore = defineStore('ai', {
       this.messages = {}
       this.conversationBusyMap = {}
       this.feishuDocCreating = false
+      this.searchKeyword = ''
+      this.pendingAttachments = []
+      this.networkOnline = true
+      this.isNewChatMode = false
     },
   },
 })

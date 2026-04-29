@@ -1,5 +1,14 @@
 <template>
-  <div :class="['ai-message-item', `is-${message.role}`]">
+  <!-- system 消息独立渲染为 info banner -->
+  <div v-if="message.role === 'system'" class="system-banner">
+    <div class="system-banner-icon">
+      <vab-icon icon="lightbulb-line" />
+    </div>
+    <div class="system-banner-content" v-html="htmlContent" />
+  </div>
+
+  <!-- user / assistant 消息 -->
+  <div v-else :class="['ai-message-item', `is-${message.role}`]">
     <div :class="['avatar', { 'is-logo-avatar': showLogoAvatar }]">
       <img v-if="showLogoAvatar" alt="网站图标" :src="yunzhouLogo" />
       <span v-else>{{ avatarText }}</span>
@@ -9,6 +18,23 @@
         <span class="name">{{ roleText }}</span>
         <span v-if="message.createdAt" class="time">{{ message.createdAt }}</span>
       </div>
+      <!-- 附件渲染区（图片） -->
+      <div v-if="imageAttachments.length" class="attachment-images">
+        <div v-for="(img, idx) in imageAttachments" :key="img.id" class="attachment-image-item" @click="openImagePreview(idx)">
+          <img :src="img.url || img.name" :alt="img.name" />
+        </div>
+      </div>
+      <!-- 附件渲染区（文档） -->
+      <div v-if="docAttachments.length" class="attachment-docs">
+        <div v-for="doc in docAttachments" :key="doc.id" class="attachment-doc-card">
+          <vab-icon :icon="getFileIcon(doc.type)" class="doc-icon" />
+          <div class="doc-info">
+            <span class="doc-name">{{ doc.name }}</span>
+            <span class="doc-meta">{{ formatFileSize(doc.size) }}</span>
+          </div>
+          <el-button text size="small" @click="handleViewDoc(doc)">查看</el-button>
+        </div>
+      </div>
       <div :class="['bubble', `is-${message.status || 'success'}`, `is-role-${message.role}`]">
         <template v-if="message.role === 'user'">
           <div class="plain">{{ message.content }}</div>
@@ -16,23 +42,29 @@
         <template v-else>
           <typing-indicator v-if="message.status === 'loading' && !message.content" />
           <div v-else class="markdown-body" @click="handleMarkdownAction" v-html="htmlContent" />
-          <el-image-viewer
-            v-if="showViewer"
-            hide-on-click-modal
-            :initial-index="viewerIndex"
-            :url-list="viewerList"
-            @close="showViewer = false"
-          />
+          <span v-if="message.role === 'assistant' && message.status === 'loading' && message.content" class="streaming-cursor">▌</span>
         </template>
+        <!-- 发送失败重试按钮 -->
+        <button v-if="message.status === 'error' && message.role === 'assistant'" type="button" class="retry-btn" @click="handleRetry">
+          <vab-icon icon="error-warning-line" />
+        </button>
       </div>
     </div>
+    <el-image-viewer
+      v-if="showViewer"
+      hide-on-click-modal
+      :initial-index="viewerIndex"
+      :url-list="viewerList"
+      @close="showViewer = false"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { $baseMessage } from '/@/hooks'
+import { useAiStore } from '/@/store/modules/ai'
 import yunzhouLogo from '/@/icon/yunzhou.svg'
-import type { ChatMessage } from '/@/type/ai/chat'
+import type { ChatAttachment, ChatMessage } from '/@/type/ai/chat'
 import { renderAiMarkdown } from '/@/utils/aiMarkdown'
 import TypingIndicator from '/@/views/ai/vabAutoComponents/TypingIndicator.vue'
 
@@ -44,9 +76,10 @@ defineOptions({
   name: 'MessageItem',
 })
 
+const aiStore = useAiStore()
+
 const avatarText = computed(() => {
   if (props.message.role === 'user') return '我'
-  if (props.message.role === 'system') return '系'
   return 'AI'
 })
 
@@ -54,15 +87,52 @@ const showLogoAvatar = computed(() => props.message.role !== 'user')
 
 const roleText = computed(() => {
   if (props.message.role === 'user') return '我'
-  if (props.message.role === 'system') return '系统'
   return 'AI 助手'
 })
 
 const htmlContent = computed(() => renderAiMarkdown(props.message.content))
 
+const attachments = computed(() => props.message.attachments ?? [])
+const imageAttachments = computed(() => attachments.value.filter((a) => a.type.startsWith('image/')))
+const docAttachments = computed(() => attachments.value.filter((a) => !a.type.startsWith('image/')))
+
 const showViewer = ref(false)
 const viewerList = ref<string[]>([])
 const viewerIndex = ref(0)
+
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+const getFileIcon = (mimeType: string) => {
+  if (mimeType.startsWith('image/')) return 'image-line'
+  if (mimeType.includes('pdf')) return 'file-pdf-line'
+  if (mimeType.includes('sheet') || mimeType.includes('excel') || mimeType.includes('csv')) return 'file-excel-2-line'
+  if (mimeType.includes('zip') || mimeType.includes('compressed')) return 'file-zip-line'
+  return 'file-text-line'
+}
+
+const openImagePreview = (index: number) => {
+  viewerList.value = imageAttachments.value.map((a) => a.url || a.name)
+  viewerIndex.value = index
+  showViewer.value = true
+}
+
+const handleViewDoc = (doc: ChatAttachment) => {
+  if (doc.url) {
+    window.open(doc.url, '_blank')
+  } else {
+    $baseMessage('文件预览暂不可用', 'info', 'hey')
+  }
+}
+
+const handleRetry = () => {
+  if (props.message.id) {
+    aiStore.retryMessage(props.message.id)
+  }
+}
 
 const fallbackCopyText = async (text: string) => {
   const textarea = document.createElement('textarea')
@@ -88,7 +158,6 @@ const copyCodeText = async (text: string) => {
   }
 }
 
-// 亚马逊图片 URL 去除缩略图后缀，展示原图
 const toFullSizeUrl = (url: string) => {
   if (url.startsWith('https://m.media-amazon.com/images')) {
     return url.replace(/\._[A-Za-z0-9_]+(?=\.[^.]+$)/, '')
@@ -100,7 +169,6 @@ const handleMarkdownAction = async (event: MouseEvent) => {
   const target = event.target as HTMLElement | null
   if (!target) return
 
-  // 图片点击预览
   if (target.tagName === 'IMG') {
     const src = (target as HTMLImageElement).src
     if (src) {
@@ -114,7 +182,6 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     return
   }
 
-  // 代码复制
   if (!target.closest('.markdown-code-copy')) return
 
   const codeElement = target.closest('.markdown-code-block')?.querySelector('code')
@@ -124,6 +191,57 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 </script>
 
 <style lang="scss" scoped>
+.system-banner {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 10px 14px;
+  border-left: 3px solid var(--el-color-primary-light-3);
+  background: var(--el-color-primary-light-9);
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--el-text-color-regular);
+
+  .system-banner-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    color: var(--el-color-primary);
+  }
+
+  .system-banner-content {
+    min-width: 0;
+
+    :deep(p) {
+      margin: 0;
+    }
+  }
+}
+
+.streaming-cursor {
+  display: inline;
+  font-weight: 400;
+  color: var(--el-text-color-primary);
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
 .ai-message-item {
   display: flex;
   gap: 14px;
@@ -189,7 +307,80 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     color: var(--el-text-color-primary);
   }
 
+  // 图片附件网格
+  .attachment-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    max-width: min(82%, 400px);
+  }
+
+  .attachment-image-item {
+    overflow: hidden;
+    cursor: zoom-in;
+    border-radius: 10px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+  }
+
+  // 文档附件卡片
+  .attachment-docs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: min(82%, 360px);
+  }
+
+  .attachment-doc-card {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--el-bg-color);
+    border: 1px solid var(--el-border-color-lighter);
+    border-radius: 10px;
+
+    .doc-icon {
+      flex-shrink: 0;
+      font-size: 22px;
+      color: var(--el-color-primary);
+    }
+
+    .doc-info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .doc-name {
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--el-text-color-primary);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .doc-meta {
+      font-size: 11px;
+      color: var(--el-text-color-placeholder);
+    }
+  }
+
   .bubble {
+    position: relative;
     max-width: min(82%, 1200px);
     padding: 16px 18px;
     overflow-wrap: break-word;
@@ -202,8 +393,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       border-color 0.2s ease,
       background 0.2s ease;
 
-    &.is-role-assistant,
-    &.is-role-system {
+    &.is-role-assistant {
       max-width: min(94%, 1600px);
       background:
         linear-gradient(180deg, rgb(255 255 255 / 0.98), rgb(247 249 255 / 0.98)),
@@ -235,9 +425,32 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     white-space: pre-wrap;
   }
 
+  // 重试按钮
+  .retry-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 14px;
+    color: var(--el-color-danger);
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+
+    &:hover {
+      background: var(--el-color-danger-light-9);
+    }
+  }
+
   .markdown-body {
     font-size: 16px;
-    line-height: 1.85;
+    line-height: 1.75;
     color: var(--el-text-color-primary);
 
     :deep(> :first-child) {
@@ -249,21 +462,23 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(p) {
-      margin: 0 0 12px;
+      margin: 0 0 14px;
     }
 
     :deep(p:last-child) {
       margin-bottom: 0;
     }
 
+    // 数字标题加粗+主色
     :deep(h1),
     :deep(h2),
     :deep(h3),
     :deep(h4) {
       margin: 24px 0 12px;
+      font-weight: 700;
       line-height: 1.4;
       letter-spacing: -0.02em;
-      color: var(--el-text-color-primary);
+      color: var(--el-color-primary);
     }
 
     :deep(h1) {
@@ -285,6 +500,11 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     :deep(strong) {
       font-weight: 700;
       color: var(--el-text-color-primary);
+    }
+
+    // 描述文字使用 secondary 颜色
+    :deep(li) {
+      color: var(--el-text-color-secondary);
     }
 
     :deep(a) {
@@ -491,6 +711,14 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     .bubble {
       max-width: 100%;
       padding: 13px 14px;
+    }
+
+    .attachment-images {
+      max-width: 100%;
+    }
+
+    .attachment-docs {
+      max-width: 100%;
     }
 
     .markdown-body {

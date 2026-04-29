@@ -11,8 +11,10 @@
   >
     <div :class="['ai-chat-dialog', { 'is-fullscreen': isFullscreen }]">
       <div class="dialog-body">
-        <conversation-sidebar :fullscreen="isFullscreen" :show-create-button="showCreateButton" />
-        <chat-panel :fullscreen="isFullscreen" />
+        <transition name="sidebar-slide">
+          <conversation-sidebar v-show="sidebarVisible" :fullscreen="isFullscreen" :show-create-button="showCreateButton" />
+        </transition>
+        <chat-panel :fullscreen="isFullscreen" :sidebar-visible="sidebarVisible" @toggle-sidebar="sidebarVisible = !sidebarVisible" />
       </div>
     </div>
   </vab-dialog>
@@ -36,7 +38,7 @@ const props = withDefaults(
   }>(),
   {
     title: 'AI 助手',
-    showCreateButton: false,
+    showCreateButton: true,
     forceCreateConversationOnOpen: false,
     refreshConversationsOnOpen: true,
     createConversationIfEmptyOnOpen: true,
@@ -53,6 +55,7 @@ defineOptions({
 
 const aiStore = useAiStore()
 const isFullscreen = ref(false)
+const sidebarVisible = ref(true)
 
 const dialogVisible = computed({
   get: () => props.modelValue,
@@ -136,6 +139,19 @@ watch(
   overflow: hidden;
   border: 1px solid var(--el-border-color-lighter);
   border-radius: 18px;
+}
+
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  transition: width 0.3s ease, opacity 0.25s ease, min-width 0.3s ease;
+}
+
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
+  width: 0 !important;
+  min-width: 0 !important;
+  opacity: 0;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 1280px) {

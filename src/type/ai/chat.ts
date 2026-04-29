@@ -1,11 +1,22 @@
 export type ChatRole = 'user' | 'assistant' | 'system'
 
+export interface ChatAttachment {
+  id: string
+  name: string
+  size: number
+  type: string
+  url?: string
+  status: 'uploading' | 'success' | 'error'
+  progress?: number
+}
+
 export interface ChatMessage {
   id?: number | string
   role: ChatRole
   content: string
   createdAt?: string
   status?: 'loading' | 'success' | 'error'
+  attachments?: ChatAttachment[]
 }
 
 export interface ChatConversation {
@@ -13,6 +24,7 @@ export interface ChatConversation {
   title: string
   createdAt?: string
   unreadCount?: number
+  messageCount?: number
 }
 
 export interface ChatConversationBusyState {

@@ -29,6 +29,17 @@ export const createAiConversation = (data?: CreateConversationPayload) => {
 }
 
 /**
+ * 新建聊天模式下创建会话（通用聊天）
+ * 无需传递参数，后端自动生成会话。
+ */
+export const createCommonChatConversation = () => {
+  return request({
+    url: `${AI_BASE_API}/conversations/common/chat/add`,
+    method: 'post',
+  })
+}
+
+/**
  * 新款评估-生成 AI 调研报告会话
  */
 export const createEvaluationResearchReportConversation = (data: EvaluationResearchReportPayload) => {
@@ -94,7 +105,7 @@ export const decreaseAiConversationUnreadCount = (conversationId: number | strin
  * @param data.content 用户输入内容
  * @param data.model 模型标识，可选
  */
-export const sendAiChatMessage = (data: { conversationId: number | string; content?: string; model?: string }) => {
+export const sendAiChatMessage = (data: { conversationId: number | string; content?: string; model?: string; attachments?: string[] }) => {
   return request({
     url: `${AI_BASE_API}/conversations/${data.conversationId}/messages`,
     method: 'post',
@@ -112,4 +123,31 @@ export const getFeishuUrl = (id: number | string = 1) => {
 
 export const createFeishuDoc = (conversationId: number | string) => {
   return request({ url: `${AI_BASE_API}/conversations/create/feishu/doc/${conversationId}`, method: 'post' })
+}
+
+/**
+ * 上传多个文件（图片/附件）
+ * 返回文件路径列表
+ */
+export const uploadAiFiles = (files: File[]) => {
+  const formData = new FormData()
+  files.forEach((file) => formData.append('files', file))
+  return request({
+    url: '/ai/image/uploads',
+    method: 'post',
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+
+/**
+ * 批量删除 AI 文件
+ * @param fileUrls 文件完整 URL 列表
+ */
+export const deleteAiFiles = (fileUrls: string[]) => {
+  return request({
+    url: '/ai/image/deletes',
+    method: 'post',
+    data: fileUrls,
+  })
 }
