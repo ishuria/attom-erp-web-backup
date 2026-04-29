@@ -33,6 +33,7 @@
         </vab-query-form>
         <el-table
           ref="tableRef"
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -156,8 +157,8 @@
 
           <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="handleOrderProcess(row)">
+              <el-dropdown :disabled="!row.projectInitiationDate">
+                <el-button :disabled="!row.projectInitiationDate" text type="primary" @click="handleOrderProcess(row)">
                   {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -227,6 +228,7 @@
         </vab-query-form>
         <el-table
           ref="tableRef"
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -239,6 +241,11 @@
           @sort-change="handleSortChange"
         >
           <el-table-column label="planPo发布日期" min-width="115" prop="poCreateTime">
+            <template #header>
+              planPo
+              <br />
+              发布日期
+            </template>
             <template #default="{ row }">
               <span>{{ row.poCreateTime ? formatDate(new Date(row.poCreateTime)) : '' }}</span>
             </template>
@@ -324,7 +331,7 @@
           </el-table-column>
           <el-table-column label="立项日期" min-width="115" prop="projectInitiationDate">
             <template #default="{ row }">
-              <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
+              <span>{{ row.projectInitiationDate != null ? formatDate(new Date(row.projectInitiationDate)) : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="审批日期" min-width="115" prop="reviewDate">
@@ -361,8 +368,8 @@
 
           <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="handleOrderProcess(row)">
+              <el-dropdown :disabled="!row.projectInitiationDate">
+                <el-button :disabled="!row.projectInitiationDate" text type="primary" @click="handleOrderProcess(row)">
                   {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -429,6 +436,7 @@
         </vab-query-form>
         <el-table
           ref="tableRef"
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -515,7 +523,7 @@
           </el-table-column>
           <el-table-column label="立项日期" min-width="115" prop="projectInitiationDate">
             <template #default="{ row }">
-              <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
+              <span>{{ row.projectInitiationDate != null ? formatDate(new Date(row.projectInitiationDate)) : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="审批日期" min-width="115" prop="reviewDate">
@@ -552,7 +560,14 @@
 
           <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">
-              <el-link type="primary" underline="never" @click="handleGetScoreById(row.reviewMainId)">分数明细</el-link>
+              <el-link
+                :disabled="!row.projectInitiationDate"
+                type="primary"
+                underline="never"
+                @click="handleGetScoreById(row.reviewMainId)"
+              >
+                分数明细
+              </el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -675,6 +690,7 @@ const route = useRoute()
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
+let fetchDataRequestId = 0
 const queryForm = reactive<IReviewQueryReq>({
   keyWord: '',
   pageNo: 1,
@@ -830,13 +846,21 @@ const fetchData = async () => {
   if (route.query.reviewId) {
     queryForm.keyWord = route.query.reviewId as string
   }
+  const requestId = ++fetchDataRequestId
   listLoading.value = true
-  const { data } = await getReviewList(queryForm)
-  dataList.value = data.list!
-  total.value = data.total
-  listLoading.value = false
-  previous = null
-  currentGroupIndex = 0
+  try {
+    const { data } = await getReviewList(queryForm)
+    if (requestId !== fetchDataRequestId) return
+
+    dataList.value = data.list!
+    total.value = data.total
+    previous = null
+    currentGroupIndex = 0
+  } finally {
+    if (requestId === fetchDataRequestId) {
+      listLoading.value = false
+    }
+  }
 }
 
 const handleOrderReview = (row: IReviewQueryItem) => {
