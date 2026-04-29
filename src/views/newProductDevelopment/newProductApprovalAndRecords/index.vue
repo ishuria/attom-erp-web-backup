@@ -560,14 +560,7 @@
 
           <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">
-              <el-link
-                :disabled="!row.projectInitiationDate"
-                type="primary"
-                underline="never"
-                @click="handleGetScoreById(row.reviewMainId)"
-              >
-                分数明细
-              </el-link>
+              <el-link type="primary" underline="never" @click="handleGetScoreById(row.reviewMainId)">分数明细</el-link>
             </template>
           </el-table-column>
           <template #empty>

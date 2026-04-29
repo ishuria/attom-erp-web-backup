@@ -3,6 +3,7 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
+  IAddOperationSubcategoryRankingReq,
   IBatchUpdateCommissionTaskPictureReq,
   IBatchUpdateDevelopDesignTaskReq,
   IGetCommissionArtTypeListRes,
@@ -19,19 +20,18 @@ import type {
   IGetDevelopDesignTaskListRes,
   IGetLongCommissionTaskListReq,
   IGetLongCommissionTaskListRes,
+  IGetOperationSubcategoryRankingListRes,
   IGetReductionCostDetailListReq,
   IGetReductionCostDetailListRes,
   IGetReductionCostListRes,
-  IGetOperationSubcategoryRankingListRes,
-  IAddOperationSubcategoryRankingReq,
   IOperationCommissionCoefficientRes,
-  IUpdateOperationSubcategoryRankingReq,
   IUpdateCommissionArtTypeReq,
   IUpdateCommissionProductTypeReq,
   IUpdateCommissionSetting1Req,
   IUpdateCommissionTaskPictureReq,
   IUpdateDevelopDesignTaskReq,
   IUpdateLongCommissionTaskReq,
+  IUpdateOperationSubcategoryRankingReq,
   IUpdateReductionCostTaskReq,
 } from '/@/type/commission/commissionType'
 
@@ -564,6 +564,64 @@ export function getOperationBonusDetailList(data: {
     data,
   })
 }
+
+/**
+ * @description 运营奖金-Walmart明细列表
+ */
+export function getOperationBonusWalmartDetailList(data: {
+  userId: number
+  month: string
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  orderByField: string
+  orderDirection: string
+}): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/detail`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 运营奖金-Walmart奖金明细列表
+ */
+export function getOperationBonusWalmartCommissionDetailList(data: {
+  userId: number
+  month: string
+  site: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  orderByField: string
+  orderDirection: string
+}): Promise<{ data: { list: any[]; total: number; totalPrice: number } }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/commission/detail`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 运营奖金-Walmart站点列表
+ */
+export function getWalmartOperationSiteList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/platform/walmart/site/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 运营奖金-Amazon站点列表
+ */
+export function getAmazonOperationSiteList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/platform/amazon/site/list`,
+    method: 'get',
+  })
+}
 /**
  * @description 运营奖金-老品利润历史列表
  */
@@ -682,6 +740,16 @@ export function getAsinDetailMonthList(): Promise<{ data: string[] }> {
 }
 
 /**
+ * @description 获取Walmart明细-月份列表
+ */
+export function getWalmartDetailMonthList(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/detail/month`,
+    method: 'get',
+  })
+}
+
+/**
  * @description 获取运营奖金明细-月份列表
  */
 export function getOperationCommissionDateList(): Promise<{ data: string[] }> {
@@ -740,6 +808,48 @@ export function updateCurrencyOperationAsinDetail(params: { currency: number }):
 export function getCurrencyOperationAsinDetail(): Promise<{ data: number }> {
   return request({
     url: `${BASE_API}/operation/asin/detail/currency`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description Walmart汇总-修改币种
+ */
+export function updateCurrencyOperationWalmartSummary(params: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/walmart/operation/summary/currency/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * @description Walmart汇总-获取币种
+ */
+export function getCurrencyOperationWalmartSummary(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/walmart/operation/summary/currency`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description Walmart明细-修改币种
+ */
+export function updateCurrencyOperationWalmartDetail(params: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/walmart/operation/detail/currency/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * @description Walmart明细-获取币种
+ */
+export function getCurrencyOperationWalmartDetail(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/walmart/operation/detail/currency`,
     method: 'get',
   })
 }
