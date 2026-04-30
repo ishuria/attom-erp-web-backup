@@ -35,6 +35,11 @@ const metricConfig: Record<string, { name: string; key: keyof IGetFrontPagePerfo
   runsNumbers: { name: '新款评估跑分次数', key: 'runsNumbers', color: '#F38181' },
   progressNumbers: { name: '新品进度记录数', key: 'progressNumbers', color: '#AA96DA' },
   samplingFrequency: { name: '拿样次数', key: 'samplingFrequency', color: '#FCBAD3' },
+  stopPercentage: { name: '2年停产%', key: 'stopPercentage', color: '#A8D8EA' },
+  excellentNewProductPercentage: { name: '2年优秀新品占比', key: 'excellentNewProductPercentage', color: '#F9D89C' },
+  firstOrderUnsold180dPercentage: { name: '2年首单上线180天未售完占比', key: 'firstOrderUnsold180dPercentage', color: '#B4A7D6' },
+  newProductDestroyLoss: { name: '新品销毁损失', key: 'newProductDestroyLoss', color: '#FF9671' },
+  monthlyFailureRate: { name: '当月失败率', key: 'monthlyFailureRate', color: '#00C9A7' },
 }
 
 const option = reactive<any>({

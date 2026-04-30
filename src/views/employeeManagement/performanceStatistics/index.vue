@@ -280,6 +280,7 @@
           <el-table-column label="侵权产品数" min-width="110" prop="infringementProductNumber" />
           <el-table-column label="下架产品数" min-width="110" prop="removeProductNumber" />
           <el-table-column label="销毁货值" min-width="100" prop="destroyGoodsValue" />
+          <el-table-column label="新品销毁损失" min-width="120" prop="newProductDestroyLoss" />
           <el-table-column label="驳回次数" min-width="100" prop="rejectCount" />
           <el-table-column min-width="120" prop="sixPastCommission">
             <template #header>
@@ -298,6 +299,8 @@
           <el-table-column label="总开发数" min-width="100" prop="totalNumber" />
           <el-table-column label="总停产数" min-width="100" prop="totalStopNumber" />
           <el-table-column label="停产%" min-width="90" prop="stopPercentage" />
+          <el-table-column label="优秀新品占比" min-width="120" prop="excellentNewProductPercentage" />
+          <el-table-column label="首单180天未售完占比" min-width="160" prop="firstOrderUnsold180dPercentage" />
           <el-table-column min-width="120" prop="newProductOneYearCommission">
             <template #header>
               上新1年内

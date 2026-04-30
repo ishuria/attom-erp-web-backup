@@ -64,6 +64,10 @@ export interface IGetAssessmentList {
    */
   destroyGoodsValue?: number
   /**
+   * 新品销毁损失
+   */
+  newProductDestroyLoss?: number
+  /**
    * id
    */
   id?: number
@@ -127,6 +131,14 @@ export interface IGetAssessmentList {
    * 停产百分比
    */
   stopPercentage?: number
+  /**
+   * 2年优秀新品占比
+   */
+  excellentNewProductPercentage?: number
+  /**
+   * 2年首单上线180天未售完占比
+   */
+  firstOrderUnsold180dPercentage?: number
   /**
    * 总开发数
    */

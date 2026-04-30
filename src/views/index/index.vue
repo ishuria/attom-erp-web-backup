@@ -520,8 +520,8 @@ import {
   ROLE_SUPPLY_CHAIN_MANG_CODE,
   ROLE_WAREHOUSEMANNAGERlEAD_CODE,
 } from '/@/const/role'
+import { FBA_CORE_SITE_LIST, SITE_NAME_MAP, SiteEnum } from '/@/const/site'
 import { useAclStore } from '/@/store/modules/acl'
-import { FBA_CORE_SITE_LIST, SiteEnum, SITE_NAME_MAP } from '/@/const/site'
 import { useUserStore } from '/@/store/modules/user'
 import {
   IGetFrontPageAttendanceOverview,
@@ -1008,6 +1008,11 @@ const availableMetrics = ref<IPerformanceMetric[]>([
   { value: 'newProductOneYearCommission', label: '新品提成', key: 'newProductOneYearCommission' },
   { value: 'newProductsAverageProfit', label: '新品平均利润', key: 'newProductsAverageProfit' },
   { value: 'purchaseAmount', label: '新款采购额', key: 'purchaseAmount' },
+  { value: 'stopPercentage', label: '2年停产%', key: 'stopPercentage' },
+  { value: 'excellentNewProductPercentage', label: '2年优秀新品占比', key: 'excellentNewProductPercentage' },
+  { value: 'firstOrderUnsold180dPercentage', label: '2年首单上线180天未售完占比', key: 'firstOrderUnsold180dPercentage' },
+  { value: 'newProductDestroyLoss', label: '新品销毁损失', key: 'newProductDestroyLoss' },
+  { value: 'monthlyFailureRate', label: '当月失败率', key: 'monthlyFailureRate' },
   { value: 'jingPinCount', label: '精品', key: 'jingPinCount' },
   { value: 'jingPuCount', label: '精铺', key: 'jingPuCount' },
   { value: 'jingPuVineCount', label: '精铺vine', key: 'jingPuVineCount' },

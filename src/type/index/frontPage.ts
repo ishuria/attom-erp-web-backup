@@ -172,6 +172,11 @@ export interface IGetFrontPagePerformanceHistory {
   runsNumbers?: number
   progressNumbers?: number
   samplingFrequency?: number
+  stopPercentage?: number
+  excellentNewProductPercentage?: number
+  firstOrderUnsold180dPercentage?: number
+  newProductDestroyLoss?: number
+  monthlyFailureRate?: number
 }
 
 // 绩效指标配置
