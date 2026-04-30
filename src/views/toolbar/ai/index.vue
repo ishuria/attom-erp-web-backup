@@ -46,7 +46,7 @@
     >
       <el-table-column label="角色" prop="roleName" show-overflow-tooltip width="120" />
       <el-table-column label="人员" prop="userName" show-overflow-tooltip width="120" />
-      <el-table-column label="提示词功能" prop="functionName" width="200">
+      <el-table-column label="提示词功能" prop="functionName" width="230">
         <template #default="{ row }">
           <el-tooltip content=" " effect="dark" placement="top">
             <template #content>
@@ -58,12 +58,7 @@
       </el-table-column>
       <el-table-column label="提示词" min-width="300" prop="prompt">
         <template #default="{ row }">
-          <el-tooltip effect="dark" placement="top">
-            <template #content>
-              <div class="custom-tooltip prompt-tooltip">{{ row.prompt }}</div>
-            </template>
-            <div class="multi-line-ellipsis-1 prompt-text">{{ row.prompt }}</div>
-          </el-tooltip>
+          <div class="multi-line-ellipsis-1 prompt-text">{{ row.prompt }}</div>
         </template>
       </el-table-column>
 
