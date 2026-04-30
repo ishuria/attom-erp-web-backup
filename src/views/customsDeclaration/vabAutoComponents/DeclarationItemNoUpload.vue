@@ -24,9 +24,7 @@
     <template #footer>
       <div style="text-align: center">
         <el-button :disabled="loading" @click="visible = false">取消</el-button>
-        <el-button :disabled="!canSubmit" :loading="loading" :type="canSubmit ? 'primary' : 'info'" @click="handleSubmit">
-          开始匹配并下载
-        </el-button>
+        <el-button :disabled="!canSubmit" :loading="loading" type="primary" @click="handleSubmit">开始匹配并下载</el-button>
       </div>
     </template>
   </vab-dialog>
