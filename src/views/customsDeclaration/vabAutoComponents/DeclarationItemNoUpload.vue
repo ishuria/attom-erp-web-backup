@@ -2,6 +2,12 @@
   <vab-dialog v-model="visible" title="匹配报关项号文件上传" width="25%" @close="close">
     <el-alert class="upload-tip" :closable="false" show-icon title="请确保Excel中包含 SKU 和 项号列" type="warning" />
 
+    <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" class="form-section">
+      <el-form-item label="ShipmentId" prop="shipmentId">
+        <el-input v-model="form.shipmentId" placeholder="请输入 ShipmentId" clearable />
+      </el-form-item>
+    </el-form>
+
     <el-upload v-model:file-list="preOrderFiles" :auto-upload="false" drag multiple :show-file-list="true">
       <el-icon class="el-icon--upload">
         <upload-filled />
@@ -34,22 +40,33 @@
 
 <script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue'
-import type { UploadUserFile } from 'element-plus'
+import type { FormInstance, FormRules, UploadUserFile } from 'element-plus'
 import { downloadFilePDH } from '/@/api/devlocal/download'
 
 defineOptions({
   name: 'DeclarationItemNoUpload',
 })
 
+const formRef = ref<FormInstance>()
+const form = reactive({
+  shipmentId: '',
+})
+const rules: FormRules = {
+  shipmentId: [{ required: true, message: '请输入 ShipmentId', trigger: 'blur' }],
+}
 const preOrderFiles = ref<UploadUserFile[]>([])
 const taxRefundFiles = ref<UploadUserFile[]>([])
 const loading = ref(false)
-const canSubmit = computed(() => preOrderFiles.value.length > 0 && taxRefundFiles.value.length > 0)
+const canSubmit = computed(
+  () => !!form.shipmentId.trim() && preOrderFiles.value.length > 0 && taxRefundFiles.value.length > 0,
+)
 const visible = defineModel({ default: false })
 
 const resetFiles = () => {
   preOrderFiles.value = []
   taxRefundFiles.value = []
+  form.shipmentId = ''
+  formRef.value?.clearValidate()
 }
 
 const close = () => {
@@ -59,6 +76,8 @@ const close = () => {
 
 const handleSubmit = async () => {
   if (loading.value) return
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
   if (preOrderFiles.value.length === 0) {
     $baseMessage('必须先上传装箱单Excel文件！', 'warning', 'hey')
     return
@@ -68,6 +87,7 @@ const handleSubmit = async () => {
     return
   }
   const formData = new FormData()
+  formData.append('shipmentId', form.shipmentId.trim())
   preOrderFiles.value.forEach((item) => {
     if (item.raw) formData.append('files', item.raw)
   })
@@ -87,6 +107,9 @@ const handleSubmit = async () => {
 
 <style lang="scss" scoped>
 .upload-tip {
+  margin-bottom: 12px;
+}
+.form-section {
   margin-bottom: 12px;
 }
 </style>
