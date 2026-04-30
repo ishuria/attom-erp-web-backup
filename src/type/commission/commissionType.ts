@@ -906,3 +906,29 @@ export interface IAddOperationSubcategoryRankingReq {
   gear: number
   proportion: number
 }
+
+// SKU利润分明细
+export interface IGetSkuProfitScoreDetailListReq {
+  pageNo: number
+  pageSize: number
+  startMonth: string
+  endMonth: string
+  userId: number
+}
+
+export interface IGetSkuProfitScoreDetailList {
+  id?: number
+  month?: string
+  groupName?: string
+  userName?: string
+  totalProfit?: number
+  monthProfitScore?: number
+  pileProfitScore?: number
+  skus?: string[]
+}
+
+export interface IGetSkuProfitGroupDetailList {
+  sku?: string
+  monthProfit?: number
+  skuImgUrl?: string
+}

@@ -24,6 +24,8 @@ import type {
   IGetReductionCostDetailListReq,
   IGetReductionCostDetailListRes,
   IGetReductionCostListRes,
+  IGetSkuProfitGroupDetailList,
+  IGetSkuProfitScoreDetailListReq,
   IOperationCommissionCoefficientRes,
   IUpdateCommissionArtTypeReq,
   IUpdateCommissionProductTypeReq,
@@ -851,5 +853,29 @@ export function getCurrencyOperationWalmartDetail(): Promise<{ data: number }> {
   return request({
     url: `${BASE_API}/walmart/operation/detail/currency`,
     method: 'get',
+  })
+}
+
+/**
+ * @description SKU利润分明细列表
+ */
+export function getSkuProfitScoreDetailList(params: IGetSkuProfitScoreDetailListReq): Promise<{
+  data: { list: any[]; total: number }
+}> {
+  return request({
+    url: `${BASE_API}/sku/profit/score/detail/list`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * @description SKU利润分组明细列表（含图片）
+ */
+export function getSkuProfitGroupDetailList(params: { groupId: number }): Promise<{ data: IGetSkuProfitGroupDetailList[] }> {
+  return request({
+    url: `${BASE_API}/sku/profit/group/detail/list`,
+    method: 'get',
+    params,
   })
 }

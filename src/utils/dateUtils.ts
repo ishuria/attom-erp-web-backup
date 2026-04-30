@@ -152,7 +152,12 @@ export const getCurrentMonth = (): string => {
   const month = String(today.getMonth() + 1).padStart(2, '0')
   return `${year}-${month}`
 }
-
+export const getCurrentMonthRange = (): string[] => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  return [`${year}-${month}`, `${year}-${month}`]
+}
 /**
  * @description 获取当前日期处理过的形式
  * @returns `${year}${month}${day}`
