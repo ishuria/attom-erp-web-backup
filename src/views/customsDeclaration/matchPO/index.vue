@@ -40,8 +40,9 @@
           关税单上传
         </el-button>
         <el-button type="primary" @click="uploadTaxRefundFielCheck">报关文件&合同校验上传</el-button>
-        <el-button type="primary" @click="uploadPreOrderCheck">预入单校验</el-button>
+        <el-button type="primary" @click="uploadPreOrderCheck">预录单校验</el-button>
         <el-button type="primary" @click="contractTaxRefundVisible = true">合同号退税额更新</el-button>
+        <el-button type="primary" @click="showMatchDeclarationItemNo">匹配报关项号</el-button>
         <el-space :size="16" style="align-items: center">
           <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxes" />
           <el-divider direction="vertical" style="height: 34px" />
@@ -579,14 +580,14 @@
       </template>
     </vab-dialog>
 
-    <!-- 预入单文件上传 -->
-    <vab-dialog v-model="uploadPreOrderFormVisible" title="预入单校验文件上传" width="25%">
+    <!-- 预录单文件上传 -->
+    <vab-dialog v-model="uploadPreOrderFormVisible" title="预录单校验文件上传" width="25%">
       <el-upload v-model:file-list="preOrderFiles" :auto-upload="false" drag multiple :show-file-list="true">
         <el-icon class="el-icon--upload">
           <upload-filled />
         </el-icon>
         <div class="el-upload__text">
-          将预入单excel文件拖拽至此处或
+          将预录单excel文件拖拽至此处或
           <em>点击上传</em>
         </div>
       </el-upload>
@@ -606,6 +607,12 @@
         </div>
       </template>
     </vab-dialog>
+
+    <declaration-item-no-upload
+      v-model="matchDeclarationItemNoVisible"
+      :loading="matchDeclarationItemNoLoading"
+      @submit="handleMatchDeclarationItemNoSubmit"
+    />
   </div>
 </template>
 
@@ -615,6 +622,7 @@ import type { FormInstance, TableInstance, UploadUserFile } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { computed, h } from 'vue'
+import DeclarationItemNoUpload from '../vabAutoComponents/DeclarationItemNoUpload.vue'
 import {
   addShipmentCost,
   archiveOutbound,
@@ -633,6 +641,7 @@ import {
   getShipmentLegCurrencyList,
   importContractNumber,
   updateBgShipmentLeg,
+  updateContractNumberTaxRefund,
   updateInTaxRefundStatusShipmentLeg,
   updateQgShipmentLeg,
   updateShipment,
@@ -643,7 +652,6 @@ import {
   updateShipmentPay,
   uploadPreOrderFormCheckFile,
   uploadTaxRefundCheckFile,
-  updateContractNumberTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
 import { getChannelList, getSettlementObjectList } from '/@/api/devlocal/encasement'
@@ -689,6 +697,7 @@ const showTariffBillUpload = () => {
 }
 const uploadPDFVisible = ref<boolean>(false)
 const contractNumberImportVisible = ref<boolean>(false)
+const matchDeclarationItemNoVisible = ref<boolean>(false)
 // 合同号退税更新
 const contractTaxRefundVisible = ref<boolean>(false)
 const contractTaxRefundFormRef = ref<FormInstance>()
@@ -761,7 +770,7 @@ const handleTaxRefundUpload = async () => {
   }
 }
 
-// 预入单上传
+// 预录单上传
 const uploadPreOrderFormVisible = ref<boolean>(false)
 const preOrderFormLoadingVisible = ref<boolean>(false)
 const preOrderFiles = ref<UploadUserFile[]>([])
@@ -784,15 +793,44 @@ const handlePreOrderFormUploadSubmit = async () => {
   try {
     const { data } = await uploadPreOrderFormCheckFile(formData)
     if (data) {
-      $baseMessage('预入单文件上传校验成功！', 'success')
+      $baseMessage('预录单文件上传校验成功！', 'success')
       uploadPreOrderFormVisible.value = false
       preOrderFiles.value = []
       taxRefundFiles.value = []
     }
   } catch {
-    $baseMessage('预入单文件上传失败', 'error')
+    $baseMessage('预录单文件上传失败', 'error')
   } finally {
     preOrderFormLoadingVisible.value = false
+  }
+}
+
+// 匹配报关项号上传
+const matchDeclarationItemNoLoading = ref<boolean>(false)
+const showMatchDeclarationItemNo = () => {
+  matchDeclarationItemNoVisible.value = true
+}
+
+const handleMatchDeclarationItemNoSubmit = async ({
+  preOrderFiles,
+  taxRefundFiles,
+}: {
+  preOrderFiles: UploadUserFile[]
+  taxRefundFiles: UploadUserFile[]
+}) => {
+  if (matchDeclarationItemNoLoading.value) return
+  matchDeclarationItemNoLoading.value = true
+  const formData = new FormData()
+  preOrderFiles.forEach((item: any) => {
+    formData.append('file1', item.raw)
+  })
+  taxRefundFiles.forEach((item: any) => {
+    formData.append('file2', item.raw)
+  })
+  try {
+    $baseMessage('匹配报关项号接口未对接！', 'warning', 'hey')
+  } finally {
+    matchDeclarationItemNoLoading.value = false
   }
 }
 
