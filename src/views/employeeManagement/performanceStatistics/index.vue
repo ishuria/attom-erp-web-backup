@@ -296,9 +296,9 @@
               上线1年内新品提成
             </template>
           </el-table-column>
-          <el-table-column label="总开发数" min-width="100" prop="totalNumber" />
-          <el-table-column label="总停产数" min-width="100" prop="totalStopNumber" />
-          <el-table-column label="停产%" min-width="90" prop="stopPercentage" />
+          <el-table-column label="2年总开发数" min-width="100" prop="totalNumber" />
+          <el-table-column label="2年总停产数" min-width="100" prop="totalStopNumber" />
+          <el-table-column label="2年停产%" min-width="90" prop="stopPercentage" />
           <el-table-column label="优秀新品占比" min-width="120" prop="excellentNewProductPercentage" />
           <el-table-column label="首单180天未售完占比" min-width="160" prop="firstOrderUnsold180dPercentage" />
           <el-table-column min-width="120" prop="newProductOneYearCommission">
