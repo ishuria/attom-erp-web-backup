@@ -307,15 +307,16 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     color: var(--el-text-color-primary);
   }
 
-  // 图片附件网格
+  // 图片附件：每张独占一行，便于跟父级 align-items 一起完成左/右对齐
   .attachment-images {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 6px;
     max-width: min(82%, 400px);
   }
 
   .attachment-image-item {
+    width: 200px;
     overflow: hidden;
     cursor: zoom-in;
     border-radius: 10px;

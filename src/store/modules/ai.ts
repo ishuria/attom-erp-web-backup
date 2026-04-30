@@ -34,6 +34,74 @@ const normalizeConversation = (item: any): ChatConversation => ({
   messageCount: Math.max(0, Number(item?.messageCount ?? item?.msgCount ?? 0) || 0),
 })
 
+// 根据文件名后缀推断 MIME，便于历史消息回显时判断走图片预览还是文档卡片。
+const inferMimeType = (name: string): string => {
+  const ext = name.split('.').pop()?.toLowerCase() ?? ''
+  const map: Record<string, string> = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    svg: 'image/svg+xml',
+    bmp: 'image/bmp',
+    pdf: 'application/pdf',
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    xls: 'application/vnd.ms-excel',
+    xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    csv: 'text/csv',
+    txt: 'text/plain',
+    zip: 'application/zip',
+    rar: 'application/x-rar-compressed',
+    '7z': 'application/x-7z-compressed',
+  }
+  return map[ext] ?? 'application/octet-stream'
+}
+
+const fileNameFromUrl = (url: string) => {
+  try {
+    const path = url.split('?')[0].split('#')[0]
+    return decodeURIComponent(path.split('/').pop() ?? '') || url
+  } catch {
+    return url
+  }
+}
+
+// 后端历史消息中的附件字段格式不固定：可能是 URL 字符串数组，也可能是对象数组。
+// 这里抹平成视图层期望的 ChatAttachment 结构，保证刷新后图片/文档仍能正常渲染。
+const normalizeAttachments = (raw: any): ChatAttachment[] | undefined => {
+  if (!Array.isArray(raw) || raw.length === 0) return undefined
+  const list = raw
+    .map((item, index): ChatAttachment | null => {
+      if (!item) return null
+      if (typeof item === 'string') {
+        const name = fileNameFromUrl(item)
+        return {
+          id: `${createLocalId('att')}_${index}`,
+          name,
+          size: 0,
+          type: inferMimeType(name),
+          url: item,
+          status: 'success',
+        }
+      }
+      const url: string = item.url ?? item.fileUrl ?? item.path ?? ''
+      const name: string = item.name ?? item.fileName ?? (url ? fileNameFromUrl(url) : `file-${index + 1}`)
+      const type: string = item.type ?? item.mimeType ?? inferMimeType(name)
+      return {
+        id: item.id ?? `${createLocalId('att')}_${index}`,
+        name,
+        size: Number(item.size ?? item.fileSize ?? 0) || 0,
+        type,
+        url: url || undefined,
+        status: 'success',
+      }
+    })
+    .filter((it): it is ChatAttachment => it !== null)
+  return list.length > 0 ? list : undefined
+}
+
 // 消息列表也做同样的字段归一，减少视图层判断分支。
 const normalizeMessage = (item: any): ChatMessage => ({
   id: item?.id ?? createLocalId('msg'),
@@ -41,6 +109,7 @@ const normalizeMessage = (item: any): ChatMessage => ({
   content: item?.content ?? '',
   createdAt: item?.createdAt ?? item?.createTime ?? dayjs().format('YYYY-MM-DD HH:mm:ss'),
   status: item?.status ?? 'success',
+  attachments: normalizeAttachments(item?.attachments ?? item?.fileList ?? item?.files),
 })
 
 const pickArray = (response: any) => {
