@@ -1,5 +1,16 @@
 <template>
-  <div class="ai-chat-panel">
+  <div
+    class="ai-chat-panel"
+    @dragenter.prevent="handleDragEnter"
+    @dragover.prevent="handleDragOver"
+    @dragleave.prevent="handleDragLeave"
+    @drop.prevent="handleDrop"
+  >
+    <div v-if="isDragover" class="panel-dropzone-overlay">
+      <vab-icon icon="upload-cloud-2-line" />
+      <span>松开鼠标上传附件</span>
+      <span class="hint">支持 PDF / Word / Excel / CSV / Markdown / ZIP / 图片</span>
+    </div>
     <!-- 侧边栏切换（无状态栏时显示） -->
     <div v-if="!currentTitle || !aiStore.activeMessages.length" class="sidebar-toggle-bar">
       <el-tooltip :content="sidebarVisible ? '隐藏侧边栏' : '显示侧边栏'" placement="top">
@@ -57,6 +68,7 @@
     <message-list v-else :messages="aiStore.activeMessages" />
 
     <message-input
+      ref="messageInputRef"
       :disabled="inputDisabled"
       :fullscreen="fullscreen"
       :placeholder="inputPlaceholder"
@@ -128,12 +140,49 @@ onMounted(() => {
   updateOnlineStatus()
 })
 
+// 拖拽上传：覆盖整个聊天面板
+const messageInputRef = ref<InstanceType<typeof ChatPanelMessageInput> | null>(null)
+const isDragover = ref(false)
+let dragCounter = 0
+
+const hasFileType = (event: DragEvent) => {
+  const types = event.dataTransfer?.types
+  if (!types) return false
+  return Array.from(types).includes('Files')
+}
+
+const handleDragEnter = (event: DragEvent) => {
+  if (inputDisabled.value || !hasFileType(event)) return
+  dragCounter++
+  isDragover.value = true
+}
+
+const handleDragOver = (event: DragEvent) => {
+  if (inputDisabled.value || !hasFileType(event)) return
+  if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy'
+}
+
+const handleDragLeave = () => {
+  dragCounter = Math.max(0, dragCounter - 1)
+  if (dragCounter === 0) isDragover.value = false
+}
+
+const handleDrop = (event: DragEvent) => {
+  dragCounter = 0
+  isDragover.value = false
+  if (inputDisabled.value) return
+  const files = Array.from(event.dataTransfer?.files ?? [])
+  if (!files.length) return
+  void messageInputRef.value?.processFiles(files)
+}
+
 const MessageInput = ChatPanelMessageInput
 const MessageList = ChatPanelMessageList
 </script>
 
 <style lang="scss" scoped>
 .ai-chat-panel {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -141,6 +190,35 @@ const MessageList = ChatPanelMessageList
   min-width: 0;
   height: 100%;
   padding: 4px 16px 2px;
+
+  .panel-dropzone-overlay {
+    position: absolute;
+    inset: 4px 16px 2px;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--el-color-primary);
+    background: rgb(238 244 255 / 0.92);
+    border: 2px dashed var(--el-color-primary);
+    border-radius: 16px;
+    pointer-events: none;
+    backdrop-filter: blur(2px);
+
+    .vab-icon {
+      font-size: 36px;
+    }
+
+    .hint {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--el-text-color-secondary);
+    }
+  }
 
   .network-banner {
     display: flex;

@@ -59,6 +59,45 @@ const normalizeCreateConversationOptions = (options?: CreateConversationOptions)
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
+// 持久化"激活会话 + 新建会话模式"，用于浏览器硬刷新后恢复用户上一次的对话状态
+const ACTIVE_STATE_STORAGE_KEY = 'ai_chat_active_state'
+
+interface PersistedActiveState {
+  activeConversationId: number | string | null
+  isNewChatMode: boolean
+}
+
+const readPersistedActiveState = (): PersistedActiveState | null => {
+  try {
+    const raw = localStorage.getItem(ACTIVE_STATE_STORAGE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (!parsed || typeof parsed !== 'object') return null
+    return {
+      activeConversationId: parsed.activeConversationId ?? null,
+      isNewChatMode: !!parsed.isNewChatMode,
+    }
+  } catch {
+    return null
+  }
+}
+
+const writePersistedActiveState = (state: PersistedActiveState) => {
+  try {
+    localStorage.setItem(ACTIVE_STATE_STORAGE_KEY, JSON.stringify(state))
+  } catch {
+    // 忽略 quota / disabled storage 等异常
+  }
+}
+
+const clearPersistedActiveState = () => {
+  try {
+    localStorage.removeItem(ACTIVE_STATE_STORAGE_KEY)
+  } catch {
+    // 同上
+  }
+}
+
 export const useAiStore = defineStore('ai', {
   state: () => ({
     // 弹窗/侧边 AI 面板的打开状态。
@@ -188,9 +227,24 @@ export const useAiStore = defineStore('ai', {
       }
       this.conversations = list
     },
+    // 持久化当前激活会话 + 是否处于新建会话模式，便于刷新后恢复
+    persistActiveState() {
+      writePersistedActiveState({
+        activeConversationId: this.activeConversationId,
+        isNewChatMode: this.isNewChatMode,
+      })
+    },
     // 初始化只做一次；具体是否在空列表时自动创建会话，由 options 控制。
     async ensureInitialized(options?: EnsureConversationOptions) {
       if (this.initialized && !options?.forceRefresh) return
+      // 首次进入时先从 localStorage 恢复状态，让浏览器硬刷新也能保持上次会话或新建会话面板
+      if (!this.initialized) {
+        const persisted = readPersistedActiveState()
+        if (persisted) {
+          this.activeConversationId = persisted.activeConversationId
+          this.isNewChatMode = persisted.isNewChatMode
+        }
+      }
       await this.loadConversations(options)
       this.initialized = true
     },
@@ -198,6 +252,7 @@ export const useAiStore = defineStore('ai', {
     async loadConversations(options?: EnsureConversationOptions) {
       const createIfEmpty = options?.createIfEmpty ?? true
       const currentActiveConversationId = this.activeConversationId
+      const wasInNewChatMode = this.isNewChatMode
 
       try {
         const response = await getAiConversationList()
@@ -214,9 +269,18 @@ export const useAiStore = defineStore('ai', {
       if (currentActiveConversationId != null) {
         const matchedConversation = this.conversations.find((item) => String(item.id) === String(currentActiveConversationId))
         if (matchedConversation) {
-          this.activeConversationId = matchedConversation.id
+          // 通过 switchConversation 复用懒加载消息逻辑，覆盖刷新后命中持久化 id 但内存无消息的场景
+          await this.switchConversation(matchedConversation.id)
           return
         }
+      }
+
+      // 用户处于"新建会话但未发送"的空白状态时，保持新会话面板，避免被强制切到最新历史
+      if (wasInNewChatMode) {
+        this.isNewChatMode = true
+        this.activeConversationId = null
+        this.persistActiveState()
+        return
       }
 
       if (this.conversations.length > 0) await this.switchConversation(this.conversations[0].id)
@@ -235,11 +299,13 @@ export const useAiStore = defineStore('ai', {
     enterNewChatMode() {
       this.isNewChatMode = true
       this.activeConversationId = null
+      this.persistActiveState()
     },
     // 切换会话时按需懒加载消息，避免初次进入一次性拉取全部历史。
     async switchConversation(id: number | string) {
       this.isNewChatMode = false
       this.activeConversationId = id
+      this.persistActiveState()
       const key = String(id)
       const targetConversation = this.conversations.find((item) => String(item.id) === key)
 
@@ -285,7 +351,10 @@ export const useAiStore = defineStore('ai', {
 
       if (String(this.activeConversationId) === String(id)) {
         if (this.conversations.length > 0) await this.switchConversation(this.conversations[0].id)
-        else this.activeConversationId = null
+        else {
+          this.activeConversationId = null
+          this.persistActiveState()
+        }
       }
     },
     // 发送消息时先落本地消息，再等待接口返回，保证界面响应及时。
@@ -301,6 +370,7 @@ export const useAiStore = defineStore('ai', {
           this.conversations.unshift(conversation)
           this.activeConversationId = conversation.id
           this.isNewChatMode = false
+          this.persistActiveState()
         } catch (err: any) {
           ElMessage.error(`创建会话失败：${err?.msg ?? err?.message ?? '请稍后重试'}`)
           return
@@ -555,6 +625,7 @@ export const useAiStore = defineStore('ai', {
       this.pendingAttachments = []
       this.networkOnline = true
       this.isNewChatMode = false
+      clearPersistedActiveState()
     },
   },
 })

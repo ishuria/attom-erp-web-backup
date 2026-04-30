@@ -133,7 +133,7 @@ export const uploadAiFiles = (files: File[]) => {
   const formData = new FormData()
   files.forEach((file) => formData.append('files', file))
   return request({
-    url: '/ai/image/uploads',
+    url: `${BASE_API}/ai/image/uploads`,
     method: 'post',
     data: formData,
     headers: { 'Content-Type': 'multipart/form-data' },
@@ -146,7 +146,7 @@ export const uploadAiFiles = (files: File[]) => {
  */
 export const deleteAiFiles = (fileUrls: string[]) => {
   return request({
-    url: '/ai/image/deletes',
+    url: `${BASE_API}/ai/image/deletes`,
     method: 'post',
     data: fileUrls,
   })

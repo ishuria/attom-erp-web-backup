@@ -450,7 +450,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
   .markdown-body {
     font-size: 16px;
-    line-height: 1.75;
+    line-height: 1.6;
     color: var(--el-text-color-primary);
 
     :deep(> :first-child) {
@@ -462,7 +462,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(p) {
-      margin: 0 0 14px;
+      margin: 0 0 8px;
     }
 
     :deep(p:last-child) {
@@ -474,9 +474,9 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     :deep(h2),
     :deep(h3),
     :deep(h4) {
-      margin: 24px 0 12px;
+      margin: 14px 0 6px;
       font-weight: 700;
-      line-height: 1.4;
+      line-height: 1.3;
       letter-spacing: -0.02em;
       color: var(--el-color-primary);
     }
@@ -526,8 +526,8 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(blockquote) {
-      padding: 12px 14px 12px 16px;
-      margin: 16px 0;
+      padding: 8px 12px 8px 14px;
+      margin: 10px 0;
       color: var(--el-text-color-secondary);
       background: linear-gradient(90deg, rgb(73 118 255 / 0.08), rgb(73 118 255 / 0.02));
       border: 1px solid rgb(73 118 255 / 0.1);
@@ -536,18 +536,18 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(hr) {
-      margin: 20px 0;
+      margin: 12px 0;
       border: 0;
       border-top: 1px solid var(--el-border-color-lighter);
     }
 
     :deep(.markdown-code-block) {
-      margin: 16px 0;
+      margin: 10px 0;
       overflow: hidden;
       background: #161b26;
       border: 1px solid rgb(255 255 255 / 0.06);
-      border-radius: 16px;
-      box-shadow: 0 14px 30px rgb(15 23 42 / 0.18);
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgb(15 23 42 / 0.08);
     }
 
     :deep(.markdown-code-header) {
@@ -561,7 +561,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(.markdown-code-lang) {
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.08em;
       color: rgb(232 237 247 / 0.78);
@@ -570,7 +570,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
     :deep(.markdown-code-copy) {
       padding: 4px 10px;
-      font-size: 16px;
+      font-size: 13px;
       color: #f4f7fb;
       cursor: pointer;
       background: rgb(255 255 255 / 0.08);
@@ -589,13 +589,13 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(pre) {
-      padding: 14px 16px 16px;
+      padding: 12px 14px;
       margin: 0;
       overflow: auto;
       color: #e8edf7;
       background: transparent;
-      font-size: 16px;
-      line-height: 1.75;
+      font-size: 14px;
+      line-height: 1.6;
     }
 
     :deep(code) {
@@ -614,38 +614,20 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     :deep(ul),
     :deep(ol) {
       padding-left: 20px;
-      margin: 12px 0;
+      margin: 6px 0;
     }
 
     :deep(li + li) {
-      margin-top: 6px;
+      margin-top: 2px;
     }
 
     :deep(.markdown-table-wrap) {
       position: relative;
-      margin: 16px 0;
+      margin: 10px 0;
       overflow-x: auto;
-      background:
-        linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(247 249 253 / 0.98)),
-        var(--el-bg-color);
-      border: 1px solid rgb(93 122 255 / 0.1);
-      border-radius: 16px;
-      box-shadow:
-        0 10px 24px rgb(17 24 39 / 0.06),
-        inset 0 1px 0 rgb(255 255 255 / 0.78);
-    }
-
-    :deep(.markdown-table-wrap::after) {
-      position: sticky;
-      top: 0;
-      right: 0;
-      display: block;
-      width: 28px;
-      height: 100%;
-      pointer-events: none;
-      content: '';
-      background: linear-gradient(90deg, rgb(255 255 255 / 0), rgb(255 255 255 / 0.9));
-      float: right;
+      background: var(--el-bg-color);
+      border: 1px solid var(--el-border-color-lighter);
+      border-radius: 12px;
     }
 
     :deep(table) {
@@ -653,30 +635,41 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       min-width: 100%;
       border-collapse: collapse;
       font-size: 16px;
-      line-height: 1.7;
+      line-height: 1.5;
     }
 
     :deep(thead tr) {
       background: linear-gradient(180deg, rgb(93 122 255 / 0.12), rgb(93 122 255 / 0.05));
     }
 
-    :deep(th),
-    :deep(td) {
-      padding: 14px 16px;
+    :deep(th) {
+      max-width: 240px;
+      padding: 6px 10px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
       text-align: left;
       vertical-align: top;
-      white-space: nowrap;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      border-bottom: 1px solid var(--el-border-color-lighter);
+    }
+
+    :deep(td) {
+      max-width: 240px;
+      padding: 6px 10px;
+      font-weight: 400;
+      text-align: left;
+      vertical-align: top;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
       border-bottom: 1px solid var(--el-border-color-lighter);
     }
 
     :deep(th + th),
     :deep(td + td) {
       border-left: 1px solid var(--el-border-color-lighter);
-    }
-
-    :deep(th) {
-      font-weight: 600;
-      color: var(--el-text-color-primary);
     }
 
     :deep(td:first-child) {
@@ -694,6 +687,16 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
     :deep(tbody tr:last-child td) {
       border-bottom: 0;
+    }
+
+    :deep(td img),
+    :deep(th img) {
+      width: auto;
+      height: auto;
+      max-width: 200px;
+      max-height: 120px;
+      cursor: zoom-in;
+      object-fit: contain;
     }
   }
 }

@@ -2,7 +2,7 @@
   <div class="ai-message-input">
     <!-- 附件按钮移到输入框外部 -->
     <div class="toolbar-outer">
-      <el-tooltip content="上传附件" placement="top">
+      <el-tooltip content="上传附件（支持粘贴 / 拖拽）" placement="top">
         <el-button circle text size="small" :disabled="disabled || totalAttachments >= 10" @click="triggerFileInput">
           <vab-icon icon="attachment-2" />
         </el-button>
@@ -51,6 +51,7 @@
           :disabled="disabled"
           :placeholder="placeholder || '输入消息，Shift+Enter 换行，Enter 发送'"
           @keydown.enter.exact.prevent="handleSend"
+          @paste="handlePaste"
         />
       </div>
       <input ref="fileInputRef" type="file" class="hidden-file-input" :accept="allAcceptTypes" multiple @change="handleFileSelect" />
@@ -147,13 +148,25 @@ const triggerFileInput = () => {
   fileInputRef.value?.click()
 }
 
-const handleFileSelect = async (event: Event) => {
-  const input = event.target as HTMLInputElement
-  if (!input.files?.length) return
+const MIME_EXT_MAP: Record<string, string> = {
+  'image/png': '.png',
+  'image/jpeg': '.jpg',
+  'image/gif': '.gif',
+  'image/webp': '.webp',
+}
 
-  const files = Array.from(input.files)
-  input.value = ''
+// 粘贴的截图等可能没有文件名或扩展名，用 MIME 兜底重命名
+const normalizeFile = (file: File): File => {
+  if (file.name && getFileExtension(file.name)) return file
+  const ext = MIME_EXT_MAP[file.type] || ''
+  const baseName = file.type.startsWith('image/') ? 'pasted-image' : 'pasted-file'
+  return new File([file], `${baseName}-${Date.now()}${ext}`, { type: file.type })
+}
 
+const processFiles = async (rawFiles: File[]) => {
+  if (props.disabled || !rawFiles.length) return
+
+  const files = rawFiles.map(normalizeFile)
   const validFiles: File[] = []
 
   for (const file of files) {
@@ -164,7 +177,7 @@ const handleFileSelect = async (event: Event) => {
 
     const ext = getFileExtension(file.name)
     if (!ALLOWED_EXTENSIONS.has(ext)) {
-      $baseMessage(`不支持的文件格式: ${ext}`, 'error', 'hey')
+      $baseMessage(`不支持的文件格式: ${ext || file.type || '未知'}`, 'error', 'hey')
       continue
     }
 
@@ -173,7 +186,7 @@ const handleFileSelect = async (event: Event) => {
       continue
     }
 
-    if (file.type.startsWith('image/') && aiStore.pendingAttachments.filter((a) => a.type.startsWith('image/')).length >= 4) {
+    if (file.type.startsWith('image/') && aiStore.pendingAttachments.filter((a) => a.type.startsWith('image/')).length + validFiles.filter((f) => f.type.startsWith('image/')).length >= 4) {
       $baseMessage('最多同时发送 4 张图片', 'warning', 'hey')
       continue
     }
@@ -217,6 +230,25 @@ const handleFileSelect = async (event: Event) => {
     $baseMessage('文件上传失败，请重试', 'error', 'hey')
   }
 }
+
+const handleFileSelect = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (!input.files?.length) return
+  const files = Array.from(input.files)
+  input.value = ''
+  void processFiles(files)
+}
+
+const handlePaste = (event: ClipboardEvent) => {
+  if (props.disabled) return
+  const files = Array.from(event.clipboardData?.files ?? [])
+  if (!files.length) return
+  // 仅当剪贴板带文件时拦截，普通文本粘贴行为不变
+  event.preventDefault()
+  void processFiles(files)
+}
+
+defineExpose({ processFiles })
 
 const removeAttachment = async (id: string) => {
   const attachment = aiStore.pendingAttachments.find((a) => a.id === id)
