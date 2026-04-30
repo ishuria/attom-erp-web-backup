@@ -10,6 +10,7 @@ import {
   getAiMessageList,
   getFeishuUrl,
   sendAiChatMessage,
+  updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
 
 import type {
@@ -58,6 +59,13 @@ const normalizeCreateConversationOptions = (options?: CreateConversationOptions)
 })
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+// 用首条消息生成会话标题：折叠空白、单行、超长截断
+const deriveTitleFromMessage = (content: string) => {
+  const normalized = content.replace(/\s+/g, ' ').trim()
+  if (!normalized) return '新建对话'
+  return normalized.length > 30 ? `${normalized.slice(0, 30)}…` : normalized
+}
 
 // 持久化"激活会话 + 新建会话模式"，用于浏览器硬刷新后恢复用户上一次的对话状态
 const ACTIVE_STATE_STORAGE_KEY = 'ai_chat_active_state'
@@ -371,6 +379,13 @@ export const useAiStore = defineStore('ai', {
           this.activeConversationId = conversation.id
           this.isNewChatMode = false
           this.persistActiveState()
+
+          // 用首条消息作为会话标题，本地立即更新 + 后台同步到服务端，失败不阻断发送
+          const derivedTitle = deriveTitleFromMessage(question)
+          if (derivedTitle && derivedTitle !== conversation.title) {
+            this.setConversationTitle(conversation.id, derivedTitle)
+            void updateAiConversationTitle({ id: conversation.id, title: derivedTitle }).catch(() => {})
+          }
         } catch (err: any) {
           ElMessage.error(`创建会话失败：${err?.msg ?? err?.message ?? '请稍后重试'}`)
           return

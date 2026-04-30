@@ -405,9 +405,13 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     &.is-role-user {
-      background: linear-gradient(135deg, var(--el-color-primary), #3e8bff);
+      max-width: min(72%, 720px);
+      padding: 10px 14px;
+      background: var(--el-color-primary);
       border-color: transparent;
-      box-shadow: 0 14px 28px rgb(62 139 255 / 0.18);
+      border-radius: 18px 18px 6px 18px;
+      box-shadow: 0 2px 8px rgb(62 139 255 / 0.18);
+      font-size: 15px;
     }
 
     &.is-error {
@@ -419,8 +423,8 @@ const handleMarkdownAction = async (event: MouseEvent) => {
   }
 
   .plain {
-    font-size: 16px;
-    line-height: 1.85;
+    font-size: 15px;
+    line-height: 1.55;
     color: var(--el-color-white);
     white-space: pre-wrap;
   }
