@@ -23,7 +23,7 @@
     </el-upload>
     <template #footer>
       <div style="text-align: center">
-        <el-button :disabled="loading" @click="visible = false">取消</el-button>
+        <el-button :disabled="loading" @click="close">取消</el-button>
         <el-button :disabled="!canSubmit" :loading="loading" :type="canSubmit ? 'primary' : 'info'" @click="handleSubmit">
           开始匹配并下载
         </el-button>
@@ -35,28 +35,15 @@
 <script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue'
 import type { UploadUserFile } from 'element-plus'
+import { downloadFilePDH } from '/@/api/devlocal/download'
 
 defineOptions({
   name: 'DeclarationItemNoUpload',
 })
 
-const props = withDefaults(
-  defineProps<{
-    modelValue: boolean
-    loading?: boolean
-  }>(),
-  {
-    loading: false,
-  }
-)
-
-const emit = defineEmits<{
-  (event: 'update:modelValue', value: boolean): void
-  (event: 'submit', value: { preOrderFiles: UploadUserFile[]; taxRefundFiles: UploadUserFile[] }): void
-}>()
-
 const preOrderFiles = ref<UploadUserFile[]>([])
 const taxRefundFiles = ref<UploadUserFile[]>([])
+const loading = ref(false)
 const canSubmit = computed(() => preOrderFiles.value.length > 0 && taxRefundFiles.value.length > 0)
 const visible = defineModel({ default: false })
 
@@ -70,8 +57,8 @@ const close = () => {
   resetFiles()
 }
 
-const handleSubmit = () => {
-  if (props.loading) return
+const handleSubmit = async () => {
+  if (loading.value) return
   if (preOrderFiles.value.length === 0) {
     $baseMessage('必须先上传装箱单Excel文件！', 'warning', 'hey')
     return
@@ -80,10 +67,21 @@ const handleSubmit = () => {
     $baseMessage('必须先上传报关单Excel文件！', 'warning', 'hey')
     return
   }
-  emit('submit', {
-    preOrderFiles: preOrderFiles.value,
-    taxRefundFiles: taxRefundFiles.value,
+  const formData = new FormData()
+  preOrderFiles.value.forEach((item) => {
+    if (item.raw) formData.append('files', item.raw)
   })
+  taxRefundFiles.value.forEach((item) => {
+    if (item.raw) formData.append('files', item.raw)
+  })
+  loading.value = true
+  try {
+    await downloadFilePDH('/shipment/file/check', formData)
+    $baseMessage('匹配并下载完成！', 'success', 'hey')
+    close()
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 

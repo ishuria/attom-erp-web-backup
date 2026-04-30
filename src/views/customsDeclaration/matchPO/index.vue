@@ -608,11 +608,7 @@
       </template>
     </vab-dialog>
 
-    <declaration-item-no-upload
-      v-model="matchDeclarationItemNoVisible"
-      :loading="matchDeclarationItemNoLoading"
-      @submit="handleMatchDeclarationItemNoSubmit"
-    />
+    <declaration-item-no-upload v-model="matchDeclarationItemNoVisible" />
   </div>
 </template>
 
@@ -806,32 +802,8 @@ const handlePreOrderFormUploadSubmit = async () => {
 }
 
 // 匹配报关项号上传
-const matchDeclarationItemNoLoading = ref<boolean>(false)
 const showMatchDeclarationItemNo = () => {
   matchDeclarationItemNoVisible.value = true
-}
-
-const handleMatchDeclarationItemNoSubmit = async ({
-  preOrderFiles,
-  taxRefundFiles,
-}: {
-  preOrderFiles: UploadUserFile[]
-  taxRefundFiles: UploadUserFile[]
-}) => {
-  if (matchDeclarationItemNoLoading.value) return
-  matchDeclarationItemNoLoading.value = true
-  const formData = new FormData()
-  preOrderFiles.forEach((item: any) => {
-    formData.append('file1', item.raw)
-  })
-  taxRefundFiles.forEach((item: any) => {
-    formData.append('file2', item.raw)
-  })
-  try {
-    $baseMessage('匹配报关项号接口未对接！', 'warning', 'hey')
-  } finally {
-    matchDeclarationItemNoLoading.value = false
-  }
 }
 
 interface IContractNumberForm {
