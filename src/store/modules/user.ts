@@ -6,14 +6,14 @@ import { useSettingsStore } from './settings'
 import { useTabsStore } from './tabs'
 import { getUserInfo, login, logout } from '/@/api/devlocal/userLogin'
 import { storage, tokenName } from '/@/config'
-import { getToken, removeToken, setToken } from '/@/utils/token'
+import { getStoredUserId, getToken, removeStoredUserId, removeToken, setStoredUserId, setToken } from '/@/utils/token'
 import { isArray, isString } from '/@/utils/validate'
 import { gp } from '/@vab/plugins/vab'
 
 export const useUserStore = defineStore('user', {
   state: (): UserModuleType => ({
     token: getToken() as string,
-    userId: '',
+    userId: (getStoredUserId() as string) || '',
     username: '游客',
     avatar: './static/svg/avatar.svg',
   }),
@@ -48,6 +48,7 @@ export const useUserStore = defineStore('user', {
     },
     setUserId(userId: string | number) {
       this.userId = userId
+      setStoredUserId(String(userId ?? ''))
     },
     /**
      * @description 登录拦截放行时，设置虚拟角色
@@ -142,6 +143,10 @@ export const useUserStore = defineStore('user', {
       // 清除token
       await removeToken(storage)
       this.setToken('')
+
+      // 清除 userId（含持久化存储）
+      this.userId = ''
+      removeStoredUserId()
 
       // 清空权限和角色
       await aclStore.setPermission([])

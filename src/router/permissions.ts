@@ -25,19 +25,26 @@ export const setupPermissions = (router: Router) => {
       getTheme: { showProgressBar },
     } = useSettingsStore()
     const { routes, setRoutes } = useRoutesStore()
-    const { token, getUserId, getUserInfo, setVirtualRoles, resetAll } = useUserStore()
+    const userStore = useUserStore()
+    const { token, getUserInfo, setVirtualRoles, resetAll } = userStore
 
-    // code 参数检测（参数可能在 # 前面，需从 window.location.search 读取）
+    // 飞书 OAuth 回调形如 http://host/?code=xxx&userid=YYY#/
+    // Why: 参数在 # 之前，须从 window.location.search 读取；hash 路由下 to.path 是 '/'
     const urlParams = new URLSearchParams(window.location.search)
     const code = urlParams.get('code')
-    if (to.path === '/index' && code) {
+    const callbackUserId = urlParams.get('userid') || urlParams.get('user_id')
+    if (code) {
       if (showProgressBar) VabProgress.start()
       try {
-        const userId = getUserId
+        // 优先用回调 URL 里的 userid；缺失时回退到 store（必要时先拉用户信息）
+        let userId: string | number = callbackUserId || userStore.getUserId
+        if (!userId && token) {
+          await getUserInfo()
+          userId = userStore.getUserId
+        }
         if (userId) {
           await exchangeLarkToken({ authorization_code: code, user_id: userId })
         }
-        debugger
         const pendingConversationId = localStorage.getItem('feishu_doc_conversation_id')
         if (pendingConversationId) {
           try {
