@@ -14,6 +14,7 @@ import {
 import {
   IOperationStockDefaultParams,
   IOperationStockLogRules,
+  IOperationStockPriceCalcLogReq,
   IOperationStockPriceCalcLogRules,
   IOperationStocksItem,
   IOperationStockUpdateReq,
@@ -258,9 +259,7 @@ export function trialGrossMargin(data: { sku: string; site: number; newPrice: st
  * @param data 查询参数
  * @returns 价格变更日志列表
  */
-export function queryOperationStockPriceCalcLogList(
-  data: IOperationStockPriceCalcLogReq
-): Promise<IOperationStockPriceCalcLogRules> {
+export function queryOperationStockPriceCalcLogList(data: IOperationStockPriceCalcLogReq): Promise<IOperationStockPriceCalcLogRules> {
   return request({
     url: `${BASE_API}/operation/stock/auto/rules/price/logs`,
     method: 'post',

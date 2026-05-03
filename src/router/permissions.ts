@@ -52,7 +52,7 @@ export const setupPermissions = (router: Router) => {
         console.error('[路由守卫] 飞书 token 交换失败:', error)
       }
       if (showProgressBar) VabProgress.done()
-      window.close()
+      // window.close()
       return next(false)
     }
 
