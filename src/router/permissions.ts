@@ -28,22 +28,23 @@ export const setupPermissions = (router: Router) => {
     const userStore = useUserStore()
     const { token, getUserInfo, setVirtualRoles, resetAll } = userStore
 
-    // 飞书 OAuth 回调形如 http://host/?code=xxx&userid=YYY#/
-    // Why: 参数在 # 之前，须从 window.location.search 读取；hash 路由下 to.path 是 '/'
+    // 飞书 OAuth 回调形如 http://host/?code=xxx&userid=XXX#/
+    // Why: 参数在 # 之前，须从 window.location.search 读取；hash 路由下 to.path 是 '/'。
+    // URL 里的 userid 是飞书回填的占位字面量，不可信，user_id 必须取自当前系统登录人。
     const urlParams = new URLSearchParams(window.location.search)
     const code = urlParams.get('code')
-    const callbackUserId = urlParams.get('userid') || urlParams.get('user_id')
     if (code) {
       if (showProgressBar) VabProgress.start()
       try {
-        // 优先用回调 URL 里的 userid；缺失时回退到 store（必要时先拉用户信息）
-        let userId: string | number = callbackUserId || userStore.getUserId
-        if (!userId && token) {
+        // 新开 tab 里 token 已从 localStorage 恢复，但 userId state 可能尚未填充，先拉一次用户信息
+        if (token && !userStore.getUserId) {
           await getUserInfo()
-          userId = userStore.getUserId
         }
+        const userId = userStore.getUserId
         if (userId) {
           await exchangeLarkToken({ authorization_code: code, user_id: userId })
+        } else {
+          console.error('[路由守卫] 飞书回调缺少当前登录用户 userId，token=', token)
         }
         const pendingConversationId = localStorage.getItem('feishu_doc_conversation_id')
         if (pendingConversationId) {
