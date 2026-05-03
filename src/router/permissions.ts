@@ -37,7 +37,7 @@ export const setupPermissions = (router: Router) => {
       if (showProgressBar) VabProgress.start()
       try {
         // 新开 tab 里 token 已从 localStorage 恢复，但 userId state 可能尚未填充，先拉一次用户信息
-        if (token && !userStore.getUserId) {
+        if (token) {
           await getUserInfo()
         }
         const userId = userStore.getUserId
