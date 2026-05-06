@@ -2,8 +2,23 @@
   <div class="ai-prompt-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button v-if="currentRoleCode === ROLE_BOSS_CODE" :icon="Plus" type="primary" @click="handleEdit(null)">新增</el-button>
-        <el-button v-if="currentRoleCode === ROLE_BOSS_CODE" :icon="User" @click="handleOpenOwnerDrawer">负责人管理</el-button>
+        <el-button
+          v-permissions="{ permission: [PromptPermission.PROMPT_CONFIG_ADD] }"
+          :icon="Plus"
+          type="primary"
+          @click="handleEdit(null)"
+        >
+          新增
+        </el-button>
+        <el-button
+          v-permissions="{
+            permission: [PromptPermission.PROMPT_CONFIG_OWNER_MANAGE],
+          }"
+          :icon="User"
+          @click="handleOpenOwnerDrawer"
+        >
+          负责人管理
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -12,7 +27,7 @@
               <el-option v-for="item in userList" :key="item.userId" :label="item.userName" :value="item.userId" />
             </el-select>
           </el-form-item>
-          <el-form-item v-if="currentRoleCode === ROLE_BOSS_CODE" label="角色">
+          <el-form-item label="角色">
             <el-select v-model="queryForm.roleId" clearable filterable placeholder="请选择角色" @change="queryData">
               <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId" />
             </el-select>
@@ -198,6 +213,7 @@ import githubTheme from '@kangc/v-md-editor/lib/theme/github'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
 import type { FormInstance, FormRules } from 'element-plus'
 import { debounce } from 'lodash-es'
+import { useAclStore } from '~/src/store/modules/acl'
 import {
   addAiPrompt,
   deletePromptConfigHistory,
@@ -210,7 +226,7 @@ import {
 import { getAllList } from '/@/api/devlocal/role'
 import { getPersonLevelDropdownList } from '/@/api/devlocal/user'
 import { ROLE_BOSS_CODE } from '/@/const/role'
-import { useAclStore } from '/@/store/modules/acl'
+import PromptPermission from '/@/permissions/prompt'
 import { IRoleRes } from '/@/type/role/roleType'
 
 // 初始化 v-md-editor
