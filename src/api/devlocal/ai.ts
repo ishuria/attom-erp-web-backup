@@ -121,8 +121,12 @@ export const getFeishuUrl = (id: number | string = 1) => {
   return request({ url: `${BASE_API}/btn/fei_shu/url/${id}`, method: 'get' })
 }
 
-export const createFeishuDoc = (conversationId: number | string) => {
-  return request({ url: `${AI_BASE_API}/conversations/create/feishu/doc/${conversationId}`, method: 'post' })
+export const createFeishuDoc = (conversationId: number | string, prompt?: string) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/create/feishu/doc`,
+    method: 'post',
+    data: { conversationId, prompt },
+  })
 }
 
 /**

@@ -54,6 +54,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           target: 'http://192.168.6.12:19000',
           changeOrigin: true,
         },
+        // 飞书 token 交换服务（独立后端，正式环境靠后端开 CORS 或网关转发）
+        '^/lark-api': {
+          target: 'http://192.168.6.14:9231',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/lark-api/, '/api/v1'),
+        },
       },
     },
     resolve: {

@@ -7,20 +7,127 @@
           <vab-icon icon="attachment-2" />
         </el-button>
       </el-tooltip>
+      <el-popover
+        v-model:visible="promptPopoverVisible"
+        placement="top-start"
+        :width="480"
+        trigger="click"
+        popper-class="prompt-popover"
+        :show-arrow="true"
+      >
+        <template #reference>
+          <el-button circle text size="small" :disabled="disabled" title="常用提示词">
+            <vab-icon icon="lightbulb-flash-line" />
+          </el-button>
+        </template>
+        <div class="prompt-panel">
+          <div class="prompt-panel__header">
+            <span class="prompt-panel__title">常用提示词</span>
+            <el-button text size="small" type="primary" @click="handleAdd">
+              <vab-icon icon="add-line" />
+              新增
+            </el-button>
+          </div>
+          <el-scrollbar max-height="480px">
+            <ul v-if="commonPrompts.length" class="prompt-list">
+              <li v-for="item in commonPrompts" :key="item.id" class="prompt-item" @click="handlePickPrompt(item)">
+                <el-tooltip :content="item.prompt" placement="left" :show-after="500" :disabled="item.prompt.length < 60">
+                  <div class="prompt-item__preview">{{ item.prompt }}</div>
+                </el-tooltip>
+                <div class="prompt-item__meta">
+                  <el-tag v-if="item.category" size="small" type="info" effect="plain">{{ item.category }}</el-tag>
+                </div>
+                <div class="prompt-item__actions" @click.stop>
+                  <el-button circle text size="small" title="编辑" @click.stop="handleEdit(item)">
+                    <vab-icon icon="edit-line" />
+                  </el-button>
+                  <el-button circle text size="small" title="删除" @click.stop="handleDelete(item)">
+                    <vab-icon icon="delete-bin-line" />
+                  </el-button>
+                </div>
+              </li>
+            </ul>
+            <el-empty v-else description="暂无常用提示词，点击右上角新增" :image-size="60" />
+          </el-scrollbar>
+        </div>
+      </el-popover>
     </div>
+    <favorite-prompt-edit-dialog
+      v-model:visible="editDialogVisible"
+      :mode="editDialogMode"
+      :item="editingItem"
+      @saved="loadCommonPrompts"
+    />
+    <el-dialog
+      v-model="feishuDialogVisible"
+      title="生成飞书文档"
+      width="80%"
+      top="6vh"
+      append-to-body
+      :close-on-click-modal="false"
+      @closed="handleFeishuDialogClosed"
+    >
+      <div class="feishu-prompt-dialog">
+        <div v-if="commonPrompts.length" class="feishu-prompt-dialog__section">
+          <div class="feishu-prompt-dialog__section-title">从常用提示词选择</div>
+          <el-scrollbar max-height="220px">
+            <ul class="feishu-prompt-list">
+              <li
+                v-for="item in commonPrompts"
+                :key="item.id"
+                class="feishu-prompt-item"
+                :class="{ 'is-selected': selectedFeishuPromptId === item.id }"
+                @click="handleSelectFeishuPromptInDialog(item)"
+              >
+                <div class="feishu-prompt-item__preview">{{ item.prompt }}</div>
+                <el-tag v-if="item.category" size="small" type="info" effect="plain">{{ item.category }}</el-tag>
+              </li>
+            </ul>
+          </el-scrollbar>
+        </div>
+        <div class="feishu-prompt-dialog__section">
+          <div class="feishu-prompt-dialog__section-title">提示词内容（可编辑或直接输入）</div>
+          <div class="md-editor-container">
+            <v-md-editor
+              v-model="feishuPromptDraft"
+              height="360px"
+              placeholder="请输入提示词，或从上方选择一条（支持 Markdown）"
+              left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | save"
+              :disabled-menus="[]"
+            />
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <el-button @click="feishuDialogVisible = false">取消</el-button>
+        <el-button
+          :disabled="!feishuPromptDraft.trim() || feishuLoading"
+          :loading="feishuLoading"
+          type="primary"
+          @click="handleConfirmFeishuDoc"
+        >
+          确定生成文档
+        </el-button>
+      </template>
+    </el-dialog>
     <div class="input-shell" :class="{ 'is-disabled': disabled }">
       <div v-if="aiStore.pendingAttachments.length" class="attachment-preview-bar">
         <template v-for="file in aiStore.pendingAttachments" :key="file.id">
           <!-- 图片类型：缩略图预览 -->
-          <div v-if="file.type.startsWith('image/')" class="attachment-image" :class="{ 'is-error': file.status === 'error' }" :title="`${file.name} (${formatFileSize(file.size)})`">
+          <div
+            v-if="file.type.startsWith('image/')"
+            class="attachment-image"
+            :class="{ 'is-error': file.status === 'error' }"
+            :title="`${file.name} (${formatFileSize(file.size)})`"
+          >
             <el-image
               v-if="file.status === 'success' && file.url"
-              :src="file.url"
-              :preview-src-list="imagePreviewList"
-              :initial-index="imagePreviewIndex(file.id)"
-              fit="cover"
-              preview-teleported
               class="image-thumb"
+              fit="cover"
+              :initial-index="imagePreviewIndex(file.id)"
+              :preview-src-list="imagePreviewList"
+              preview-teleported
+              :src="file.url"
             />
             <div v-else class="image-placeholder">
               <vab-icon icon="image-line" />
@@ -35,7 +142,13 @@
             <vab-icon :icon="getFileIcon(file.type)" class="chip-icon" />
             <span class="chip-name">{{ file.name }}</span>
             <span v-if="file.status === 'uploading'" class="chip-progress">{{ file.progress ?? 0 }}%</span>
-            <button v-if="file.status !== 'uploading'" type="button" class="chip-remove" :class="{ 'is-error': file.status === 'error' }" @click="removeAttachment(file.id)">
+            <button
+              v-if="file.status !== 'uploading'"
+              type="button"
+              class="chip-remove"
+              :class="{ 'is-error': file.status === 'error' }"
+              @click="removeAttachment(file.id)"
+            >
               <vab-icon icon="close-line" />
             </button>
           </div>
@@ -61,8 +174,16 @@
           <span :class="['count', charCountClass]">剩余 {{ remaining }} 字</span>
         </div>
         <div class="action-buttons">
-          <el-button class="feishu-btn" :disabled="disabled || feishuLoading" :loading="feishuLoading" @click="handleCreateFeishuDoc">生成飞书文档</el-button>
-          <el-button class="send-btn" type="primary" circle :disabled="disabled || (!draft.trim() && !aiStore.pendingAttachments.length)" @click="handleSend">
+          <el-button class="feishu-btn" :disabled="disabled || feishuLoading" :loading="feishuLoading" @click="handleOpenFeishuDialog">
+            生成飞书文档
+          </el-button>
+          <el-button
+            class="send-btn"
+            type="primary"
+            circle
+            :disabled="disabled || (!draft.trim() && !aiStore.pendingAttachments.length)"
+            @click="handleSend"
+          >
             <vab-icon icon="send-plane-fill" />
           </el-button>
         </div>
@@ -72,14 +193,24 @@
 </template>
 
 <script lang="ts" setup>
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+import { ElMessageBox } from 'element-plus'
 import { $baseMessage } from '/@/hooks'
 import { deleteAiFiles, uploadAiFiles } from '/@/api/devlocal/ai'
+import { deleteFavoritePrompt, listFavoritePrompts } from '/@/api/devlocal/favoritePrompt'
 import { useAiStore } from '/@/store/modules/ai'
 import type { ChatAttachment } from '/@/type/ai/chat'
+import type { FavoritePromptItem } from '/@/type/ai/favoritePrompt'
+import FavoritePromptEditDialog from '/@/views/ai/vabAutoComponents/FavoritePromptEditDialog.vue'
+
+VMdEditor.use(githubTheme)
 
 const emit = defineEmits<{
   send: [value: string]
-  createFeishuDoc: []
+  createFeishuDoc: [prompt: string]
 }>()
 
 defineOptions({
@@ -97,6 +228,66 @@ const aiStore = useAiStore()
 const draft = ref('')
 const fileInputRef = ref<HTMLInputElement>()
 
+const promptPopoverVisible = ref(false)
+const commonPrompts = ref<FavoritePromptItem[]>([])
+const editDialogVisible = ref(false)
+const editDialogMode = ref<'add' | 'edit'>('add')
+const editingItem = ref<FavoritePromptItem | null>(null)
+
+const loadCommonPrompts = async () => {
+  try {
+    const res: any = await listFavoritePrompts()
+    commonPrompts.value = res?.data ?? []
+  } catch {
+    commonPrompts.value = []
+  }
+}
+
+const handlePickPrompt = (item: FavoritePromptItem) => {
+  if (props.disabled) return
+  draft.value = draft.value ? `${draft.value}\n${item.prompt}` : item.prompt
+  promptPopoverVisible.value = false
+  nextTick(() => {
+    const el = document.querySelector<HTMLTextAreaElement>('.ai-message-input .el-textarea__inner')
+    el?.focus()
+    if (el) el.selectionStart = el.selectionEnd = draft.value.length
+  })
+}
+
+const handleAdd = () => {
+  promptPopoverVisible.value = false
+  editDialogMode.value = 'add'
+  editingItem.value = null
+  editDialogVisible.value = true
+}
+
+const handleEdit = (item: FavoritePromptItem) => {
+  promptPopoverVisible.value = false
+  editDialogMode.value = 'edit'
+  editingItem.value = item
+  editDialogVisible.value = true
+}
+
+const handleDelete = async (item: FavoritePromptItem) => {
+  promptPopoverVisible.value = false
+  try {
+    await ElMessageBox.confirm('确认删除该常用提示词？', '提示', { type: 'warning' })
+  } catch {
+    return
+  }
+  try {
+    await deleteFavoritePrompt(item.id)
+    $baseMessage('删除成功', 'success', 'hey')
+    await loadCommonPrompts()
+  } catch {
+    $baseMessage('删除失败，请稍后重试', 'error', 'hey')
+  }
+}
+
+onMounted(() => {
+  void loadCommonPrompts()
+})
+
 const autosizeConfig = computed(() => ({
   minRows: 1,
   maxRows: props.fullscreen ? 12 : 8,
@@ -113,7 +304,9 @@ const charCountClass = computed(() => {
 
 const totalAttachments = computed(() => aiStore.pendingAttachments.length)
 
-const imagePreviewList = computed(() => aiStore.pendingAttachments.filter((a) => a.type.startsWith('image/') && a.status === 'success' && a.url).map((a) => a.url!))
+const imagePreviewList = computed(() =>
+  aiStore.pendingAttachments.filter((a) => a.type.startsWith('image/') && a.status === 'success' && a.url).map((a) => a.url!)
+)
 
 const imagePreviewIndex = (id: string) => {
   const image = aiStore.pendingAttachments.find((a) => a.id === id)
@@ -186,7 +379,12 @@ const processFiles = async (rawFiles: File[]) => {
       continue
     }
 
-    if (file.type.startsWith('image/') && aiStore.pendingAttachments.filter((a) => a.type.startsWith('image/')).length + validFiles.filter((f) => f.type.startsWith('image/')).length >= 4) {
+    if (
+      file.type.startsWith('image/') &&
+      aiStore.pendingAttachments.filter((a) => a.type.startsWith('image/')).length +
+        validFiles.filter((f) => f.type.startsWith('image/')).length >=
+        4
+    ) {
       $baseMessage('最多同时发送 4 张图片', 'warning', 'hey')
       continue
     }
@@ -270,9 +468,32 @@ const handleSend = () => {
   draft.value = ''
 }
 
-const handleCreateFeishuDoc = () => {
-  if (props.disabled) return
-  emit('createFeishuDoc')
+const feishuDialogVisible = ref(false)
+const feishuPromptDraft = ref('')
+const selectedFeishuPromptId = ref<number | null>(null)
+
+const handleOpenFeishuDialog = () => {
+  if (props.disabled || props.feishuLoading) return
+  feishuPromptDraft.value = ''
+  selectedFeishuPromptId.value = null
+  feishuDialogVisible.value = true
+}
+
+const handleSelectFeishuPromptInDialog = (item: FavoritePromptItem) => {
+  selectedFeishuPromptId.value = item.id
+  feishuPromptDraft.value = item.prompt
+}
+
+const handleConfirmFeishuDoc = () => {
+  const value = feishuPromptDraft.value.trim()
+  if (!value || props.disabled || props.feishuLoading) return
+  feishuDialogVisible.value = false
+  emit('createFeishuDoc', value)
+}
+
+const handleFeishuDialogClosed = () => {
+  feishuPromptDraft.value = ''
+  selectedFeishuPromptId.value = null
 }
 </script>
 
@@ -294,9 +515,7 @@ const handleCreateFeishuDoc = () => {
     flex-direction: column;
     gap: 6px;
     padding: 8px 12px 7px;
-    background:
-      linear-gradient(180deg, rgb(255 255 255 / 0.98), rgb(247 249 252 / 0.98)),
-      var(--el-bg-color);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.98), rgb(247 249 252 / 0.98)), var(--el-bg-color);
     border: 1px solid rgb(15 23 42 / 0.08);
     border-radius: 24px;
     box-shadow:
@@ -549,6 +768,164 @@ const handleCreateFeishuDoc = () => {
     &.is-danger {
       color: var(--el-color-danger);
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.prompt-popover.el-popper {
+  padding: 8px;
+
+  .prompt-panel {
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 6px 8px;
+      border-bottom: 1px solid var(--el-border-color-lighter);
+    }
+
+    &__title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
+    }
+  }
+
+  .prompt-list {
+    padding: 4px 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .prompt-item {
+    position: relative;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: var(--el-fill-color-light);
+    }
+
+    &__preview {
+      display: -webkit-box;
+      padding-right: 56px;
+      overflow: hidden;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--el-text-color-primary);
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    &__meta {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+
+    &__actions {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      z-index: 2;
+      display: flex;
+      gap: 0;
+      align-items: center;
+      opacity: 0.55;
+      transition: opacity 0.15s ease;
+      pointer-events: auto;
+    }
+
+    &:hover &__actions {
+      opacity: 1;
+    }
+  }
+}
+
+.feishu-prompt-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__section-title {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--el-text-color-primary);
+  }
+
+  .md-editor-container {
+    width: 100%;
+  }
+
+  .md-editor-container .v-md-editor {
+    width: 100%;
+    background: var(--el-color-white);
+    border: 1px solid var(--el-border-color);
+    border-radius: var(--el-border-radius-base);
+    box-shadow: none;
+  }
+
+  .md-editor-container .v-md-editor--fullscreen {
+    z-index: 9999;
+    border-radius: 0;
+  }
+
+  .md-editor-container .v-md-editor__toolbar {
+    border-bottom: 1px solid var(--el-border-color);
+  }
+
+  .md-editor-container .v-md-editor__editor-wrapper {
+    border-right: 1px solid var(--el-border-color);
+  }
+}
+
+.feishu-prompt-list {
+  padding: 4px;
+  margin: 0;
+  list-style: none;
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 8px;
+}
+
+.feishu-prompt-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+
+  & + & {
+    margin-top: 2px;
+  }
+
+  &:hover {
+    background: var(--el-fill-color-light);
+  }
+
+  &.is-selected {
+    background: var(--el-color-primary-light-9);
+    outline: 1px solid var(--el-color-primary-light-5);
+  }
+
+  &__preview {
+    flex: 1;
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--el-text-color-primary);
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 }
 </style>

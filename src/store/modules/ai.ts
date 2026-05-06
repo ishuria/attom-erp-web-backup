@@ -645,7 +645,7 @@ export const useAiStore = defineStore('ai', {
 
       delete this.conversationBusyMap[key]
     },
-    async handleCreateFeishuDoc() {
+    async handleCreateFeishuDoc(prompt?: string) {
       // 捕获目标会话 id：用户在请求过程中可能切换会话，loading 状态必须始终落在按钮所在的会话上
       const targetConversationId = this.activeConversationId
       if (!targetConversationId) return
@@ -658,16 +658,18 @@ export const useAiStore = defineStore('ai', {
         if (!canCreate) {
           const urlResponse = await getFeishuUrl(1)
           const url = urlResponse?.data ?? urlResponse
-          // OAuth 回调时可能有多个会话同时在等飞书授权，用数组队列代替单值
+          // OAuth 回调时可能有多个会话同时在等飞书授权，用数组队列代替单值；
+          // 升级为 { conversationId, prompt } 形态，兼容旧版纯字符串项
           const pendingRaw = localStorage.getItem('feishu_doc_pending_conversations')
-          let pending: string[] = []
+          let pending: Array<{ conversationId: string; prompt?: string } | string> = []
           try {
             pending = pendingRaw ? JSON.parse(pendingRaw) : []
             if (!Array.isArray(pending)) pending = []
           } catch {
             pending = []
           }
-          if (!pending.includes(key)) pending.push(key)
+          const exists = pending.some((p) => (typeof p === 'string' ? p : p?.conversationId) === key)
+          if (!exists) pending.push({ conversationId: key, prompt })
           localStorage.setItem('feishu_doc_pending_conversations', JSON.stringify(pending))
           this.feishuDocCreatingMap[key] = true
           ElMessage.info('飞书文档创建中')
@@ -680,7 +682,7 @@ export const useAiStore = defineStore('ai', {
         ElMessage.info('飞书文档创建中')
         this.closeModal()
 
-        await createFeishuDoc(targetConversationId)
+        await createFeishuDoc(targetConversationId, prompt)
         delete this.feishuDocCreatingMap[key]
       } catch {
         delete this.feishuDocCreatingMap[key]

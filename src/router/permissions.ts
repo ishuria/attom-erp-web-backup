@@ -48,16 +48,28 @@ export const setupPermissions = (router: Router) => {
         }
         const pendingRaw = localStorage.getItem('feishu_doc_pending_conversations')
         if (pendingRaw) {
-          let pending: string[] = []
+          // 队列项目兼容两种形态：旧版纯字符串、新版 { conversationId, prompt }
+          const items: Array<{ conversationId: string; prompt?: string }> = []
           try {
             const parsed = JSON.parse(pendingRaw)
-            if (Array.isArray(parsed)) pending = parsed.map(String)
+            if (Array.isArray(parsed)) {
+              parsed.forEach((p) => {
+                if (typeof p === 'string') {
+                  items.push({ conversationId: p })
+                } else if (p && typeof p === 'object' && p.conversationId != null) {
+                  items.push({
+                    conversationId: String(p.conversationId),
+                    prompt: typeof p.prompt === 'string' ? p.prompt : undefined,
+                  })
+                }
+              })
+            }
           } catch (e) {
             console.error('[路由守卫] 解析飞书文档队列失败:', e)
           }
-          for (const cid of pending) {
+          for (const { conversationId, prompt } of items) {
             try {
-              await createFeishuDoc(cid)
+              await createFeishuDoc(conversationId, prompt)
             } catch (e) {
               console.error('[路由守卫] 创建飞书文档失败:', e)
             }
