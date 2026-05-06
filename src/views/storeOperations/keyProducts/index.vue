@@ -116,7 +116,7 @@
           <span v-show="row.junEndNum">({{ row.junEndNum }})</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="ratingStatus">
+      <el-table-column label="状态" prop="ratingStatus" width="150">
         <template #default="{ row }">
           <el-tag v-if="row.status === 1" type="warning">暂停</el-tag>
           <el-tag v-else-if="row.ratingStatus === 0" type="info">未上线</el-tag>
