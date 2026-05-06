@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import { markRaw } from 'vue'
-import { $baseMessage } from '/@/hooks'
-import { getNotificationUnreadCount, markAllNotificationsRead } from '/@/api/devlocal/notification'
+import { getNotificationUnreadCount } from '/@/api/devlocal/notification'
 import { createNotificationSocket } from '/@/hooks/useNotificationSocket'
 import { useUserStore } from '/@/store/modules/user'
 

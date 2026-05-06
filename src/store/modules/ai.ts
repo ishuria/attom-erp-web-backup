@@ -4,7 +4,7 @@ import {
   createAiConversation,
   createCommonChatConversation,
   createFeishuDoc,
-  decreaseAiConversationUnreadCount,
+  conversationUnreadCount,
   deleteAiConversation,
   getAiConversationList,
   getAiMessageList,
@@ -391,24 +391,29 @@ export const useAiStore = defineStore('ai', {
       const targetConversation = this.conversations.find((item) => String(item.id) === key)
 
       if ((targetConversation?.unreadCount ?? 0) > 0) {
-        void this.decreaseConversationUnreadCount(id)
+        void this.conversationUnreadCount(id)
       }
 
       if (!this.messages[key]) await this.loadMessages(id)
     },
-    async decreaseConversationUnreadCount(id: number | string) {
+    async conversationUnreadCount(id: number | string) {
       const key = String(id)
       const targetConversation = this.conversations.find((item) => String(item.id) === key)
-      const unreadCount = Math.max(0, Number(targetConversation?.unreadCount) || 0)
-      if (!unreadCount) return
+      const previousUnreadCount = Math.max(0, Number(targetConversation?.unreadCount) || 0)
+      if (!previousUnreadCount) return
+
+      // 乐观更新：先本地清零让红点立即消失，请求失败再回滚
+      this.setConversationUnreadCount(id, 0)
 
       try {
-        const response = await decreaseAiConversationUnreadCount(id)
+        const response = await conversationUnreadCount(id)
         const success = response?.data ?? response
-        if (success === false) return
-        this.setConversationUnreadCount(id, 0)
-      } catch {
-        // 未读数同步失败不阻断切换会话，保持当前角标以避免误清零。
+        if (success === false) {
+          this.setConversationUnreadCount(id, previousUnreadCount)
+        }
+      } catch (e) {
+        this.setConversationUnreadCount(id, previousUnreadCount)
+        console.warn('[ai] decrease unread failed, rolled back', e)
       }
     },
     // 消息接口失败时保留现有本地消息，避免把空态误写成欢迎语。
