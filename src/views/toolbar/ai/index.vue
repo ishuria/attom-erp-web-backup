@@ -37,32 +37,29 @@
       ref="tableRef"
       v-loading="listLoading"
       border
-      :cell-style="{ textAlign: 'center' }"
       :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
+      :row-class-name="rowClassName"
       :span-method="objectSpanMethod"
       stripe
       @cell-click="cellClick"
     >
-      <el-table-column label="角色" prop="roleName" show-overflow-tooltip width="120" />
-      <el-table-column label="人员" prop="userName" show-overflow-tooltip width="120" />
-      <el-table-column label="提示词功能" prop="functionName" width="230">
+      <el-table-column align="center" class-name="col-role" label="角色" prop="roleName" show-overflow-tooltip width="120" />
+      <el-table-column align="center" class-name="col-user" label="人员" prop="userName" show-overflow-tooltip width="120" />
+      <el-table-column align="left" label="提示词功能" prop="functionName" width="250">
         <template #default="{ row }">
-          <el-tooltip content=" " effect="dark" placement="top">
-            <template #content>
-              <div class="custom-tooltip">{{ row.functionName }}</div>
-            </template>
-            <div class="multi-line-ellipsis-1">{{ row.functionName }}</div>
-          </el-tooltip>
+          <div class="multi-line-ellipsis-1">{{ row.functionName }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="提示词" min-width="300" prop="prompt">
+      <el-table-column align="left" label="提示词" min-width="300" prop="prompt">
         <template #default="{ row }">
-          <div class="multi-line-ellipsis-1 prompt-text">{{ row.prompt }}</div>
+          <div class="prompt-cell">
+            <el-tag v-if="row.currentVersionNo != null" class="draft-tag" size="small" type="success">v{{ row.currentVersionNo }}</el-tag>
+            <div class="multi-line-ellipsis-1 prompt-text">{{ row.prompt }}</div>
+          </div>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="200">
+      <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleShowHistoryList(row)">历史</el-button>
 
@@ -125,18 +122,28 @@
     />
 
     <!-- 历史版本抽屉 -->
-    <el-drawer v-model="historyDrawerVisible" size="700px" title="历史版本" @close="historyList = []">
+    <el-drawer v-model="historyDrawerVisible" size="800px" title="历史版本" @close="historyList = []">
+      <el-alert
+        v-if="historyCurrentVersionNo == null"
+        :closable="false"
+        show-icon
+        title="当前提示词未保存版本，可保存为新版本以便回滚到任意历史版本"
+        type="warning"
+      />
       <el-table v-loading="historyLoading" border :data="historyList" :header-cell-style="{ textAlign: 'center' }">
-        <el-table-column align="center" label="版本" min-width="70">
+        <el-table-column align="center" label="版本" min-width="100">
           <template #default="{ row }">
-            <el-tag :type="row.isCurrent ? 'success' : 'info'">v{{ row.versionNo }}</el-tag>
+            <el-tag :type="row.versionNo === historyCurrentVersionNo ? 'success' : 'info'">
+              v{{ row.versionNo }}
+              <span v-if="row.versionNo === historyCurrentVersionNo">（当前）</span>
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="保存时间" min-width="170" prop="createTime" />
-        <el-table-column label="备注" min-width="120" prop="remark" show-overflow-tooltip>
+        <el-table-column label="备注" min-width="180" prop="remark" show-overflow-tooltip>
           <template #default="{ row }">{{ row.remark || '—' }}</template>
         </el-table-column>
-        <el-table-column align="center" label="操作" min-width="250">
+        <el-table-column align="center" label="操作" min-width="200">
           <template #default="{ row }">
             <el-button text type="primary" @click="handlePreviewHistory(row)">预览</el-button>
             <el-popconfirm :title="`确认回滚到 v${row.versionNo} 吗？`" @confirm="handleRollback(row)">
@@ -210,11 +217,17 @@ const currentRoleCode = useAclStore().getRole[0]
 // 当前编辑的行数据
 const currentEditRow = ref<any>(null)
 
+// 当前点击的"人员组" key（roleId + userId），用于行高亮
+const currentRowKey = ref<string>('')
+const getRowKey = (row: any) => `${row.roleId}_${row.userId}_${row.id}`
+
 // 历史版本
 const historyDrawerVisible = ref<boolean>(false)
 const historyLoading = ref<boolean>(false)
 const historyList = ref<any[]>([])
 const historyCurrentRow = ref<any>(null)
+// 抽屉里"当前生效版本号"指针，回滚/保存版本后本地同步，避免依赖外层列表刷新
+const historyCurrentVersionNo = ref<number | null>(null)
 
 // 预览
 const previewDialogVisible = ref<boolean>(false)
@@ -367,10 +380,43 @@ const handleEdit = (row: any) => {
   }
 }
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  // 点击任意单元格都更新高亮 key（合并的角色 cell 点击时，row 是该角色组首行 → 高亮该组首位人员）
+  currentRowKey.value = getRowKey(row)
   if (column.label === '提示词') {
     currentEditRow.value = row
     editorDialogVisible.value = true
   }
+}
+
+// 合并表格的行高亮（key = roleId_userId_id，每行唯一）：
+// 1. 点击的那一行 → 整行高亮
+// 2. 同 roleId+userId 的人员合并 cell 拥有者（该人员组首行）→ 仅人员列高亮
+// 3. 同 roleId 的角色合并 cell 拥有者（该角色组首行）→ 仅角色列高亮
+// 后两条用来补齐合并 cell 的视觉，避免点击非首行时出现"竖列断层"
+const rowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (!currentRowKey.value) return ''
+
+  const classes: string[] = []
+  const [clickedRoleId, clickedUserId] = currentRowKey.value.split('_')
+
+  // 1. 点击的那一行
+  if (getRowKey(row) === currentRowKey.value) {
+    classes.push('is-row-active')
+  }
+
+  // 2. 人员合并 cell 拥有者（同 roleId+userId 的首行）
+  if (String(row.roleId) === clickedRoleId && String(row.userId) === clickedUserId) {
+    const isUserOwner = rowIndex === 0 || list.value[rowIndex - 1].roleId !== row.roleId || list.value[rowIndex - 1].userId !== row.userId
+    if (isUserOwner) classes.push('is-row-user-owner')
+  }
+
+  // 3. 角色合并 cell 拥有者（同 roleId 的首行）
+  if (String(row.roleId) === clickedRoleId) {
+    const isRoleOwner = rowIndex === 0 || list.value[rowIndex - 1].roleId !== row.roleId
+    if (isRoleOwner) classes.push('is-row-role-owner')
+  }
+
+  return classes.join(' ')
 }
 // 保存提示词（从编辑弹窗组件触发）
 const handleSavePrompt = async (data: { prompt: string }) => {
@@ -416,16 +462,12 @@ const handleSaveToNewVersion = async (data: { prompt: string; remark: string }) 
 
 const handleShowHistoryList = async (row: any) => {
   historyCurrentRow.value = row
+  historyCurrentVersionNo.value = row.currentVersionNo ?? null
   historyDrawerVisible.value = true
   try {
     historyLoading.value = true
     const { data } = await getPromptConfigHistory(row.id)
-    // 最大版本号即为当前生效版本
-    const maxVersionNo = Math.max(...(data || []).map((item: any) => item.versionNo), 0)
-    historyList.value = (data || []).map((item: any) => ({
-      ...item,
-      isCurrent: item.versionNo === maxVersionNo,
-    }))
+    historyList.value = data || []
   } catch (error) {
     console.error('获取历史版本失败:', error)
   } finally {
@@ -445,8 +487,12 @@ const handleRollback = async (row: any) => {
       historyId: row.id,
     })
     $baseMessage(`已回滚到 v${row.versionNo}`, 'success')
-    // 重新加载历史列表（因为回滚会生成新版本记录）
-    await handleShowHistoryList(historyCurrentRow.value)
+    // 本地立刻把指针指向回滚目标，避免抽屉短暂显示旧"当前"
+    historyCurrentVersionNo.value = row.versionNo
+    historyCurrentRow.value.currentVersionNo = row.versionNo
+    // 重新加载历史列表（回滚会把"被替换的旧 current"作为新版本写入）
+    const { data } = await getPromptConfigHistory(historyCurrentRow.value.id)
+    historyList.value = data || []
     fetchData()
   } catch (error) {
     console.error('回滚失败:', error)
@@ -513,7 +559,19 @@ onMounted(() => {
 .ai-prompt-container {
   padding: 20px;
 
+  .prompt-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .draft-tag {
+      flex: none;
+    }
+  }
+
   .prompt-text {
+    flex: 1;
+    min-width: 0;
     cursor: pointer;
 
     &:hover {
@@ -526,6 +584,26 @@ onMounted(() => {
     max-width: 500px;
     white-space: pre-wrap;
     word-break: break-word;
+  }
+
+  // 合并表格行高亮：
+  // - is-row-active：点击的那一行整行染色
+  // - is-row-user-owner：仅人员列染色（补齐合并的"人员"单元格视觉）
+  // - is-row-role-owner：仅角色列染色（补齐合并的"角色"单元格视觉）
+  :deep(.el-table__row.is-row-active > td.el-table__cell) {
+    background-color: var(--el-color-primary-light-9) !important;
+  }
+
+  :deep(.el-table__row.is-row-active:hover > td.el-table__cell) {
+    background-color: var(--el-color-primary-light-8) !important;
+  }
+
+  :deep(.el-table__row.is-row-user-owner > td.el-table__cell.col-user) {
+    background-color: var(--el-color-primary-light-9) !important;
+  }
+
+  :deep(.el-table__row.is-row-role-owner > td.el-table__cell.col-role) {
+    background-color: var(--el-color-primary-light-9) !important;
   }
 }
 
