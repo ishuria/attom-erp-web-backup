@@ -87,3 +87,25 @@ export function rollbackPromptConfig(data: { configId: number; historyId: number
     data,
   })
 }
+
+/**
+ * 修改提示词负责人（仅 BOSS）
+ */
+export function updatePromptConfigOwner(data: { flowComponentId: number; ownerUserId: number | null }) {
+  return request({
+    url: `${BASE_API}/prompt/config/owner`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 提示词功能 + 负责人 列表（BOSS 负责人管理面板用）
+ */
+export function getFlowComponentOwnerList(params?: { functionName?: string }) {
+  return request({
+    url: `${BASE_API}/prompt/flow-component/list`,
+    method: 'get',
+    params,
+  })
+}

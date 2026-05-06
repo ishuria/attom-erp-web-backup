@@ -6,7 +6,7 @@
     class="prompt-editor-dialog"
     :close-on-click-modal="false"
     modal-class="prompt-editor-modal"
-    title="编辑提示词"
+    :title="readonly ? '查看提示词' : '编辑提示词'"
     width="80%"
     @close="handleClose"
   >
@@ -27,17 +27,21 @@
         </div>
       </div>
 
-      <!-- 编辑器区 -->
+      <el-alert v-if="readonly" class="readonly-tip" :closable="false" show-icon :title="readonlyTip" type="info" />
+
+      <!-- 编辑器区：readonly 时切到 v-md-editor 的 preview 模式（隐藏工具栏，只显示渲染结果） -->
       <div class="md-editor-container">
-        <v-md-editor v-model="editorContent" height="100%" />
+        <v-md-editor v-model="editorContent" height="100%" :mode="readonly ? 'preview' : 'editable'" />
       </div>
     </div>
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button :icon="Close" @click="handleClose">取消</el-button>
-        <el-button :icon="Check" :loading="saving" type="primary" @click="handleSave">保存</el-button>
-        <el-button :icon="DocumentAdd" type="success" @click="handleSaveToNewVersion">保存为新版本</el-button>
+        <el-button :icon="Close" @click="handleClose">{{ readonly ? '关闭' : '取消' }}</el-button>
+        <template v-if="!readonly">
+          <el-button :icon="Check" :loading="saving" type="primary" @click="handleSave">保存</el-button>
+          <el-button :icon="DocumentAdd" type="success" @click="handleSaveToNewVersion">保存为新版本</el-button>
+        </template>
       </div>
     </template>
   </el-dialog>
@@ -71,6 +75,8 @@ interface Props {
   modelValue: boolean
   currentRow: any
   roleList: any[]
+  readonly?: boolean
+  readonlyTip?: string
 }
 
 interface Emits {
@@ -79,7 +85,10 @@ interface Emits {
   (e: 'saveToNewVersion', data: { prompt: string; remark: string }): void
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  readonly: false,
+  readonlyTip: '该提示词由专人负责，您只能查看，无法编辑',
+})
 const emit = defineEmits<Emits>()
 
 const editorContent = ref<string>('')
@@ -272,11 +281,16 @@ defineExpose({
     }
 
     // 编辑器容器：撑满剩余空间，内部用 v-md-editor 自带布局
+    .readonly-tip {
+      flex-shrink: 0;
+      margin-bottom: 10px;
+    }
+
     .md-editor-container {
       flex: 1 1 auto;
       min-width: 0;
       min-height: 0;
-      overflow: hidden;
+      overflow: auto;
       background: var(--el-bg-color);
       border: 1px solid var(--el-border-color-lighter);
       border-radius: 8px;

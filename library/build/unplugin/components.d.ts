@@ -202,6 +202,7 @@ declare module 'vue' {
     ProgressLinearProgressBar: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressLinearProgressBar.vue')['default']
     ProgressStripedProgress: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressStripedProgress.vue')['default']
     PromptEditorDialog: typeof import('./../../../src/views/toolbar/vabAutoComponents/PromptEditorDialog.vue')['default']
+    PromptOwnerManagerDialog: typeof import('./../../../src/views/toolbar/vabAutoComponents/PromptOwnerManagerDialog.vue')['default']
     PropertyDialog: typeof import('./../../../src/views/other/workflow/vabAutoComponents/propertySetting/PropertyDialog.vue')['default']
     PurchaseQuantityLineChart: typeof import('./../../../src/views/purchase/vabAutoComponents/PurchaseQuantityLineChart.vue')['default']
     QuickAccess: typeof import('./../../../src/views/index/vabAutoComponents/QuickAccess.vue')['default']

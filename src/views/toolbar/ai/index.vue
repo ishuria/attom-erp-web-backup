@@ -3,6 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
         <el-button v-if="currentRoleCode === ROLE_BOSS_CODE" :icon="Plus" type="primary" @click="handleEdit(null)">新增</el-button>
+        <el-button v-if="currentRoleCode === ROLE_BOSS_CODE" :icon="User" @click="handleOpenOwnerDrawer">负责人管理</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -63,7 +64,7 @@
         <template #default="{ row }">
           <el-button text type="primary" @click="handleShowHistoryList(row)">历史</el-button>
 
-          <el-button text type="primary" @click="handleEdit(row)">修改</el-button>
+          <el-button text type="primary" @click="handleEdit(row)">{{ row.canEdit ? '修改' : '查看' }}</el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -104,6 +105,18 @@
         <el-form-item label="ComponentID" prop="componentId">
           <el-input v-model.trim="addFormData.componentId" clearable placeholder="请输入ComponentID" />
         </el-form-item>
+
+        <el-form-item label="提示词负责人" prop="ownerUserId">
+          <el-select
+            v-model="addFormData.ownerUserId"
+            clearable
+            filterable
+            placeholder="选填，留空则所有人可编辑自己那条"
+            style="width: 100%"
+          >
+            <el-option v-for="item in userList" :key="item.userId" :label="item.userName" :value="item.userId" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="addDialogVisible = false">取消</el-button>
@@ -116,10 +129,15 @@
       ref="editorDialogRef"
       v-model="editorDialogVisible"
       :current-row="currentEditRow"
+      :readonly="!currentEditRow?.canEdit"
+      :readonly-tip="readonlyTip"
       :role-list="roleList"
       @save="handleSavePrompt"
       @save-to-new-version="handleSaveToNewVersion"
     />
+
+    <!-- 提示词负责人管理弹窗（BOSS 专用，封装为独立组件） -->
+    <prompt-owner-manager-dialog v-model="ownerManagerVisible" :user-list="userList" @updated="fetchData" />
 
     <!-- 历史版本抽屉 -->
     <el-drawer v-model="historyDrawerVisible" size="800px" title="历史版本" @close="historyList = []">
@@ -173,7 +191,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus, Refresh, Search } from '@element-plus/icons-vue'
+import { Plus, Refresh, Search, User } from '@element-plus/icons-vue'
 import VMdEditor from '@kangc/v-md-editor'
 import '@kangc/v-md-editor/lib/style/base-editor.css'
 import githubTheme from '@kangc/v-md-editor/lib/theme/github'
@@ -229,6 +247,23 @@ const historyCurrentRow = ref<any>(null)
 // 抽屉里"当前生效版本号"指针，回滚/保存版本后本地同步，避免依赖外层列表刷新
 const historyCurrentVersionNo = ref<number | null>(null)
 
+// 负责人管理弹窗可见性（具体逻辑在组件里）
+const ownerManagerVisible = ref<boolean>(false)
+
+const handleOpenOwnerDrawer = () => {
+  ownerManagerVisible.value = true
+}
+
+// 编辑弹窗只读模式提示文案：根据是否有 owner 给出不同说明
+const readonlyTip = computed(() => {
+  const row = currentEditRow.value
+  if (!row) return ''
+  if (row.ownerUserId) {
+    return `该提示词由 ${row.ownerUserName || '负责人'} 负责，您只能查看，无法编辑`
+  }
+  return '该提示词归属其他用户，您只能查看，无法编辑'
+})
+
 // 预览
 const previewDialogVisible = ref<boolean>(false)
 const previewPrompt = ref<string>('')
@@ -248,6 +283,7 @@ const addFormData = reactive<any>({
   prompt: '',
   flowId: '',
   componentId: '',
+  ownerUserId: null,
 })
 
 const addFormRules = reactive<FormRules>({
@@ -517,6 +553,7 @@ const handleAddDialogClose = () => {
   addFormData.prompt = ''
   addFormData.flowId = ''
   addFormData.componentId = ''
+  addFormData.ownerUserId = null
 }
 
 const handleAddSubmit = async () => {
@@ -530,6 +567,7 @@ const handleAddSubmit = async () => {
       functionName: addFormData.functionName,
       prompt: addFormData.prompt,
       flowId: addFormData.flowId,
+      ownerUserId: addFormData.ownerUserId,
     })
 
     $baseMessage('新增成功', 'success')
