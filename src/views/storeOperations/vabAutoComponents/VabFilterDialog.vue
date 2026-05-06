@@ -116,12 +116,12 @@
       </el-form-item>
       <el-form-item v-if="props.classify === 0" label="销量趋势">
         <div style="display: flex; gap: 10px; width: 100%">
-          <el-select v-model="filterForm.salesTrendDays" placeholder="时间范围" clearable style="flex: 1">
+          <el-select v-model="filterForm.salesTrendDays" clearable placeholder="时间范围" style="flex: 1">
             <el-option label="近7天" :value="7" />
             <el-option label="近14天" :value="14" />
             <el-option label="近30天" :value="30" />
           </el-select>
-          <el-select v-model="filterForm.salesTrendDirection" placeholder="趋势方向" clearable style="flex: 1">
+          <el-select v-model="filterForm.salesTrendDirection" clearable placeholder="趋势方向" style="flex: 1">
             <el-option label="上升" :value="1" />
             <el-option label="下降" :value="2" />
           </el-select>
@@ -140,7 +140,8 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
-import { getFrontPageProductManagerSelectOption, getOperationTypeUserList } from '~/src/api/devlocal/frontPage'
+import { getOperationTypeUserList } from '~/src/api/devlocal/frontPage'
+import { getAmazonOptionUserList } from '~/src/api/devlocal/productPerformance'
 import { useUserStore } from '~/src/store/modules/user'
 import { adStatusOption } from '../constantOption'
 
@@ -161,7 +162,7 @@ watchEffect(() => {
 const myName = useUserStore().getUsername
 const operationUserList = ref<{ id: number; label: string }[]>([])
 const fetchOperationUserList = async () => {
-  const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
+  const { data } = await getAmazonOptionUserList()
   operationUserList.value = data
   operationUserList.value.unshift({ id: -1, label: '全部' })
   filterForm.operationUserId = props.operationUserId || -1

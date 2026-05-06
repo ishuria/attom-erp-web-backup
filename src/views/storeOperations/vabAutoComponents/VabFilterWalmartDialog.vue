@@ -74,7 +74,8 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
-import { getFrontPageProductManagerSelectOption, getOperationTypeUserList } from '~/src/api/devlocal/frontPage'
+import { getOperationTypeUserList } from '~/src/api/devlocal/frontPage'
+import { getWalmartOptionUserList } from '~/src/api/devlocal/productPerformance'
 import { useUserStore } from '~/src/store/modules/user'
 
 defineOptions({
@@ -93,7 +94,7 @@ watchEffect(() => {
 const myName = useUserStore().getUsername
 const operationUserList = ref<{ id: number; label: string }[]>([])
 const fetchOperationUserList = async () => {
-  const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
+  const { data } = await getWalmartOptionUserList()
   operationUserList.value = data
   operationUserList.value.unshift({ id: -1, label: '全部' })
   filterForm.operationUserId = props.operationUserId || -1
