@@ -46,10 +46,29 @@ export const setupPermissions = (router: Router) => {
         } else {
           console.error('[路由守卫] 飞书回调缺少当前登录用户 userId，token=', token)
         }
-        const pendingConversationId = localStorage.getItem('feishu_doc_conversation_id')
-        if (pendingConversationId) {
+        const pendingRaw = localStorage.getItem('feishu_doc_pending_conversations')
+        if (pendingRaw) {
+          let pending: string[] = []
           try {
-            await createFeishuDoc(pendingConversationId)
+            const parsed = JSON.parse(pendingRaw)
+            if (Array.isArray(parsed)) pending = parsed.map(String)
+          } catch (e) {
+            console.error('[路由守卫] 解析飞书文档队列失败:', e)
+          }
+          for (const cid of pending) {
+            try {
+              await createFeishuDoc(cid)
+            } catch (e) {
+              console.error('[路由守卫] 创建飞书文档失败:', e)
+            }
+          }
+          localStorage.removeItem('feishu_doc_pending_conversations')
+        }
+        // 兼容旧版本未消费的单值 key
+        const legacyConversationId = localStorage.getItem('feishu_doc_conversation_id')
+        if (legacyConversationId) {
+          try {
+            await createFeishuDoc(legacyConversationId)
           } catch (e) {
             console.error('[路由守卫] 创建飞书文档失败:', e)
           }

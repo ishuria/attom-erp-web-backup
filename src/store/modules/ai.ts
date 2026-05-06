@@ -190,7 +190,7 @@ export const useAiStore = defineStore('ai', {
     // 按 conversationId 缓存消息，切换会话时无需反复清空重建。
     messages: {} as Record<string, ChatMessage[]>,
     conversationBusyMap: {} as Record<string, ChatConversationBusyState>,
-    feishuDocCreating: false,
+    feishuDocCreatingMap: {} as Record<string, boolean>,
     searchKeyword: '',
     pendingAttachments: [] as ChatAttachment[],
     networkOnline: true,
@@ -210,6 +210,10 @@ export const useAiStore = defineStore('ai', {
     activeConversationBusyState(state) {
       const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
       return key ? (state.conversationBusyMap[key] ?? null) : null
+    },
+    activeFeishuDocCreating(state) {
+      const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
+      return key ? !!state.feishuDocCreatingMap[key] : false
     },
     // 没有激活会话或请求进行中时，不允许发送。
     canSend(state) {
@@ -637,7 +641,11 @@ export const useAiStore = defineStore('ai', {
       delete this.conversationBusyMap[key]
     },
     async handleCreateFeishuDoc() {
-      if (this.feishuDocCreating) return
+      // 捕获目标会话 id：用户在请求过程中可能切换会话，loading 状态必须始终落在按钮所在的会话上
+      const targetConversationId = this.activeConversationId
+      if (!targetConversationId) return
+      const key = String(targetConversationId)
+      if (this.feishuDocCreatingMap[key]) return
 
       try {
         const response = await checkFeishuDoc()
@@ -645,26 +653,32 @@ export const useAiStore = defineStore('ai', {
         if (!canCreate) {
           const urlResponse = await getFeishuUrl(1)
           const url = urlResponse?.data ?? urlResponse
-          if (this.activeConversationId) {
-            localStorage.setItem('feishu_doc_conversation_id', String(this.activeConversationId))
+          // OAuth 回调时可能有多个会话同时在等飞书授权，用数组队列代替单值
+          const pendingRaw = localStorage.getItem('feishu_doc_pending_conversations')
+          let pending: string[] = []
+          try {
+            pending = pendingRaw ? JSON.parse(pendingRaw) : []
+            if (!Array.isArray(pending)) pending = []
+          } catch {
+            pending = []
           }
-          this.feishuDocCreating = true
+          if (!pending.includes(key)) pending.push(key)
+          localStorage.setItem('feishu_doc_pending_conversations', JSON.stringify(pending))
+          this.feishuDocCreatingMap[key] = true
           ElMessage.info('飞书文档创建中')
           this.closeModal()
           window.open(url, '_blank')
           return
         }
 
-        if (!this.activeConversationId) return
-
-        this.feishuDocCreating = true
+        this.feishuDocCreatingMap[key] = true
         ElMessage.info('飞书文档创建中')
         this.closeModal()
 
-        await createFeishuDoc(this.activeConversationId)
-        this.feishuDocCreating = false
+        await createFeishuDoc(targetConversationId)
+        delete this.feishuDocCreatingMap[key]
       } catch {
-        this.feishuDocCreating = false
+        delete this.feishuDocCreatingMap[key]
         ElMessage.error('操作失败')
       }
     },
@@ -704,7 +718,7 @@ export const useAiStore = defineStore('ai', {
       this.activeConversationId = null
       this.messages = {}
       this.conversationBusyMap = {}
-      this.feishuDocCreating = false
+      this.feishuDocCreatingMap = {}
       this.searchKeyword = ''
       this.pendingAttachments = []
       this.networkOnline = true

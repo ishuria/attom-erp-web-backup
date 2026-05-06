@@ -72,7 +72,7 @@
       :disabled="inputDisabled"
       :fullscreen="fullscreen"
       :placeholder="inputPlaceholder"
-      :feishu-loading="aiStore.feishuDocCreating"
+      :feishu-loading="aiStore.activeFeishuDocCreating"
       @send="aiStore.sendMessage"
       @create-feishu-doc="aiStore.handleCreateFeishuDoc"
     />

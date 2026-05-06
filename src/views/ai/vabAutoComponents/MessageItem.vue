@@ -16,14 +16,14 @@
     <div class="content-wrap">
       <div class="meta">
         <span class="name">{{ roleText }}</span>
-        <span v-if="message.createdAt" class="time">{{ message.createdAt }}</span>
+        <span v-if="message.createdAt && message.status !== 'loading'" class="time">{{ message.createdAt }}</span>
       </div>
       <!-- 附件渲染区（图片） -->
       <div v-if="imageAttachments.length" class="attachment-images">
         <div v-for="(img, idx) in imageAttachments" :key="img.id" class="attachment-image-item" @click="openImagePreview(idx)">
           <img :src="img.url || img.name" :alt="img.name" />
         </div>
-      </div>
+    </div>
       <!-- 附件渲染区（文档） -->
       <div v-if="docAttachments.length" class="attachment-docs">
         <div v-for="doc in docAttachments" :key="doc.id" class="attachment-doc-card">
@@ -524,8 +524,10 @@ const handleMarkdownAction = async (event: MouseEvent) => {
     }
 
     :deep(img) {
-      max-width: 100%;
+      display: block;
+      max-width: 70%;
       height: auto;
+      margin: 0 auto;
       cursor: zoom-in;
       border-radius: 8px;
     }
@@ -536,7 +538,7 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       color: var(--el-text-color-secondary);
       background: linear-gradient(90deg, rgb(73 118 255 / 0.08), rgb(73 118 255 / 0.02));
       border: 1px solid rgb(73 118 255 / 0.1);
-      border-left: 4px solid var(--el-color-primary-light-5);
+      border-left: 2.5px solid var(--el-border-color-darker);
       border-radius: 12px;
     }
 
@@ -609,17 +611,22 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 
     :deep(:not(pre) > code) {
       padding: 2px 7px;
-      font-size: 16px;
-      color: var(--el-color-primary-dark-2);
-      background: var(--el-color-primary-light-9);
-      border: 1px solid rgb(93 122 255 / 0.1);
-      border-radius: 8px;
+      font-size: 0.92em;
+      color: var(--el-text-color-primary);
+      background: var(--el-fill-color);
+      border: 1px solid var(--el-border-color-lighter);
+      border-radius: 6px;
     }
 
     :deep(ul),
     :deep(ol) {
       padding-left: 20px;
       margin: 6px 0;
+    }
+
+    :deep(li ul),
+    :deep(li ol) {
+      margin: -2px 0;
     }
 
     :deep(li + li) {
