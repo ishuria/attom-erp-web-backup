@@ -179,7 +179,7 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck && row.operation.includes(userName)"
+                v-if="canCheckProofreading(row)"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
@@ -431,7 +431,7 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck && row.operation.includes(userName)"
+                v-if="canCheckProofreading(row)"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
@@ -676,7 +676,7 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck && row.operation.includes(userName)"
+                v-if="canCheckProofreading(row)"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
@@ -1250,6 +1250,14 @@ defineOptions({
 const userName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableCheck = currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE
+// 运营校对：运营本人或运营上级都可勾选
+const canCheckProofreading = (row: any) => {
+  if (!ableCheck || !userName) return false
+  const operations = row.operation?.split(',').map((name: string) => name.trim()) || []
+  if (operations.includes(userName)) return true
+  const opSupervisors = row.operationSupervisorNames?.split(',').map((name: string) => name.trim()) || []
+  return opSupervisors.includes(userName)
+}
 const distributeSkusVisible = ref<boolean>(false)
 
 const deadlineExtensionApplicationVisible = ref<boolean>(false)
