@@ -271,8 +271,8 @@ defineExpose({
           min-width: 0;
           overflow: hidden;
 
-          font-weight: 600;
           text-overflow: ellipsis;
+          font-weight: 600;
           line-height: 1.2;
           color: var(--el-text-color-primary);
           white-space: nowrap;
@@ -290,7 +290,7 @@ defineExpose({
       flex: 1 1 auto;
       min-width: 0;
       min-height: 0;
-      overflow: auto;
+      overflow: hidden;
       background: var(--el-bg-color);
       border: 1px solid var(--el-border-color-lighter);
       border-radius: 8px;
@@ -303,7 +303,7 @@ defineExpose({
         border-radius: 8px;
         box-shadow: none;
 
-        // 关键：让 v-md-editor 内部所有 flex 容器允许 shrink，避免被内容撑开
+        // 让内部所有 flex 容器允许 shrink,避免被内容撑开
         &__main,
         &__left-area,
         &__right-area,
@@ -323,10 +323,33 @@ defineExpose({
           border-right-color: var(--el-border-color-lighter);
         }
 
-        // textarea 内容超长时，编辑/预览区内部滚（不向外撑）
+        // 编辑/预览区内容超长时,在 v-md-editor 自带滚动容器内滚动
         &__editor-wrapper,
         &__preview-wrapper {
-          overflow: auto;
+          overflow: hidden;
+        }
+
+        .scrollbar__wrap {
+          overflow-y: auto !important;
+        }
+
+        // 预览区:加底部留白,避免最后几行贴边被遮
+        &__preview-wrapper {
+          .github-markdown-body,
+          .vuepress-markdown-body {
+            padding-bottom: 88px;
+          }
+        }
+
+        // 编辑区(textarea):pre 负责撑开滚动高度,textarea 负责可见输入层,两者都要留底部缓冲
+        .v-md-textarea-editor pre,
+        .v-md-textarea-editor textarea {
+          padding-bottom: 88px !important;
+        }
+
+        // 兼容 CodeMirror 模式:滚到最后一行不贴边
+        &__editor-wrapper .CodeMirror-lines {
+          padding-bottom: 88px !important;
         }
 
         &--fullscreen {
