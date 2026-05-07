@@ -41,7 +41,7 @@
         </template>
         <template v-else>
           <typing-indicator v-if="message.status === 'loading' && !message.content" />
-          <div v-else class="markdown-body" @click="handleMarkdownAction" v-html="htmlContent" />
+          <div v-else ref="markdownBodyRef" class="markdown-body" @click="handleMarkdownAction" v-html="htmlContent" />
           <span v-if="message.role === 'assistant' && message.status === 'loading' && message.content" class="streaming-cursor">▌</span>
         </template>
         <!-- 发送失败重试按钮 -->
@@ -66,6 +66,7 @@ import { useAiStore } from '/@/store/modules/ai'
 import yunzhouLogo from '/@/icon/yunzhou.svg'
 import type { ChatAttachment, ChatMessage } from '/@/type/ai/chat'
 import { renderAiMarkdown } from '/@/utils/aiMarkdown'
+import { enhanceStickyTableScrollbars } from '/@/views/ai/vabAutoComponents/composables/useStickyTableScrollbar'
 import TypingIndicator from '/@/views/ai/vabAutoComponents/TypingIndicator.vue'
 
 const props = defineProps<{
@@ -91,6 +92,28 @@ const roleText = computed(() => {
 })
 
 const htmlContent = computed(() => renderAiMarkdown(props.message.content))
+
+const markdownBodyRef = ref<HTMLElement>()
+let stickyTableCleanup: (() => void) | null = null
+
+watch(
+  htmlContent,
+  () => {
+    nextTick(() => {
+      stickyTableCleanup?.()
+      stickyTableCleanup = null
+      if (markdownBodyRef.value) {
+        stickyTableCleanup = enhanceStickyTableScrollbars(markdownBodyRef.value)
+      }
+    })
+  },
+  { immediate: true, flush: 'post' }
+)
+
+onBeforeUnmount(() => {
+  stickyTableCleanup?.()
+  stickyTableCleanup = null
+})
 
 const attachments = computed(() => props.message.attachments ?? [])
 const imageAttachments = computed(() => attachments.value.filter((a) => a.type.startsWith('image/')))
@@ -633,13 +656,48 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       margin-top: 2px;
     }
 
-    :deep(.markdown-table-wrap) {
+    :deep(.markdown-table-outer) {
       position: relative;
       margin: 10px 0;
+    }
+
+    :deep(.markdown-table-wrap) {
+      position: relative;
       overflow-x: auto;
       background: var(--el-bg-color);
       border: 1px solid var(--el-border-color-lighter);
       border-radius: 12px;
+    }
+
+    :deep(.markdown-table-sticky-scrollbar) {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      height: 12px;
+      margin-top: -12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      &.is-hidden {
+        display: none;
+      }
+
+      &::-webkit-scrollbar {
+        height: 10px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--el-border-color);
+        border-radius: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background: var(--el-border-color-darker);
+      }
+    }
+
+    :deep(.markdown-table-sticky-spacer) {
+      height: 1px;
     }
 
     :deep(table) {
