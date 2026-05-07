@@ -387,14 +387,16 @@ export const useAiStore = defineStore('ai', {
       this.isNewChatMode = false
       this.activeConversationId = id
       this.persistActiveState()
-      const key = String(id)
-      const targetConversation = this.conversations.find((item) => String(item.id) === key)
+      const targetConversation = this.conversations.find((item) => String(item.id) === String(id))
 
       if ((targetConversation?.unreadCount ?? 0) > 0) {
         void this.conversationUnreadCount(id)
       }
 
-      if (!this.messages[key]) await this.loadMessages(id)
+      // 每次切换都重拉：unreadCount 仅在 conversations 重拉时才会更新，
+      // 在 dialog 已打开期间到达的新消息可能不会反映到该字段，缓存短路会漏读。
+      // loadMessages 失败时保留旧缓存（见 loadMessages 注释），网络抖动安全。
+      await this.loadMessages(id)
     },
     async conversationUnreadCount(id: number | string) {
       const key = String(id)
