@@ -57,31 +57,37 @@ export const setupPermissions = (router: Router) => {
         // pending 队列按 userId 命名空间存数组：跨账号天然隔离，本次回调只消费当前用户的项
         const storageKey = `feishu_doc_pending_${userId}`
         const pendingRaw = localStorage.getItem(storageKey)
+        console.log('[飞书诊断] 进入消费块，userId=', userId, 'storageKey=', storageKey)
+        console.log('[飞书诊断] pendingRaw=', pendingRaw)
         if (pendingRaw) {
           let items: Array<{ conversationId: string; prompt?: string }> = []
           try {
             const parsed = JSON.parse(pendingRaw)
+            console.log('[飞书诊断] parsed=', parsed, 'isArray=', Array.isArray(parsed), 'typeof=', typeof parsed)
             if (Array.isArray(parsed)) {
               items = parsed.filter(
-                (p): p is { conversationId: string; prompt?: string } =>
-                  !!p && typeof p === 'object' && p.conversationId != null
+                (p): p is { conversationId: string; prompt?: string } => !!p && typeof p === 'object' && p.conversationId != null
               )
             }
           } catch (e) {
             console.error('[路由守卫] 解析飞书文档待处理项失败:', e)
           }
+          console.log('[飞书诊断] items.length=', items.length, 'items=', items)
           for (const { conversationId, prompt } of items) {
+            console.log('[飞书诊断] 即将调 createFeishuDoc，conversationId=', conversationId, 'prompt=', prompt)
             try {
-              await createFeishuDoc(
-                String(conversationId),
-                typeof prompt === 'string' ? prompt : undefined
-              )
+              const resp = await createFeishuDoc(String(conversationId), typeof prompt === 'string' ? prompt : undefined)
+              console.log('[飞书诊断] createFeishuDoc 返回=', resp)
             } catch (e) {
-              console.error('[路由守卫] 创建飞书文档失败:', e)
+              console.error('[路由守卫] 创建飞书文档失败:', e, (e as Error)?.stack)
             }
           }
           localStorage.removeItem(storageKey)
+        } else {
+          console.warn('[飞书诊断] pendingRaw 为空，本次回调不会消费任何 pending 项')
         }
+      } else {
+        console.warn('[飞书诊断] userId 为空，跳过消费 pending 队列')
       }
       // 一次性清理：升级为 per-user key 后，老的全局 key 不再有写入方
       localStorage.removeItem('feishu_doc_pending_conversations')
