@@ -317,10 +317,11 @@ export interface IGetFrontPageProfitScoreRes {
   list: IGetFrontPageProfitScoreItem[]
 }
 export interface IGetFrontPageProfitScoreItem {
+  userId: number
   userName: string
   month: string
   skus: string[]
-  totalScore: number
+  totalProfit: number
   groupName: string
   monthProfitScore: number
   pileProfitScore: number
