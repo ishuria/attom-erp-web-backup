@@ -8,9 +8,6 @@ import type {
   IGetSeasonalCoefficientListReq,
   IGetSeasonalCoefficientListRes,
   IId,
-  IPlatFormItem,
-  ISeasonalCoefficientDashboardReq,
-  ISeasonalCoefficientDashboardRes,
   ISite,
   ISiteList,
   IUpdateSeasonalCoefficientReq,
@@ -83,43 +80,6 @@ export function getSeasonalCoefficientSite(params: ISite): Promise<{ data: ISite
 export function addSeasonalCoefficient(data: IAddSeasonalCoefficientReq): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/seasonal/coefficient/add`,
-    method: 'post',
-    data,
-  })
-}
-/**
- * @description 季节系数看板 - 平台列表
- */
-export function getSeasonalCoefficientPlatformList(): Promise<{ data: IPlatFormItem[] }> {
-  return request({
-    url: `${BASE_API}/platform/list`,
-    method: 'get',
-  })
-}
-/**
- * @description 季节系数看板 - 按平台获取站点列表
- */
-export function getSeasonalCoefficientSiteListByPlatform(platformId: number): Promise<{ data: ISiteList[] }> {
-  return request({
-    url: `${BASE_API}/platform/site/${platformId}`,
-    method: 'get',
-  })
-}
-/**
- * @description 季节系数看板 - 按站点获取种类列表
- */
-export function getSeasonalCoefficientKindList(site: number): Promise<{ data: ISiteList[] }> {
-  return request({
-    url: `${BASE_API}/kind/list/${site}`,
-    method: 'get',
-  })
-}
-/**
- * @description 季节系数看板数据
- */
-export function getSeasonalCoefficientDashboard(data: ISeasonalCoefficientDashboardReq): Promise<ISeasonalCoefficientDashboardRes> {
-  return request({
-    url: `${BASE_API}/product/seasonal`,
     method: 'post',
     data,
   })
