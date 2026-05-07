@@ -52,7 +52,7 @@
           <el-checkbox v-model="queryForm.exactSearch" :false-value="0" :true-value="1" @change="queryData">精准搜索</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+          <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
         </el-form-item>
         <el-form-item>
           <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />

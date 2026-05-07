@@ -24,7 +24,7 @@
         <el-form inline :model="form" @submit.prevent>
           <el-form-item>
             <el-input
-              v-model="form.keyWord"
+              v-model.trim="form.keyWord"
               clearable
               placeholder="请输入搜索关键词"
               @input="queryData"

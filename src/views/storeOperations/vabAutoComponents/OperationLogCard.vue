@@ -38,7 +38,7 @@
           </el-form-item>
           <el-form-item>
             <el-input
-              v-model="keyWord"
+              v-model.trim="keyWord"
               clearable
               placeholder="请输入搜索关键词"
               @input="handleFilterChange"

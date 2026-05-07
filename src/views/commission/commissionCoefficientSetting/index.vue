@@ -9,7 +9,7 @@
           <vab-query-form-right-panel>
             <el-form inline @submit.prevent>
               <el-form-item>
-                <el-input v-model="keyWord" clearable placeholder="请输入搜索关键词" @input="fetchData" @keyup.enter="fetchData" />
+                <el-input v-model.trim="keyWord" clearable placeholder="请输入搜索关键词" @input="fetchData" @keyup.enter="fetchData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData" />
@@ -130,7 +130,7 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline @submit.prevent>
               <el-form-item>
-                <el-input v-model="keyWord2" clearable placeholder="请输入搜索关键词" @input="fetchData2" @keyup.enter="fetchData2" />
+                <el-input v-model.trim="keyWord2" clearable placeholder="请输入搜索关键词" @input="fetchData2" @keyup.enter="fetchData2" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData2" />

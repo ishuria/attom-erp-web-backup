@@ -106,14 +106,28 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="Reference ID" min-width="130" prop="referenceId" />
+      <el-table-column label="Reference ID" min-width="130" prop="referenceId">
+        <template #default="{ row }">
+          <span v-show="row.referenceId" class="copySku" @click="handleClipboard($event, row.referenceId)">
+            {{ row.referenceId }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="站点" min-width="130" prop="site" />
       <el-table-column
         label="货代单号"
-        min-width="120"
+        min-width="200"
         prop="freightForwardingNumber"
-        :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber')"
-      />
+        :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber', 50)"
+      >
+         <template #default="{ row }">
+          <span v-show="row.freightForwardingNumber" class="copySku" @click="handleClipboard($event, row.freightForwardingNumber)">
+            {{ row.freightForwardingNumber }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="合并报关"
         prop="mergeCustomsDeclarationList"

@@ -23,7 +23,7 @@
         <el-form inline :model="costQueryForm" @submit.prevent>
           <el-form-item>
             <el-input
-              v-model="costQueryForm.keyWord"
+              v-model.trim="costQueryForm.keyWord"
               clearable
               placeholder="请输入搜索关键词"
               @input="costQueryData"
@@ -180,7 +180,7 @@
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="priceForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model="priceForm.keyWord" clearable placeholder="请输入搜索关键词" @input="" @keyup.enter="" />
+              <el-input v-model.trim="priceForm.keyWord" clearable placeholder="请输入搜索关键词" @input="" @keyup.enter="" />
             </el-form-item>
             <el-form-item>
               <el-button :icon="Search" :loading="listLoading" type="primary" @click="" />

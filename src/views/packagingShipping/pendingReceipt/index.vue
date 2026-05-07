@@ -169,9 +169,9 @@
                 <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
               </div>
               <div v-if="item.label === 'PO'">
-                <span class="copySku" @click="handleClipboard($event, row.po)">
-                  {{ row.po }}
-                  <vab-icon icon="file-copy-2-fill" />
+                <span class="copySku">
+                  <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
+                  <vab-icon icon="file-copy-2-fill"  @click="handleClipboard($event, row.po)"/>
                 </span>
               </div>
               <div v-if="item.label === '零件图片'">
@@ -422,10 +422,10 @@
                 <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
               </div>
               <div v-if="item.label === 'PO'">
-                <span class="copySku" @click="handleClipboard($event, row.po)">
-                  {{ row.po }}
+                <span class="copySku">
+                  <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
+                  <vab-icon icon="file-copy-2-fill"  @click="handleClipboard($event, row.po)"/>
                 </span>
-                <vab-icon icon="file-copy-2-fill" />
               </div>
               <div v-if="item.label === '零件图片'">
                 <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
@@ -661,6 +661,8 @@
         </div>
       </template>
     </vab-dialog>
+    <!-- PO明细 -->
+    <poDetail v-model="poDetailVisible" :poSkuId="poSkuId" :close="closePoDetail" />
   </div>
 </template>
 
@@ -701,6 +703,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { hasPermission } from '/@/utils/permission'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
+import poDetail from './components/poDetail.vue'
 
 defineOptions({
   name: 'PendingReceipt',
@@ -1540,6 +1543,20 @@ onBeforeMount(async () => {
   }
   await fetchData()
 })
+
+/******* PO明细弹窗 *******/
+const poDetailVisible = ref<boolean>(false);
+const poSkuId = ref<number>(null);
+// 打开PO明细弹窗
+const openPoDetail = (skuId) => {
+  poDetailVisible.value = true;
+  poSkuId.value = skuId;
+}
+// 关闭PO明细弹窗
+const closePoDetail = () => {
+  poDetailVisible.value = false;
+  poSkuId.value = null;
+}
 </script>
 
 <style lang="scss" scoped>

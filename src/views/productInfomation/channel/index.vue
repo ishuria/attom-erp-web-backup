@@ -105,7 +105,7 @@
           <el-form inline :model="setUpQueryForm" @submit.prevent>
             <el-form-item>
               <el-input
-                v-model="setUpQueryForm.keyWord"
+                v-model.trim="setUpQueryForm.keyWord"
                 clearable
                 placeholder="请输入搜索关键词"
                 @input="setUpQueryData"
