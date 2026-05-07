@@ -446,8 +446,6 @@ const handlePaste = (event: ClipboardEvent) => {
   void processFiles(files)
 }
 
-defineExpose({ processFiles })
-
 const removeAttachment = async (id: string) => {
   const attachment = aiStore.pendingAttachments.find((a) => a.id === id)
   if (attachment?.url) {
@@ -495,6 +493,8 @@ const handleFeishuDialogClosed = () => {
   feishuPromptDraft.value = ''
   selectedFeishuPromptId.value = null
 }
+
+defineExpose({ processFiles, handleOpenFeishuDialog })
 </script>
 
 <style lang="scss" scoped>

@@ -1,0 +1,7 @@
+# 仅保留打镜像所需文件，避免把 node_modules / .git / src 等 ~1GB 内容
+# 作为 docker build 上下文上传，从而把 build-docker-image 阶段从 ~20min 降到 1-2min
+*
+
+!dist/
+!nginx.conf
+!Dockerfile

@@ -12,6 +12,7 @@ import {
   sendAiChatMessage,
   updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
+import { useUserStore } from '/@/store/modules/user'
 
 import type {
   ChatAttachment,
@@ -656,21 +657,33 @@ export const useAiStore = defineStore('ai', {
         const response = await checkFeishuDoc()
         const canCreate = response?.data ?? response
         if (!canCreate) {
+          const userStore = useUserStore()
+          const userId = userStore.getUserId
+          if (!userId) {
+            ElMessage.warning('登录信息丢失，请重新登录')
+            return
+          }
           const urlResponse = await getFeishuUrl(1)
           const url = urlResponse?.data ?? urlResponse
-          // OAuth 回调时可能有多个会话同时在等飞书授权，用数组队列代替单值；
-          // 升级为 { conversationId, prompt } 形态，兼容旧版纯字符串项
-          const pendingRaw = localStorage.getItem('feishu_doc_pending_conversations')
-          let pending: Array<{ conversationId: string; prompt?: string } | string> = []
+          // OAuth 回调时可能有多个会话同时在等飞书授权，按 userId 命名空间存数组队列；
+          // 跨账号天然隔离，同账号多会话按 conversationId 去重 push
+          const storageKey = `feishu_doc_pending_${userId}`
+          const pendingRaw = localStorage.getItem(storageKey)
+          let pending: Array<{ conversationId: string; prompt?: string }> = []
           try {
-            pending = pendingRaw ? JSON.parse(pendingRaw) : []
-            if (!Array.isArray(pending)) pending = []
+            const parsed = pendingRaw ? JSON.parse(pendingRaw) : []
+            if (Array.isArray(parsed)) {
+              pending = parsed.filter(
+                (p): p is { conversationId: string; prompt?: string } =>
+                  !!p && typeof p === 'object' && p.conversationId != null
+              )
+            }
           } catch {
             pending = []
           }
-          const exists = pending.some((p) => (typeof p === 'string' ? p : p?.conversationId) === key)
+          const exists = pending.some((p) => p.conversationId === key)
           if (!exists) pending.push({ conversationId: key, prompt })
-          localStorage.setItem('feishu_doc_pending_conversations', JSON.stringify(pending))
+          localStorage.setItem(storageKey, JSON.stringify(pending))
           this.feishuDocCreatingMap[key] = true
           ElMessage.info('飞书文档创建中')
           this.closeModal()

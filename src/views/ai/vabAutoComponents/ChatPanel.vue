@@ -120,7 +120,7 @@ const handleQuickPrompt = (question: string) => {
 
 const handleContextCommand = (command: string) => {
   if (command === 'feishuDoc') {
-    aiStore.handleCreateFeishuDoc()
+    messageInputRef.value?.handleOpenFeishuDialog()
     return
   }
   if (command === 'exportPdf') {

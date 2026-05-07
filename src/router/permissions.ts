@@ -35,61 +35,57 @@ export const setupPermissions = (router: Router) => {
     const code = urlParams.get('code')
     if (code) {
       if (showProgressBar) VabProgress.start()
+      // 新开 tab 里 token 已从 localStorage 恢复，但 userId state 可能尚未填充，先拉一次用户信息
       try {
-        // 新开 tab 里 token 已从 localStorage 恢复，但 userId state 可能尚未填充，先拉一次用户信息
-        if (token) {
-          await getUserInfo()
-        }
-        const userId = userStore.getUserId
-        if (userId) {
+        if (token) await getUserInfo()
+      } catch (error) {
+        console.error('[路由守卫] 飞书回调拉取用户信息失败:', error)
+      }
+      const userId = userStore.getUserId
+      if (userId) {
+        // 把 token 交换隔离在独立 try/catch：即使后端 lark/token/exchange 失败，
+        // 也不能影响下面 pending 队列的消费，否则用户会看到"授权成功了但什么都没创建"
+        try {
           await exchangeLarkToken({ authorization_code: code, user_id: userId })
-        } else {
-          console.error('[路由守卫] 飞书回调缺少当前登录用户 userId，token=', token)
+        } catch (error) {
+          console.error('[路由守卫] 飞书 token 交换失败:', error)
         }
-        const pendingRaw = localStorage.getItem('feishu_doc_pending_conversations')
+      } else {
+        console.error('[路由守卫] 飞书回调缺少当前登录用户 userId，token=', token)
+      }
+      if (userId) {
+        // pending 队列按 userId 命名空间存数组：跨账号天然隔离，本次回调只消费当前用户的项
+        const storageKey = `feishu_doc_pending_${userId}`
+        const pendingRaw = localStorage.getItem(storageKey)
         if (pendingRaw) {
-          // 队列项目兼容两种形态：旧版纯字符串、新版 { conversationId, prompt }
-          const items: Array<{ conversationId: string; prompt?: string }> = []
+          let items: Array<{ conversationId: string; prompt?: string }> = []
           try {
             const parsed = JSON.parse(pendingRaw)
             if (Array.isArray(parsed)) {
-              parsed.forEach((p) => {
-                if (typeof p === 'string') {
-                  items.push({ conversationId: p })
-                } else if (p && typeof p === 'object' && p.conversationId != null) {
-                  items.push({
-                    conversationId: String(p.conversationId),
-                    prompt: typeof p.prompt === 'string' ? p.prompt : undefined,
-                  })
-                }
-              })
+              items = parsed.filter(
+                (p): p is { conversationId: string; prompt?: string } =>
+                  !!p && typeof p === 'object' && p.conversationId != null
+              )
             }
           } catch (e) {
-            console.error('[路由守卫] 解析飞书文档队列失败:', e)
+            console.error('[路由守卫] 解析飞书文档待处理项失败:', e)
           }
           for (const { conversationId, prompt } of items) {
             try {
-              await createFeishuDoc(conversationId, prompt)
+              await createFeishuDoc(
+                String(conversationId),
+                typeof prompt === 'string' ? prompt : undefined
+              )
             } catch (e) {
               console.error('[路由守卫] 创建飞书文档失败:', e)
             }
           }
-          localStorage.removeItem('feishu_doc_pending_conversations')
+          localStorage.removeItem(storageKey)
         }
-        // 兼容旧版本未消费的单值 key
-        const legacyConversationId = localStorage.getItem('feishu_doc_conversation_id')
-        if (legacyConversationId) {
-          try {
-            await createFeishuDoc(legacyConversationId)
-          } catch (e) {
-            console.error('[路由守卫] 创建飞书文档失败:', e)
-          }
-          localStorage.removeItem('feishu_doc_conversation_id')
-        }
-        document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#666;">操作完成，请手动关闭此页面</div>`
-      } catch (error) {
-        console.error('[路由守卫] 飞书 token 交换失败:', error)
       }
+      // 一次性清理：升级为 per-user key 后，老的全局 key 不再有写入方
+      localStorage.removeItem('feishu_doc_pending_conversations')
+      document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#666;">操作完成，请手动关闭此页面</div>`
       if (showProgressBar) VabProgress.done()
       // window.close()
       return next(false)
