@@ -1147,8 +1147,8 @@ const queryForm = reactive<any>({
   status: 0, //0待签收 1签收
   signUserId: -1,
   signDate: '',
-  orderByField: 'sellableDay',
-  orderDirection: 'desc',
+  orderByField: 'po',
+  orderDirection: 'asc',
   filterProblemComponent: -1,
   filterFollowLog: -1,
   procurementManager: -1,
