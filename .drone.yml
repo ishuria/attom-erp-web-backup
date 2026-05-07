@@ -25,9 +25,12 @@ steps:
       - ls -alt
 
       - npm config set registry https://registry.npmmirror.com
-      - npm i -g pnpm
-      - pnpm store prune
-      - pnpm install
+      # 用 corepack 启用 pnpm，避免每次 npm i -g pnpm 的 20-30s 开销
+      # COREPACK_NPM_REGISTRY 让 corepack 也走 npmmirror，否则会从 npmjs.org 拉
+      - export COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
+      - corepack enable && corepack prepare pnpm@latest --activate
+      # 仓库 .gitignore 排除了 pnpm-lock.yaml，故不能用 --frozen-lockfile
+      - pnpm install --prefer-offline
       - pnpm build
 
   # 构建镜像并推送到镜像仓库
