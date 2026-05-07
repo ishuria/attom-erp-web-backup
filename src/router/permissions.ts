@@ -6,7 +6,6 @@ import 'nprogress/nprogress.css'
 import type { Router } from 'vue-router'
 import { authentication, loginInterception, routesWhiteList, supportVisit } from '/@/config'
 import { exchangeLarkToken } from '/@/api/lark'
-import { createFeishuDoc } from '/@/api/devlocal/ai'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
@@ -42,58 +41,28 @@ export const setupPermissions = (router: Router) => {
         console.error('[路由守卫] 飞书回调拉取用户信息失败:', error)
       }
       const userId = userStore.getUserId
+      let exchanged = false
       if (userId) {
-        // 把 token 交换隔离在独立 try/catch：即使后端 lark/token/exchange 失败，
-        // 也不能影响下面 pending 队列的消费，否则用户会看到"授权成功了但什么都没创建"
         try {
           await exchangeLarkToken({ authorization_code: code, user_id: userId })
+          exchanged = true
         } catch (error) {
           console.error('[路由守卫] 飞书 token 交换失败:', error)
         }
       } else {
         console.error('[路由守卫] 飞书回调缺少当前登录用户 userId，token=', token)
       }
-      if (userId) {
-        // pending 队列按 userId 命名空间存数组：跨账号天然隔离，本次回调只消费当前用户的项
-        const storageKey = `feishu_doc_pending_${userId}`
-        const pendingRaw = localStorage.getItem(storageKey)
-        console.log('[飞书诊断] 进入消费块，userId=', userId, 'storageKey=', storageKey)
-        console.log('[飞书诊断] pendingRaw=', pendingRaw)
-        if (pendingRaw) {
-          let items: Array<{ conversationId: string; prompt?: string }> = []
-          try {
-            const parsed = JSON.parse(pendingRaw)
-            console.log('[飞书诊断] parsed=', parsed, 'isArray=', Array.isArray(parsed), 'typeof=', typeof parsed)
-            if (Array.isArray(parsed)) {
-              items = parsed.filter(
-                (p): p is { conversationId: string; prompt?: string } => !!p && typeof p === 'object' && p.conversationId != null
-              )
-            }
-          } catch (e) {
-            console.error('[路由守卫] 解析飞书文档待处理项失败:', e)
-          }
-          console.log('[飞书诊断] items.length=', items.length, 'items=', items)
-          for (const { conversationId, prompt } of items) {
-            console.log('[飞书诊断] 即将调 createFeishuDoc，conversationId=', conversationId, 'prompt=', prompt)
-            try {
-              const resp = await createFeishuDoc(String(conversationId), typeof prompt === 'string' ? prompt : undefined)
-              console.log('[飞书诊断] createFeishuDoc 返回=', resp)
-            } catch (e) {
-              console.error('[路由守卫] 创建飞书文档失败:', e, (e as Error)?.stack)
-            }
-          }
-          localStorage.removeItem(storageKey)
-        } else {
-          console.warn('[飞书诊断] pendingRaw 为空，本次回调不会消费任何 pending 项')
+      // 飞书 redirect_uri 强制走外网域名，回调 tab 与发起按钮的 tab 跨 origin，localStorage 不通。
+      // 通过 window.opener.postMessage 通知发起 tab：token 已交换，可以发 createFeishuDoc 了。
+      if (exchanged) {
+        try {
+          window.opener?.postMessage({ type: 'feishu-doc-authorized' }, '*')
+        } catch (error) {
+          console.error('[路由守卫] 通知 opener tab 失败:', error)
         }
-      } else {
-        console.warn('[飞书诊断] userId 为空，跳过消费 pending 队列')
       }
-      // 一次性清理：升级为 per-user key 后，老的全局 key 不再有写入方
-      localStorage.removeItem('feishu_doc_pending_conversations')
       document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#666;">操作完成，请手动关闭此页面</div>`
       if (showProgressBar) VabProgress.done()
-      // window.close()
       return next(false)
     }
 

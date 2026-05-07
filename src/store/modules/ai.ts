@@ -12,7 +12,6 @@ import {
   sendAiChatMessage,
   updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
-import { useUserStore } from '/@/store/modules/user'
 
 import type {
   ChatAttachment,
@@ -657,36 +656,41 @@ export const useAiStore = defineStore('ai', {
         const response = await checkFeishuDoc()
         const canCreate = response?.data ?? response
         if (!canCreate) {
-          const userStore = useUserStore()
-          const userId = userStore.getUserId
-          if (!userId) {
-            ElMessage.warning('登录信息丢失，请重新登录')
-            return
-          }
           const urlResponse = await getFeishuUrl(1)
           const url = urlResponse?.data ?? urlResponse
-          // OAuth 回调时可能有多个会话同时在等飞书授权，按 userId 命名空间存数组队列；
-          // 跨账号天然隔离，同账号多会话按 conversationId 去重 push
-          const storageKey = `feishu_doc_pending_${userId}`
-          const pendingRaw = localStorage.getItem(storageKey)
-          let pending: Array<{ conversationId: string; prompt?: string }> = []
-          try {
-            const parsed = pendingRaw ? JSON.parse(pendingRaw) : []
-            if (Array.isArray(parsed)) {
-              pending = parsed.filter(
-                (p): p is { conversationId: string; prompt?: string } =>
-                  !!p && typeof p === 'object' && p.conversationId != null
-              )
-            }
-          } catch {
-            pending = []
-          }
-          const exists = pending.some((p) => p.conversationId === key)
-          if (!exists) pending.push({ conversationId: key, prompt })
-          localStorage.setItem(storageKey, JSON.stringify(pending))
+
           this.feishuDocCreatingMap[key] = true
           ElMessage.info('飞书文档创建中')
           this.closeModal()
+
+          // 跨 origin 场景下（内网入口写、外网 origin 回调）localStorage 不共享，pending 队列
+          // 失效。改用 window.opener.postMessage：回调 tab 完成 token 交换后通知本 tab，本 tab
+          // 用闭包里持有的 conversationId / prompt 直接发起 createFeishuDoc。
+          let timeoutId!: ReturnType<typeof setTimeout>
+          const handler = async (event: MessageEvent) => {
+            if (event.data?.type !== 'feishu-doc-authorized') return
+            // 仅信任来自外部 origin 的消息，避免本页脚本误触
+            if (event.origin === window.location.origin) return
+            window.removeEventListener('message', handler)
+            clearTimeout(timeoutId)
+            try {
+              await createFeishuDoc(targetConversationId, prompt)
+            } catch {
+              ElMessage.error('飞书文档创建失败')
+            } finally {
+              delete this.feishuDocCreatingMap[key]
+            }
+          }
+          window.addEventListener('message', handler)
+          timeoutId = setTimeout(
+            () => {
+              window.removeEventListener('message', handler)
+              delete this.feishuDocCreatingMap[key]
+              ElMessage.warning('飞书授权等待超时，请重试')
+            },
+            10 * 60 * 1000
+          )
+
           window.open(url, '_blank')
           return
         }
