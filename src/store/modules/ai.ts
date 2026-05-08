@@ -9,9 +9,9 @@ import {
   getAiConversationList,
   getAiMessageList,
   getFeishuUrl,
-  sendAiChatMessage,
   updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
+import { streamAiMessage } from '/@/utils/aiStream'
 
 import type {
   ChatAttachment,
@@ -508,37 +508,42 @@ export const useAiStore = defineStore('ai', {
       this.loading = true
       this.isStreaming = true
 
+      let accumulated = ''
       try {
-        try {
-          const response = await sendAiChatMessage({
+        await streamAiMessage(
+          {
             conversationId,
             content: question,
             model: this.currentModel,
             attachments: attachmentUrls,
-          })
-          const payload = pickObject(response)
-          if (typeof payload === 'string') {
-            updateAssistantMessage({
-              content: payload,
-              status: 'success',
-            })
-          } else {
-            updateAssistantMessage({
-              content: payload?.content ?? payload?.reply ?? payload?.message ?? '已收到请求，但未返回可展示内容。',
-              status: 'success',
-            })
+          },
+          {
+            onChunk: (chunk) => {
+              accumulated += chunk
+              updateAssistantMessage({ content: accumulated })
+            },
+            onDone: (payload) => {
+              updateAssistantMessage({
+                content: accumulated || payload?.content || '已收到请求，但未返回可展示内容。',
+                status: 'success',
+              })
+            },
+            onError: (message) => {
+              updateAssistantMessage({
+                content: accumulated || `请求失败：${message}`,
+                status: 'error',
+              })
+            },
           }
-        } catch (requestError: any) {
+        )
+      } catch (streamError: any) {
+        const lastIndex = this.messages[key].length - 1
+        if (this.messages[key][lastIndex]?.status !== 'error') {
           updateAssistantMessage({
-            content: `请求失败：${requestError?.msg ?? requestError?.message ?? '请稍后重试'}`,
+            content: accumulated || `请求失败：${streamError?.message ?? '响应异常'}`,
             status: 'error',
           })
         }
-      } catch (streamError: any) {
-        updateAssistantMessage({
-          content: assistantMessage.content || `请求失败：${streamError?.message ?? '响应异常'}`,
-          status: 'error',
-        })
       } finally {
         this.loading = false
         this.isStreaming = false
@@ -646,6 +651,55 @@ export const useAiStore = defineStore('ai', {
       }
 
       delete this.conversationBusyMap[key]
+    },
+    // 流式接收任意"已通过 setConversationBusy 占位"的会话回复，把 chunk 写入占位 assistant 消息。
+    // 与 waitForConversationReply 处于同一调用位置，但走 SSE 流式而非轮询。
+    // 用于研报、标题优化等"会话由后端创建 + 前端只等 assistant 首条回复"的场景。
+    async streamConversationReply(conversationId: number | string) {
+      const key = String(conversationId)
+      const busyState = this.conversationBusyMap[key]
+      if (!busyState) return
+
+      const placeholderMessageId = busyState.placeholderMessageId
+
+      const updatePlaceholder = (patch: Partial<ChatMessage>) => {
+        const list = [...(this.messages[key] ?? [])]
+        const idx = list.findIndex((item) => String(item.id) === String(placeholderMessageId))
+        if (idx === -1) return
+        list[idx] = { ...list[idx], ...patch }
+        this.messages[key] = list
+      }
+
+      this.isStreaming = true
+      this.loading = true
+
+      let accumulated = ''
+      try {
+        await streamAiMessage(
+          { conversationId },
+          {
+            onChunk: (chunk) => {
+              accumulated += chunk
+              updatePlaceholder({ content: accumulated })
+            },
+            onDone: (payload) => {
+              const finalContent = accumulated || (typeof payload === 'object' ? payload?.content : '') || ''
+              this.finishConversationBusy(conversationId, finalContent)
+            },
+            onError: (message) => {
+              this.failConversationBusy(conversationId, accumulated || `请求失败：${message}`)
+            },
+          }
+        )
+      } catch (streamError: any) {
+        // streamAiMessage 内部已通过 onError 标记失败，这里仅在仍处忙碌态时兜底，避免遗留 busy 状态。
+        if (this.conversationBusyMap[key]) {
+          this.failConversationBusy(conversationId, accumulated || `请求失败：${streamError?.message ?? '响应异常'}`)
+        }
+      } finally {
+        this.isStreaming = false
+        this.loading = false
+      }
     },
     async handleCreateFeishuDoc(prompt?: string) {
       // 捕获目标会话 id：用户在请求过程中可能切换会话，loading 状态必须始终落在按钮所在的会话上

@@ -45,7 +45,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
-import { createEvaluationResearchReportConversation, sendAiChatMessage } from '/@/api/devlocal/ai'
+import { createEvaluationResearchReportConversation } from '/@/api/devlocal/ai'
 import { useAiStore } from '/@/store/modules/ai'
 
 defineOptions({
@@ -156,13 +156,9 @@ const submitAIReport = async () => {
       message: 'AI调研报告生成中，当前会话暂时不能发送消息，请等待结果返回。',
       placeholderText: '已提交AI调研报告请求，正在等待模型返回结果...',
     })
-    $baseMessage('已开始生成 AI 调研报告，预计耗时约 30 分钟左右。生成期间暂无法发送新消息，请耐心等待结果返回。', 'success')
-    await sendAiChatMessage({
-      conversationId,
-    })
-    void aiStore.waitForConversationReply(conversationId)
-
-    $baseMessage('已开始生成AI调研报告', 'success')
+    $baseMessage('已开始生成 AI 调研报告，生成期间暂无法发送新消息，请耐心等待结果返回。', 'success')
+    // 调研报告改为流式输出：与 setConversationBusy 创建的占位消息绑定，由流回写。
+    void aiStore.streamConversationReply(conversationId)
   } catch (error: any) {
     const errorMessage = error?.msg ?? error?.message ?? '生成AI调研报告失败'
     if (conversationId != null && conversationId !== '') {

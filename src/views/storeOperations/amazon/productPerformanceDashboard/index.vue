@@ -581,7 +581,7 @@ import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../../constantOption.ts'
 import { useUserStore } from '/@//store/modules/user'
-import { createAiConversation, sendAiChatMessage } from '/@/api/devlocal/ai'
+import { createAiConversation } from '/@/api/devlocal/ai'
 import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis.ts'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
@@ -1128,10 +1128,8 @@ const showAiTitleOptimization = async (row: any) => {
         placeholderText: '已提交标题优化请求，正在等待模型返回结果...',
       })
       $baseMessage('已开始标题优化，当前会话会在结果返回前禁止发送新消息', 'success')
-      await sendAiChatMessage({
-        conversationId,
-      })
-      void aiStore.waitForConversationReply(conversationId)
+      // 标题优化改为流式输出：与 setConversationBusy 创建的占位消息绑定，由流回写。
+      void aiStore.streamConversationReply(conversationId)
     } catch (error: any) {
       aiStore.failConversationBusy(conversationId, error?.msg ?? error?.message ?? '标题优化任务创建成功，但消息发送失败')
       $baseMessage(error?.msg ?? error?.message ?? '标题优化任务创建成功，但消息发送失败', 'error')
