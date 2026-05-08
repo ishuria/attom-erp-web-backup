@@ -25,6 +25,7 @@
     <el-table border :data="changeLogList" :max-height="700" stripe>
       <el-table-column label="修改时间" prop="createTime" width="170" />
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(changeLogList, 'SKU', 'sku')" />
+      <el-table-column label="PO" prop="po" width="100" />
       <el-table-column label="已有零件ID" prop="componentId" width="130" />
       <el-table-column label="变更项目" prop="changeField" width="200" />
       <el-table-column label="变更前" min-width="120" prop="oldValue" show-overflow-tooltip />

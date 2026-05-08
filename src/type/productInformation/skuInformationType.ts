@@ -1525,6 +1525,7 @@ export interface IskuChangeLogItem {
   operatorId: number
   operator: string
   type: string
+  po: string | null
   createTime: string
 }
 
