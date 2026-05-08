@@ -135,7 +135,7 @@
       <div class="panel-head">
         <span class="panel-title">季节系数详情</span>
       </div>
-      <el-table v-loading="loading" :data="tableList" style="width: 100%" @sort-change="handleSortChange">
+      <el-table v-loading="loading" :cell-class-name="clearPadding" :data="tableList" style="width: 100%" @sort-change="handleSortChange">
         <el-table-column label="ASIN" min-width="110">
           <template #default="{ row }">
             <el-link v-if="row.asinUrl" :href="row.asinUrl" target="_blank" type="primary">{{ row.asin }}</el-link>
@@ -147,7 +147,7 @@
             <el-image
               v-if="row.skuImgUrl"
               :src="row.skuImgUrl"
-              style="width: 60px; height: 60px; cursor: pointer"
+              style="display: block; width: 60px; height: 60px; cursor: pointer"
               @click="openImagePreview(toOriginalImage(row.skuImgUrl))"
             />
             <span v-else>—</span>
@@ -159,8 +159,10 @@
             <div class="cell-header">
               <span class="cell-header-label">季节系数曲线</span>
               <span class="curve-legend">
-                <i class="curve-legend-dot curve-legend-dot--ratio" />系统计算
-                <i class="curve-legend-dot curve-legend-dot--actual" />实际设定
+                <i class="curve-legend-dot curve-legend-dot--ratio" />
+                系统计算
+                <i class="curve-legend-dot curve-legend-dot--actual" />
+                实际设定
               </span>
             </div>
           </template>
@@ -189,7 +191,10 @@
                   <el-icon class="cell-header-icon"><question-filled /></el-icon>
                 </span>
                 <template #content>
-                  <div class="custom-tooltip">| (系统计算的季节系数 - 系统设置的季节系数) | / 系统设置的季节系数</div>
+                  <div class="custom-tooltip">
+                    <div>每月偏差率 = | 系统计算 - 实际设定 | ÷ 实际设定</div>
+                    <div>平均偏差率 = 12 个月偏差率之和 ÷ 12</div>
+                  </div>
                 </template>
               </el-tooltip>
             </div>
@@ -215,8 +220,37 @@
     </div>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal teleported :url-list="imagePreviewList" @close="closeImagePreview" />
 
-    <el-dialog v-model="curveDialogVisible" :title="curveDialogTitle" width="720px" @close="closeCurveDialog">
-      <vab-chart :option="curveDialogOption" style="height: 380px; width: 100%" />
+    <!-- 曲线图 -->
+    <el-dialog v-model="curveDialogVisible" :title="curveDialogTitle" width="780px" @close="closeCurveDialog">
+      <vab-chart :option="curveDialogOption" style="height: 320px; width: 100%" />
+      <el-divider style="margin: 16px 0">
+        <span style="color: #8c8c8c">修改实际系数</span>
+      </el-divider>
+      <el-alert
+        v-if="curveDialogRow?.kindName"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 12px"
+        :title="`修改将同步影响品类「${curveDialogRow.kindName}」下所有 ASIN`"
+        type="warning"
+      />
+      <div class="actual-edit-grid">
+        <div v-for="(field, idx) in MONTH_ACTUAL_FIELDS" :key="field" class="actual-edit-item">
+          <span class="actual-edit-label">{{ idx + 1 }}月</span>
+          <el-input-number
+            v-model="editingActuals[field]"
+            controls-position="right"
+            :min="0"
+            :precision="2"
+            :step="0.01"
+            style="width: 100%"
+          />
+        </div>
+      </div>
+      <template #footer>
+        <el-button @click="closeCurveDialog">取消</el-button>
+        <el-button :loading="editSaving" type="primary" @click="saveSeasonalCoefficient">保存</el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -232,12 +266,15 @@ const {
   closeCurveDialog,
   closeImagePreview,
   curveDialogOption,
+  curveDialogRow,
   curveDialogTitle,
   curveDialogVisible,
+  editingActuals,
+  editSaving,
   fetchData,
   fetchDataDebounce,
   formatPercent,
-  getDiffBarStyle,
+
   getDiffStyle,
   handleCurrentChange,
   handlePlatformChange,
@@ -249,8 +286,10 @@ const {
   imagePreviewVisible,
   kindList,
   loading,
+  MONTH_ACTUAL_FIELDS,
   openCurveDialog,
   openImagePreview,
+  saveSeasonalCoefficient,
   sparklineOption,
   operationUserList,
   platformList,
@@ -260,6 +299,7 @@ const {
   tableList,
   top10List,
   total,
+  clearPadding,
 } = useSeasonalCoefficientDashboard()
 </script>
 
@@ -532,6 +572,16 @@ const {
   :deep(.el-table__body tr:hover > td) {
     background: #fafcff !important;
   }
+  :deep() {
+    .clear-padding {
+      padding-top: 0;
+      padding-bottom: 0;
+      .cell {
+        padding-right: 0;
+        padding-left: 0;
+      }
+    }
+  }
 }
 
 .diff-viz-track {
@@ -574,17 +624,19 @@ const {
 
   .curve-legend-dot {
     display: inline-block;
-    width: 10px;
-    height: 2px;
+    width: 16px;
+    height: 0;
     margin: 0 4px 0 8px;
     vertical-align: middle;
+    border-top: 2px solid transparent;
 
     &--ratio {
-      background: #1677ff;
+      border-top-color: #1677ff;
     }
 
     &--actual {
-      background: #fa8c16;
+      border-top-style: dashed;
+      border-top-color: #fa8c16;
     }
   }
 }
@@ -595,6 +647,23 @@ const {
 
   &:hover {
     opacity: 0.75;
+  }
+}
+
+.actual-edit-grid {
+  display: grid;
+  gap: 10px 12px;
+  grid-template-columns: repeat(6, 1fr);
+
+  .actual-edit-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .actual-edit-label {
+    font-size: 12px;
+    color: #595959;
   }
 }
 

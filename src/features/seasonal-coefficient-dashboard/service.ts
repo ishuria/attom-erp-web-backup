@@ -35,6 +35,23 @@ export const getDiffBarStyle = (diff: number | null | undefined) => {
   return { width: `${Math.min(Math.abs(diff), 100)}%` }
 }
 
+export const MONTH_ACTUAL_FIELDS = [
+  'janActual',
+  'febActual',
+  'marActual',
+  'aprActual',
+  'mayActual',
+  'junActual',
+  'julActual',
+  'augActual',
+  'sepActual',
+  'octActual',
+  'novActual',
+  'decActual',
+] as const
+
+export type MonthActualField = (typeof MONTH_ACTUAL_FIELDS)[number]
+
 export const parseMonthlyValues = (raw: string | null | undefined): number[] => {
   if (!raw) return []
   return raw
@@ -72,8 +89,14 @@ export const buildSparklineOption = (ratioArr: number[], actualArr: number[]) =>
 })
 
 export const buildCurveOption = (ratioArr: number[], actualArr: number[]) => ({
-  grid: { top: 40, right: 24, bottom: 40, left: 56 },
-  legend: { data: ['系统计算', '实际设定'], top: 0 },
+  grid: { top: 40, right: 20, bottom: 40, left: 56 },
+  legend: {
+    data: ['系统计算', '实际设定'],
+    top: 0,
+    itemWidth: 36,
+    itemHeight: 12,
+    itemGap: 24,
+  },
   tooltip: {
     trigger: 'axis',
     valueFormatter: (val: number) => (val == null ? '-' : Number(val).toFixed(2)),

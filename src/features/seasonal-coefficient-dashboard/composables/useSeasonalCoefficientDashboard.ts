@@ -1,6 +1,6 @@
 import { debounce } from 'lodash-es'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useImagePreview } from '/@/hooks/useImagePreview'
+import { updateSeasonalCoefficient } from '/@/api/devlocal/seasonalCoefficient'
 import { seasonalCoefficientDashboardApi } from '../api'
 import {
   ALL_OPERATION_USER_ID,
@@ -11,6 +11,8 @@ import {
   getDiffBarStyle,
   getDiffStyle,
   getPlatformCodeById,
+  MONTH_ACTUAL_FIELDS,
+  type MonthActualField,
   normalizeOperationUserOptions,
   parseMonthlyValues,
 } from '../service'
@@ -21,26 +23,86 @@ import type {
   ISeasonalCoefficientDashboardReq,
   ISeasonalCoefficientOption,
 } from '../types'
+import { useImagePreview } from '/@/hooks/useImagePreview'
 
 export const useSeasonalCoefficientDashboard = () => {
   const { imagePreviewVisible, imagePreviewList, openImagePreview, closeImagePreview } = useImagePreview()
   const curveDialogVisible = ref(false)
   const curveDialogTitle = ref('')
-  const curveDialogOption = ref<any>({})
+  const curveDialogRow = ref<ISeasonalCoefficientDashboardItem | null>(null)
+  const editingActuals = reactive<Record<MonthActualField, number | null>>({
+    janActual: null,
+    febActual: null,
+    marActual: null,
+    aprActual: null,
+    mayActual: null,
+    junActual: null,
+    julActual: null,
+    augActual: null,
+    sepActual: null,
+    octActual: null,
+    novActual: null,
+    decActual: null,
+  })
+  const editSaving = ref(false)
+
   const sparklineOption = (row: ISeasonalCoefficientDashboardItem) =>
     buildSparklineOption(parseMonthlyValues(row.monthlyRatio), parseMonthlyValues(row.monthlyActual))
+
+  const curveDialogOption = computed(() => {
+    if (!curveDialogRow.value) return {}
+    const ratioArr = parseMonthlyValues(curveDialogRow.value.monthlyRatio)
+    const actualArr = MONTH_ACTUAL_FIELDS.map((f) => Number(editingActuals[f] ?? 0))
+    return buildCurveOption(ratioArr, actualArr)
+  })
 
   const openCurveDialog = (row: ISeasonalCoefficientDashboardItem) => {
     const ratioArr = parseMonthlyValues(row.monthlyRatio)
     const actualArr = parseMonthlyValues(row.monthlyActual)
     if (!ratioArr.length && !actualArr.length) return
     curveDialogTitle.value = `${row.asin} · ${row.kindName ?? ''} 季节系数对比`
-    curveDialogOption.value = buildCurveOption(ratioArr, actualArr)
+    curveDialogRow.value = row
+    MONTH_ACTUAL_FIELDS.forEach((field, idx) => {
+      const v = actualArr[idx]
+      editingActuals[field] = v == null || Number.isNaN(v) ? null : Number(v)
+    })
     curveDialogVisible.value = true
   }
 
   const closeCurveDialog = () => {
     curveDialogVisible.value = false
+    curveDialogRow.value = null
+  }
+
+  const saveSeasonalCoefficient = async () => {
+    if (!curveDialogRow.value?.kindId) {
+      $baseMessage('缺少品类 ID，无法保存', 'error', '', false)
+      return
+    }
+    for (const field of MONTH_ACTUAL_FIELDS) {
+      const v = editingActuals[field]
+      if (v == null || Number(v) <= 0) {
+        $baseMessage('每月系数必须大于 0', 'warning', '', false)
+        return
+      }
+    }
+    editSaving.value = true
+    try {
+      const payload: any = { id: curveDialogRow.value.kindId }
+      MONTH_ACTUAL_FIELDS.forEach((f) => {
+        payload[f] = Number(editingActuals[f])
+      })
+      const { data } = await updateSeasonalCoefficient(payload)
+      if (data) {
+        $baseMessage('修改成功', 'success', '', false)
+        closeCurveDialog()
+        fetchData()
+      } else {
+        $baseMessage('修改失败', 'error', '', false)
+      }
+    } finally {
+      editSaving.value = false
+    }
   }
 
   const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0')
@@ -203,6 +265,13 @@ export const useSeasonalCoefficientDashboard = () => {
     await handleSiteChange(sites[0].id)
   })
 
+  const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+    if (data.column.label === '图片') {
+      return 'clear-padding'
+    }
+    return ''
+  }
+
   return {
     barChartOption,
     fetchData,
@@ -228,6 +297,11 @@ export const useSeasonalCoefficientDashboard = () => {
     curveDialogVisible,
     curveDialogTitle,
     curveDialogOption,
+    curveDialogRow,
+    editingActuals,
+    editSaving,
+    saveSeasonalCoefficient,
+    MONTH_ACTUAL_FIELDS,
     sparklineOption,
     operationUserList,
     pickerMonths,
@@ -238,5 +312,6 @@ export const useSeasonalCoefficientDashboard = () => {
     tableList,
     top10List,
     total,
+    clearPadding,
   }
 }
