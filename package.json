@@ -3,6 +3,19 @@
   "version": "29.7.7",
   "private": true,
   "author": "github.com/zxwk1998",
+  "packageManager": "pnpm@9.15.4",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "@parcel/watcher",
+      "vue-demi",
+      "core-js",
+      "es5-ext",
+      "typeit",
+      "vue-echarts"
+    ]
+  },
   "scripts": {
     "dev": "vite",
     "dev:vue-tsc": "vue-tsc --noEmit && cross-env VITE_CJS_IGNORE_WARNING=true vite",

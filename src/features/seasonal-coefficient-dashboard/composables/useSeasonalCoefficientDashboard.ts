@@ -4,12 +4,15 @@ import { useImagePreview } from '/@/hooks/useImagePreview'
 import { seasonalCoefficientDashboardApi } from '../api'
 import {
   ALL_OPERATION_USER_ID,
+  buildCurveOption,
+  buildSparklineOption,
   formatMonth,
   formatPercent,
   getDiffBarStyle,
   getDiffStyle,
   getPlatformCodeById,
   normalizeOperationUserOptions,
+  parseMonthlyValues,
 } from '../service'
 import type {
   IOperationUserOption,
@@ -21,6 +24,25 @@ import type {
 
 export const useSeasonalCoefficientDashboard = () => {
   const { imagePreviewVisible, imagePreviewList, openImagePreview, closeImagePreview } = useImagePreview()
+  const curveDialogVisible = ref(false)
+  const curveDialogTitle = ref('')
+  const curveDialogOption = ref<any>({})
+  const sparklineOption = (row: ISeasonalCoefficientDashboardItem) =>
+    buildSparklineOption(parseMonthlyValues(row.monthlyRatio), parseMonthlyValues(row.monthlyActual))
+
+  const openCurveDialog = (row: ISeasonalCoefficientDashboardItem) => {
+    const ratioArr = parseMonthlyValues(row.monthlyRatio)
+    const actualArr = parseMonthlyValues(row.monthlyActual)
+    if (!ratioArr.length && !actualArr.length) return
+    curveDialogTitle.value = `${row.asin} · ${row.kindName ?? ''} 季节系数对比`
+    curveDialogOption.value = buildCurveOption(ratioArr, actualArr)
+    curveDialogVisible.value = true
+  }
+
+  const closeCurveDialog = () => {
+    curveDialogVisible.value = false
+  }
+
   const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0')
   const pickerMonths = ref<string | null>(currentMonth)
   const loading = ref(false)
@@ -201,6 +223,12 @@ export const useSeasonalCoefficientDashboard = () => {
     loading,
     openImagePreview,
     closeImagePreview,
+    openCurveDialog,
+    closeCurveDialog,
+    curveDialogVisible,
+    curveDialogTitle,
+    curveDialogOption,
+    sparklineOption,
     operationUserList,
     pickerMonths,
     platformList,

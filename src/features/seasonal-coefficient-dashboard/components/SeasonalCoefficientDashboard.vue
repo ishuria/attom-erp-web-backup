@@ -154,7 +154,23 @@
           </template>
         </el-table-column>
         <el-table-column label="SKU" min-width="120" prop="sku" show-overflow-tooltip />
-
+        <el-table-column label="季节系数曲线" min-width="200">
+          <template #header>
+            <div class="cell-header">
+              <span class="cell-header-label">季节系数曲线</span>
+              <span class="curve-legend">
+                <i class="curve-legend-dot curve-legend-dot--ratio" />系统计算
+                <i class="curve-legend-dot curve-legend-dot--actual" />实际设定
+              </span>
+            </div>
+          </template>
+          <template #default="{ row }">
+            <div v-if="row.monthlyRatio || row.monthlyActual" class="sparkline-cell" @click="openCurveDialog(row)">
+              <vab-chart :option="sparklineOption(row)" style="height: 40px; width: 100%" />
+            </div>
+            <span v-else>—</span>
+          </template>
+        </el-table-column>
         <el-table-column label="品类" min-width="130" prop="kindName" show-overflow-tooltip />
         <!-- <el-table-column label="月份" min-width="100" prop="month">
           <template #default="{ row }">
@@ -198,6 +214,10 @@
       </div>
     </div>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal teleported :url-list="imagePreviewList" @close="closeImagePreview" />
+
+    <el-dialog v-model="curveDialogVisible" :title="curveDialogTitle" width="720px" @close="closeCurveDialog">
+      <vab-chart :option="curveDialogOption" style="height: 380px; width: 100%" />
+    </el-dialog>
   </div>
 </template>
 
@@ -209,7 +229,11 @@ defineOptions({ name: 'SeasonalCoefficientDashboardFeature' })
 
 const {
   barChartOption,
+  closeCurveDialog,
   closeImagePreview,
+  curveDialogOption,
+  curveDialogTitle,
+  curveDialogVisible,
   fetchData,
   fetchDataDebounce,
   formatPercent,
@@ -225,7 +249,9 @@ const {
   imagePreviewVisible,
   kindList,
   loading,
+  openCurveDialog,
   openImagePreview,
+  sparklineOption,
   operationUserList,
   platformList,
   productCount,
@@ -537,6 +563,38 @@ const {
     font-size: 17px;
     margin-top: -1px;
     color: #bfbfbf;
+  }
+}
+
+.curve-legend {
+  margin-left: 8px;
+  font-weight: 400;
+  font-size: 11px;
+  color: #8c8c8c;
+
+  .curve-legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 2px;
+    margin: 0 4px 0 8px;
+    vertical-align: middle;
+
+    &--ratio {
+      background: #1677ff;
+    }
+
+    &--actual {
+      background: #fa8c16;
+    }
+  }
+}
+
+.sparkline-cell {
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.75;
   }
 }
 

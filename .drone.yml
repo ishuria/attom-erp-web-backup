@@ -28,7 +28,9 @@ steps:
       # 用 corepack 启用 pnpm，避免每次 npm i -g pnpm 的 20-30s 开销
       # COREPACK_NPM_REGISTRY 让 corepack 也走 npmmirror，否则会从 npmjs.org 拉
       - export COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
-      - corepack enable && corepack prepare pnpm@latest --activate
+      # 不传版本号让 corepack 自动用 package.json 的 packageManager 字段，CI 可重现
+      - corepack enable
+      - corepack install
       # 仓库 .gitignore 排除了 pnpm-lock.yaml，故不能用 --frozen-lockfile
       - pnpm install --prefer-offline
       - pnpm build

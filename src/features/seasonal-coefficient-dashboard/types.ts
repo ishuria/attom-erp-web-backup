@@ -34,6 +34,10 @@ export interface ISeasonalCoefficientDashboardItem {
   asin: string
   asinUrl: string
   kindName: string
+  /** 12 个月系统计算系数，逗号分隔 */
+  monthlyRatio?: string
+  /** 12 个月实际设定系数，逗号分隔 */
+  monthlyActual?: string
 }
 
 export interface ISeasonalCoefficientDashboardRes {
