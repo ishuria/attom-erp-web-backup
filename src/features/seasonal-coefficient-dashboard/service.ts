@@ -76,7 +76,7 @@ export const buildCurveOption = (ratioArr: number[], actualArr: number[]) => ({
   legend: { data: ['系统计算', '实际设定'], top: 0 },
   tooltip: {
     trigger: 'axis',
-    valueFormatter: (val: number) => (val == null ? '-' : Number(val).toFixed(4)),
+    valueFormatter: (val: number) => (val == null ? '-' : Number(val).toFixed(2)),
   },
   xAxis: { type: 'category', data: MONTH_LABELS, boundaryGap: false },
   yAxis: { type: 'value', name: '系数' },
