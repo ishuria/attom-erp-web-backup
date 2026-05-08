@@ -62,7 +62,7 @@
       v-model="feishuDialogVisible"
       title="生成飞书文档"
       width="80%"
-      top="6vh"
+      top="4vh"
       append-to-body
       :close-on-click-modal="false"
       @closed="handleFeishuDialogClosed"
@@ -70,7 +70,7 @@
       <div class="feishu-prompt-dialog">
         <div v-if="commonPrompts.length" class="feishu-prompt-dialog__section">
           <div class="feishu-prompt-dialog__section-title">从常用提示词选择</div>
-          <el-scrollbar max-height="220px">
+          <el-scrollbar max-height="260px">
             <ul class="feishu-prompt-list">
               <li
                 v-for="item in commonPrompts"
@@ -86,12 +86,12 @@
           </el-scrollbar>
         </div>
         <div class="feishu-prompt-dialog__section">
-          <div class="feishu-prompt-dialog__section-title">提示词内容（可编辑或直接输入）</div>
+          <div class="feishu-prompt-dialog__section-title">文档生成要求</div>
           <div class="md-editor-container">
             <v-md-editor
               v-model="feishuPromptDraft"
-              height="360px"
-              placeholder="请输入提示词，或从上方选择一条（支持 Markdown）"
+              height="680px"
+              placeholder="请输入文档生成要求，或从上方选择一条（支持 Markdown）"
               left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | save"
               :disabled-menus="[]"
             />

@@ -3,7 +3,7 @@
     v-model="visible"
     :title="mode === 'add' ? '新增常用提示词' : '编辑常用提示词'"
     width="80%"
-    top="6vh"
+    top="3vh"
     :close-on-click-modal="false"
     append-to-body
     @closed="handleClosed"
@@ -13,7 +13,7 @@
         <div class="md-editor-container">
           <v-md-editor
             v-model="form.prompt"
-            height="500px"
+            height="680px"
             placeholder="请输入提示词正文（支持 Markdown）"
             left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | save"
             :disabled-menus="[]"
