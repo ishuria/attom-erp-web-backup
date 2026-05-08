@@ -703,7 +703,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { hasPermission } from '/@/utils/permission'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import poDetail from './components/poDetail.vue'
+import poDetail from '/@/views/packagingShipping/components/poDetail.vue'
 
 defineOptions({
   name: 'PendingReceipt',

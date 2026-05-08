@@ -47,9 +47,9 @@
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
+              <span class="copySku">
+                <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill"  @click="handleClipboard($event, row.po)"/>
               </span>
             </template>
           </el-table-column>
@@ -182,9 +182,9 @@
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
+              <span class="copySku">
+                <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill"  @click="handleClipboard($event, row.po)"/>
               </span>
             </template>
           </el-table-column>
@@ -815,9 +815,9 @@
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
+              <span class="copySku">
+                <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill"  @click="handleClipboard($event, row.po)"/>
               </span>
             </template>
           </el-table-column>
@@ -972,6 +972,8 @@
       @click-child="confirmEditorLog"
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <!-- PO明细 -->
+    <poDetail v-model="poDetailVisible" :poSkuId="poSkuId" :close="closePoDetail" />
   </div>
 </template>
 
@@ -996,6 +998,7 @@ import {
 } from '/@/api/devlocal/packagingShipping'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
+import poDetail from '/@/views/packagingShipping/components/poDetail.vue'
 
 defineOptions({
   name: 'AfterSales',
@@ -1386,6 +1389,20 @@ const afterSalesLogCellStyle = (data: { row: any; column: any; rowIndex: number;
   return {
     textAlign: 'left',
   }
+}
+
+/******* PO明细弹窗 *******/
+const poDetailVisible = ref<boolean>(false);
+const poSkuId = ref<number>(null);
+// 打开PO明细弹窗
+const openPoDetail = (skuId) => {
+  poDetailVisible.value = true;
+  poSkuId.value = skuId;
+}
+// 关闭PO明细弹窗
+const closePoDetail = () => {
+  poDetailVisible.value = false;
+  poSkuId.value = null;
 }
 
 onActivated(() => {
