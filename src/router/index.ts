@@ -99,12 +99,25 @@ export const setupRouter = (app: App<Element>) => {
   if (disableRouterWarning)
     router.addRoute({
       path: '/:pathMatch(.*)*',
-      component: () => {},
+      component: () => { },
     })
 
   if (authentication === 'intelligence') addRouter(asyncRoutes)
   setupPermissions(router)
   app.use(router)
+
+  // [兜底机制-更新失败] 检测到资源加载失败（可能是版本更新导致），正在刷新页面...
+  router.onError((error) => {
+    // 匹配 Vite 打包后的动态导入失败错误
+    const pattern = /Failed to fetch dynamically imported module/g
+    const isChunkLoadFailed = pattern.test(error?.message)
+
+    if (isChunkLoadFailed) {
+      console.warn('检测到资源加载失败（可能是版本更新导致），正在刷新页面...')
+      // 强制刷新，获取最新的 index.html
+      window.location.reload()
+    }
+  })
 
   return router
 }
