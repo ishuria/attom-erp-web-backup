@@ -106,7 +106,9 @@ export const setupRouter = (app: App<Element>) => {
   setupPermissions(router)
   app.use(router)
 
-  // [兜底机制-更新失败] 检测到资源加载失败（可能是版本更新导致），正在刷新页面...
+  /**
+ * 路由懒加载失败兜底
+ */
   router.onError((error) => {
     const message = error?.message || ''
 
@@ -115,18 +117,23 @@ export const setupRouter = (app: App<Element>) => {
       message.includes('Importing a module script failed')
 
     if (isChunkLoadFailed) {
-      console.warn('检测到资源加载失败，正在刷新页面...')
+      console.warn('检测到路由资源更新，正在恢复页面...')
 
       const reloadKey = 'vite-router-reload'
 
       // 防止无限刷新
-      if (!sessionStorage.getItem(reloadKey)) {
-        sessionStorage.setItem(reloadKey, '1')
-
-        // 不要 reload
-        window.location.href =
-          `${location.origin}?t=${Date.now()}${location.hash}`
+      if (sessionStorage.getItem(reloadKey)) {
+        return
       }
+
+      sessionStorage.setItem(reloadKey, '1')
+
+      const url = new URL(window.location.href)
+
+      // 强制重新请求最新 index.html
+      url.searchParams.set('_reload', Date.now().toString())
+
+      window.location.replace(url.toString())
     }
   })
 
