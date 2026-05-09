@@ -11,20 +11,36 @@ setupI18n(app)
 setupStore(app)
 setupRouter(app)
 
-// [兜底机制-更新失败] 检测到系统版本更新，正在自动刷新...
+// 【兜底机制-更新失败】监听 chunk 加载失败
 window.addEventListener('unhandledrejection', (event) => {
-  const reason = event.reason
+  const message = event.reason?.message || ''
 
-  // 判断是否为动态导入模块失败（Chunk 加载失败）
-  if (
-    reason instanceof TypeError &&
-    (reason.message.includes('Failed to fetch dynamically imported module') ||
-      reason.message.includes('Failed to fetch'))
-  ) {
-    console.warn('检测到系统版本更新，正在自动刷新...')
-    // 强制刷新页面，获取最新的 index.html 和 JS 文件
-    window.location.reload()
+  console.log('message', message)
+
+  const isChunkLoadFailed =
+    message.includes('Failed to fetch dynamically imported module') ||
+    message.includes('Importing a module script failed') ||
+    message.includes('Failed to fetch')
+
+  console.log('isChunkLoadFailed', isChunkLoadFailed)
+
+  if (isChunkLoadFailed) {
+    console.warn('检测到系统版本更新，正在刷新页面...')
+
+    const reloadKey = 'vite-reload'
+
+    // 防止无限刷新
+    if (!sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, '1')
+
+      // 不要 reload
+      location.replace(`${location.origin}${location.pathname}`)
+    }
   }
 })
 
 app.mount('#app')
+
+// 页面正常启动后清除
+sessionStorage.removeItem('vite-reload')
+sessionStorage.removeItem('vite-router-reload')
