@@ -157,7 +157,15 @@
         <el-table-column label="季节系数曲线" min-width="200">
           <template #header>
             <div class="cell-header">
-              <span class="cell-header-label">季节系数曲线</span>
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <span class="custom-tooltip">点击曲线可查看明细并修改实际系数</span>
+                </template>
+                <span class="cell-header-label">
+                  季节系数曲线
+                  <el-icon class="cell-header-icon"><question-filled /></el-icon>
+                </span>
+              </el-tooltip>
               <span class="curve-legend">
                 <i class="curve-legend-dot curve-legend-dot--ratio" />
                 系统计算
