@@ -10,17 +10,26 @@
     </template>
 
     <el-table
+      ref="mainTableRef"
       v-loading="loading"
       border
       :data="groupedList"
+      table-layout="fixed"
       :expand-row-keys="expandedRows"
       :header-cell-style="{ textAlign: 'center' }"
       row-key="rowKey"
       @row-click="handleRowClick"
+      @header-dragend="handleHeaderDragend"
+      @expand-change="syncColumnWidths"
     >
-      <el-table-column align="center" label="月份" prop="month" width="90" />
-      <el-table-column align="center" label="姓名" prop="userName" width="95" />
-      <el-table-column align="center" label="预计本月总利润分" prop="totalMonthProfitScore" width="100">
+      <!-- 1. 月份 -->
+      <el-table-column align="center" label="月份" prop="month" width="90" class-name="col-month" />
+
+      <!-- 2. 姓名 -->
+      <el-table-column align="center" label="姓名" prop="userName" width="95" class-name="col-user" />
+
+      <!-- 3. 预计本月总利润分 -->
+      <el-table-column align="center" label="预计本月总利润分" prop="totalMonthProfitScore" width="100" class-name="col-total-month">
         <template #header>
           预计本月
           <br />
@@ -30,81 +39,69 @@
           <span style="color: var(--el-color-success)">{{ formatNumber(row.totalMonthProfitScore) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="展开" type="expand" width="80">
+
+      <!-- 4. 展开列 (占位) -->
+      <el-table-column align="center" label="展开" type="expand" width="80" class-name="col-expand">
         <template #default="{ row }">
           <div style="padding: 0">
-            <el-table border :data="row.items.slice(1)" :show-header="false">
+            <!-- 子表格：注意这里 width 是动态绑定的 -->
+            <el-table border :data="row.items.slice(1)" :show-header="false" table-layout="fixed" style="width: 100%">
+              <!-- 对应 月份 -->
               <el-table-column width="90" />
+              <!-- 对应 姓名 -->
               <el-table-column width="95" />
+              <!-- 对应 预计本月总利润分 -->
               <el-table-column width="100" />
+              <!-- 对应 展开图标 -->
               <el-table-column width="80" />
-              <el-table-column prop="groupName">
+
+              <!-- 对应 利润组名 (动态绑定) -->
+              <el-table-column prop="groupName" :width="colWidths.groupName">
                 <template #default="{ row: item }">
-                  <el-popover v-if="item.skus && item.skus.length > 0" placement="top" trigger="hover" :width="360">
-                    <template #reference>
-                      <span style="cursor: pointer; color: var(--el-color-primary)">
-                        {{ item.groupName }}
-                      </span>
-                    </template>
-                    <div style="max-height: 300px; overflow-y: auto">
-                      <div style="font-weight: 600; margin-bottom: 8px; color: var(--el-text-color-primary)">SKU：</div>
-                      <div
-                        v-for="sku in item.skus"
-                        :key="sku"
-                        style="padding: 4px 0; border-bottom: 1px solid var(--el-border-color-lighter)"
-                      >
-                        {{ sku }}
-                      </div>
-                    </div>
-                  </el-popover>
-                  <span v-else>{{ item.groupName }}</span>
+                  <!-- ... 你的 Popover 内容 ... -->
+                  <span style="cursor: pointer; color: var(--el-color-primary)">
+                    {{ item.groupName }}
+                  </span>
                 </template>
               </el-table-column>
-              <el-table-column align="center" prop="totalProfit" width="100">
+
+              <!-- 对应 总利润 (动态绑定) -->
+              <el-table-column align="center" prop="totalProfit" :width="colWidths.totalProfit">
                 <template #default="{ row: item }">${{ formatNumber(item.totalProfit) }}</template>
               </el-table-column>
-              <el-table-column align="center" prop="monthProfitScore" width="100">
+
+              <!-- 对应 预计本月利润分 (动态绑定) -->
+              <el-table-column align="center" prop="monthProfitScore" :width="colWidths.monthProfitScore">
                 <template #default="{ row: item }">
                   <span style="color: var(--el-color-success)">{{ formatNumber(item.monthProfitScore) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column align="center" prop="pileProfitScore" width="115">
+
+              <!-- 对应 累计利润分 (动态绑定) -->
+              <el-table-column align="center" prop="pileProfitScore" :width="colWidths.pileProfitScore">
                 <template #default="{ row: item }">{{ formatNumber(item.pileProfitScore) }}</template>
               </el-table-column>
             </el-table>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="利润组名">
+
+      <!-- 5. 利润组名 (主表列) -->
+      <el-table-column label="利润组名" ref="colGroupName" width="100" class-name="col-group-name">
         <template #default="{ row }">
-          <template v-if="row.items[0]">
-            <el-popover v-if="row.items[0].skus && row.items[0].skus.length > 0" placement="top" trigger="hover" :width="360">
-              <template #reference>
-                <span style="cursor: pointer; color: var(--el-color-primary)">
-                  {{ row.items[0].groupName }}
-                </span>
-              </template>
-              <div style="max-height: 300px; overflow-y: auto">
-                <div style="font-weight: 600; margin-bottom: 8px; color: var(--el-text-color-primary)">SKU：</div>
-                <div
-                  v-for="sku in row.items[0].skus"
-                  :key="sku"
-                  style="padding: 4px 0; border-bottom: 1px solid var(--el-border-color-lighter)"
-                >
-                  {{ sku }}
-                </div>
-              </div>
-            </el-popover>
-            <span v-else>{{ row.items[0].groupName }}</span>
-          </template>
+          {{ row.items[0].groupName }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="总利润" width="100">
+
+      <!-- 6. 总利润 (主表列) -->
+      <el-table-column align="center" label="总利润" ref="colTotalProfit" width="120" class-name="col-total-profit">
         <template #default="{ row }">
           <span v-if="row.items[0]">${{ formatNumber(row.items[0].totalProfit) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="预计本月利润分" width="100">
+
+      <!-- 7. 预计本月利润分 (主表列) -->
+      <el-table-column align="center" label="预计本月利润分" ref="colMonthProfit" width="120" class-name="col-month-profit">
         <template #header>
           预计本月
           <br />
@@ -114,15 +111,13 @@
           <span v-if="row.items[0]" style="color: var(--el-color-success)">{{ formatNumber(row.items[0].monthProfitScore) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="累计利润分" width="115">
+
+      <!-- 8. 累计利润分 (主表列) -->
+      <el-table-column align="center" label="累计利润分" ref="colPileProfit" width="120" class-name="col-pile-profit">
         <template #default="{ row }">
           <span v-if="row.items[0]">{{ formatNumber(row.items[0].pileProfitScore) }}</span>
         </template>
       </el-table-column>
-
-      <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-      </template>
     </el-table>
     <vab-pagination
       :current-page="pageNo"
@@ -195,6 +190,45 @@ const handleRowClick = (row: ProfitSharePreviewGroup) => {
   } else {
     expandedRows.value.push(row.rowKey)
   }
+}
+
+const mainTableRef = ref(null)
+
+// 1. 定义一个响应式对象来存储列宽
+const colWidths = ref({
+  groupName: 100,
+  totalProfit: 120,
+  monthProfitScore: 120,
+  pileProfitScore: 120,
+})
+
+// 2. 同步宽度的函数
+const syncColumnWidths = () => {
+  nextTick(() => {
+    // 获取主表实例
+    const table: any = mainTableRef.value
+    if (!table) return
+
+    // 获取所有列的定义
+    const columns = table.columns
+
+    // 辅助函数：根据 className 或 label 找到对应的列宽
+    const getWidth = (className: any) => {
+      const col = columns.find((c: any) => c.className === className)
+      return col ? col.realWidth || col.width : 'auto'
+    }
+
+    // 更新宽度 (这里使用你在 template 中定义的 class-name)
+    colWidths.value.groupName = getWidth('col-group-name')
+    colWidths.value.totalProfit = getWidth('col-total-profit')
+    colWidths.value.monthProfitScore = getWidth('col-month-profit')
+    colWidths.value.pileProfitScore = getWidth('col-pile-profit')
+  })
+}
+
+// 3. 监听拖拽结束
+const handleHeaderDragend = () => {
+  syncColumnWidths()
 }
 
 const handleCurrentChange = (val: number) => {
