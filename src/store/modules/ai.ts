@@ -735,10 +735,6 @@ export const useAiStore = defineStore('ai', {
         } catch {
           // reload 失败不影响主流程：用户再点开会自己走 historic API
         }
-        // 流式 done 后立即把当前会话标记已读，抹平后端 addConversationUnreadCount 的 +1：
-        // 后端会再推一条 WebSocket 通知（带最新全局 unreadCount），useNotificationStore
-        // 自动同步顶部全局红点。fire-and-forget：失败时本地由 conversationUnreadCount 自带回滚。
-        void this.conversationUnreadCount(conversationId)
       }
     },
     setConversationBusy(
