@@ -184,9 +184,19 @@
                 <el-button text type="success">回滚</el-button>
               </template>
             </el-popconfirm>
-            <el-popconfirm title="确认删除该版本吗？" @confirm="handleDeleteHistory(row)">
+            <el-popconfirm
+              :disabled="row.versionNo === historyCurrentVersionNo"
+              title="确认删除该版本吗？"
+              @confirm="handleDeleteHistory(row)"
+            >
               <template #reference>
-                <el-button text type="danger">删除</el-button>
+                <el-button
+                  :disabled="row.versionNo === historyCurrentVersionNo"
+                  text
+                  type="danger"
+                >
+                  删除
+                </el-button>
               </template>
             </el-popconfirm>
           </template>
