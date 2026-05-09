@@ -86,22 +86,59 @@ const handleDialogOpened = async () => {
     offset: 0,
   })
 }
-// 监听对话框显示状态变化，处理内容逻辑
+
+// 草稿过期时间：7 天
+const DRAFT_EXPIRE_MS = 7 * 24 * 60 * 60 * 1000
+
+const getDraftKey = () =>
+  props.progressId ? `${props.classify}_${props.progressId}` : props.classify
+
+const clearDraft = () => {
+  const key = getDraftKey()
+  localStorage.removeItem(key)
+  localStorage.removeItem(`${key}_timestamp`)
+}
+
+// 过期或无时间戳的草稿视为无效，顺带清掉避免僵尸数据
+const readValidDraft = (): string | null => {
+  const key = getDraftKey()
+  const draft = localStorage.getItem(key)
+  if (!draft) return null
+
+  const ts = localStorage.getItem(`${key}_timestamp`)
+  if (!ts || Date.now() - Number(ts) > DRAFT_EXPIRE_MS) {
+    clearDraft()
+    return null
+  }
+  return draft
+}
+
+// 对话框打开时的内容选择逻辑
+// ---------------------------------------------------------
+// 【草稿生命周期】
+//   写入：编辑器点击后启动 1s 间隔的 setInterval，把 html.value 写入 localStorage（key + _timestamp）
+//   过期：超过 7 天的草稿在 readValidDraft 里自动清掉，视为无草稿
+//   清理：点「保存」/「确认」→ clearDraft 清光 key 和 _timestamp；点「取消」/关闭 → 保留草稿
+//
+// 【打开对话框时的 4 种分支】
+//   1. 后端有 + 草稿有(7天内)：5 分钟裁决
+//        - 草稿写入时间 ≤ 5min → 用草稿（假设用户在续写）
+//        - 超过 5min                → 用后端（假设用户已放弃草稿）
+//   2. 只有后端           → 用后端
+//   3. 只有草稿(7天内)    → 用草稿（如新建场景）
+//   4. 都没有             → 空
+//
+// 【已知风险】
+//   多人协作场景下，5min 裁决可能用旧草稿覆盖后端新版本
+//   （后端无 updateTime，没法做真正的时间戳比较，待后续优化）
 watch(
   () => props.wangEditorVisible,
   (newValue) => {
     dflag.value = newValue
 
-    // 当对话框打开时，智能选择内容来源
     if (newValue) {
-      const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
-      const tempContent = localStorage.getItem(key)
-
-      // 智能选择逻辑：
-      // 1. 如果后端有内容且缓存也有内容，比较时间戳决定使用哪个
-      // 2. 如果只有后端有内容，使用后端内容
-      // 3. 如果只有缓存有内容，使用缓存内容
-      // 4. 都没有则使用空内容
+      const key = getDraftKey()
+      const tempContent = readValidDraft()
 
       if (content.value && !isEmptyHtml(content.value) && tempContent && !isEmptyHtml(tempContent)) {
         // 两者都有内容，比较时间戳
@@ -295,7 +332,7 @@ const handleClick = () => {
   clearTimer() // 确保在设置新定时器之前清除旧定时器
 
   intervalTimerLog = setInterval(() => {
-    const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
+    const key = getDraftKey()
     // 直接使用 localStorage.setItem 保存 HTML 内容，避免 JSON.stringify 添加引号
     localStorage.setItem(key, html.value)
     // 同时保存时间戳，用于判断缓存是否过期
@@ -329,8 +366,7 @@ const handleSave = () => {
   emit('clickChild', htmlContent)
   $baseMessage(`${props.title}保存成功`, 'success', 'hey')
   clearTimer()
-  const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
-  localStorage.removeItem(`${key}_timestamp`)
+  clearDraft()
 }
 /**
  * 当确认对话框的时候
@@ -346,8 +382,7 @@ const handleConfirmDialog = () => {
   $baseMessage(`${props.title}保存成功`, 'success', 'hey')
   dflag.value = false
   clearTimer()
-  const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
-  localStorage.removeItem(`${key}_timestamp`)
+  clearDraft()
 }
 
 const handleCreated = (editor: IDomEditor) => {
