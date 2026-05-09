@@ -1,7 +1,13 @@
 import { getToken } from '/@/utils/token'
+import type { LangFlowProgressEvent } from '/@/type/ai/chat'
 
 interface StreamCallbacks {
   onChunk: (chunk: string) => void
+  /**
+   * LangFlow 节点过程事件（vertices_sorted / build_start / log / end_vertex / add_message / end / error 等）。
+   * payload 已经是 LangFlow 原始 {event, data} 结构，调用方可直接使用。
+   */
+  onProgress?: (event: LangFlowProgressEvent) => void
   onDone: (payload?: any) => void
   onError: (message: string) => void
 }
@@ -34,7 +40,8 @@ export const streamAiMessage = async (
     model?: string
     attachments?: string[]
   },
-  callbacks: StreamCallbacks
+  callbacks: StreamCallbacks,
+  signal?: AbortSignal,
 ) => {
   const response = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/api/v1/ai/conversations/${data.conversationId}/messages/stream`, {
     method: 'POST',
@@ -44,6 +51,7 @@ export const streamAiMessage = async (
       ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
     },
     body: JSON.stringify(data),
+    signal,
   })
 
   if (!response.ok || !response.body) {
@@ -103,6 +111,15 @@ export const streamAiMessage = async (
           callbacks.onChunk(text)
           // 让出宏任务，避免同一 read 内多条事件被 Vue 合并成一次渲染（微任务 break 不足以触发 paint）。
           await new Promise((resolve) => setTimeout(resolve, 0))
+        }
+      } else if (event === 'progress') {
+        // payload 是 LangFlow 原始 {event, data}，直接转给 onProgress（无 onProgress 时静默忽略）
+        if (callbacks.onProgress && payload && typeof payload === 'object' && payload.event) {
+          try {
+            callbacks.onProgress(payload as LangFlowProgressEvent)
+          } catch (err) {
+            console.warn('[sse] onProgress 回调异常', err)
+          }
         }
       } else if (event === 'done') {
         console.log(`[sse] done   +${(performance.now() - t0).toFixed(0)}ms reads=${readCount} chunks=${chunkCount}`)

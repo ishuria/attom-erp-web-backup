@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import {
+  cancelAiStream,
   checkFeishuDoc,
   createAiConversation,
   createCommonChatConversation,
@@ -8,18 +9,22 @@ import {
   deleteAiConversation,
   getAiConversationList,
   getAiMessageList,
+  getAiMessageProgress,
+  getAiStreamActive,
   getFeishuUrl,
   updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
 import { streamAiMessage } from '/@/utils/aiStream'
 
 import type {
+  AiMessageProgress,
   ChatAttachment,
   ChatConversation,
   ChatConversationBusyState,
   ChatMessage,
   CreateConversationOptions,
   EnsureConversationOptions,
+  LangFlowProgressEvent,
 } from '/@/type/ai/chat'
 
 // 为本地兜底消息生成临时主键，避免渲染层依赖后端 id。
@@ -110,6 +115,10 @@ const normalizeMessage = (item: any): ChatMessage => ({
   createdAt: item?.createdAt ?? item?.createTime ?? dayjs().format('YYYY-MM-DD HH:mm:ss'),
   status: item?.status ?? 'success',
   attachments: normalizeAttachments(item?.attachments ?? item?.fileList ?? item?.files),
+  // 后端 messageStatus=ERROR 时 status 由调用层另行判断，这里仅透传 requestId 关联思考过程
+  requestId: item?.requestId ?? undefined,
+  // 后端按会话级 DISTINCT request_id 标记是否存在过程事件；旧消息或 build 失败的消息会是 false
+  hasProgress: typeof item?.hasProgress === 'boolean' ? item.hasProgress : undefined,
 })
 
 const pickArray = (response: any) => {
@@ -122,6 +131,17 @@ const pickArray = (response: any) => {
 
 // 某些接口直接返回对象，某些接口包在 data 中，这里统一抹平。
 const pickObject = (response: any) => response?.data ?? response ?? {}
+
+// 安全 JSON.parse：失败时返回原字符串，避免 progress eventData 异常时整面板报错
+const safeJsonParse = (raw: any): any => {
+  if (raw == null) return null
+  if (typeof raw !== 'string') return raw
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return raw
+  }
+}
 
 const normalizeCreateConversationOptions = (options?: CreateConversationOptions): CreateConversationOptions => ({
   payload: options?.payload ? { ...options.payload } : undefined,
@@ -196,6 +216,15 @@ export const useAiStore = defineStore('ai', {
     networkOnline: true,
     // 新建聊天模式：无激活会话，输入框可用，发送时才创建会话。
     isNewChatMode: false,
+    // 当前流式中的 LangFlow 过程事件（vertices_sorted / build_start / log / end_vertex / add_message / end）；
+    // 流式结束时由 sendMessage 回填到 progressCache，避免占用内存
+    liveProgress: [] as LangFlowProgressEvent[],
+    // 历史消息思考过程缓存：key = requestId（user / assistant 共享）
+    progressCache: {} as Record<string, LangFlowProgressEvent[]>,
+    // 当前 sendMessage 的 AbortController，用于"停止"按钮中断 fetch
+    currentAbortController: null as AbortController | null,
+    // 远端 stream 探测轮询定时器：key = String(conversationId)
+    remoteStreamPollers: {} as Record<string, ReturnType<typeof setInterval>>,
   }),
   getters: {
     // 当前激活会话对象。
@@ -397,12 +426,17 @@ export const useAiStore = defineStore('ai', {
       // 在 dialog 已打开期间到达的新消息可能不会反映到该字段，缓存短路会漏读。
       // loadMessages 失败时保留旧缓存（见 loadMessages 注释），网络抖动安全。
       await this.loadMessages(id)
+      // 探测：浏览器刷新后切回该会话时，如果有未完成 stream，补 loading 占位 + 启动轮询
+      void this.checkAndFollowRemoteStream(id)
     },
     async conversationUnreadCount(id: number | string) {
       const key = String(id)
       const targetConversation = this.conversations.find((item) => String(item.id) === key)
       const previousUnreadCount = Math.max(0, Number(targetConversation?.unreadCount) || 0)
-      if (!previousUnreadCount) return
+      // 不再 early return：本地 unreadCount=0 不代表后端真的是 0。
+      // 例如 sendMessage 流式刚结束，后端 addConversationUnreadCount 已 +1，
+      // 但前端 conversations 列表此刻仍是过期快照，必须强行触发后端 markRead + WebSocket 推送。
+      // switchConversation 路径在外层已做 `unreadCount > 0` 预判，不会受影响。
 
       // 乐观更新：先本地清零让红点立即消失，请求失败再回滚
       this.setConversationUnreadCount(id, 0)
@@ -429,6 +463,123 @@ export const useAiStore = defineStore('ai', {
         this.messages[key] = this.messages[key] ?? []
       }
     },
+    /**
+     * 拉取指定 requestId 的思考过程历史（带内存缓存）。
+     *
+     * - 命中 progressCache → 直接返回（避免重复请求）
+     * - 否则调 GET /messages/{requestId}/progress，转成 LangFlowProgressEvent[] 后缓存返回
+     */
+    async fetchMessageProgress(conversationId: number | string, requestId: string): Promise<LangFlowProgressEvent[]> {
+      if (!requestId) return []
+      if (this.progressCache[requestId]) return this.progressCache[requestId]
+      try {
+        const response = await getAiMessageProgress(conversationId, requestId)
+        const rows = pickArray(response) as AiMessageProgress[]
+        const events: LangFlowProgressEvent[] = rows.map((r) => ({
+          event: r.eventType,
+          data: safeJsonParse(r.eventData),
+          // DB createdAt 转毫秒；空字符串 / 解析失败时返回 NaN，由面板兜底为 undefined
+          receivedAt: r.createdAt ? new Date(r.createdAt).getTime() : undefined,
+        }))
+        this.progressCache[requestId] = events
+        return events
+      } catch {
+        return []
+      }
+    },
+    /**
+     * 主动取消当前活动会话的流式调用（"停止"按钮）。
+     *
+     * 顺序：先调后端 cancel API（让 LangFlow 端 flow 真正终止），再 abort 本地 fetch。
+     * 原因：abort 会触发后端 emitter onError(Broken pipe)，按"客户端断开"分支处理（不取消 handle），
+     * 必须先走显式 cancel API 才能取消 LangFlow。
+     */
+    async cancelStream() {
+      const cid = this.activeConversationId
+      if (!cid) return
+      try {
+        await cancelAiStream(cid)
+      } catch (e) {
+        console.warn('[ai] cancel API 失败', e)
+      }
+      this.currentAbortController?.abort()
+      this.currentAbortController = null
+    },
+    /**
+     * 探测远端是否有未完成 stream（浏览器刷新场景）；若有则补 loading 占位 + 启动轮询。
+     *
+     * 触发时机：进入会话后（switchConversation / loadMessages 之后）。
+     * 轮询间隔 5 秒：每次调 stream/active；返回 false 时停止 + reload 拉最终结果替换占位。
+     */
+    async checkAndFollowRemoteStream(cid: number | string) {
+      const key = String(cid)
+      // 本地 sendMessage 已在跑则不需要探测（避免误补占位）
+      if (this.isStreaming && String(this.activeConversationId) === key) return
+
+      // 关键：补占位 与 启 timer 必须解耦
+      // 关闭对话框再重新打开时，switchConversation → loadMessages 整列覆盖会丢占位，
+      // 此时 remoteStreamPollers[key] 仍存在；若直接 return 就看不到 loading 了。
+      const alreadyPolling = !!this.remoteStreamPollers[key]
+
+      // 1) 决定 active：已 polling 即视为 active（避免重复探测 API）；否则发一次探测请求
+      let active: boolean
+      if (alreadyPolling) {
+        active = true
+      } else {
+        try {
+          const resp: any = await getAiStreamActive(cid)
+          active = !!(resp?.data ?? resp)
+        } catch {
+          return
+        }
+      }
+      if (!active) return
+
+      // 2) 补占位（幂等）：每次 loadMessages 整列覆盖后都需要重新补
+      const list = this.messages[key] ?? []
+      const last = list[list.length - 1]
+      if (last?.role !== 'assistant' || last.status !== 'loading') {
+        this.messages[key] = [
+          ...list,
+          {
+            id: createLocalId('msg'),
+            role: 'assistant',
+            content: '',
+            createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            status: 'loading',
+          },
+        ]
+      }
+
+      // 3) 启动轮询：仅在还没启时启动，避免重复 setInterval
+      if (alreadyPolling) return
+      const timer = setInterval(async () => {
+        try {
+          const r: any = await getAiStreamActive(cid)
+          const stillActive = !!(r?.data ?? r)
+          if (!stillActive) {
+            clearInterval(this.remoteStreamPollers[key])
+            delete this.remoteStreamPollers[key]
+            // 拉最终结果，loading 占位会被替换
+            await this.loadMessages(cid)
+          }
+        } catch {
+          // 单次网络失败不停止轮询，下次会重试
+        }
+      }, 5000)
+      this.remoteStreamPollers[key] = timer
+    },
+    /**
+     * 停止指定会话的远端 stream 轮询（切换 / 删除会话时调用）。
+     */
+    stopRemoteStreamPoll(cid: number | string) {
+      const key = String(cid)
+      const timer = this.remoteStreamPollers[key]
+      if (timer) {
+        clearInterval(timer)
+        delete this.remoteStreamPollers[key]
+      }
+    },
     // 删除当前激活会话后，优先切到列表中的下一个；如果已空则保留零会话状态。
     async removeConversation(id: number | string) {
       await deleteAiConversation(id)
@@ -436,6 +587,7 @@ export const useAiStore = defineStore('ai', {
       this.conversations = this.conversations.filter((item) => String(item.id) !== String(id))
       delete this.messages[String(id)]
       delete this.conversationBusyMap[String(id)]
+      this.stopRemoteStreamPoll(id)
 
       if (String(this.activeConversationId) === String(id)) {
         if (this.conversations.length > 0) await this.switchConversation(this.conversations[0].id)
@@ -448,7 +600,8 @@ export const useAiStore = defineStore('ai', {
     // 发送消息时先落本地消息，再等待接口返回，保证界面响应及时。
     async sendMessage(content: string) {
       const question = content.trim()
-      if (!question) return
+      // 文字与附件至少有一项非空才发送（仅图片场景：question 空但 pendingAttachments 非空）
+      if (!question && this.pendingAttachments.length === 0) return
 
       // 新建聊天模式：先调用创建接口，拿到真实 id 后再发送。
       if (!this.activeConversationId && this.isNewChatMode) {
@@ -507,6 +660,12 @@ export const useAiStore = defineStore('ai', {
       }
       this.loading = true
       this.isStreaming = true
+      // 重置思考过程实时面板，确保新一轮流式不会显示上次残留事件
+      this.liveProgress = []
+      // 创建 AbortController 让"停止"按钮能中断 fetch；旧的（理论上不会有）先 abort 防御
+      this.currentAbortController?.abort()
+      const abortController = new AbortController()
+      this.currentAbortController = abortController
 
       let accumulated = ''
       try {
@@ -522,6 +681,10 @@ export const useAiStore = defineStore('ai', {
               accumulated += chunk
               updateAssistantMessage({ content: accumulated })
             },
+            onProgress: (event) => {
+              // LangFlow 节点过程事件：实时累加到面板。本地打时间戳用于面板展示总耗时 / 步间隔。
+              this.liveProgress = [...this.liveProgress, { ...event, receivedAt: Date.now() }]
+            },
             onDone: (payload) => {
               updateAssistantMessage({
                 content: accumulated || payload?.content || '已收到请求，但未返回可展示内容。',
@@ -534,7 +697,8 @@ export const useAiStore = defineStore('ai', {
                 status: 'error',
               })
             },
-          }
+          },
+          abortController.signal,
         )
       } catch (streamError: any) {
         const lastIndex = this.messages[key].length - 1
@@ -547,6 +711,34 @@ export const useAiStore = defineStore('ai', {
       } finally {
         this.loading = false
         this.isStreaming = false
+        // 仅当本次 controller 仍然挂在 store 上才清掉（避免覆盖后续新发起的 sendMessage）
+        if (this.currentAbortController === abortController) {
+          this.currentAbortController = null
+        }
+
+        // 流式结束后 reload 消息（让本地 assistant 消息拿到真实 requestId），
+        // 并把 liveProgress 缓存到 progressCache，避免用户立即点击"查看思考过程"再走一次接口
+        const cachedProgress = [...this.liveProgress]
+        this.liveProgress = []
+        try {
+          await this.loadMessages(conversationId)
+          if (cachedProgress.length > 0) {
+            const list = this.messages[key] ?? []
+            const lastAssistant = [...list].reverse().find((m) => m.role === 'assistant')
+            if (lastAssistant?.requestId) {
+              this.progressCache[lastAssistant.requestId] = cachedProgress
+              // 后端 progress 落库为 fire-and-forget，reload 时 DISTINCT 查询可能还未读到刚写入的行，
+              // 这里强制将刚结束流式的消息标为 hasProgress=true，避免按钮抖动消失/出现
+              lastAssistant.hasProgress = true
+            }
+          }
+        } catch {
+          // reload 失败不影响主流程：用户再点开会自己走 historic API
+        }
+        // 流式 done 后立即把当前会话标记已读，抹平后端 addConversationUnreadCount 的 +1：
+        // 后端会再推一条 WebSocket 通知（带最新全局 unreadCount），useNotificationStore
+        // 自动同步顶部全局红点。fire-and-forget：失败时本地由 conversationUnreadCount 自带回滚。
+        void this.conversationUnreadCount(conversationId)
       }
     },
     setConversationBusy(

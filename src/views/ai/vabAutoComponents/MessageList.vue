@@ -1,6 +1,6 @@
 <template>
   <div ref="containerRef" class="ai-message-list">
-    <message-item v-for="item in messages" :key="item.id" :message="item" />
+    <message-item v-for="item in messages" :key="item.id" :message="item" :conversation-id="conversationId" />
   </div>
 </template>
 
@@ -11,6 +11,8 @@ import MessageItem from '/@/views/ai/vabAutoComponents/MessageItem.vue'
 
 const props = defineProps<{
   messages: ChatMessage[]
+  /** 当前会话 id，透传给 MessageItem 用于查 progress 历史 */
+  conversationId?: number | string
 }>()
 
 defineOptions({

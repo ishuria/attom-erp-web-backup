@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <message-list v-else :messages="aiStore.activeMessages" />
+    <message-list v-else :messages="aiStore.activeMessages" :conversation-id="aiStore.activeConversationId ?? undefined" />
 
     <message-input
       ref="messageInputRef"

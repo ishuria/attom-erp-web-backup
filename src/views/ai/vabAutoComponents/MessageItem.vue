@@ -49,6 +49,15 @@
           <vab-icon icon="error-warning-line" />
         </button>
       </div>
+      <!-- 思考过程：仅 assistant 消息展示。流式中默认展开实时累加；历史消息默认折叠，点击 lazy 加载 -->
+      <div v-if="message.role === 'assistant' && showProgressSection" class="progress-section">
+        <button type="button" class="progress-toggle" :disabled="!progressTogglable" @click="toggleProgress">
+          <vab-icon :icon="progressExpanded ? 'arrow-down-s-line' : 'arrow-right-s-line'" />
+          <span>{{ progressExpanded ? '收起思考过程' : '查看思考过程' }}</span>
+          <span v-if="progressEvents.length > 0" class="progress-count">（{{ progressEvents.length }} 步）</span>
+        </button>
+        <message-progress-panel v-if="progressExpanded" :events="progressEvents" :loading="progressLoading" />
+      </div>
     </div>
     <el-image-viewer
       v-if="showViewer"
@@ -64,13 +73,16 @@
 import { $baseMessage } from '/@/hooks'
 import { useAiStore } from '/@/store/modules/ai'
 import yunzhouLogo from '/@/icon/yunzhou.svg'
-import type { ChatAttachment, ChatMessage } from '/@/type/ai/chat'
+import type { ChatAttachment, ChatMessage, LangFlowProgressEvent } from '/@/type/ai/chat'
 import { renderAiMarkdown } from '/@/utils/aiMarkdown'
 import { enhanceStickyTableScrollbars } from '/@/views/ai/vabAutoComponents/composables/useStickyTableScrollbar'
+import MessageProgressPanel from '/@/views/ai/vabAutoComponents/MessageProgressPanel.vue'
 import TypingIndicator from '/@/views/ai/vabAutoComponents/TypingIndicator.vue'
 
 const props = defineProps<{
   message: ChatMessage
+  /** 当前会话 id，用于 lazy 拉取 progress 历史。父组件需透传。 */
+  conversationId?: number | string
 }>()
 
 defineOptions({
@@ -118,6 +130,65 @@ onBeforeUnmount(() => {
 const attachments = computed(() => props.message.attachments ?? [])
 const imageAttachments = computed(() => attachments.value.filter((a) => a.type.startsWith('image/')))
 const docAttachments = computed(() => attachments.value.filter((a) => !a.type.startsWith('image/')))
+
+// === 思考过程（progress）展示 ===
+// 流式中：实时显示 store.liveProgress（不依赖 requestId）
+// 历史：lazy 拉取 store.fetchMessageProgress（依赖 message.requestId）
+const isCurrentlyStreaming = computed(
+  () => props.message.role === 'assistant' && props.message.status === 'loading',
+)
+// 历史消息是否有思考过程：后端 hasProgress 字段；为 undefined 时（兼容旧后端）回退按 requestId 判断
+const hasHistoricalProgress = computed(() => {
+  if (typeof props.message.hasProgress === 'boolean') return props.message.hasProgress
+  return !!props.message.requestId
+})
+// 折叠按钮显示条件：assistant 且（流式中 或 历史有思考过程）
+const showProgressSection = computed(
+  () => props.message.role === 'assistant' && (isCurrentlyStreaming.value || hasHistoricalProgress.value),
+)
+// 按钮是否可点（流式中始终可点；历史需要有 requestId 且 hasProgress）
+const progressTogglable = computed(
+  () => isCurrentlyStreaming.value || (!!props.message.requestId && hasHistoricalProgress.value),
+)
+
+const progressExpanded = ref(false)
+const historyEvents = ref<LangFlowProgressEvent[]>([])
+const progressLoading = ref(false)
+
+const progressEvents = computed<LangFlowProgressEvent[]>(() =>
+  isCurrentlyStreaming.value ? aiStore.liveProgress : historyEvents.value,
+)
+
+const toggleProgress = async () => {
+  if (!progressTogglable.value) return
+  progressExpanded.value = !progressExpanded.value
+  if (
+    progressExpanded.value &&
+    !isCurrentlyStreaming.value &&
+    historyEvents.value.length === 0 &&
+    props.message.requestId &&
+    props.conversationId != null
+  ) {
+    progressLoading.value = true
+    try {
+      historyEvents.value = await aiStore.fetchMessageProgress(props.conversationId, props.message.requestId)
+    } finally {
+      progressLoading.value = false
+    }
+  }
+}
+
+// 流式开始 → 立即展开；流式结束 → 自动折叠（让用户主动点开历史回放，避免占屏）。
+// 必须 immediate=true：组件挂载时 isCurrentlyStreaming 已经是 true（store 在挂载前已置 status='loading'），
+// 默认 watch 不立即触发会导致面板看起来一直折叠。
+watch(
+  isCurrentlyStreaming,
+  (now, prev) => {
+    if (now) progressExpanded.value = true
+    if (!now && prev) progressExpanded.value = false
+  },
+  { immediate: true },
+)
 
 const showViewer = ref(false)
 const viewerList = ref<string[]>([])
@@ -214,6 +285,39 @@ const handleMarkdownAction = async (event: MouseEvent) => {
 </script>
 
 <style lang="scss" scoped>
+.progress-section {
+  margin-top: 6px;
+}
+
+.progress-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #909399;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover:not(:disabled) {
+    color: #606266;
+    background: #f5f7fa;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.progress-count {
+  margin-left: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
 .system-banner {
   display: flex;
   gap: 10px;

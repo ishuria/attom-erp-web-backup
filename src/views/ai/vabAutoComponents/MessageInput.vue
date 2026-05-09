@@ -178,6 +178,17 @@
             生成飞书文档
           </el-button>
           <el-button
+            v-if="aiStore.isStreaming"
+            class="stop-btn"
+            type="danger"
+            circle
+            title="停止生成"
+            @click="aiStore.cancelStream"
+          >
+            <vab-icon icon="stop-fill" />
+          </el-button>
+          <el-button
+            v-else
             class="send-btn"
             type="primary"
             circle
@@ -462,7 +473,11 @@ const handleSend = () => {
   if (props.disabled) return
   const value = draft.value.trim()
   if (!value && !aiStore.pendingAttachments.length) return
-  emit('send', value || '(附件)')
+  // 仅上传图片不输入文字时，默认补一句"请分析图片中的内容"作为 content：
+  // 1) 聊天气泡显示该文字 + 图片，避免空白气泡
+  // 2) LangFlow ChatInput 拿到非空 input_value，避开 chatbot flow required=true 限制
+  // 3) AI 直接得到明确指令而不是空 prompt
+  emit('send', value || '请分析图片中的内容')
   draft.value = ''
 }
 

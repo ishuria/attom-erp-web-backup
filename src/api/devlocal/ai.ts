@@ -73,6 +73,45 @@ export const getAiMessageList = (conversationId: number | string) => {
 }
 
 /**
+ * 主动取消指定会话当前活动的流式调用（"停止"按钮路径）。
+ * 后端通过 AiStreamRegistry 找到对应 UpstreamCallHandle，
+ * build 模式会自动调 LangFlow {@code POST /api/v1/build/{job_id}/cancel}。
+ */
+export const cancelAiStream = (conversationId: number | string) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/${conversationId}/cancel`,
+    method: 'post',
+  })
+}
+
+/**
+ * 查询指定会话是否有正在跑的流式调用（浏览器刷新后探测，恢复 loading 占位）。
+ * 返回 boolean。
+ */
+export const getAiStreamActive = (conversationId: number | string) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/${conversationId}/stream/active`,
+    method: 'get',
+  })
+}
+
+/**
+ * 拉取指定 requestId 的 LangFlow 思考过程事件历史。
+ *
+ * 返回 row 列表（{id, eventType, eventData, createdAt}），按 id 升序（即接收顺序）。
+ * eventData 是 LangFlow 原始事件 data 字段的 JSON 字符串，调用方需 JSON.parse 后使用。
+ *
+ * @param conversationId 会话 ID
+ * @param requestId 来自 ChatMessage.requestId（user/assistant 共享同一 requestId）
+ */
+export const getAiMessageProgress = (conversationId: number | string, requestId: string) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/${conversationId}/messages/${requestId}/progress`,
+    method: 'get',
+  })
+}
+
+/**
  * 更新会话标题
  * @param data.id 会话 ID
  * @param data.title 新的会话标题
