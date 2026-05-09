@@ -69,6 +69,7 @@
         <template #default="{ row }">
           <el-image
             fit="fill"
+            lazy
             :src="row.skuImageUrl"
             style="display: block; width: 75px; height: 75px"
             @click="handleImageClick(row.skuImageUrl)"
@@ -156,9 +157,9 @@
         <template #default="{ row }">
           <el-tooltip content="" effect="dark" placement="top">
             <template #content>
-              <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              <div class="custom-tooltip">{{ row.packageRemarkText }}</div>
             </template>
-            <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+            <div class="multi-line-ellipsis">{{ row.packageRemarkText }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -263,13 +264,12 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import { computed } from 'vue'
 import { updateIsClaimable } from '~/src/api/devlocal/packagingShipping'
-import { ROLE_PACKAGER_CODE, ROLE_WAREHOUSEMANNAGERlEAD_CODE } from '~/src/const/role'
 import { useAclStore } from '~/src/store/modules/acl'
 import PackingTaskPermission from '/@/permissions/packingTask'
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 import { hasPermission } from '/@/utils/permission'
-import { calculateBrColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { calculateBrColumnWidth } from '/@/utils/tableColum'
 import type { PackingTaskColumn } from '/@/views/packagingShipping/packingTask/packingTaskColumns'
 
 defineOptions({

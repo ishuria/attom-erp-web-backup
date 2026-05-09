@@ -1054,7 +1054,7 @@
     <!-- 打包质检报告 -->
     <vab-packing-inspection-report v-model="qualityInspectionReportVisible" :sku="sku" :task-id="taskId" />
     <!-- 打包反馈 -->
-    <vab-package-feedback-dialog v-model="feedbackDialogVisible"  :current-row="feedbackCurrentRow" @submitted="fetchDataByStatus" />
+    <vab-package-feedback-dialog v-model="feedbackDialogVisible" :current-row="feedbackCurrentRow" @submitted="fetchDataByStatus" />
   </div>
 </template>
 
@@ -1104,7 +1104,7 @@ import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import { formatDate } from '/@/utils/dateUtils'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackingTask',
@@ -1922,14 +1922,14 @@ const handleAllTaskSortChange = (orderByField: string, orderDirection: string) =
   fetchAllTaskData()
 }
 
-// 监听日期变化，确保数据及时更新
-watch(
-  () => allTaskForm.releaseDate,
-  () => {
-    queryAllTaskData()
-  },
-  { deep: true }
-)
+// // 监听日期变化，确保数据及时更新
+// watch(
+//   () => allTaskForm.releaseDate,
+//   () => {
+//     queryAllTaskData()
+//   },
+//   { deep: true }
+// )
 const handleAllTaskSizeChange = (value: number) => {
   allTaskForm.pageNo = 1
   allTaskForm.pageSize = value
@@ -1947,16 +1947,23 @@ const taskingForm = reactive<any>({
 })
 const taskingList = ref<any>([])
 const taskingTotal = ref<number>(0)
+const normalizePackageTaskList = (items: any[] = []) => {
+  return items.map((item: any) => {
+    const packageRemarkList = Array.isArray(item.packageRemarkList) ? item.packageRemarkList.join('<br>') : (item.packageRemarkList ?? '')
+    return {
+      ...item,
+      packageRemarkList,
+      packageRemarkText: removeHtmlTags(packageRemarkList),
+      _sku: `${item.sku}<br/>${item.desc}`,
+    }
+  })
+}
 const fetchTaskingData = async () => {
   listLoading.value = true
   const { data } = await getPackageTaskingList(taskingForm)
   if (data) {
     taskingTotal.value = data.total!
-    taskingList.value = data.list
-    taskingList.value.forEach((item: any) => {
-      item.packageRemarkList = item.packageRemarkList.join('<br>')
-      item._sku = `${item.sku}<br/>${item.desc}`
-    })
+    taskingList.value = normalizePackageTaskList(data.list)
     listLoading.value = false
   }
 }
@@ -2015,19 +2022,15 @@ const fetchAllTaskData = async () => {
 
   const { data } = await getPackageAllTaskList(requestData)
   if (data) {
-    allTaskList.value = data.list
+    allTaskList.value = normalizePackageTaskList(data.list)
     allTaskTotal.value = data.total!
-    allTaskList.value.forEach((item: any) => {
-      item.packageRemarkList = item.packageRemarkList.join('<br>')
-      item._sku = `${item.sku}<br/>${item.desc}`
-    })
     listLoading.value = false
   }
 }
 
 const handleTabClick = (tab: TabsPaneContext) => {
   list.value = []
-  // selectRows.value = []
+  selectRows.value = []
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name)
@@ -2150,11 +2153,7 @@ const fetchData = async () => {
     if (data) {
       listLoading.value = false
       total.value = data.total!
-      list.value = data.list
-      list.value.forEach((item: any) => {
-        item.packageRemarkList = item.packageRemarkList.join('<br>')
-        item._sku = `${item.sku}<br/>${item.desc}`
-      })
+      list.value = normalizePackageTaskList(data.list)
     }
   } catch (error) {
     console.error(error)
