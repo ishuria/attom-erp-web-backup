@@ -18,9 +18,9 @@
       row-key="rowKey"
       @row-click="handleRowClick"
     >
-      <el-table-column align="center" label="月份" min-width="90" prop="month" />
-      <el-table-column align="center" label="姓名" min-width="95" prop="userName" />
-      <el-table-column align="center" label="预计本月总利润分" min-width="100" prop="totalMonthProfitScore">
+      <el-table-column align="center" label="月份" prop="month" width="90" />
+      <el-table-column align="center" label="姓名" prop="userName" width="95" />
+      <el-table-column align="center" label="预计本月总利润分" prop="totalMonthProfitScore" width="100">
         <template #header>
           预计本月
           <br />
@@ -38,7 +38,7 @@
               <el-table-column width="95" />
               <el-table-column width="100" />
               <el-table-column width="80" />
-              <el-table-column align="center" min-width="130" prop="groupName">
+              <el-table-column prop="groupName">
                 <template #default="{ row: item }">
                   <el-popover v-if="item.skus && item.skus.length > 0" placement="top" trigger="hover" :width="360">
                     <template #reference>
@@ -75,7 +75,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="利润组名" min-width="130">
+      <el-table-column label="利润组名">
         <template #default="{ row }">
           <template v-if="row.items[0]">
             <el-popover v-if="row.items[0].skus && row.items[0].skus.length > 0" placement="top" trigger="hover" :width="360">
@@ -99,12 +99,12 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="总利润" min-width="100">
+      <el-table-column align="center" label="总利润" width="100">
         <template #default="{ row }">
           <span v-if="row.items[0]">${{ formatNumber(row.items[0].totalProfit) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="预计本月利润分" min-width="100">
+      <el-table-column align="center" label="预计本月利润分" width="100">
         <template #header>
           预计本月
           <br />
@@ -114,7 +114,7 @@
           <span v-if="row.items[0]" style="color: var(--el-color-success)">{{ formatNumber(row.items[0].monthProfitScore) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="累计利润分" min-width="115">
+      <el-table-column align="center" label="累计利润分" width="115">
         <template #default="{ row }">
           <span v-if="row.items[0]">{{ formatNumber(row.items[0].pileProfitScore) }}</span>
         </template>
@@ -221,7 +221,7 @@ const emit = defineEmits<{
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    overflow: auto;
   }
 
   .right-select {
@@ -248,6 +248,8 @@ const emit = defineEmits<{
       .el-table {
         margin: 0;
         border-top: none;
+        border-left: none; // 加这行
+        border-right: none; // 加这行
       }
     }
 
