@@ -1244,11 +1244,12 @@ export interface IHideOrShowOperationColumnReq {
 /**
  * 产品表现看板-列拖动
  */
-export interface IUpdateSortOperationColumnReq {
+export interface IUpdateSortOperationColumnReqItem {
   userId: number
   columnId: number
   sort: number
 }
+export type IUpdateSortOperationColumnReq = IUpdateSortOperationColumnReqItem[]
 /**
  * 产品表现-运营备注修改
  */
