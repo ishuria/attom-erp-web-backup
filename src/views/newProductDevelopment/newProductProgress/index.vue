@@ -85,25 +85,13 @@
           </el-table-column>
           <el-table-column label="示例图片" prop="imageList" :width="imageColumnWidth">
             <template #default="{ row, $index }">
-              <div style="display: flex; align-items: center">
-                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="(event) => onEnd(row, event)">
-                  <div v-for="(image, index) in row.imageList" :key="image.imageId" class="image-cell">
-                    <div class="image-preview">
-                      <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
-                      <div class="image-actions">
-                        <el-icon @click="handlePictureCardPreview(image, row)"><zoom-in /></el-icon>
-                        <el-icon @click="handleRemove(image, row)"><delete /></el-icon>
-                      </div>
-                    </div>
-                  </div>
-                </vue-draggable>
-
-                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
-                  <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
-                    <el-icon><plus /></el-icon>
-                  </div>
-                </div>
-              </div>
+              <progress-image-sorter
+                :images="row.imageList"
+                @preview="(image) => handlePictureCardPreview(image, row)"
+                @remove="(image) => handleRemove(image, row)"
+                @sort-change="(images, idList) => handleImageSortChange(row, images, idList)"
+                @upload="showUploadDialog(row, $index)"
+              />
             </template>
           </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
@@ -316,25 +304,13 @@
           </el-table-column>
           <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="imageColumnWidth">
             <template #default="{ row, $index }">
-              <div style="display: flex; align-items: center">
-                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="(event) => onEnd(row, event)">
-                  <div v-for="(image, index) in row.imageList" :key="image.imageId" class="image-cell">
-                    <div class="image-preview">
-                      <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
-                      <div class="image-actions">
-                        <el-icon @click="handlePictureCardPreview(image, row)"><zoom-in /></el-icon>
-                        <el-icon @click="handleRemove(image, row)"><delete /></el-icon>
-                      </div>
-                    </div>
-                  </div>
-                </vue-draggable>
-                <!-- 添加按钮 -->
-                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
-                  <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
-                    <el-icon><plus /></el-icon>
-                  </div>
-                </div>
-              </div>
+              <progress-image-sorter
+                :images="row.imageList"
+                @preview="(image) => handlePictureCardPreview(image, row)"
+                @remove="(image) => handleRemove(image, row)"
+                @sort-change="(images, idList) => handleImageSortChange(row, images, idList)"
+                @upload="showUploadDialog(row, $index)"
+              />
             </template>
           </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
@@ -644,12 +620,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { ElLink, type FormInstance, type TableInstance, type TableTooltipData, type TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
-import { VueDraggable } from 'vue-draggable-plus'
 import { getEvaluationTrendList } from '~/src/api/devlocal/evaluation'
 import { getReviewIdByProgressId } from '~/src/api/devlocal/orderProcess'
 import { updateProgressLog } from '~/src/api/devlocal/progressSample'
@@ -675,7 +650,14 @@ import {
 } from '/@/api/devlocal/progress'
 import ProgressPermission from '/@/permissions/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
-import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
+import type {
+  IGetByIdQueryEvaluation,
+  ImageList,
+  IProgress,
+  IProgressQueryReq,
+  IProgressShared,
+  ISelectShare,
+} from '/@/type/progress/progressType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -1127,28 +1109,10 @@ async function uploadImage(file: File) {
     console.error(error)
   }
 }
-// 移动之后触发修改排序接口
+// 图片顺序更新后触发修改排序接口
 const sortDebounceMap = new Map<number, ReturnType<typeof debounce>>()
 
-const onEnd = async (row: any, event?: { oldIndex?: number; newIndex?: number }) => {
-  console.info('图片拖拽结束 onEnd 触发', {
-    progressId: row?.progressId,
-    oldIndex: event?.oldIndex,
-    newIndex: event?.newIndex,
-    imageList: row?.imageList,
-    userNameList: queryForm.userNameList,
-    status: queryForm.status,
-  })
-
-  if (event?.oldIndex === event?.newIndex) {
-    console.info('图片排序未提交：拖拽位置未变化', {
-      progressId: row?.progressId,
-      oldIndex: event?.oldIndex,
-      newIndex: event?.newIndex,
-    })
-    return
-  }
-
+const handleImageSortChange = (row: any, imageList: ImageList[], idList: number[]) => {
   const progressId = row?.progressId
   if (!progressId) {
     console.warn('图片排序缺少 progressId，无法更新排序:', row)
@@ -1157,11 +1121,12 @@ const onEnd = async (row: any, event?: { oldIndex?: number; newIndex?: number })
   }
 
   sortDebounceMap.get(progressId)?.cancel()
-  await nextTick()
-
   const currentRow = progressList.value.find((item: any) => item.progressId === progressId) || row
-  const imageList = Array.isArray(currentRow.imageList) ? currentRow.imageList : []
-  const idList = imageList.map((item: any) => item.imageId).filter(Boolean)
+
+  if (imageList.length > 0) {
+    currentRow.imageList = imageList
+    row.imageList = imageList
+  }
 
   console.info('图片排序准备提交', {
     progressId,
@@ -1819,10 +1784,6 @@ onBeforeMount(() => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-.ghost {
-  background: #c8ebfb;
-  opacity: 0.5;
-}
 // 开模申请
 :deep(.moldDialog .el-dialog__body) {
   padding-top: 0;
@@ -1840,84 +1801,6 @@ onBeforeMount(() => {
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
 
-.image-list {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.image-cell {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 75px;
-  height: 75px;
-
-  .image-preview {
-    position: relative;
-    width: 100%;
-    height: 100%;
-
-    img {
-      width: 100%;
-      height: 100%;
-      cursor: move; // 添加拖拽指针
-      object-fit: cover;
-    }
-
-    .image-actions {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0);
-      opacity: 0;
-      transition: all 0.3s;
-
-      .el-icon {
-        font-size: 20px;
-        color: #fff;
-        cursor: pointer;
-
-        &:hover {
-          transform: scale(1.1);
-        }
-      }
-    }
-
-    &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);
-      opacity: 1;
-    }
-  }
-
-  .upload-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border: 1px dashed var(--el-border-color);
-
-    &:hover {
-      border-color: var(--el-color-primary);
-      .el-icon {
-        color: var(--el-color-primary);
-      }
-    }
-
-    .el-icon {
-      font-size: 20px;
-      color: #999;
-    }
-  }
-}
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-checkbox-checked-bg-color);

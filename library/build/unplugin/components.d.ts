@@ -197,6 +197,7 @@ declare module 'vue' {
     ProductStatisticsDetail: typeof import('./../../../src/views/purchase/vabAutoComponents/productStatisticsDetail.vue')['default']
     ProductTab: typeof import('./../../../src/views/purchase/vabAutoComponents/ProductTab.vue')['default']
     ProfitSharePreviewCard: typeof import('./../../../src/views/index/vabAutoComponents/ProfitSharePreviewCard.vue')['default']
+    ProgressImageSorter: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/ProgressImageSorter.vue')['default']
     ProgressIndeterminateProgress: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressIndeterminateProgress.vue')['default']
     ProgressInternalPercentage: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressInternalPercentage.vue')['default']
     ProgressLinearProgressBar: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressLinearProgressBar.vue')['default']
