@@ -3,8 +3,8 @@
     <vab-query-form>
       <vab-query-form-left-panel :span="10">
         <div class="header-actions">
-<!--          <el-button :icon="Plus" type="primary" @click="openAddDialog">新增库存调整</el-button>-->
-<!--          <el-button :loading="marginLoading" type="primary" @click="openMarginDialog">余量设定</el-button>-->
+          <!--          <el-button :icon="Plus" type="primary" @click="openAddDialog">新增库存调整</el-button>-->
+          <!--          <el-button :loading="marginLoading" type="primary" @click="openMarginDialog">余量设定</el-button>-->
         </div>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="14">
@@ -111,10 +111,10 @@
         ref="addFormRef"
         v-loading="skuInfoLoading || addLoading || priceCalcLoading || packingTaskLoading"
         class="dialog-form"
-        :model="addForm"
-        :rules="addRules"
         label-position="right"
         label-width="96px"
+        :model="addForm"
+        :rules="addRules"
       >
         <div class="dialog-grid">
           <el-form-item label="类型" prop="type">
@@ -131,29 +131,29 @@
               @keyup.enter="handleSearchSku"
             />
           </el-form-item>
-          <el-form-item prop="poId" label="PO">
+          <el-form-item label="PO" prop="poId">
             <template #default>
               <el-select
                 v-model="addForm.poId"
                 clearable
                 filterable
-                remote
                 :loading="poLoading"
-                :remote-method="handleSearchPo"
                 placeholder="请输入 PO 搜索"
+                remote
+                :remote-method="handleSearchPo"
                 style="width: 80%"
               >
                 <el-option v-for="item in poOptions" :key="item.poId" :label="item.po" :value="item.poId" />
               </el-select>
-              <el-checkbox style="padding-left: 10px" v-model="addForm.allPo">全部 PO</el-checkbox>
+              <el-checkbox v-model="addForm.allPo" style="padding-left: 10px">全部 PO</el-checkbox>
             </template>
           </el-form-item>
           <el-form-item label="产品信息">
-            <el-input :model-value="addForm.productDesc" disabled />
+            <el-input disabled :model-value="addForm.productDesc" />
           </el-form-item>
           <el-form-item label="SKU 图片">
             <div class="sku-image-preview">
-              <el-image v-if="addForm.skuImg" :preview-src-list="[addForm.skuImg]" :src="addForm.skuImg" fit="cover" />
+              <el-image v-if="addForm.skuImg" fit="cover" :preview-src-list="[addForm.skuImg]" :src="addForm.skuImg" />
             </div>
           </el-form-item>
           <el-form-item v-if="showPackingTaskFields" prop="packingTaskId">
@@ -179,7 +179,7 @@
             </el-select>
           </el-form-item>
           <el-form-item v-if="showPackingTaskFields" label="打包任务数" prop="currentTaskCount">
-            <el-input :model-value="addForm.currentTaskCount" disabled />
+            <el-input disabled :model-value="addForm.currentTaskCount" />
           </el-form-item>
           <el-form-item label="货件编号">
             <el-input v-model.trim="addForm.shipmentId" clearable placeholder="请输入货件编号" />
@@ -195,7 +195,7 @@
             <el-input-number v-model="addForm.price" disabled :precision="2" :step="1" style="width: 100%" />
           </el-form-item>
           <el-form-item class="dialog-grid-span-2" label="备注">
-            <el-input v-model.trim="addForm.remark" :maxlength="500" :rows="4" placeholder="请输入备注" show-word-limit type="textarea" />
+            <el-input v-model.trim="addForm.remark" :maxlength="500" placeholder="请输入备注" :rows="4" show-word-limit type="textarea" />
           </el-form-item>
         </div>
       </el-form>
@@ -248,7 +248,7 @@
     </vab-dialog>
 
     <vab-dialog v-model="marginVisible" title="余量设定" width="420px" @close="handleMarginDialogClose">
-      <el-form :model="marginForm" label-position="top">
+      <el-form label-position="top" :model="marginForm">
         <el-form-item label="余量设定">
           <el-input-number v-model="marginForm.margin" :precision="0" :step="1" style="width: 100%" />
         </el-form-item>
@@ -262,7 +262,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus, QuestionFilled, RefreshRight, Search } from '@element-plus/icons-vue'
+import { QuestionFilled, RefreshRight, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import {
   addInventoryAdjust,
@@ -691,7 +691,7 @@ const handleSubmitAdd = async () => {
     })
     $baseMessage('新增成功', 'success', 'hey')
     addVisible.value = false
-    queryForm.pageNo = 1
+
     await fetchList()
   } finally {
     addLoading.value = false

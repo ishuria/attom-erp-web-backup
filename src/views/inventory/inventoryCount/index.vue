@@ -71,10 +71,12 @@
       border
       :data="tableData"
       :header-cell-style="{ textAlign: 'center' }"
+      :row-class-name="getRowClassName"
       row-key="rowKey"
       show-summary
       :span-method="tableSpanMethod"
       :summary-method="getSummaryRow"
+      @row-click="handleRowClick"
       @sort-change="handleSortChange"
     >
       <el-table-column
@@ -830,6 +832,15 @@ const tableSpanMethod = ({
   return { rowspan, colspan: 1 }
 }
 
+const activeParentId = ref<number | string>('')
+
+const handleRowClick = (row: InventoryCountTableRow) => {
+  activeParentId.value = activeParentId.value === row.parentId ? '' : row.parentId
+}
+
+const getRowClassName = ({ row }: { row: InventoryCountTableRow }) =>
+  row.parentId !== '' && row.parentId === activeParentId.value ? 'row-active' : ''
+
 const handleSortChange = ({ prop, order }: { prop: string; order: string | null }) => {
   queryForm.orderByField = prop || ''
   queryForm.orderDirection = order === 'ascending' ? 'asc' : order === 'descending' ? 'desc' : ''
@@ -1464,6 +1475,10 @@ watch(
 }
 
 .inventory-count-page {
+  :deep(.el-table .el-table__row.row-active > td.el-table__cell) {
+    background-color: var(--el-color-primary-light-9);
+  }
+
   :deep(.el-table .el-table__header th .cell) {
     white-space: normal;
     word-break: break-all;
