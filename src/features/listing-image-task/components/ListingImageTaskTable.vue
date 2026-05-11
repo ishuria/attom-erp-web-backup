@@ -24,7 +24,11 @@
           >
             卖点填写(批量)
           </el-button>
-          <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_ASSIGN] }" type="primary" @click="$emit('show-assign-task')">
+          <el-button
+            v-permissions="{ permission: [ListingPermission.LISTING_TASK_ASSIGN] }"
+            type="primary"
+            @click="$emit('show-assign-task')"
+          >
             {{ tabConfig.assignButtonText ?? '任务分配' }}
           </el-button>
         </template>
@@ -76,7 +80,12 @@
       <el-table-column fixed="left" type="selection" />
       <el-table-column label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
-          <el-image :lazy="true" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="$emit('preview-image', row.skuImgUrl)">
+          <el-image
+            :lazy="true"
+            :src="row.skuImgUrl"
+            style="display: block; width: 75px; height: 75px"
+            @click="$emit('preview-image', row.skuImgUrl)"
+          >
             <template #error><el-icon /></template>
           </el-image>
         </template>
@@ -143,17 +152,16 @@
       </el-table-column>
       <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
         <template #default="{ row }">
-          <vab-icon v-if="row.sellingPointStatus === 1" icon="checkbox-circle-fill" style="color: var(--el-color-success); font-size: 23px" />
+          <vab-icon
+            v-if="row.sellingPointStatus === 1"
+            icon="checkbox-circle-fill"
+            style="color: var(--el-color-success); font-size: 23px"
+          />
           {{ '' }}
         </template>
       </el-table-column>
       <template v-for="col in columnConfigs" :key="col.prop">
-        <el-table-column
-          v-if="!col.isSpecial"
-          :label="col.label"
-          :prop="col.prop"
-          :width="columnWidths.byProp[col.prop] ?? col.baseWidth"
-        >
+        <el-table-column v-if="!col.isSpecial" :label="col.label" :prop="col.prop" :width="columnWidths.byProp[col.prop] ?? col.baseWidth">
           <template #default="{ row }">
             <span
               v-for="(username, index) in row._usernamesByProp[col.prop]"
@@ -176,7 +184,11 @@
             :true-value="1"
             @change="$emit('update-proofreading', row)"
           />
-          <vab-icon v-else-if="row.proofreadingStatus === 1" icon="checkbox-circle-fill" style="color: var(--el-color-success); font-size: 23px" />
+          <vab-icon
+            v-else-if="row.proofreadingStatus === 1"
+            icon="checkbox-circle-fill"
+            style="color: var(--el-color-success); font-size: 23px"
+          />
           {{ '' }}
         </template>
       </el-table-column>
@@ -197,7 +209,7 @@
               v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }"
               text
               type="primary"
-              @click="$emit('show-selling-point', row)"
+              @click="handleShowSellingPoint(row)"
             >
               卖点
               <el-icon class="el-icon--right">
@@ -208,9 +220,10 @@
               <el-dropdown-menu>
                 <el-dropdown-item
                   v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] })"
-                  @click="$emit('show-selling-point', row)"
+                  :disabled="!row.sku"
+                  @click="handleShowSellingPoint(row)"
                 >
-                  <el-link type="primary" underline="never">卖点</el-link>
+                  <el-link :disabled="!row.sku" type="primary" underline="never">卖点</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="row.taskType === '设计任务'" @click="$emit('show-distribute-skus', row)">
                   <el-link type="primary" underline="never">分配SKU</el-link>
@@ -221,7 +234,10 @@
                 >
                   <el-link type="primary" underline="never">长期提成</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-if="tabConfig.showSubmitApproval && isAssignedDesigner(row)" @click="$emit('show-submit-approval', row)">
+                <el-dropdown-item
+                  v-if="tabConfig.showSubmitApproval && isAssignedDesigner(row)"
+                  @click="$emit('show-submit-approval', row)"
+                >
                   <el-link type="success" underline="never">提交审批</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="tabConfig.showDeadlineActions" @click="$emit('deadline-extension', row)">
@@ -260,12 +276,12 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { columnConfigs, getTaskTypeColor, taskTypeOption } from '/@/views/newProductTask/constantOption'
+import type { ListingImageTaskColumnWidths, ListingImageTaskRow, ListingImageTaskTabConfig } from '../types'
 import ListingPermission from '/@/permissions/listing'
+import type { IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { hasPermission } from '/@/utils/permission'
-import type { IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
-import type { ListingImageTaskColumnWidths, ListingImageTaskRow, ListingImageTaskTabConfig } from '../types'
+import { columnConfigs, getTaskTypeColor, taskTypeOption } from '/@/views/newProductTask/constantOption'
 
 const props = defineProps<{
   canCheckProofreading: (row: ListingImageTaskRow) => boolean
@@ -320,6 +336,14 @@ const getTaskTypeBaseColor = (taskTypeName: string) => {
     设计任务: '#F56C6C',
   }
   return colorMap[taskTypeName] ?? '#909399'
+}
+
+const handleShowSellingPoint = (row: ListingImageTaskRow) => {
+  if (!row.sku) {
+    $baseMessage('当前没分配SKU，无法填写卖点!', 'warning')
+    return
+  }
+  emit('show-selling-point', row)
 }
 
 const clickCancel = async (event: any, value: ListingImageTaskRow) => {

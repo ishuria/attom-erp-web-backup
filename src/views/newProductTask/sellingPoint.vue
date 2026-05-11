@@ -4,7 +4,7 @@
       <el-page-header @back="goBack">
         <template #content>
           <span class="text-large font-600 mr-3">
-            {{ route.query.sku ? route.query.sku : route.query.skus.split(',').join(' ，') || '' }}
+            {{ pageSkuTitle }}
           </span>
           <span class="text-large font-600 mr-3">&nbsp;卖点</span>
           <span class="text-large font-600 mr-3" style="color: var(--el-color-primary)">
@@ -190,6 +190,14 @@ const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
+const getQueryValue = (value: unknown) => {
+  return Array.isArray(value) ? String(value[0] ?? '') : String(value ?? '')
+}
+const pageSkuTitle = computed(() => {
+  const querySku = getQueryValue(route.query.sku)
+  if (querySku) return querySku
+  return getQueryValue(route.query.skus).split(',').filter(Boolean).join(' ，')
+})
 const selectSKUVisible = ref<boolean>(false)
 const selectedSKUForm = reactive<{ sku: string }>({
   sku: '',
@@ -381,7 +389,12 @@ const fetchSellingPointData = async () => {
   })
   _id.value = null
 
-  const querySku = route.query.sku
+  const querySku = getQueryValue(route.query.sku)
+  const querySkus = getQueryValue(route.query.skus)
+  if (!querySku && !querySkus) {
+    $baseMessage('目前没有SKU，无法获取卖点', 'warning')
+    return
+  }
   if (querySku) {
     // 单个SKU，直接从后端获取数据
     sku.value = querySku
@@ -392,7 +405,7 @@ const fetchSellingPointData = async () => {
     Object.assign(form, data)
   } else {
     // 批量修改，直接从后端获取数据
-    const querySkus = route.query.skus
+
     sku.value = querySkus.split(',').sort().join(',')
     const { data } = await getBatchArtDesignSellingPoint({
       skus: sku.value,
@@ -412,7 +425,7 @@ watch(
   () => route.query,
   async () => {
     await fetchSellingPointData()
-  },
+  }
 )
 </script>
 
