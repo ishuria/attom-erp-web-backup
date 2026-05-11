@@ -1,51 +1,55 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="备注和日志" width="20%" @opened="handleDialogOpened">
-      <div class="field-label">备注</div>
-      <el-input ref="remarkInputRef" v-model="remark" class="log-input" placeholder="请输入运营备注" :rows="5" type="textarea" />
-      <div class="dialog-actions">
-        <el-button @click="visible = false">取消</el-button>
-        <el-button type="success" @click="confirmUpdateRemark">保存</el-button>
-        <el-button type="primary" @click="handleConfirm">确定</el-button>
-      </div>
-      <el-divider />
-      <div class="field-label">日志</div>
-      <!-- 格式化工具栏 -->
-      <div class="format-toolbar">
-        <el-button size="small" @click="applyFormat('bold')">
-          <strong>B</strong>
-          &nbsp;加粗
-        </el-button>
-        <el-button size="small" @click="applyFormat('red')">
-          <span style="color: red">A</span>
-          &nbsp;标红
-        </el-button>
-      </div>
-      <!-- 富文本编辑区 -->
-      <div ref="editorRef" class="rich-editor" contenteditable="true" data-placeholder="请输入操作日志" @paste="handlePaste"></div>
+    <vab-dialog v-model="visible" class="operation-log-dialog" title="备注和日志" width="20%" @opened="handleDialogOpened">
+      <div class="operation-log-content">
+        <div class="field-label">备注</div>
+        <el-input ref="remarkInputRef" v-model="remark" class="log-input" placeholder="请输入运营备注" :rows="5" type="textarea" />
+        <div class="dialog-actions">
+          <el-button @click="visible = false">取消</el-button>
+          <el-button type="success" @click="confirmUpdateRemark">保存</el-button>
+          <el-button type="primary" @click="handleConfirm">确定</el-button>
+        </div>
+        <el-divider />
+        <div class="field-label">日志</div>
+        <!-- 格式化工具栏 -->
+        <div class="format-toolbar">
+          <el-button size="small" @click="applyFormat('bold')">
+            <strong>B</strong>
+            &nbsp;加粗
+          </el-button>
+          <el-button size="small" @click="applyFormat('red')">
+            <span style="color: red">A</span>
+            &nbsp;标红
+          </el-button>
+        </div>
+        <!-- 富文本编辑区 -->
+        <div ref="editorRef" class="rich-editor" contenteditable="true" data-placeholder="请输入操作日志" @paste="handlePaste"></div>
 
-      <!-- 按钮区 -->
-      <div class="dialog-actions">
-        <el-button @click="visible = false">取消</el-button>
-        <el-button type="success" @click="handleAdd">新增</el-button>
-        <el-button type="primary" @click="confirmUpdateOperationLog">确定</el-button>
+        <!-- 按钮区 -->
+        <div class="dialog-actions">
+          <el-button @click="visible = false">取消</el-button>
+          <el-button type="success" @click="handleAdd">新增</el-button>
+          <el-button type="primary" @click="confirmUpdateOperationLog">确定</el-button>
+        </div>
+
+        <div class="history-section">
+          <!-- 历史标题 -->
+          <div class="history-title">日志历史</div>
+
+          <!-- 历史表格 -->
+          <el-table class="history-table" border :data="list" height="100%" stripe>
+            <el-table-column label="日期" prop="date" width="160" />
+            <el-table-column label="内容" prop="content">
+              <template #default="{ row }">
+                <div v-html="row.content"></div>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+            </template>
+          </el-table>
+        </div>
       </div>
-
-      <!-- 历史标题 -->
-      <div class="history-title">日志历史</div>
-
-      <!-- 历史表格 -->
-      <el-table border :data="list" max-height="600" stripe>
-        <el-table-column label="日期" prop="date" width="160" />
-        <el-table-column label="内容" prop="content">
-          <template #default="{ row }">
-            <div v-html="row.content"></div>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-        </template>
-      </el-table>
     </vab-dialog>
   </div>
 </template>
@@ -161,6 +165,14 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.operation-log-content {
+  display: flex;
+  flex-direction: column;
+  height: min(860px, calc(100vh - 120px));
+  min-height: 0;
+  overflow: hidden;
+}
+
 .field-label {
   font-size: 15px;
   font-weight: 500;
@@ -180,9 +192,22 @@ watch(
 }
 
 .history-title {
+  flex: none;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 8px;
+}
+
+.history-section {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.history-table {
+  flex: 1;
+  min-height: 0;
 }
 
 .format-toolbar {

@@ -1158,8 +1158,8 @@ const addLogAdapter = async (row: any, content: string) => {
 
 const fetchHistoryLogAdapter = async (row: any) => {
   // 获取最近30天的日志
-  const endDate = new Date()
-  const startDate = new Date(Date.now() - 29 * 24 * 60 * 60 * 1000)
+  // const endDate = new Date()
+  // const startDate = new Date(Date.now() - 29 * 24 * 60 * 60 * 1000)
 
   const result = await getOperationLog({
     asin: row.asin,
@@ -1167,8 +1167,8 @@ const fetchHistoryLogAdapter = async (row: any) => {
     type: [0], // 手动输入
     pageNo: 1,
     pageSize: 10000,
-    startDate: dayjs(startDate).format('YYYY-MM-DD'),
-    endDate: dayjs(endDate).format('YYYY-MM-DD'),
+    // startDate: dayjs(startDate).format('YYYY-MM-DD'),
+    // endDate: dayjs(endDate).format('YYYY-MM-DD'),
   })
   return { list: result.data.list }
 }
@@ -1564,18 +1564,29 @@ const hasFilter = computed(() => {
   const filterKeys = [
     'advStatus',
     'artLongTermFlag',
-    'esTotalMin', 'esTotalMax',
-    'fbaMin', 'fbaMax',
-    'outOfStockMin', 'outOfStockMax',
-    'estimateNextMonthStorageFeeMin', 'estimateNextMonthStorageFeeMax',
-    'availableRateMin', 'availableRateMax',
-    'monthInterestRateMin', 'monthInterestRateMax',
-    'monthProfitMin', 'monthProfitMax',
-    'monthSalesVolumeMin', 'monthSalesVolumeMax',
-    'newArrivalMinDay', 'newArrivalMaxDay',
+    'esTotalMin',
+    'esTotalMax',
+    'fbaMin',
+    'fbaMax',
+    'outOfStockMin',
+    'outOfStockMax',
+    'estimateNextMonthStorageFeeMin',
+    'estimateNextMonthStorageFeeMax',
+    'availableRateMin',
+    'availableRateMax',
+    'monthInterestRateMin',
+    'monthInterestRateMax',
+    'monthProfitMin',
+    'monthProfitMax',
+    'monthSalesVolumeMin',
+    'monthSalesVolumeMax',
+    'newArrivalMinDay',
+    'newArrivalMaxDay',
     'operationTypeId',
-    'signCountMin', 'signCountMax',
-    'sellPriceMin', 'sellPriceMax',
+    'signCountMin',
+    'signCountMax',
+    'sellPriceMin',
+    'sellPriceMax',
     'warehouseAge',
     'salesTrendDays',
     'salesTrendDirection',
@@ -2133,7 +2144,7 @@ const fetchColumn = async () => {
         'newArrivalDay',
         'pAsinMonthNetProfit',
         'monthOrderVolume',
-        'currentB2bSalesOrder'
+        'currentB2bSalesOrder',
       ].includes(item.prop)
     ) {
       item.sortable = true
