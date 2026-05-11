@@ -189,6 +189,9 @@
               <span v-if="item.label === '开票类型'">
                 <el-tag :type="row.invoicing === '专票' ? 'success' : 'danger'">{{ row.invoicing }}</el-tag>
               </span>
+              <span v-if="item.label === '退免征类型'">
+                <el-tag v-if="row.hsTaxType" :type="hsTaxTypeTagMap[row.hsTaxType]">{{ row.hsTaxType }}</el-tag>
+              </span>
               <span v-if="item.label === '发票匹配日期'">
                 <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
               </span>
@@ -414,6 +417,9 @@
               </span>
               <span v-if="item.label === '出口退税税率'">
                 {{ row.exportTaxRebateRate ? row.exportTaxRebateRate + '%' : '' }}
+              </span>
+              <span v-if="item.label === '退免征类型'">
+                <el-tag v-if="row.hsTaxType" :type="hsTaxTypeTagMap[row.hsTaxType]">{{ row.hsTaxType }}</el-tag>
               </span>
               <span v-if="item.label === '发票匹配日期'">
                 <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
@@ -682,6 +688,11 @@ const handleCalculateWidth = (item: any) => {
       return item.minWidth
     }
   }
+}
+const hsTaxTypeTagMap: Record<string, 'primary' | 'success' | 'danger'> = {
+  退税: 'primary',
+  征税: 'danger',
+  免税: 'success',
 }
 const searchOptions = [
   { label: '全部', value: 'all' },

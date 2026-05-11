@@ -10,7 +10,6 @@ import {
   getAiConversationList,
   getAiMessageList,
   getAiMessageProgress,
-  getAiStreamActive,
   getFeishuUrl,
   updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
@@ -223,8 +222,6 @@ export const useAiStore = defineStore('ai', {
     progressCache: {} as Record<string, LangFlowProgressEvent[]>,
     // 当前 sendMessage 的 AbortController，用于"停止"按钮中断 fetch
     currentAbortController: null as AbortController | null,
-    // 远端 stream 探测轮询定时器：key = String(conversationId)
-    remoteStreamPollers: {} as Record<string, ReturnType<typeof setInterval>>,
   }),
   getters: {
     // 当前激活会话对象。
@@ -426,8 +423,6 @@ export const useAiStore = defineStore('ai', {
       // 在 dialog 已打开期间到达的新消息可能不会反映到该字段，缓存短路会漏读。
       // loadMessages 失败时保留旧缓存（见 loadMessages 注释），网络抖动安全。
       await this.loadMessages(id)
-      // 探测：浏览器刷新后切回该会话时，如果有未完成 stream，补 loading 占位 + 启动轮询
-      void this.checkAndFollowRemoteStream(id)
     },
     async conversationUnreadCount(id: number | string) {
       const key = String(id)
@@ -505,81 +500,6 @@ export const useAiStore = defineStore('ai', {
       this.currentAbortController?.abort()
       this.currentAbortController = null
     },
-    /**
-     * 探测远端是否有未完成 stream（浏览器刷新场景）；若有则补 loading 占位 + 启动轮询。
-     *
-     * 触发时机：进入会话后（switchConversation / loadMessages 之后）。
-     * 轮询间隔 5 秒：每次调 stream/active；返回 false 时停止 + reload 拉最终结果替换占位。
-     */
-    async checkAndFollowRemoteStream(cid: number | string) {
-      const key = String(cid)
-      // 本地 sendMessage 已在跑则不需要探测（避免误补占位）
-      if (this.isStreaming && String(this.activeConversationId) === key) return
-
-      // 关键：补占位 与 启 timer 必须解耦
-      // 关闭对话框再重新打开时，switchConversation → loadMessages 整列覆盖会丢占位，
-      // 此时 remoteStreamPollers[key] 仍存在；若直接 return 就看不到 loading 了。
-      const alreadyPolling = !!this.remoteStreamPollers[key]
-
-      // 1) 决定 active：已 polling 即视为 active（避免重复探测 API）；否则发一次探测请求
-      let active: boolean
-      if (alreadyPolling) {
-        active = true
-      } else {
-        try {
-          const resp: any = await getAiStreamActive(cid)
-          active = !!(resp?.data ?? resp)
-        } catch {
-          return
-        }
-      }
-      if (!active) return
-
-      // 2) 补占位（幂等）：每次 loadMessages 整列覆盖后都需要重新补
-      const list = this.messages[key] ?? []
-      const last = list[list.length - 1]
-      if (last?.role !== 'assistant' || last.status !== 'loading') {
-        this.messages[key] = [
-          ...list,
-          {
-            id: createLocalId('msg'),
-            role: 'assistant',
-            content: '',
-            createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-            status: 'loading',
-          },
-        ]
-      }
-
-      // 3) 启动轮询：仅在还没启时启动，避免重复 setInterval
-      if (alreadyPolling) return
-      const timer = setInterval(async () => {
-        try {
-          const r: any = await getAiStreamActive(cid)
-          const stillActive = !!(r?.data ?? r)
-          if (!stillActive) {
-            clearInterval(this.remoteStreamPollers[key])
-            delete this.remoteStreamPollers[key]
-            // 拉最终结果，loading 占位会被替换
-            await this.loadMessages(cid)
-          }
-        } catch {
-          // 单次网络失败不停止轮询，下次会重试
-        }
-      }, 5000)
-      this.remoteStreamPollers[key] = timer
-    },
-    /**
-     * 停止指定会话的远端 stream 轮询（切换 / 删除会话时调用）。
-     */
-    stopRemoteStreamPoll(cid: number | string) {
-      const key = String(cid)
-      const timer = this.remoteStreamPollers[key]
-      if (timer) {
-        clearInterval(timer)
-        delete this.remoteStreamPollers[key]
-      }
-    },
     // 删除当前激活会话后，优先切到列表中的下一个；如果已空则保留零会话状态。
     async removeConversation(id: number | string) {
       await deleteAiConversation(id)
@@ -587,7 +507,6 @@ export const useAiStore = defineStore('ai', {
       this.conversations = this.conversations.filter((item) => String(item.id) !== String(id))
       delete this.messages[String(id)]
       delete this.conversationBusyMap[String(id)]
-      this.stopRemoteStreamPoll(id)
 
       if (String(this.activeConversationId) === String(id)) {
         if (this.conversations.length > 0) await this.switchConversation(this.conversations[0].id)

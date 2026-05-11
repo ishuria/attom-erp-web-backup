@@ -69,7 +69,12 @@
         <el-table-column label="合同编号" min-width="140" prop="contractNumber" sortable />
         <el-table-column label="报关品名" min-width="110" prop="customsDeclarationName" sortable />
         <el-table-column label="报关数量" min-width="90" prop="customsDeclarationCount" />
-        <el-table-column label="报关单位" min-width="70" prop="customsDeclarationUnit" />
+        <el-table-column label="报关单位" min-width="110" prop="customsDeclarationUnit" />
+        <el-table-column label="退免征类型" min-width="130" prop="hsTaxType">
+          <template #default="{ row }">
+            <el-tag v-if="row.hsTaxType" :type="hsTaxTypeTagMap[row.hsTaxType]">{{ row.hsTaxType }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
         <el-table-column label="未税成本￥" min-width="110" prop="taxRefundsCost" />
         <el-table-column label="匹配发票总金额￥" min-width="100" prop="matchInvoicePrice">
@@ -224,6 +229,12 @@ import VabPdf from '/@/plugins/VabPdf'
 defineOptions({
   name: 'VatRefundProductAggregation',
 })
+
+const hsTaxTypeTagMap: Record<string, 'primary' | 'success' | 'danger'> = {
+  退税: 'primary',
+  征税: 'danger',
+  免税: 'success',
+}
 
 const searchOptions = [
   { label: '全部', value: 'all' },

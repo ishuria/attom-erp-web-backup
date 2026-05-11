@@ -593,6 +593,8 @@ export interface IGetTaxRefundMainList {
   fobPrice?: number
   /** 发票匹配日期 */
   matchDate?: number
+  /** HS 退免税类型：退税 / 征税 / 免税 */
+  hsTaxType?: string
 }
 
 export interface IGetTaxRefundMainInvoiceInfo {

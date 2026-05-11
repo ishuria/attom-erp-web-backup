@@ -85,17 +85,6 @@ export const cancelAiStream = (conversationId: number | string) => {
 }
 
 /**
- * 查询指定会话是否有正在跑的流式调用（浏览器刷新后探测，恢复 loading 占位）。
- * 返回 boolean。
- */
-export const getAiStreamActive = (conversationId: number | string) => {
-  return request({
-    url: `${AI_BASE_API}/conversations/${conversationId}/stream/active`,
-    method: 'get',
-  })
-}
-
-/**
  * 拉取指定 requestId 的 LangFlow 思考过程事件历史。
  *
  * 返回 row 列表（{id, eventType, eventData, createdAt}），按 id 升序（即接收顺序）。

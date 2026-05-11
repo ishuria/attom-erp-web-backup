@@ -26,7 +26,7 @@ const scrollToBottom = () => {
 }
 
 watch(
-  () => props.messages.map((item) => `${item.id}_${item.content}_${item.status}`).join('|'),
+  () => props.messages.map((item) => item.id).join('|'),
   async () => {
     await nextTick()
     scrollToBottom()
