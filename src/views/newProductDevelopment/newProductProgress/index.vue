@@ -1132,32 +1132,39 @@ async function uploadImage(file: File) {
   }
 }
 // 移动之后触发修改排序接口
-let debouncedOnEnd: ReturnType<typeof debounce> | null = null
+const sortDebounceMap = new Map<number, ReturnType<typeof debounce>>()
 
 const onEnd = (row: any) => {
-  // 取消之前的 debounce（如果存在）
-  if (debouncedOnEnd) {
-    debouncedOnEnd.cancel()
+  const progressId = row?.progressId
+  if (!progressId) {
+    return
   }
 
-  // 创建新的 debounce 函数
-  debouncedOnEnd = debounce(async () => {
+  sortDebounceMap.get(progressId)?.cancel()
+
+  const debouncedSort = debounce(async () => {
+    sortDebounceMap.delete(progressId)
+    await nextTick()
+
+    const currentRow = progressList.value.find((item: any) => item.progressId === progressId) || row
+    const imageList = Array.isArray(currentRow.imageList) ? currentRow.imageList : []
+    const idList = imageList.map((item: any) => item.imageId).filter(Boolean)
+
+    if (idList.length < 2) {
+      return
+    }
+
     try {
-      const idList =
-        row.imageList?.map((item: any) => {
-          return item.imageId
-        }) || []
       await updateProgressImgSort(idList)
       $baseMessage('图片排序更新成功', 'success', 'hey')
     } catch (error) {
       console.error('更新图片排序失败:', error)
       $baseMessage('更新图片排序失败，请稍后重试', 'error', 'hey')
     }
-    debouncedOnEnd = null
   }, 300)
 
-  // 执行 debounce 函数
-  debouncedOnEnd()
+  sortDebounceMap.set(progressId, debouncedSort)
+  debouncedSort()
 }
 /**
  * 获取初始新品进度数据
