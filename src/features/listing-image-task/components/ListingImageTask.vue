@@ -46,37 +46,93 @@
     <vab-dialog v-if="assignTaskVisible" v-model="assignTaskVisible" title="任务分配" width="26%">
       <el-form label-position="right" label-width="auto" :model="assignTaskForm" style="margin: 0 10px">
         <el-form-item v-if="showOldProductTaskFields" label="基础图片">
-          <el-select v-model="assignTaskForm.baseImageUrlPerson" clearable collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+          <el-select
+            v-model="assignTaskForm.baseImageUrlPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
             <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="建模">
-          <el-select v-model="assignTaskForm.moldingPerson" clearable collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+          <el-select
+            v-model="assignTaskForm.moldingPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
             <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="渲染">
-          <el-select v-model="assignTaskForm.renderingPerson" clearable collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+          <el-select
+            v-model="assignTaskForm.renderingPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
             <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="A+">
-          <el-select v-model="assignTaskForm.aPlus" clearable collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+          <el-select
+            v-model="assignTaskForm.aPlus"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
             <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="视频">
-          <el-select v-model="assignTaskForm.videoPerson" clearable collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+          <el-select
+            v-model="assignTaskForm.videoPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
             <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showDesignTaskFields" label="说明书/包装">
-          <el-select v-model="assignTaskForm.instructionPerson" clearable collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+          <el-select
+            v-model="assignTaskForm.instructionPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
             <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showDesignTaskFields" label="配色设计">
-          <el-select v-model="assignTaskForm.colorDesignPerson" clearable collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+          <el-select
+            v-model="assignTaskForm.colorDesignPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
             <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -188,7 +244,9 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
-import { splitUsernames } from '/@/views/newProductTask/constantOption'
+import { useListingImageTask } from '../composables/useListingImageTask'
+import type { ListingImageTaskRow, ListingImageTaskStatus, ListingImageTaskTabConfig } from '../types'
+import ListingImageTaskTable from './ListingImageTaskTable.vue'
 import {
   addArtDesignSelectionReasons,
   allocateArtDesignTask,
@@ -216,13 +274,13 @@ import type {
   IGetArtDesignTaskList,
   IGetArtDesignTaskUserListBySku,
 } from '/@/type/listingTask/imageTaskType'
-import ListingImageTaskTable from './ListingImageTaskTable.vue'
-import { useListingImageTask } from '../composables/useListingImageTask'
-import type { ListingImageTaskRow, ListingImageTaskStatus, ListingImageTaskTabConfig } from '../types'
+import { splitUsernames } from '/@/views/newProductTask/constantOption'
 
 defineOptions({
   name: 'ListingImageTaskFeature',
 })
+
+const router = useRouter()
 
 const {
   activeName,
@@ -710,7 +768,7 @@ const showTaskStatistics = async () => {
 }
 
 const handleShowSellingPoint = (row: ListingImageTaskRow) => {
-  useRouter().push({
+  router.push({
     path: '/newProductTask/sellingPoint',
     query: {
       sku: row.sku,
@@ -726,7 +784,7 @@ const showBatchSellingPoint = () => {
   }
   const skus = selectedRows.value.map((item) => item.sku).join(',')
   const ids = selectedRows.value.map((item) => item.id).join(',')
-  useRouter().push({
+  router.push({
     path: '/newProductTask/sellingPoint',
     query: {
       skus,
