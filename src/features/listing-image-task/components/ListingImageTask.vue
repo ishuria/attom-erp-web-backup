@@ -41,7 +41,7 @@
     </el-tabs>
 
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
-    <post-task-dialog v-if="postTaskVisible" v-model:visible="postTaskVisible" :site-list="siteList" @success="fetchData" />
+    <post-task-dialog v-model:visible="postTaskVisible" :site-list="siteList" @success="fetchData" />
 
     <vab-dialog v-if="assignTaskVisible" v-model="assignTaskVisible" title="任务分配" width="26%">
       <el-form label-position="right" label-width="auto" :model="assignTaskForm" style="margin: 0 10px">
