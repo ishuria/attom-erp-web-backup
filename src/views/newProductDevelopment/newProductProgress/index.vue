@@ -83,10 +83,10 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="示例图片" prop="imageList" :width="getImageColumnWidth()">
+          <el-table-column label="示例图片" prop="imageList" :width="imageColumnWidth">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
-                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="() => onEnd(row)">
+                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="(event) => onEnd(row, event)">
                   <div v-for="(image, index) in row.imageList" :key="image.imageId" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
@@ -314,10 +314,10 @@
               />
             </template>
           </el-table-column>
-          <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
+          <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="imageColumnWidth">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
-                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="() => onEnd(row)">
+                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="(event) => onEnd(row, event)">
                   <div v-for="(image, index) in row.imageList" :key="image.imageId" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
@@ -774,7 +774,6 @@ const updateForm = reactive({
   product: '',
   mainSearchTerms: '',
 })
-const imageListWidth = ref<number>(0)
 const activeName = ref<number>(0)
 const router = useRouter()
 const route = useRoute()
@@ -785,6 +784,19 @@ const evaluationTableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 // 新品进度列表
 const progressList = ref<IProgress[]>([])
+const imageColumnWidth = computed(() => {
+  const imageWidth = 75
+  const sidePadding = 24
+  const imageGap = 8
+
+  return progressList.value.reduce((maxWidth, row) => {
+    const imageCount = row?.imageList?.length || 0
+    const slotCount = imageCount < 5 ? imageCount + 1 : imageCount
+    const totalWidth = slotCount * imageWidth + sidePadding + Math.max(slotCount - 1, 0) * imageGap
+
+    return Math.max(maxWidth, totalWidth)
+  }, imageWidth + sidePadding)
+})
 // 优化：使用 computed 缓存列宽度，但只在数据变化时重新计算
 const columnWidths = computed(() => {
   // 如果列表为空，返回默认值，避免不必要的计算
@@ -968,19 +980,6 @@ const convertToTreeData = (data: any[]) => {
   return treeData
 }
 
-const getImageColumnWidth = (): number => {
-  const imageWidth = 75 // 每张图片宽度
-  progressList.value.forEach((row) => {
-    const imageCount = row?.imageList?.length || 0
-    let totalWidth = 0
-    if (imageCount === 5) totalWidth = imageCount * imageWidth + 24 + (imageCount - 1) * 8
-    else totalWidth = (imageCount + 1) * imageWidth + 24 + imageCount * 8
-    if (totalWidth > imageListWidth.value) {
-      imageListWidth.value = totalWidth
-    }
-  })
-  return imageListWidth.value
-}
 const handlerCloseDialog = () => {
   moldVisible.value = false
 }
@@ -1039,9 +1038,6 @@ const handleRemove = async (image: any, row: any) => {
           row.imageList = [...row.imageList.slice(0, imageIndex), ...row.imageList.slice(imageIndex + 1)]
         }
         $baseMessage('此条产品图片信息删除成功!', 'success', 'hey')
-        // 重新计算列宽
-        imageListWidth.value = 0
-        getImageColumnWidth()
       } else {
         $baseMessage('删除失败，请重试!', 'error', 'hey')
       }
@@ -1134,7 +1130,25 @@ async function uploadImage(file: File) {
 // 移动之后触发修改排序接口
 const sortDebounceMap = new Map<number, ReturnType<typeof debounce>>()
 
-const onEnd = (row: any) => {
+const onEnd = async (row: any, event?: { oldIndex?: number; newIndex?: number }) => {
+  console.info('图片拖拽结束 onEnd 触发', {
+    progressId: row?.progressId,
+    oldIndex: event?.oldIndex,
+    newIndex: event?.newIndex,
+    imageList: row?.imageList,
+    userNameList: queryForm.userNameList,
+    status: queryForm.status,
+  })
+
+  if (event?.oldIndex === event?.newIndex) {
+    console.info('图片排序未提交：拖拽位置未变化', {
+      progressId: row?.progressId,
+      oldIndex: event?.oldIndex,
+      newIndex: event?.newIndex,
+    })
+    return
+  }
+
   const progressId = row?.progressId
   if (!progressId) {
     console.warn('图片排序缺少 progressId，无法更新排序:', row)
@@ -1143,27 +1157,40 @@ const onEnd = (row: any) => {
   }
 
   sortDebounceMap.get(progressId)?.cancel()
+  await nextTick()
+
+  const currentRow = progressList.value.find((item: any) => item.progressId === progressId) || row
+  const imageList = Array.isArray(currentRow.imageList) ? currentRow.imageList : []
+  const idList = imageList.map((item: any) => item.imageId).filter(Boolean)
+
+  console.info('图片排序准备提交', {
+    progressId,
+    idList,
+    imageList,
+    currentRow,
+    userNameList: queryForm.userNameList,
+    status: queryForm.status,
+  })
+
+  if (idList.length < 2) {
+    console.warn('图片排序未提交：有效图片数量不足', {
+      progressId,
+      imageList,
+      idList,
+    })
+    $baseMessage('图片数量不足，无需更新排序', 'warning', 'hey')
+    return
+  }
 
   const debouncedSort = debounce(async () => {
     sortDebounceMap.delete(progressId)
-    await nextTick()
-
-    const currentRow = progressList.value.find((item: any) => item.progressId === progressId) || row
-    const imageList = Array.isArray(currentRow.imageList) ? currentRow.imageList : []
-    const idList = imageList.map((item: any) => item.imageId).filter(Boolean)
-
-    if (idList.length < 2) {
-      console.warn('图片排序未提交：有效图片数量不足', {
-        progressId,
-        imageList,
-        idList,
-      })
-      $baseMessage('图片数量不足，无需更新排序', 'warning', 'hey')
-      return
-    }
 
     try {
       await updateProgressImgSort(idList)
+      console.info('图片排序接口提交成功', {
+        progressId,
+        idList,
+      })
       $baseMessage('图片排序更新成功', 'success', 'hey')
     } catch (error) {
       console.error('更新图片排序失败:', error)
@@ -1184,24 +1211,6 @@ const fetchData = async () => {
   progressList.value = data.list
   total.value = data.total
   listLoading.value = false
-
-  // 优化：延迟计算列宽度，避免阻塞首屏渲染
-  // 使用 requestIdleCallback 或 setTimeout 延迟执行非关键计算
-  if (typeof requestIdleCallback !== 'undefined') {
-    requestIdleCallback(
-      () => {
-        imageListWidth.value = 0 // 重置为初始值
-        getImageColumnWidth()
-      },
-      { timeout: 300 }
-    )
-  } else {
-    // 降级方案：延迟执行
-    setTimeout(() => {
-      imageListWidth.value = 0 // 重置为初始值
-      getImageColumnWidth()
-    }, 100)
-  }
 }
 let _row: any = null
 const progressId = ref<number>(-1)
