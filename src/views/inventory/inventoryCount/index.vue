@@ -52,7 +52,7 @@
               clearable
               placeholder="请输入关键词"
               style="width: 280px"
-              @clear="handleQuery"
+              @input="handleQuery"
               @keyup.enter="handleQuery"
             />
           </el-form-item>
@@ -130,7 +130,9 @@
             <div class="sku-image-cell">
               <el-image
                 v-if="row.skuImg"
+                close-on-press-escape
                 fit="cover"
+                hide-on-click-modal
                 preview-class-name="inventory-count-image-viewer"
                 :preview-src-list="[row.skuImg]"
                 :preview-teleported="true"
@@ -867,7 +869,7 @@ const fetchMargin = async () => {
 
 const handleQuery = () => {
   queryForm.pageNo = 1
-  resetRowEditForm()
+
   fetchList()
 }
 
