@@ -240,6 +240,11 @@
           <el-table-column label="SKU" :min-width="flexColumnWidth(detailList, 'SKU', 'sku')" prop="sku" />
           <el-table-column label="Item ID" min-width="140" prop="itemId" />
           <el-table-column label="站点" min-width="135" prop="site" />
+          <el-table-column label="运营分类" min-width="120" prop="operationTypeName">
+            <template #default="{ row }">
+              {{ row.operationTypeName || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column label="广告花费" min-width="130" prop="adSpend" sortable="custom">
             <template #default="{ row }">
               {{ row.adSpend ? row.currencyIcon + formatAmount(row.adSpend) : '-' }}
@@ -255,14 +260,20 @@
               {{ row.totalSales ? row.currencyIcon + formatAmount(row.totalSales) : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总毛利润" min-width="130" prop="totalGrossProfit" sortable="custom">
+          <el-table-column label="总毛利润" min-width="150" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
+              <div>{{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}</div>
+              <div v-if="row.totalGrossProfitMomRatio != null" :style="momStyle(row.totalGrossProfitMomRatio)">
+                {{ formatMomRatio(row.totalGrossProfitMomRatio) }}
+              </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润报表销售额" min-width="160" prop="totalSalesAmount" sortable="custom">
+          <el-table-column label="利润报表销售额" min-width="170" prop="totalSalesAmount" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalSalesAmount ? row.currencyIcon + formatAmount(row.totalSalesAmount) : '-' }}
+              <div>{{ row.totalSalesAmount ? row.currencyIcon + formatAmount(row.totalSalesAmount) : '-' }}</div>
+              <div v-if="row.totalSalesAmountMomRatio != null" :style="momStyle(row.totalSalesAmountMomRatio)">
+                {{ formatMomRatio(row.totalSalesAmountMomRatio) }}
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
@@ -713,6 +724,21 @@ const handleBonusDetailSizeChange = (val: number) => {
   bonusDetailQueryForm.pageSize = val
   bonusDetailQueryForm.pageNo = 1
   queryBonusDetailData()
+}
+
+/** 环比百分比文案：>0 显示 ↑、<0 显示 ↓、=0 显示 0% */
+const formatMomRatio = (val: number): string => {
+  if (val > 0) return `↑ ${val}%`
+  if (val < 0) return `↓ ${Math.abs(val)}%`
+  return `0%`
+}
+
+/** 环比百分比颜色：正绿、负红、零灰；统一 12px 小号字 */
+const momStyle = (val: number): CSSProperties => {
+  let color = 'var(--el-text-color-secondary)'
+  if (val > 0) color = 'var(--el-color-success)'
+  else if (val < 0) color = 'var(--el-color-danger)'
+  return { fontSize: '12px', color, marginTop: '2px' }
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {

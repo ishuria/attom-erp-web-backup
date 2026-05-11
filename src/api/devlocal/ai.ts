@@ -85,17 +85,17 @@ export const cancelAiStream = (conversationId: number | string) => {
 }
 
 /**
- * 拉取指定 requestId 的 LangFlow 思考过程事件历史。
+ * 拉取指定 requestId 的 Flow 执行链路（结构化节点 / 工具步骤）。
  *
- * 返回 row 列表（{id, eventType, eventData, createdAt}），按 id 升序（即接收顺序）。
- * eventData 是 LangFlow 原始事件 data 字段的 JSON 字符串，调用方需 JSON.parse 后使用。
+ * 返回 row 列表（AiFlowStepRow[]），按 step_order / start_time 排序。
+ * 老消息（progress_detail 表上线前）返回空数组。
  *
  * @param conversationId 会话 ID
- * @param requestId 来自 ChatMessage.requestId（user/assistant 共享同一 requestId）
+ * @param requestId 来自 ChatMessage.requestId
  */
-export const getAiMessageProgress = (conversationId: number | string, requestId: string) => {
+export const getAiMessageFlowTrace = (conversationId: number | string, requestId: string) => {
   return request({
-    url: `${AI_BASE_API}/conversations/${conversationId}/messages/${requestId}/progress`,
+    url: `${AI_BASE_API}/conversations/${conversationId}/messages/${requestId}/flow-trace`,
     method: 'get',
   })
 }

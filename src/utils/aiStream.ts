@@ -1,13 +1,13 @@
 import { getToken } from '/@/utils/token'
-import type { LangFlowProgressEvent } from '/@/type/ai/chat'
+import type { AiStreamStepEvent } from '/@/type/ai/chat'
 
 interface StreamCallbacks {
   onChunk: (chunk: string) => void
   /**
-   * LangFlow 节点过程事件（vertices_sorted / build_start / log / end_vertex / add_message / end / error 等）。
-   * payload 已经是 LangFlow 原始 {event, data} 结构，调用方可直接使用。
+   * 后端结构化"思考链"步骤事件（vertex / tool / error，含 summary 文案）。
+   * 用于前端在最终结果出来前实时展示 AI 的执行过程。
    */
-  onProgress?: (event: LangFlowProgressEvent) => void
+  onStep?: (step: AiStreamStepEvent) => void
   onDone: (payload?: any) => void
   onError: (message: string) => void
 }
@@ -112,13 +112,13 @@ export const streamAiMessage = async (
           // 让出宏任务，避免同一 read 内多条事件被 Vue 合并成一次渲染（微任务 break 不足以触发 paint）。
           await new Promise((resolve) => setTimeout(resolve, 0))
         }
-      } else if (event === 'progress') {
-        // payload 是 LangFlow 原始 {event, data}，直接转给 onProgress（无 onProgress 时静默忽略）
-        if (callbacks.onProgress && payload && typeof payload === 'object' && payload.event) {
+      } else if (event === 'step') {
+        // 后端结构化思考链步骤，payload 是 AiStreamStepEvent
+        if (callbacks.onStep && payload && typeof payload === 'object' && payload.stepType) {
           try {
-            callbacks.onProgress(payload as LangFlowProgressEvent)
+            callbacks.onStep(payload as AiStreamStepEvent)
           } catch (err) {
-            console.warn('[sse] onProgress 回调异常', err)
+            console.warn('[sse] onStep 回调异常', err)
           }
         }
       } else if (event === 'done') {

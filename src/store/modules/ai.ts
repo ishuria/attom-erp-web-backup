@@ -8,22 +8,22 @@ import {
   conversationUnreadCount,
   deleteAiConversation,
   getAiConversationList,
+  getAiMessageFlowTrace,
   getAiMessageList,
-  getAiMessageProgress,
   getFeishuUrl,
   updateAiConversationTitle,
 } from '/@/api/devlocal/ai'
 import { streamAiMessage } from '/@/utils/aiStream'
 
 import type {
-  AiMessageProgress,
+  AiFlowStepRow,
+  AiStreamStepEvent,
   ChatAttachment,
   ChatConversation,
   ChatConversationBusyState,
   ChatMessage,
   CreateConversationOptions,
   EnsureConversationOptions,
-  LangFlowProgressEvent,
 } from '/@/type/ai/chat'
 
 // 为本地兜底消息生成临时主键，避免渲染层依赖后端 id。
@@ -148,6 +148,35 @@ const normalizeCreateConversationOptions = (options?: CreateConversationOptions)
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
+/**
+ * 与后端 buildStepSummary 对齐的思考链文案拼装，给 fetchMessageFlowTrace 拉到的
+ * 历史 row（无 summary 字段）补一份本地文案，保证历史与实时展示一致。
+ */
+const buildStepSummary = (
+  stepType: string,
+  stepStatus: string,
+  vertexName?: string,
+  vertexId?: string,
+  toolName?: string,
+  durationMs?: number,
+  errorMessage?: string,
+): string => {
+  const name = vertexName || vertexId || '未知节点'
+  const tool = toolName || '未知工具'
+  if (stepType === 'error') {
+    return `流程异常: ${errorMessage || '(无详情)'}`
+  }
+  if (stepType === 'tool') {
+    if (stepStatus === 'error') return `工具 ${tool} 调用失败`
+    return durationMs == null ? `已调用工具 ${tool}` : `已调用工具 ${tool} (${durationMs}ms)`
+  }
+  // vertex
+  if (stepStatus === 'running') return `正在执行 ${name}...`
+  if (stepStatus === 'error') return `${name} 执行失败`
+  if (durationMs == null) return `${name} 已完成`
+  return `${name} 已完成 (${(durationMs / 1000).toFixed(1)}s)`
+}
+
 // 用首条消息生成会话标题：折叠空白、单行、超长截断
 const deriveTitleFromMessage = (content: string) => {
   const normalized = content.replace(/\s+/g, ' ').trim()
@@ -215,11 +244,10 @@ export const useAiStore = defineStore('ai', {
     networkOnline: true,
     // 新建聊天模式：无激活会话，输入框可用，发送时才创建会话。
     isNewChatMode: false,
-    // 当前流式中的 LangFlow 过程事件（vertices_sorted / build_start / log / end_vertex / add_message / end）；
-    // 流式结束时由 sendMessage 回填到 progressCache，避免占用内存
-    liveProgress: [] as LangFlowProgressEvent[],
-    // 历史消息思考过程缓存：key = requestId（user / assistant 共享）
-    progressCache: {} as Record<string, LangFlowProgressEvent[]>,
+    // 当前流式中的"思考链"步骤事件（vertex / tool / error，含 summary 文案）
+    liveSteps: [] as AiStreamStepEvent[],
+    // 历史思考链缓存：key = requestId（来自 GET /flow-trace）
+    stepsCache: {} as Record<string, AiStreamStepEvent[]>,
     // 当前 sendMessage 的 AbortController，用于"停止"按钮中断 fetch
     currentAbortController: null as AbortController | null,
   }),
@@ -459,25 +487,47 @@ export const useAiStore = defineStore('ai', {
       }
     },
     /**
-     * 拉取指定 requestId 的思考过程历史（带内存缓存）。
+     * 拉取指定 requestId 的 Flow 执行链路（结构化思考链步骤，带内存缓存）。
      *
-     * - 命中 progressCache → 直接返回（避免重复请求）
-     * - 否则调 GET /messages/{requestId}/progress，转成 LangFlowProgressEvent[] 后缓存返回
+     * - 命中 stepsCache → 直接返回
+     * - 否则调 GET /messages/{requestId}/flow-trace，转为 AiStreamStepEvent[] 后缓存返回
+     * - 老消息（progress_detail 表上线前）返回空数组，由面板显示"无思考过程数据"
+     * - force=true：强制覆盖现有缓存，用于流式结束后用完整版替换 SSE 推送的预览版
      */
-    async fetchMessageProgress(conversationId: number | string, requestId: string): Promise<LangFlowProgressEvent[]> {
+    async fetchMessageFlowTrace(
+      conversationId: number | string,
+      requestId: string,
+      force = false,
+    ): Promise<AiStreamStepEvent[]> {
       if (!requestId) return []
-      if (this.progressCache[requestId]) return this.progressCache[requestId]
+      if (!force && this.stepsCache[requestId]) return this.stepsCache[requestId]
       try {
-        const response = await getAiMessageProgress(conversationId, requestId)
-        const rows = pickArray(response) as AiMessageProgress[]
-        const events: LangFlowProgressEvent[] = rows.map((r) => ({
-          event: r.eventType,
-          data: safeJsonParse(r.eventData),
-          // DB createdAt 转毫秒；空字符串 / 解析失败时返回 NaN，由面板兜底为 undefined
-          receivedAt: r.createdAt ? new Date(r.createdAt).getTime() : undefined,
-        }))
-        this.progressCache[requestId] = events
-        return events
+        const response = await getAiMessageFlowTrace(conversationId, requestId)
+        const rows = pickArray(response) as AiFlowStepRow[]
+        const steps: AiStreamStepEvent[] = rows.map((r) => {
+          const startTime = r.startTime ? new Date(r.startTime).getTime() : undefined
+          const createdAt = r.createdAt ? new Date(r.createdAt).getTime() : undefined
+          // 工具步骤携带入参，工具 / vertex 步骤都带出参（供详情 tab 展示）
+          const supportsIO = r.stepType === 'tool' || r.stepType === 'vertex'
+          return {
+            stepType: r.stepType,
+            stepStatus: r.stepStatus,
+            vertexId: r.vertexId,
+            vertexName: r.vertexName,
+            toolName: r.toolName,
+            stepInputs: r.stepType === 'tool' ? r.stepInputs : undefined,
+            stepOutputs: supportsIO ? r.stepOutputs : undefined,
+            // 历史接口没有 summary，前端复刻后端模板规则补一份
+            summary: buildStepSummary(r.stepType, r.stepStatus, r.vertexName, r.vertexId, r.toolName, r.durationMs, r.errorMessage),
+            durationMs: r.durationMs,
+            errorMessage: r.errorMessage,
+            stepOrder: r.stepOrder,
+            timestamp: r.startTime ?? r.createdAt,
+            receivedAt: startTime ?? createdAt,
+          }
+        })
+        this.stepsCache[requestId] = steps
+        return steps
       } catch {
         return []
       }
@@ -580,7 +630,7 @@ export const useAiStore = defineStore('ai', {
       this.loading = true
       this.isStreaming = true
       // 重置思考过程实时面板，确保新一轮流式不会显示上次残留事件
-      this.liveProgress = []
+      this.liveSteps = []
       // 创建 AbortController 让"停止"按钮能中断 fetch；旧的（理论上不会有）先 abort 防御
       this.currentAbortController?.abort()
       const abortController = new AbortController()
@@ -600,9 +650,9 @@ export const useAiStore = defineStore('ai', {
               accumulated += chunk
               updateAssistantMessage({ content: accumulated })
             },
-            onProgress: (event) => {
-              // LangFlow 节点过程事件：实时累加到面板。本地打时间戳用于面板展示总耗时 / 步间隔。
-              this.liveProgress = [...this.liveProgress, { ...event, receivedAt: Date.now() }]
+            onStep: (step) => {
+              // 结构化思考链步骤：累积到 liveSteps，前端 panel 实时渲染
+              this.liveSteps = [...this.liveSteps, { ...step, receivedAt: Date.now() }]
             },
             onDone: (payload) => {
               updateAssistantMessage({
@@ -636,19 +686,22 @@ export const useAiStore = defineStore('ai', {
         }
 
         // 流式结束后 reload 消息（让本地 assistant 消息拿到真实 requestId），
-        // 并把 liveProgress 缓存到 progressCache，避免用户立即点击"查看思考过程"再走一次接口
-        const cachedProgress = [...this.liveProgress]
-        this.liveProgress = []
+        // 并把 liveSteps 缓存到 stepsCache，避免用户立即点击"查看思考过程"再走一次接口
+        const cachedSteps = [...this.liveSteps]
+        this.liveSteps = []
         try {
           await this.loadMessages(conversationId)
-          if (cachedProgress.length > 0) {
+          if (cachedSteps.length > 0) {
             const list = this.messages[key] ?? []
             const lastAssistant = [...list].reverse().find((m) => m.role === 'assistant')
             if (lastAssistant?.requestId) {
-              this.progressCache[lastAssistant.requestId] = cachedProgress
+              this.stepsCache[lastAssistant.requestId] = cachedSteps
               // 后端 progress 落库为 fire-and-forget，reload 时 DISTINCT 查询可能还未读到刚写入的行，
               // 这里强制将刚结束流式的消息标为 hasProgress=true，避免按钮抖动消失/出现
               lastAssistant.hasProgress = true
+              // 异步用 /flow-trace 完整版替换 SSE 推送的预览版（不阻塞，不 await）
+              // 流结束后用户再点开「详情」时能看到完整 outputs（去掉截断尾巴）
+              this.fetchMessageFlowTrace(conversationId, lastAssistant.requestId, true).catch(() => {})
             }
           }
         } catch {

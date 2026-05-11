@@ -24,31 +24,58 @@ export interface ChatMessage {
 }
 
 /**
- * LangFlow 原始过程事件（来自 SSE progress 帧 data 或 GET /progress 响应解构后形态）。
+ * AI 思考链步骤事件（结构化，前端友好）。
  *
- * - SSE 实时模式：event = 'progress' 帧的 data 解析后即此结构
- * - 历史回放模式：GET /progress 接口的 row 解构后转成此结构
+ * 来源：
+ * - 流式实时：SSE `step` 事件 payload（后端从 LangFlow 节点 / 工具事件解析后推送）
+ * - 历史回放：GET /flow-trace 接口返回，由前端补充 summary / 转换 receivedAt
  */
-export interface LangFlowProgressEvent {
-  /** vertices_sorted / build_start / add_message / log / end_vertex / end / error 等 */
-  event: string
-  /** 不同 event 对应不同 data 结构，前端按 event 类型解析 */
-  data: any
+export interface AiStreamStepEvent {
+  stepType: 'vertex' | 'tool' | 'error' | string
+  stepStatus: 'running' | 'success' | 'error' | string
+  vertexId?: string
+  vertexName?: string
+  toolName?: string
   /**
-   * 事件接收/记录时间（毫秒 epoch）。用于面板展示总耗时与每步间隔。
-   * - 流式中 = store 在 onProgress 收到事件时打的本地时间戳
-   * - 历史回放 = 后端 ai_chat_message_progress.created_at 转 ms
+   * 工具入参 JSON 字符串（仅工具步骤）。
+   * 后端按 8KB 截断后推送，前端用 JSON.parse 美化后展示在工具行展开区。
    */
+  stepInputs?: string
+  /**
+   * 步骤输出预览（仅 tool / vertex 步骤）。
+   * SSE 推送按 1KB 截断作为流式预览，完整版由 fetchMessageFlowTrace 覆盖。
+   */
+  stepOutputs?: string
+  /** 后端拼装的中文进度文案，可直接渲染 */
+  summary?: string
+  durationMs?: number
+  errorMessage?: string
+  stepOrder?: number
+  /** 后端时间戳（ISO 8601 或毫秒） */
+  timestamp?: string | number
+  /** 前端接收时打的本地时间戳（毫秒），用于步间隔展示 */
   receivedAt?: number
 }
 
-/** GET /api/v1/ai/conversations/{cid}/messages/{requestId}/progress 响应 row */
-export interface AiMessageProgress {
+/** GET /api/v1/ai/conversations/{cid}/messages/{requestId}/flow-trace 响应 row */
+export interface AiFlowStepRow {
   id: number
-  eventType: string
-  /** 原始事件 data JSON 字符串，前端用 JSON.parse 解构 */
-  eventData: string
-  createdAt: string
+  stepType: string
+  stepStatus: string
+  vertexId?: string
+  vertexName?: string
+  componentType?: string
+  toolName?: string
+  stepInputs?: string
+  stepOutputs?: string
+  stepLogs?: string
+  errorMessage?: string
+  durationMs?: number
+  startTime?: string
+  endTime?: string
+  source?: string
+  stepOrder?: number
+  createdAt?: string
 }
 
 export interface ChatConversation {

@@ -1,164 +1,155 @@
 <template>
   <div class="message-progress-panel">
-    <div class="progress-toolbar">
-      <label class="detail-toggle">
-        <input v-model="showDetails" type="checkbox" />
-        <span>详情</span>
-      </label>
-      <span v-if="hiddenLogCount > 0" class="hidden-hint">{{ hiddenLogCount }} 条 log 已折叠</span>
-      <span v-if="totalTokens > 0" class="total-tokens">{{ totalTokens.toLocaleString() }} tokens</span>
-      <span v-if="totalDuration" class="total-duration">总耗时 {{ totalDuration }}</span>
+    <div v-if="totalDuration" class="progress-toolbar">
+      <span class="total-duration">总耗时 {{ totalDuration }}</span>
     </div>
     <ul class="progress-list">
-      <li v-for="(ev, idx) in visibleEvents" :key="idx" :class="['progress-item', `event-${ev.event}`]">
-        <span class="event-tag">{{ ev.event }}</span>
-        <span class="event-label">{{ describe(ev) }}</span>
-        <span v-if="stepDelta(idx)" class="event-delta">{{ stepDelta(idx) }}</span>
+      <li
+        v-for="(s, idx) in steps"
+        :key="idx"
+        :class="['progress-item', `step-${s.stepType}`, `status-${s.stepStatus}`]"
+      >
+        <div class="progress-head">
+          <span class="step-icon">{{ stepIcon(s) }}</span>
+          <span class="event-label">{{ s.summary || fallbackSummary(s) }}</span>
+          <span v-if="stepDelta(idx)" class="event-delta">{{ stepDelta(idx) }}</span>
+          <button
+            v-if="hasDetail(s)"
+            type="button"
+            class="detail-toggle"
+            @click="toggleDetail(idx)"
+          >
+            {{ expandedDetailMap[idx] ? '▼ 详情' : '▶ 详情' }}
+          </button>
+        </div>
+        <div v-if="expandedDetailMap[idx] && hasDetail(s)" class="step-detail">
+          <div v-if="availableTabs(s).length > 1" class="step-detail-tabs">
+            <span
+              v-for="tab in availableTabs(s)"
+              :key="tab.key"
+              :class="['detail-tab', { active: currentTabKey(s, idx) === tab.key }]"
+              @click="activeTabMap[idx] = tab.key"
+            >{{ tab.label }}</span>
+          </div>
+          <div class="step-detail-text">{{ currentTabText(s, idx) }}</div>
+        </div>
+        <div v-if="s.errorMessage" class="event-error">{{ s.errorMessage }}</div>
       </li>
       <li v-if="loading" class="progress-item is-loading">
         <span class="event-label">加载中...</span>
       </li>
-      <li v-else-if="events.length === 0" class="progress-item is-empty">
-        <span class="event-label">无过程数据</span>
-      </li>
-      <li v-else-if="visibleEvents.length === 0" class="progress-item is-empty">
-        <span class="event-label">暂无关键步骤（点击「详情」查看完整 timeline）</span>
+      <li v-else-if="steps.length === 0" class="progress-item is-empty">
+        <span class="event-label">无思考过程数据</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { LangFlowProgressEvent } from '/@/type/ai/chat'
+import { computed, reactive } from 'vue'
+import type { AiStreamStepEvent } from '/@/type/ai/chat'
 
 const props = defineProps<{
-  events: LangFlowProgressEvent[]
+  steps: AiStreamStepEvent[]
   loading?: boolean
 }>()
 
-// 默认折叠 log 噪声，用户可主动展开看完整 timeline
-const showDetails = ref(false)
+type DetailTabKey = 'inputs' | 'outputs'
 
-// LangFlow 节点 id 形如 "ComponentType-<6位随机后缀>"，end_vertex 事件不带顶层 display_name，
-// 这里取 id 的 - 前缀作为类型名展示（例：UnifiedWebSearch-APzw9 → UnifiedWebSearch）。
-const extractVertexTypeName = (rawId: string): string => {
-  if (!rawId) return ''
-  const dashIdx = rawId.indexOf('-')
-  return dashIdx > 0 ? rawId.slice(0, dashIdx) : rawId
+// 详情展开状态（key = idx）
+const expandedDetailMap = reactive<Record<number, boolean>>({})
+// 当前激活 Tab
+const activeTabMap = reactive<Record<number, DetailTabKey>>({})
+
+const hasDetail = (s: AiStreamStepEvent): boolean => Boolean(s.stepInputs || s.stepOutputs)
+
+const availableTabs = (s: AiStreamStepEvent): { key: DetailTabKey; label: string }[] => {
+  const tabs: { key: DetailTabKey; label: string }[] = []
+  if (s.stepInputs) tabs.push({ key: 'inputs', label: '输入' })
+  if (s.stepOutputs) tabs.push({ key: 'outputs', label: '输出' })
+  return tabs
 }
 
-// 在 outputs 子树中递归查找首个非空的 metadata.display_name —— LangFlow 把
-// 节点调用的工具/子组件名挂在 outputs.<port>.message[i].metadata.display_name 之类的位置。
-// 实测路径示例：
-//   outputs.component_as_tool.message[0].metadata.display_name = "perform_search"
-//   outputs.component_as_tool.raw[0].metadata.display_name = "4_2_Reddit_Research_tool"
-const extractOutputsDisplayName = (node: any): string => {
-  if (!node || typeof node !== 'object') return ''
-  // 直接命中：当前节点就是一个 {metadata: {display_name}} 结构
-  const dn = node?.metadata?.display_name
-  if (typeof dn === 'string' && dn) return dn
-  // 递归
-  if (Array.isArray(node)) {
-    for (const item of node) {
-      const found = extractOutputsDisplayName(item)
-      if (found) return found
-    }
-  } else {
-    for (const key of Object.keys(node)) {
-      const found = extractOutputsDisplayName(node[key])
-      if (found) return found
-    }
+// 默认 Tab：有 outputs 优先 outputs（结果通常更接近用户关注的"AI 干了什么"）
+const currentTabKey = (s: AiStreamStepEvent, idx: number): DetailTabKey => {
+  return activeTabMap[idx] || (s.stepOutputs ? 'outputs' : 'inputs')
+}
+
+const toggleDetail = (idx: number) => {
+  expandedDetailMap[idx] = !expandedDetailMap[idx]
+  if (expandedDetailMap[idx] && !activeTabMap[idx]) {
+    activeTabMap[idx] = props.steps[idx].stepOutputs ? 'outputs' : 'inputs'
   }
-  return ''
+}
+
+const currentTabText = (s: AiStreamStepEvent, idx: number): string => {
+  const key = currentTabKey(s, idx)
+  return extractDisplayText(key === 'outputs' ? s.stepOutputs : s.stepInputs)
 }
 
 /**
- * 把 LangFlow 节点 token_usage 字段格式化为可读字符串。
+ * 从 JSON / 字符串中提取可读文本。
  *
- * LangFlow / LangChain 标准结构：
- *   { prompt_tokens, completion_tokens, total_tokens }
- * 也兼容驼峰命名 / OpenAI input_tokens/output_tokens。
- *
- * @returns "1234 tokens" / "123+456 tokens" / "" (无可用值)
+ * - 字符串（非 JSON）→ 原文
+ * - JSON 字符串包了引号 → 解开
+ * - 对象 → 递归找首个 text/content/message/output/result/answer 字段
+ * - 都找不到 → fallback 到 JSON.stringify 缩进（保留可读性）
  */
-const formatTokenUsage = (usage: any): string => {
-  if (!usage || typeof usage !== 'object') return ''
-  const total = usage.total_tokens ?? usage.totalTokens
-  const prompt = usage.prompt_tokens ?? usage.promptTokens ?? usage.input_tokens ?? usage.inputTokens
-  const completion = usage.completion_tokens ?? usage.completionTokens ?? usage.output_tokens ?? usage.outputTokens
-  if (typeof total === 'number' && total > 0) return `${total.toLocaleString()} tokens`
-  if (typeof prompt === 'number' && typeof completion === 'number') {
-    return `${prompt.toLocaleString()}+${completion.toLocaleString()} tokens`
+const extractDisplayText = (raw?: string): string => {
+  if (!raw) return ''
+  let value: unknown
+  try {
+    value = JSON.parse(raw)
+  } catch {
+    return raw
   }
-  return ''
-}
-
-/**
- * 从单个 end_vertex 事件中提取 token_usage 数值，用于 totalTokens 累加。
- * 取 total_tokens；若缺失则用 prompt + completion；都没有返回 0。
- */
-const extractTokenCount = (usage: any): number => {
-  if (!usage || typeof usage !== 'object') return 0
-  const total = usage.total_tokens ?? usage.totalTokens
-  if (typeof total === 'number' && total > 0) return total
-  const prompt = usage.prompt_tokens ?? usage.promptTokens ?? usage.input_tokens ?? usage.inputTokens ?? 0
-  const completion = usage.completion_tokens ?? usage.completionTokens ?? usage.output_tokens ?? usage.outputTokens ?? 0
-  return (typeof prompt === 'number' ? prompt : 0) + (typeof completion === 'number' ? completion : 0)
-}
-
-// 按事件类型给出人类可读描述。无描述（返回空串）的事件由 visibleEvents 过滤掉。
-const labelMap: Record<string, (data: any) => string> = {
-  vertices_sorted: (d) => `规划 ${d?.to_run?.length ?? 0} 个节点`,
-  build_start: () => '开始执行',
-  end_vertex: (d) => {
-    const typeName = extractVertexTypeName(d?.build_data?.id ?? '')
-    const displayName = extractOutputsDisplayName(d?.build_data?.data?.outputs)
-    const tokens = formatTokenUsage(d?.build_data?.data?.token_usage)
-    // 两者都有且不重复 → "类型名 → 工具/子组件名"；否则取其一
-    let main: string
-    if (typeName && displayName && typeName !== displayName) {
-      main = `节点完成：${typeName} → ${displayName}`
-    } else {
-      main = `节点完成：${displayName || typeName || '未知节点'}`
+  if (typeof value === 'string') return value
+  if (value == null) return ''
+  const candidateKeys = ['text', 'content', 'message', 'output', 'result', 'answer']
+  const visit = (node: unknown, depth = 0): string | null => {
+    if (depth > 4 || node == null) return null
+    if (typeof node === 'string') return node
+    if (typeof node !== 'object') return String(node)
+    const obj = node as Record<string, unknown>
+    for (const key of candidateKeys) {
+      const v = obj[key]
+      if (typeof v === 'string' && v) return v
+      if (v && typeof v === 'object') {
+        const found = visit(v, depth + 1)
+        if (found) return found
+      }
     }
-    return tokens ? `${main}（${tokens}）` : main
-  },
-  log: (d) => d?.name ?? '步骤',
-  add_message: (d) => {
-    const sender = d?.data?.sender
-    const state = d?.data?.properties?.state
-    if (sender === 'User' && state === 'complete') return '' // 用户消息已显示在主聊天框
-    if (sender === 'Machine' && state === 'partial') return 'AI 正在思考...'
-    if (sender === 'Machine' && state === 'complete') return '' // 已通过 chunk 流出
-    return ''
-  },
-  end: () => '执行完成',
-  error: (d) => `错误：${d?.message ?? '未知'}`,
+    return null
+  }
+  const found = visit(value)
+  return found ?? JSON.stringify(value, null, 2)
 }
 
-const describe = (ev: LangFlowProgressEvent): string => labelMap[ev.event]?.(ev.data) ?? ''
+const stepIcon = (s: AiStreamStepEvent): string => {
+  if (s.stepType === 'error') return '💥'
+  if (s.stepType === 'tool') {
+    return s.stepStatus === 'error' ? '⚠️' : '🔧'
+  }
+  // vertex
+  if (s.stepStatus === 'running') return '🔍'
+  if (s.stepStatus === 'error') return '❌'
+  return '✅'
+}
 
-// 过滤：(1) 隐藏空 label 行；(2) 默认隐藏 log 事件
-const visibleEvents = computed(() =>
-  props.events.filter((ev) => {
-    if (!describe(ev)) return false
-    if (ev.event === 'log' && !showDetails.value) return false
-    return true
-  }),
-)
+// summary 兜底：后端 summary 缺失时按名字 + 状态拼出基本文案
+const fallbackSummary = (s: AiStreamStepEvent): string => {
+  const name = s.vertexName || s.vertexId || '未知节点'
+  const tool = s.toolName || '未知工具'
+  if (s.stepType === 'error') return `流程异常: ${s.errorMessage || ''}`
+  if (s.stepType === 'tool') {
+    if (s.stepStatus === 'error') return `工具 ${tool} 调用失败`
+    return s.durationMs != null ? `已调用工具 ${tool} (${s.durationMs}ms)` : `已调用工具 ${tool}`
+  }
+  if (s.stepStatus === 'running') return `正在执行 ${name}...`
+  if (s.stepStatus === 'error') return `${name} 执行失败`
+  return s.durationMs != null ? `${name} 已完成 (${(s.durationMs / 1000).toFixed(1)}s)` : `${name} 已完成`
+}
 
-// 折叠提示：当前折了多少条 log
-const hiddenLogCount = computed(() =>
-  showDetails.value ? 0 : props.events.filter((ev) => ev.event === 'log').length,
-)
-
-/**
- * 自适应耗时格式化：
- * - < 1s: "320ms"
- * - < 60s: "5.4s"
- * - >= 60s: "1m 23s"
- */
 const formatDuration = (ms?: number): string => {
   if (ms == null || !Number.isFinite(ms) || ms < 0) return ''
   if (ms < 1000) return `${Math.round(ms)}ms`
@@ -168,29 +159,20 @@ const formatDuration = (ms?: number): string => {
   return `${m}m ${s}s`
 }
 
-// 总耗时：第一个有 receivedAt 的事件 → 最后一个有 receivedAt 的事件
+// 取第一条与最后一条 receivedAt 的差作为总耗时
 const totalDuration = computed(() => {
-  const first = props.events.find((e) => e.receivedAt)?.receivedAt
-  const last = [...props.events].reverse().find((e) => e.receivedAt)?.receivedAt
+  const arr = props.steps
+  const first = arr.find((s) => s.receivedAt)?.receivedAt
+  const last = [...arr].reverse().find((s) => s.receivedAt)?.receivedAt
   if (!first || !last || last <= first) return ''
   return formatDuration(last - first)
 })
 
-// 总 tokens：所有 end_vertex 事件 token_usage 累加（仅 LLM/Agent 节点会报）
-const totalTokens = computed(() => {
-  let sum = 0
-  for (const ev of props.events) {
-    if (ev.event !== 'end_vertex') continue
-    sum += extractTokenCount(ev.data?.build_data?.data?.token_usage)
-  }
-  return sum
-})
-
-// 自上一条 visible 事件的间隔（首条无）
+// 同步显示相邻步骤的时间差，便于观察单步耗时
 const stepDelta = (idx: number): string => {
   if (idx === 0) return ''
-  const cur = visibleEvents.value[idx]?.receivedAt
-  const prev = visibleEvents.value[idx - 1]?.receivedAt
+  const cur = props.steps[idx]?.receivedAt
+  const prev = props.steps[idx - 1]?.receivedAt
   if (!cur || !prev || cur <= prev) return ''
   return `+${formatDuration(cur - prev)}`
 }
@@ -210,43 +192,16 @@ const stepDelta = (idx: number): string => {
 .progress-toolbar {
   display: flex;
   align-items: center;
-  gap: 12px;
   margin-bottom: 6px;
   padding-bottom: 4px;
   border-bottom: 1px dashed #e4e7ed;
 }
 
-.detail-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: #909399;
-  cursor: pointer;
-  user-select: none;
-
-  input {
-    cursor: pointer;
-  }
-}
-
-.hidden-hint {
-  font-size: 12px;
-  color: #c0c4cc;
-}
-
-.total-duration,
-.total-tokens {
+.total-duration {
   margin-left: auto;
   font-size: 12px;
   color: #c0c4cc;
   font-variant-numeric: tabular-nums;
-}
-
-/* 当 tokens 和 duration 都存在时，第一个 margin-left:auto 把 tokens 推到右侧，
-   duration 紧贴 tokens 后面（不再单独推） */
-.total-tokens + .total-duration {
-  margin-left: 0;
 }
 
 .progress-list {
@@ -256,25 +211,22 @@ const stepDelta = (idx: number): string => {
 }
 
 .progress-item {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
   padding: 3px 0;
   font-size: 12px;
   line-height: 1.6;
   color: #606266;
 }
 
-.event-tag {
+.progress-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.step-icon {
   flex: 0 0 auto;
-  display: inline-block;
-  padding: 1px 6px;
-  font-family: monospace;
-  font-size: 11px;
-  color: #909399;
-  background: #fff;
-  border: 1px solid #ebeef5;
-  border-radius: 3px;
+  font-size: 13px;
+  line-height: 1;
 }
 
 .event-label {
@@ -290,13 +242,89 @@ const stepDelta = (idx: number): string => {
   font-variant-numeric: tabular-nums;
 }
 
-.progress-item.event-end_vertex .event-label,
-.progress-item.event-end .event-label {
+.event-error {
+  margin-top: 2px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #f56c6c;
+  background: #fef0f0;
+  border-radius: 3px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-toggle {
+  flex: 0 0 auto;
+  padding: 1px 6px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #409eff;
+  background: transparent;
+  border: 1px solid #d9ecff;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 16px;
+
+  &:hover {
+    background: #ecf5ff;
+    border-color: #409eff;
+  }
+}
+
+.step-detail {
+  margin: 4px 0 6px 24px;
+  padding: 6px 10px;
+  background: #fafbfc;
+  border-left: 3px solid #d9ecff;
+  border-radius: 3px;
+}
+
+.step-detail-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.detail-tab {
+  padding: 2px 0;
+  font-size: 11px;
+  color: #909399;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  user-select: none;
+
+  &.active {
+    color: #409eff;
+    border-bottom-color: #409eff;
+  }
+
+  &:hover:not(.active) {
+    color: #606266;
+  }
+}
+
+.step-detail-text {
+  max-height: 240px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #303133;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.progress-item.status-success .event-label {
   color: #67c23a;
 }
 
-.progress-item.event-error .event-label {
+.progress-item.status-error .event-label,
+.progress-item.step-error .event-label {
   color: #f56c6c;
+}
+
+.progress-item.status-running .event-label {
+  color: #409eff;
 }
 
 .progress-item.is-loading,

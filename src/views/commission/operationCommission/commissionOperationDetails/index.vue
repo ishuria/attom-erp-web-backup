@@ -198,6 +198,12 @@
                 </el-select>
               </el-form-item>
 
+              <el-form-item label="运营分类">
+                <el-select v-model="asinDetailQueryForm.operationTypeId" placeholder="全部" @change="queryAsinDetailData">
+                  <el-option v-for="item in operationTypeList" :key="item.id" :label="item.typeName" :value="item.id" />
+                </el-select>
+              </el-form-item>
+
               <el-form-item label="币种">
                 <el-select v-model="asinDetailQueryForm.currency" clearable placeholder="请选择币种" @change="changeAsinDetailHandler">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
@@ -247,6 +253,11 @@
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
           <el-table-column label="站点" min-width="135" prop="site" />
+          <el-table-column label="运营分类" min-width="120" prop="operationTypeName">
+            <template #default="{ row }">
+              {{ row.operationTypeName || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column label="广告花费" min-width="130" prop="adSpend" sortable="custom">
             <template #default="{ row }">
               {{ row.adSpend ? row.currencyIcon + formatAmount(row.adSpend) : '-' }}
@@ -262,14 +273,20 @@
               {{ row.totalSales ? row.currencyIcon + formatAmount(row.totalSales) : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总毛利润" min-width="130" prop="totalGrossProfit" sortable="custom">
+          <el-table-column label="总毛利润" min-width="150" prop="totalGrossProfit" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}
+              <div>{{ row.totalGrossProfit ? row.currencyIcon + formatAmount(row.totalGrossProfit) : '-' }}</div>
+              <div v-if="row.totalGrossProfitMomRatio != null" :style="momStyle(row.totalGrossProfitMomRatio)">
+                {{ formatMomRatio(row.totalGrossProfitMomRatio) }}
+              </div>
             </template>
           </el-table-column>
-          <el-table-column label="利润报表销售额" min-width="160" prop="totalSalesAmount" sortable="custom">
+          <el-table-column label="利润报表销售额" min-width="170" prop="totalSalesAmount" sortable="custom">
             <template #default="{ row }">
-              {{ row.totalSalesAmount ? row.currencyIcon + formatAmount(row.totalSalesAmount) : '-' }}
+              <div>{{ row.totalSalesAmount ? row.currencyIcon + formatAmount(row.totalSalesAmount) : '-' }}</div>
+              <div v-if="row.totalSalesAmountMomRatio != null" :style="momStyle(row.totalSalesAmountMomRatio)">
+                {{ formatMomRatio(row.totalSalesAmountMomRatio) }}
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
@@ -612,7 +629,7 @@ import {
   updateCurrencyOperationAsinDetail,
   updateCurrencyOperationAsinSummary,
 } from '/@/api/devlocal/commission'
-import { getOperationUserListByPlatform } from '/@/api/devlocal/frontPage'
+import { getOperationTypeUserList, getOperationUserListByPlatform } from '/@/api/devlocal/frontPage'
 import { getCurrencyList } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
@@ -661,6 +678,7 @@ const asinDetailQueryForm = reactive({
   orderByField: 'adSpend',
   orderDirection: 'descending',
   currency: -1,
+  operationTypeId: -1,
 })
 const asinDetailList = ref<any[]>([])
 const asinDetailTotal = ref<number>(0)
@@ -808,6 +826,21 @@ const handleAsinSummarySizeChange = (val: number) => {
   asinSummaryQueryForm.pageNo = 1
   queryAsinSummaryData()
 }
+/** 环比百分比文案：>0 显示 ↑、<0 显示 ↓、=0 显示 0% */
+const formatMomRatio = (val: number): string => {
+  if (val > 0) return `↑ ${val}%`
+  if (val < 0) return `↓ ${Math.abs(val)}%`
+  return `0%`
+}
+
+/** 环比百分比颜色：正绿、负红、零灰；统一 12px 小号字 */
+const momStyle = (val: number): CSSProperties => {
+  let color = 'var(--el-text-color-secondary)'
+  if (val > 0) color = 'var(--el-color-success)'
+  else if (val < 0) color = 'var(--el-color-danger)'
+  return { fontSize: '12px', color, marginTop: '2px' }
+}
+
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   const flag = data.row.flag || {}
@@ -1083,10 +1116,21 @@ const fetchCurrencyList = async () => {
   currencyList.value = data
   currencyList.value.unshift({ id: -1, label: '原币种' })
 }
+
+// 运营分类筛选（当前用户创建的分类）
+const operationTypeList = ref<{ id: number; typeName: string }[]>([])
+const fetchOperationTypeList = async () => {
+  const userId = useUserStore().getUserId
+  if (userId == null) return
+  const { data } = await getOperationTypeUserList({ userId })
+  operationTypeList.value = data || []
+  operationTypeList.value.unshift({ id: -1, typeName: '全部' })
+}
 onBeforeMount(async () => {
   await fetchSiteList()
   await fetchCurrencyList()
   await fetchUserLevelList()
+  await fetchOperationTypeList()
   await fetchAsinSummaryMonthList()
   await fetchAsinDetailMonthList()
   await fetchOperationBonusMonthList()

@@ -35,6 +35,15 @@
           <el-button text size="small" @click="handleViewDoc(doc)">查看</el-button>
         </div>
       </div>
+      <!-- 思考过程：仅 assistant 消息展示。流式中默认展开实时累加；历史消息默认折叠，点击 lazy 加载 -->
+      <div v-if="message.role === 'assistant' && showProgressSection" class="progress-section">
+        <button type="button" class="progress-toggle" :disabled="!progressTogglable" @click="toggleProgress">
+          <vab-icon :icon="progressExpanded ? 'arrow-down-s-line' : 'arrow-right-s-line'" />
+          <span>{{ progressExpanded ? '收起思考过程' : '查看思考过程' }}</span>
+          <span v-if="progressSteps.length > 0" class="progress-count">（{{ progressSteps.length }} 步）</span>
+        </button>
+        <message-progress-panel v-if="progressExpanded" :steps="progressSteps" :loading="progressLoading" />
+      </div>
       <div :class="['bubble', `is-${message.status || 'success'}`, `is-role-${message.role}`]">
         <template v-if="message.role === 'user'">
           <div class="plain">{{ message.content }}</div>
@@ -48,15 +57,6 @@
         <button v-if="message.status === 'error' && message.role === 'assistant'" type="button" class="retry-btn" @click="handleRetry">
           <vab-icon icon="error-warning-line" />
         </button>
-      </div>
-      <!-- 思考过程：仅 assistant 消息展示。流式中默认展开实时累加；历史消息默认折叠，点击 lazy 加载 -->
-      <div v-if="message.role === 'assistant' && showProgressSection" class="progress-section">
-        <button type="button" class="progress-toggle" :disabled="!progressTogglable" @click="toggleProgress">
-          <vab-icon :icon="progressExpanded ? 'arrow-down-s-line' : 'arrow-right-s-line'" />
-          <span>{{ progressExpanded ? '收起思考过程' : '查看思考过程' }}</span>
-          <span v-if="progressEvents.length > 0" class="progress-count">（{{ progressEvents.length }} 步）</span>
-        </button>
-        <message-progress-panel v-if="progressExpanded" :events="progressEvents" :loading="progressLoading" />
       </div>
     </div>
     <el-image-viewer
@@ -73,7 +73,7 @@
 import { $baseMessage } from '/@/hooks'
 import { useAiStore } from '/@/store/modules/ai'
 import yunzhouLogo from '/@/icon/yunzhou.svg'
-import type { ChatAttachment, ChatMessage, LangFlowProgressEvent } from '/@/type/ai/chat'
+import type { AiStreamStepEvent, ChatAttachment, ChatMessage } from '/@/type/ai/chat'
 import { renderAiMarkdown } from '/@/utils/aiMarkdown'
 import { enhanceStickyTableScrollbars } from '/@/views/ai/vabAutoComponents/composables/useStickyTableScrollbar'
 import MessageProgressPanel from '/@/views/ai/vabAutoComponents/MessageProgressPanel.vue'
@@ -131,9 +131,9 @@ const attachments = computed(() => props.message.attachments ?? [])
 const imageAttachments = computed(() => attachments.value.filter((a) => a.type.startsWith('image/')))
 const docAttachments = computed(() => attachments.value.filter((a) => !a.type.startsWith('image/')))
 
-// === 思考过程（progress）展示 ===
-// 流式中：实时显示 store.liveProgress（不依赖 requestId）
-// 历史：lazy 拉取 store.fetchMessageProgress（依赖 message.requestId）
+// === 思考过程（思考链步骤）展示 ===
+// 流式中：实时显示 store.liveSteps（不依赖 requestId）
+// 历史：lazy 拉取 store.fetchMessageFlowTrace（依赖 message.requestId）
 const isCurrentlyStreaming = computed(
   () => props.message.role === 'assistant' && props.message.status === 'loading',
 )
@@ -152,11 +152,11 @@ const progressTogglable = computed(
 )
 
 const progressExpanded = ref(false)
-const historyEvents = ref<LangFlowProgressEvent[]>([])
+const historySteps = ref<AiStreamStepEvent[]>([])
 const progressLoading = ref(false)
 
-const progressEvents = computed<LangFlowProgressEvent[]>(() =>
-  isCurrentlyStreaming.value ? aiStore.liveProgress : historyEvents.value,
+const progressSteps = computed<AiStreamStepEvent[]>(() =>
+  isCurrentlyStreaming.value ? aiStore.liveSteps : historySteps.value,
 )
 
 const toggleProgress = async () => {
@@ -165,13 +165,13 @@ const toggleProgress = async () => {
   if (
     progressExpanded.value &&
     !isCurrentlyStreaming.value &&
-    historyEvents.value.length === 0 &&
+    historySteps.value.length === 0 &&
     props.message.requestId &&
     props.conversationId != null
   ) {
     progressLoading.value = true
     try {
-      historyEvents.value = await aiStore.fetchMessageProgress(props.conversationId, props.message.requestId)
+      historySteps.value = await aiStore.fetchMessageFlowTrace(props.conversationId, props.message.requestId)
     } finally {
       progressLoading.value = false
     }
