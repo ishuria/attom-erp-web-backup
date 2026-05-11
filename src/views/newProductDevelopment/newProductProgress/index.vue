@@ -1137,6 +1137,8 @@ const sortDebounceMap = new Map<number, ReturnType<typeof debounce>>()
 const onEnd = (row: any) => {
   const progressId = row?.progressId
   if (!progressId) {
+    console.warn('图片排序缺少 progressId，无法更新排序:', row)
+    $baseMessage('图片排序更新失败：缺少进度ID', 'warning', 'hey')
     return
   }
 
@@ -1151,6 +1153,12 @@ const onEnd = (row: any) => {
     const idList = imageList.map((item: any) => item.imageId).filter(Boolean)
 
     if (idList.length < 2) {
+      console.warn('图片排序未提交：有效图片数量不足', {
+        progressId,
+        imageList,
+        idList,
+      })
+      $baseMessage('图片数量不足，无需更新排序', 'warning', 'hey')
       return
     }
 
