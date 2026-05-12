@@ -43,7 +43,29 @@
                   </thead>
                   <tbody>
                     <tr v-for="(row, ri) in block.rows" :key="ri">
-                      <td v-for="(cell, ci) in row" :key="ci">{{ cell }}</td>
+                      <td v-for="(cell, ci) in row" :key="ci">
+                        <el-image
+                          v-if="isImageUrl(cell)"
+                          :src="cell"
+                          :preview-src-list="[cell]"
+                          :preview-teleported="true"
+                          fit="contain"
+                          lazy
+                          class="step-cell-image"
+                        >
+                          <template #error>
+                            <span class="step-cell-image-broken">🖼 加载失败</span>
+                          </template>
+                        </el-image>
+                        <a
+                          v-else-if="isHttpUrl(cell)"
+                          :href="cell"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="step-cell-link"
+                        >{{ cell }}</a>
+                        <template v-else>{{ cell }}</template>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -292,6 +314,51 @@ const stringifyCell = (v: unknown): string => {
   if (typeof v === 'number' || typeof v === 'boolean') return String(v)
   // 嵌套对象 / 数组 → yaml-like 缩进，避免单元格显示 raw JSON
   return toReadableYaml(v, 0)
+}
+
+const IMAGE_EXT_RE = /\.(?:jpe?g|png|gif|webp|svg|bmp|avif|ico)(?:\?[^#]*)?(?:#.*)?$/i
+
+/**
+ * 判断字符串是否为图片资源 URL（用于 table cell 渲染时把图片字段显示成缩略图）。
+ *
+ * 命中条件：
+ * - data:image/... 内联 base64 图片
+ * - http(s) URL 且 pathname 以常见图片扩展名结尾（jpg/png/gif/webp/svg/bmp/avif/ico）
+ *
+ * 不命中无扩展名的 CDN URL（如 `https://cdn.x.com/i/abc123`）—— 无法 sync 判断，
+ * 留作文本展示避免误判。
+ */
+const isImageUrl = (text: unknown): boolean => {
+  if (typeof text !== 'string') return false
+  const trimmed = text.trim()
+  if (!trimmed) return false
+  if (trimmed.startsWith('data:image/')) return true
+  if (!/^https?:\/\//i.test(trimmed)) return false
+  try {
+    const url = new URL(trimmed)
+    return IMAGE_EXT_RE.test(url.pathname)
+  } catch {
+    return false
+  }
+}
+
+/**
+ * 判断 cell 是否是 http(s) URL（且不是图片 —— 图片走 isImageUrl 分支）。
+ *
+ * 要求整段字符串本身就是一个完整 URL，单元格里夹带文本的 URL 不命中（避免误判
+ * "查看链接: https://..." 这类描述性文本）。
+ */
+const isHttpUrl = (text: unknown): boolean => {
+  if (typeof text !== 'string') return false
+  const trimmed = text.trim()
+  if (!trimmed) return false
+  if (!/^https?:\/\/\S+$/i.test(trimmed)) return false
+  try {
+    const url = new URL(trimmed)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch {
+    return false
+  }
 }
 
 // 主要文本字段（LangChain message / agent output 常见结构里有 text / content / message 等正文）
@@ -698,6 +765,7 @@ const totalDuration = computed(() => {
     vertical-align: top;
     border-bottom: 1px solid #f0f2f5;
     word-break: break-word;
+    overflow-wrap: anywhere;
     white-space: pre-wrap;
     max-width: 380px;
   }
@@ -705,8 +773,9 @@ const totalDuration = computed(() => {
   td:first-child {
     font-weight: 500;
     color: #303133;
-    white-space: nowrap;
-    max-width: 160px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-width: 180px;
   }
 
   tbody tr:nth-child(even) {
@@ -719,6 +788,46 @@ const totalDuration = computed(() => {
 
   tbody tr:last-child td {
     border-bottom: 0;
+  }
+}
+
+// —— 图片单元格 ——
+.step-cell-image {
+  display: block;
+  max-width: 160px;
+  max-height: 120px;
+  background: #f5f7fa;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  cursor: zoom-in;
+}
+
+.step-cell-image-broken {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 8px;
+  font-size: 11px;
+  color: #909399;
+  background: #f5f7fa;
+  border: 1px dashed #dcdfe6;
+  border-radius: 4px;
+}
+
+// —— 链接单元格 ——
+.step-cell-link {
+  color: #409eff;
+  text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    color: #66b1ff;
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: #6a5acd;
   }
 }
 
