@@ -180,6 +180,9 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   if (label === '运营备注') {
     return STYLE_LEFT_POINTER
   }
+  if (label === '订货#' && props.type === 'sku') {
+    return STYLE_CENTER_POINTER
+  }
   if (clickableLabels.has(label)) {
     return STYLE_CENTER_POINTER
   }

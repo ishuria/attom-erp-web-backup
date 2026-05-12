@@ -219,11 +219,13 @@
             </span>
             / {{ row.availableInventory }}
           </div>
-          <div v-else-if="item.label === '订货#'">
-            {{ row.orderCount }}
-            <br />
-            <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
-          </div>
+          <el-tooltip v-else-if="item.label === '订货#'" content="点击查看订货明细" effect="dark" placement="top">
+            <div class="order-detail-link">
+              {{ row.orderCount }}
+              <br />
+              <span>{{ row.orderTotalNumber }}</span>
+            </div>
+          </el-tooltip>
 
           <!-- HTML 内容字段 -->
           <span v-else-if="item.label === '库龄'" v-html="row.storageAge"></span>
@@ -391,7 +393,7 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 订货表 -->
-    <vab-product-order-table v-model="productOrderTableVisible" :list="productOrderTableList" />
+    <vab-product-order-table ref="productOrderTableRef" />
     <!-- 订货备注 -->
     <vab-dialog v-model="remarkVisible" title="订货备注" width="20%" @opened="handleDialogOpened">
       <el-input ref="inputRef" v-model="remark" placeholder="请输入订货备注" :rows="15" type="textarea" />
@@ -416,7 +418,6 @@ import {
   getOperationOrderSku,
   getOperationOrderSmoothness,
   getOperationOrderSpringFestival,
-  getOperationOrderTable,
   getOperationWalmartOrderList,
   releaseOperationPlanPo,
   updateOperationOrderSmoothness,
@@ -433,7 +434,7 @@ import {
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user.ts'
-import type { IGetOperationOrderList, IGetOperationOrderTable } from '/@/type/storeOperation/productOrdering'
+import type { IGetOperationOrderList, IProductOrderTableRef } from '/@/type/storeOperation/productOrdering'
 import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
 import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
@@ -443,7 +444,7 @@ defineOptions({
   name: 'ProductOrderWalmart',
 })
 
-const productOrderTableList = ref<IGetOperationOrderTable[]>([])
+const productOrderTableRef = ref<IProductOrderTableRef>()
 const router = useRouter()
 const route = useRoute()
 const smoothSettingVisible = ref<boolean>(false)
@@ -686,7 +687,6 @@ let _seasonalCoefficient = {
   actualList: [],
   referenceList: [],
 }
-const productOrderTableVisible = ref<boolean>(false)
 const option1 = ref<any>({})
 const cellClick = async (row: any, column: any) => {
   const label = column.label
@@ -715,12 +715,10 @@ const cellClick = async (row: any, column: any) => {
       break
     }
     case '订货#': {
-      productOrderTableVisible.value = true
-      const { data } = await getOperationOrderTable({
+      productOrderTableRef.value?.open({
         sku: row.sku,
         site: row.site,
       })
-      productOrderTableList.value = data
       break
     }
     case '订货备注': {
@@ -1520,6 +1518,17 @@ onBeforeMount(async () => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+.order-detail-link {
+  display: inline-block;
+  color: var(--el-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  span {
+    font-weight: bold;
   }
 }
 :deep(.column_caret .cell) {

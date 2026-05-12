@@ -449,11 +449,13 @@
   </span>
 
   <!-- 订货# -->
-  <span v-else-if="item.label === '订货#'">
-    {{ row.orderCount }}
-    <br />
-    <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
-  </span>
+  <el-tooltip v-else-if="item.label === '订货#'" content="点击查看订货明细" effect="dark" placement="top">
+    <div class="order-detail-link">
+      {{ row.orderCount }}
+      <br />
+      <span>{{ row.orderTotalNumber }}</span>
+    </div>
+  </el-tooltip>
 
   <!-- 开发人员 -->
   <span v-else-if="item.label === '开发人员'">
@@ -1042,6 +1044,17 @@ const publishPrice = async (row: any) => {
     justify-content: flex-end;
     gap: 8px;
     margin-top: 12px;
+  }
+}
+.order-detail-link {
+  display: inline-block;
+  color: var(--el-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  span {
+    font-weight: bold;
   }
 }
 </style>

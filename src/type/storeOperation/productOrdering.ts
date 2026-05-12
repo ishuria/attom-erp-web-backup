@@ -271,3 +271,12 @@ export interface IGetOperationOrderTable {
   status: number
   arrivalDate: string
 }
+
+export interface IProductOrderTableOpenParams {
+  sku: string
+  site: number
+}
+
+export interface IProductOrderTableRef {
+  open: (params: IProductOrderTableOpenParams) => Promise<void>
+}

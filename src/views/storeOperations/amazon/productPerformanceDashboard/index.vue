@@ -568,6 +568,7 @@
     <!-- 文件上传 -->
     <sp-file-upload v-model:visible="spFileUploadVisible" :site-list="filteredSiteList" />
     <operation-log-manual-sum v-model:visible="logSummaryVisible" />
+    <vab-product-order-table ref="productOrderTableRef" />
   </div>
 </template>
 
@@ -620,6 +621,7 @@ import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
 import StoreOperationPermission from '/@/permissions/storeOperation'
 import { useAclStore } from '/@/store/modules/acl'
 import { useAiStore } from '/@/store/modules/ai'
+import type { IProductOrderTableRef } from '/@/type/storeOperation/productOrdering'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
@@ -636,6 +638,7 @@ defineOptions({
   name: 'ProductPerformanceDashboard',
 })
 
+const productOrderTableRef = ref<IProductOrderTableRef>()
 const userName = useUserStore().getUsername
 const currentRole = useAclStore().getRole
 const aiStore = useAiStore()
@@ -1780,6 +1783,14 @@ const cellClick = async (row: any, column: any) => {
       copyRow = row
       title.value = 'VOC满意度'
       fetchSkuVocData()
+      break
+    }
+    case '订货#': {
+      if (activeName.value !== 0) return
+      productOrderTableRef.value?.open({
+        sku: row.sku,
+        site: row.site,
+      })
       break
     }
     // No default
