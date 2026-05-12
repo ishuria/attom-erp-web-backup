@@ -1124,7 +1124,6 @@ const showAiTitleOptimization = async (row: any) => {
       await aiStore.switchConversation(conversationId)
       aiStore.setConversationBusy(conversationId, {
         reason: 'title-optimization',
-        message: '标题优化处理中，当前会话暂时不能发送消息，请等待结果返回。',
         placeholderText: '已提交标题优化请求，正在等待模型返回结果...',
       })
       $baseMessage('已开始标题优化，当前会话会在结果返回前禁止发送新消息', 'success')

@@ -41,7 +41,7 @@ export const streamAiMessage = async (
     attachments?: string[]
   },
   callbacks: StreamCallbacks,
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ) => {
   const response = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/api/v1/ai/conversations/${data.conversationId}/messages/stream`, {
     method: 'POST',

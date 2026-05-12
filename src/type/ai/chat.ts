@@ -88,7 +88,7 @@ export interface ChatConversation {
 
 export interface ChatConversationBusyState {
   reason: 'chat' | 'title-optimization' | 'evaluation-research-report'
-  message: string
+  message?: string
   placeholderMessageId?: number | string
 }
 

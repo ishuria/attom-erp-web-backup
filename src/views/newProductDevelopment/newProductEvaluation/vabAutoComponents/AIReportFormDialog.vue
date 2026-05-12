@@ -153,7 +153,6 @@ const submitAIReport = async () => {
     await aiStore.switchConversation(conversationId)
     aiStore.setConversationBusy(conversationId, {
       reason: 'evaluation-research-report',
-      message: 'AI调研报告生成中，当前会话暂时不能发送消息，请等待结果返回。',
       placeholderText: '已提交AI调研报告请求，正在等待模型返回结果...',
     })
     $baseMessage('已开始生成 AI 调研报告，生成期间暂无法发送新消息，请耐心等待结果返回。', 'success')

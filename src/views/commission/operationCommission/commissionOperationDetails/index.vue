@@ -186,7 +186,7 @@
                   :disabled="userSelectDisabled"
                   filterable
                   placeholder="全部"
-                  @change="queryAsinDetailData"
+                  @change="handleAsinDetailUserChange"
                 >
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
@@ -341,7 +341,7 @@
               <el-form-item label="人员">
                 <el-select
                   v-model="bonusDetailQueryForm.userId"
-                  :disabled="userSelectDisabled"
+                :disabled="userSelectDisabled"
                   filterable
                   placeholder="全部"
                   @change="queryBonusDetailData"
@@ -1117,14 +1117,23 @@ const fetchCurrencyList = async () => {
   currencyList.value.unshift({ id: -1, label: '原币种' })
 }
 
-// 运营分类筛选（当前用户创建的分类）
+// 运营分类筛选（按当前选择的运营人员获取其创建的分类）
 const operationTypeList = ref<{ id: number; typeName: string }[]>([])
 const fetchOperationTypeList = async () => {
-  const userId = useUserStore().getUserId
-  if (userId == null) return
+  const userId = asinDetailQueryForm.userId
+  operationTypeList.value = [{ id: -1, typeName: '全部' }]
+  if (userId == null || userId === -1) return
   const { data } = await getOperationTypeUserList({ userId })
-  operationTypeList.value = data || []
-  operationTypeList.value.unshift({ id: -1, typeName: '全部' })
+  if (data && data.length) {
+    operationTypeList.value.push(...data)
+  }
+}
+
+// 切换运营人员：重置已选分类、重拉分类下拉、刷新列表
+const handleAsinDetailUserChange = async () => {
+  asinDetailQueryForm.operationTypeId = -1
+  await fetchOperationTypeList()
+  await queryAsinDetailData()
 }
 onBeforeMount(async () => {
   await fetchSiteList()

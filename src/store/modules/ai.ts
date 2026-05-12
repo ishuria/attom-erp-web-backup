@@ -159,7 +159,7 @@ const buildStepSummary = (
   vertexId?: string,
   toolName?: string,
   durationMs?: number,
-  errorMessage?: string,
+  errorMessage?: string
 ): string => {
   const name = vertexName || vertexId || '未知节点'
   const tool = toolName || '未知工具'
@@ -478,6 +478,11 @@ export const useAiStore = defineStore('ai', {
     // 消息接口失败时保留现有本地消息，避免把空态误写成欢迎语。
     async loadMessages(id: number | string) {
       const key = String(id)
+      // setConversationBusy 注入的本地占位（id=local-xxx）不在服务端列表里，
+      // 流式期间若被全量覆盖，streamConversationReply 的 updatePlaceholder 会按 id 找不到目标、
+      // 静默丢弃后续 chunk，UI 看似"不流式"。finishConversationBusy 清掉 busyMap 后，
+      // 下一次调用会正常拉到持久化的最终消息。
+      if (this.conversationBusyMap[key]) return
       try {
         const response = await getAiMessageList(id)
         const list = pickArray(response).map(normalizeMessage)
@@ -494,11 +499,7 @@ export const useAiStore = defineStore('ai', {
      * - 老消息（progress_detail 表上线前）返回空数组，由面板显示"无思考过程数据"
      * - force=true：强制覆盖现有缓存，用于流式结束后用完整版替换 SSE 推送的预览版
      */
-    async fetchMessageFlowTrace(
-      conversationId: number | string,
-      requestId: string,
-      force = false,
-    ): Promise<AiStreamStepEvent[]> {
+    async fetchMessageFlowTrace(conversationId: number | string, requestId: string, force = false): Promise<AiStreamStepEvent[]> {
       if (!requestId) return []
       if (!force && this.stepsCache[requestId]) return this.stepsCache[requestId]
       try {
@@ -667,7 +668,7 @@ export const useAiStore = defineStore('ai', {
               })
             },
           },
-          abortController.signal,
+          abortController.signal
         )
       } catch (streamError: any) {
         const lastIndex = this.messages[key].length - 1
@@ -713,7 +714,7 @@ export const useAiStore = defineStore('ai', {
       conversationId: number | string,
       payload: {
         reason: ChatConversationBusyState['reason']
-        message: string
+        message?: string
         placeholderText?: string
       }
     ) {
@@ -727,13 +728,14 @@ export const useAiStore = defineStore('ai', {
         status: 'loading',
       }
 
-      this.messages[key] = this.messages[key] ?? []
-      this.messages[key] = [...this.messages[key], placeholderMessage]
+      // 先标 busy 再 push 占位：让任何并发的 loadMessages 在 push 前就被 busyMap 守卫拦住。
       this.conversationBusyMap[key] = {
         reason: payload.reason,
         message: payload.message,
         placeholderMessageId,
       }
+      this.messages[key] = this.messages[key] ?? []
+      this.messages[key] = [...this.messages[key], placeholderMessage]
     },
     finishConversationBusy(conversationId: number | string, content: string) {
       const key = String(conversationId)
@@ -822,11 +824,21 @@ export const useAiStore = defineStore('ai', {
 
       const placeholderMessageId = busyState.placeholderMessageId
 
+      // 若中途 messages[key] 被全量覆盖（如外部刷新绕过 busy 守卫），按 id 找不到占位时回退重新 append，避免静默丢 chunk。
       const updatePlaceholder = (patch: Partial<ChatMessage>) => {
         const list = [...(this.messages[key] ?? [])]
         const idx = list.findIndex((item) => String(item.id) === String(placeholderMessageId))
-        if (idx === -1) return
-        list[idx] = { ...list[idx], ...patch }
+        if (idx === -1) {
+          list.push({
+            id: placeholderMessageId,
+            role: 'assistant',
+            content: '',
+            status: 'loading',
+            ...patch,
+          })
+        } else {
+          list[idx] = { ...list[idx], ...patch }
+        }
         this.messages[key] = list
       }
 
@@ -841,6 +853,9 @@ export const useAiStore = defineStore('ai', {
             onChunk: (chunk) => {
               accumulated += chunk
               updatePlaceholder({ content: accumulated })
+            },
+            onStep: (step) => {
+              this.liveSteps = [...this.liveSteps, step]
             },
             onDone: (payload) => {
               const finalContent = accumulated || (typeof payload === 'object' ? payload?.content : '') || ''
