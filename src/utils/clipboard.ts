@@ -42,12 +42,14 @@ export const handleClip = (text: string) => {
   const { isSupported, copy } = useClipboard({ legacy: true })
   if (!isSupported) usePermission('clipboard-write')
 
-  copy(text)
+  return copy(text)
     .then(() => {
       clipboardSuccess(text)
+      return true
     })
     .catch(() => {
       clipboardError(text)
+      return false
     })
 }
 export default handleClipboard

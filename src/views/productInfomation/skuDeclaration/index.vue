@@ -60,9 +60,15 @@
       </el-table-column>
       <el-table-column fixed="left" label="SKU品名" :min-width="flexColumnWidth(list, 'SKU品名', 'sku')" prop="sku">
         <template #default="{ row }">
-          {{ row.sku }}
-          <br />
-          {{ row.description }}
+          <div class="sku-name-cell">
+            <div class="sku-line">
+              <span v-if="row.sku" class="sku-code copySku" @click.stop="handleClipboard($event, row.sku)">
+                {{ row.sku }}
+                <el-button class="copy-btn" :icon="CopyDocument" link type="primary" />
+              </span>
+            </div>
+            <div class="sku-description">{{ row.description || '-' }}</div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="UPC" :min-width="calculateBrColumnWidth(list, (row: any) => row.upc, 90)" prop="upc">
@@ -512,7 +518,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { CopyDocument, Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
@@ -532,6 +538,7 @@ import {
 } from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
 import { IGetCustomsClearanceSkuInfo } from '/@/type/productInformation/skuInformationType'
+import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
@@ -1099,7 +1106,52 @@ onBeforeMount(() => {
   gap: 8px;
   width: 100%;
 }
+.sku-name-cell {
+  min-width: 0;
+  line-height: 1.45;
+}
+.sku-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  gap: 4px;
+}
+.sku-code {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: color 0.2s;
+}
+.copySku:hover {
+  color: var(--el-text-color-secondary);
+}
+.sku-description {
+  margin-top: 2px;
+  color: var(--el-text-color-regular);
+  word-break: break-word;
+}
 .copy-btn {
   flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  padding: 0;
+  font-size: 16px;
+  color: var(--el-color-primary-dark-2);
+  opacity: 0.9;
+  vertical-align: middle;
+}
+.copy-btn:hover {
+  color: var(--el-color-primary);
+  opacity: 1;
 }
 </style>
