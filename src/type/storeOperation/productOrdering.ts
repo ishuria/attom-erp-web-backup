@@ -264,12 +264,14 @@ export interface IUpdateOperationOrderShipmentQuantityReq {
   planSite: number
 }
 export interface IGetOperationOrderTable {
+  id: number
   releaseDate: string
   po: string
   packageTaskCount: number
   sendSite: string
   status: number
   arrivalDate: string
+  needFollowUp: number
 }
 
 /**

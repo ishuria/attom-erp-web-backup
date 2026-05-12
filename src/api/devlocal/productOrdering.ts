@@ -122,3 +122,14 @@ export function getOperationRepackageTable(params: { sku: string; site: number }
     params,
   })
 }
+
+/**
+ * 打包任务-需跟进标记/取消
+ */
+export function updateTaskFollowUp(id: number, needFollowUp: number): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/task/${id}/follow-up`,
+    method: 'put',
+    data: needFollowUp,
+  })
+}

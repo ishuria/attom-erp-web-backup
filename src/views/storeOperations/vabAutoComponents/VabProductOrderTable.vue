@@ -31,7 +31,12 @@
         </el-table-column>
         <el-table-column label="需跟进产品" prop="needFollowUp" width="110">
           <template #default="{ row }">
-            <el-checkbox :false-value="0" :true-value="1" />
+            <el-checkbox
+              v-model="row.needFollowUp"
+              :false-value="0"
+              :true-value="1"
+              @change="(val) => handleFollowUpChange(row, val)"
+            />
           </template>
         </el-table-column>
         <template #empty>
@@ -72,7 +77,9 @@
 </template>
 
 <script setup lang="ts">
-import { getOperationOrderTable, getOperationRepackageTable } from '/@/api/devlocal/productOrdering'
+import type { CheckboxValueType } from 'element-plus'
+
+import { getOperationOrderTable, getOperationRepackageTable, updateTaskFollowUp } from '/@/api/devlocal/productOrdering'
 import type { IGetOperationOrderTable, IGetRepackageDetail, IProductOrderTableOpenParams } from '/@/type/storeOperation/productOrdering'
 
 defineOptions({
@@ -116,6 +123,16 @@ const isArrivalOverdue = (row: IGetOperationOrderTable) => {
 
 const getPackageTaskStatus = (status?: number | null) => {
   return status == null ? { label: '-', type: 'info' as TagType } : packageTaskStatusMap[status] || { label: '-', type: 'info' as TagType }
+}
+
+const handleFollowUpChange = async (row: IGetOperationOrderTable, val: CheckboxValueType) => {
+  const value = val === 1 ? 1 : 0
+  try {
+    await updateTaskFollowUp(row.id, value)
+  } catch {
+    row.needFollowUp = val === 1 ? 0 : 1
+    $baseMessage('更新失败，请重试', 'warning')
+  }
 }
 
 const open = async (params: IProductOrderTableOpenParams) => {
