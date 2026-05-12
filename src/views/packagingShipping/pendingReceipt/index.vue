@@ -171,7 +171,7 @@
               <div v-if="item.label === 'PO'">
                 <span class="copySku">
                   <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
-                  <vab-icon icon="file-copy-2-fill"  @click="handleClipboard($event, row.po)"/>
+                  <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
                 </span>
               </div>
               <div v-if="item.label === '零件图片'">
@@ -424,7 +424,7 @@
               <div v-if="item.label === 'PO'">
                 <span class="copySku">
                   <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
-                  <vab-icon icon="file-copy-2-fill"  @click="handleClipboard($event, row.po)"/>
+                  <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
                 </span>
               </div>
               <div v-if="item.label === '零件图片'">
@@ -1545,17 +1545,22 @@ onBeforeMount(async () => {
 })
 
 /******* PO明细弹窗 *******/
-const poDetailVisible = ref<boolean>(false);
-const poSkuId = ref<number>(null);
+const poDetailVisible = ref<boolean>(false)
+const poSkuId = ref<number | null>(null)
 // 打开PO明细弹窗
-const openPoDetail = (skuId) => {
-  poDetailVisible.value = true;
-  poSkuId.value = skuId;
+const openPoDetail = (skuId: any) => {
+  const id = skuId ?? null
+  if (id == null) {
+    ElMessage.warning('缺少 PO SKU') // 按需
+    return
+  }
+  poDetailVisible.value = true
+  poSkuId.value = id
 }
 // 关闭PO明细弹窗
 const closePoDetail = () => {
-  poDetailVisible.value = false;
-  poSkuId.value = null;
+  poDetailVisible.value = false
+  poSkuId.value = null
 }
 </script>
 
