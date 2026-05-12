@@ -29,11 +29,11 @@
             <el-tag :type="getPackageTaskStatus(row.status).type">{{ getPackageTaskStatus(row.status).label }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="需跟进产品" prop="needFollowUp" width="110">
+        <!-- <el-table-column label="需跟进产品" prop="needFollowUp" width="110">
           <template #default="{ row }">
             <el-checkbox :false-value="0" :true-value="1" />
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
         </template>
