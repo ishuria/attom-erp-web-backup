@@ -10,6 +10,7 @@ import type {
   IGetOperationOrderSpringFestival,
   IGetOperationOrdersSmoothness,
   IGetOperationOrderTable,
+  IGetRepackageDetail,
   IReleaseOperationPlanPoReq,
   IReleaseOperationPlanPoRes,
   IUpdateOperationOrderShipmentQuantityReq,
@@ -106,6 +107,17 @@ export function updateOperationOrderShipmentQuantity(data: IUpdateOperationOrder
 export function getOperationOrderTable(params: { sku: string; site: number }): Promise<{ data: IGetOperationOrderTable[] }> {
   return request({
     url: `${BASE_API}/package/task/order/detail`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * 产品订货-装错货补发明细查询
+ */
+export function getOperationRepackageTable(params: { sku: string; site: number }): Promise<{ data: IGetRepackageDetail[] }> {
+  return request({
+    url: `${BASE_API}/package/task/repackage/detail`,
     method: 'get',
     params,
   })

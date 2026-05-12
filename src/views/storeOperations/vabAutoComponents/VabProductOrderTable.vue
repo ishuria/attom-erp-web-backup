@@ -29,22 +29,51 @@
             <el-tag :type="getPackageTaskStatus(row.status).type">{{ getPackageTaskStatus(row.status).label }}</el-tag>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="需跟进产品" prop="needFollowUp" width="110">
+        <el-table-column label="需跟进产品" prop="needFollowUp" width="110">
           <template #default="{ row }">
             <el-checkbox :false-value="0" :true-value="1" />
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
         </template>
       </el-table>
+
+      <div v-if="repackageList.length > 0" class="repackage-section">
+        <el-divider class="repackage-divider">
+          <el-text class="repackage-divider-text" type="warning">
+            以下为装箱记录（原打包任务已归档，可能为补发/换码/历史数据）
+          </el-text>
+        </el-divider>
+        <el-table
+          v-loading="repackageLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="repackageList"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
+          <el-table-column label="装箱日期" prop="encasementDate" width="120">
+            <template #default="{ row }">
+              {{ formatDate(row.encasementDate) }}
+            </template>
+          </el-table-column>
+          <el-table-column label="装箱数量" prop="encasementCount" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="125" />
+          <el-table-column label="备注" min-width="180" prop="remarks" show-overflow-tooltip>
+            <template #default="{ row }">
+              {{ row.remarks || '-' }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </vab-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getOperationOrderTable } from '/@/api/devlocal/productOrdering'
-import type { IGetOperationOrderTable, IProductOrderTableOpenParams } from '/@/type/storeOperation/productOrdering'
+import { getOperationOrderTable, getOperationRepackageTable } from '/@/api/devlocal/productOrdering'
+import type { IGetOperationOrderTable, IGetRepackageDetail, IProductOrderTableOpenParams } from '/@/type/storeOperation/productOrdering'
 
 defineOptions({
   name: 'VabProductOrderTable',
@@ -64,6 +93,8 @@ const packageTaskStatusMap: Record<number, { label: string; type: TagType }> = {
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const list = ref<IGetOperationOrderTable[]>([])
+const repackageLoading = ref<boolean>(false)
+const repackageList = ref<IGetRepackageDetail[]>([])
 let querySeq = 0
 
 const formatDate = (date?: string | null) => {
@@ -91,6 +122,7 @@ const open = async (params: IProductOrderTableOpenParams) => {
   const currentSeq = ++querySeq
   visible.value = true
   list.value = []
+  repackageList.value = []
 
   if (!params.sku || params.site == null) {
     $baseMessage('缺少SKU或站点，无法查询订货明细!', 'warning')
@@ -98,17 +130,24 @@ const open = async (params: IProductOrderTableOpenParams) => {
   }
 
   loading.value = true
+  repackageLoading.value = true
   try {
-    const { data } = await getOperationOrderTable(params)
+    const [orderRes, repackageRes] = await Promise.allSettled([getOperationOrderTable(params), getOperationRepackageTable(params)])
     if (currentSeq !== querySeq) return
-    list.value = data
-  } catch {
-    if (currentSeq === querySeq) {
+
+    if (orderRes.status === 'fulfilled') {
+      list.value = orderRes.value.data
+    } else {
       $baseMessage('订货明细查询失败!', 'warning')
+    }
+
+    if (repackageRes.status === 'fulfilled') {
+      repackageList.value = repackageRes.value.data
     }
   } finally {
     if (currentSeq === querySeq) {
       loading.value = false
+      repackageLoading.value = false
     }
   }
 }
@@ -117,3 +156,10 @@ defineExpose({
   open,
 })
 </script>
+
+<style style="scss" scoped>
+.repackage-divider :deep(.el-divider__text),
+  .repackage-divider-text {
+    white-space: nowrap;
+  }
+</style>

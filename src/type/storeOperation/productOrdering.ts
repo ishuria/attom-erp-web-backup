@@ -272,6 +272,18 @@ export interface IGetOperationOrderTable {
   arrivalDate: string
 }
 
+/**
+ * 装错货补发明细
+ */
+export interface IGetRepackageDetail {
+  encasementNo: number
+  encasementDate: string
+  sendSite: string
+  sku: string
+  encasementCount: number
+  remarks: string
+}
+
 export interface IProductOrderTableOpenParams {
   sku: string
   site: number
