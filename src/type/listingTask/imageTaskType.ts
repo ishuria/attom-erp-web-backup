@@ -491,6 +491,8 @@ export interface IArtDesignTaskApprovalPageItem {
   skuImgUrl: string
   /** SKU */
   sku: string
+  /** 主站点ASIN */
+  asin?: string
   /** 产品描述 */
   productDesc: string
   /** 任务类型 */

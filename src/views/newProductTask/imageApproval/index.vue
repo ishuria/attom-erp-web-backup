@@ -45,6 +45,11 @@
           {{ row.productDesc }}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="ASIN" min-width="160" prop="asin">
+        <template #default="{ row }">
+          <span v-if="row.asin" class="asin-copy" @click="handleClip(row.asin)">{{ row.asin }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="任务类型" min-width="110" prop="taskType">
         <template #default="{ row }">
           <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
@@ -153,30 +158,28 @@
           {{ row.createTime ? formatDate(new Date(row.createTime)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="状态" min-width="100" prop="approvalStatus">
+      <el-table-column align="center" label="状态" min-width="115" prop="approvalStatus">
         <template #default="{ row }">
           <el-tag v-if="row.approvalStatus === 2" type="danger">审批不通过</el-tag>
           <el-tag v-else-if="row.approvalStatus === 0" type="warning">待审批</el-tag>
           <el-tag v-else-if="row.status === 2" type="success">已完成</el-tag>
-          <el-tag v-else-if="row.approvalStatus === 1" type="primary">审批通过</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" width="200">
+      <el-table-column align="center" fixed="right" label="操作" width="150">
         <template #default="{ row }">
-          <div style="display: flex; justify-content: center; gap: 16px">
-            <template v-if="row.approvalStatus === 0 && (row.approvalUserName === userName || canApprove)">
-              <el-link type="success" underline="never" @click="handlePass(row)">通过</el-link>
-              <el-link type="danger" underline="never" @click="handleReject(row)">不通过</el-link>
-            </template>
-            <el-link
-              v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_FINISH] }) && row.approvalStatus === 1 && row.status !== 2"
-              type="success"
-              underline="never"
-              @click="handleFinish(row)"
-            >
-              完成
+          <el-space v-if="row.approvalStatus === 0">
+            <el-link :disabled="row.approvalUserName !== userName && !canApprove" type="success" underline="never" @click="handlePass(row)">
+              通过
             </el-link>
-          </div>
+            <el-link
+              :disabled="row.approvalUserName !== userName && !canApprove"
+              type="danger"
+              underline="never"
+              @click="handleReject(row)"
+            >
+              不通过
+            </el-link>
+          </el-space>
         </template>
       </el-table-column>
       <template #empty>
@@ -209,10 +212,10 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
+import { handleClip } from '~/src/utils/clipboard'
 import { getTaskTypeColor, splitUsernames } from '../constantOption'
 import {
   approveArtDesignTask,
-  finishArtDesignTask,
   getArtDesignTaskApprovalPage,
   updateArtDesignTaskApprovalRework,
   updateProofreadingStatus,
@@ -224,19 +227,16 @@ import {
   ROLE_GRAPHICDESIGNLEAD_CODE,
   ROLE_PRODUCTMANNAGERLEAD_CODE,
 } from '/@/const/role'
-import ListingPermission from '/@/permissions/listing'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import type { IArtDesignTaskApprovalPageItem } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
-import { hasPermission } from '/@/utils/permission'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ImageApproval',
 })
 
-// 角色判断：BOSS 和平面设计主管可修改返工数
 const currentRoleCode = useAclStore().getRole[0]
 const canEditRework = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE
 const ableCheck = currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE
@@ -346,14 +346,11 @@ const handleUpdateProofreadingStatus = async (row: IArtDesignTaskApprovalPageIte
     fetchData()
   }
 }
-// 查看整改要求
-const stripHtml = (html: string) => {
-  const text = html
+const stripHtml = (html: string) =>
+  html
     .replace(/<[^>]*>/g, '')
     .replace(/&nbsp;/g, ' ')
     .trim()
-  return text.length > 50 ? text.slice(0, 50) + '...' : text
-}
 const correctionVisible = ref(false)
 const correctionContent = ref('')
 const handleViewCorrection = (row: IArtDesignTaskApprovalPageItem) => {
@@ -364,20 +361,6 @@ const handleViewCorrection = (row: IArtDesignTaskApprovalPageItem) => {
 const handleViewSellingPoint = (row: IArtDesignTaskApprovalPageItem) => {
   sellingPointSku.value = row.sku
   sellingPointVisible.value = true
-}
-// 完成
-const handleFinish = async (row: IArtDesignTaskApprovalPageItem) => {
-  $baseConfirm('确定要完成美工任务吗？', null, async () => {
-    try {
-      const { data } = await finishArtDesignTask({ id: row.artDesignTaskId })
-      if (data) {
-        $baseMessage('完成成功！', 'success')
-        fetchData()
-      }
-    } catch (error) {
-      console.error('完成任务失败:', error)
-    }
-  })
 }
 
 // 修改返工数
@@ -408,6 +391,7 @@ const handlePreviewImage = (url: string) => {
   imagePreviewList.value = [processedUrl]
   imagePreviewVisible.value = true
 }
+
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.column.label === '图片') {
     return 'clear-padding'
@@ -466,10 +450,15 @@ onMounted(() => {
 }
 
 .correction-preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   cursor: pointer;
-  color: var(--el-color-primary);
+  color: var(--el-text-color-regular);
+  line-height: 1.5;
   &:hover {
-    text-decoration: underline;
+    color: var(--el-color-primary);
   }
 }
 .correction-detail {
@@ -491,5 +480,14 @@ onMounted(() => {
 
 .person-tag {
   max-width: 100%;
+}
+
+.asin-copy {
+  cursor: pointer;
+
+  transition: opacity 0.2s;
+  &:hover {
+    opacity: 0.55;
+  }
 }
 </style>

@@ -68,7 +68,7 @@
       <el-form-item label="要求" prop="remark" :required="form.taskType === '设计任务' && !form.sku">
         <el-input v-model="form.remark" placeholder="如没有SKU，请填写产品中文名称" resize="none" :rows="3" type="textarea" />
       </el-form-item>
-      <el-form-item label="需求文件共享文档地址" prop="linkAddress" :required="form.taskType === '设计任务'">
+      <el-form-item label="需求文件共享文档地址" prop="linkAddress" required>
         <el-input v-model="form.linkAddress" clearable />
       </el-form-item>
     </el-form>
@@ -153,18 +153,7 @@ const rules = reactive<FormRules<PostTaskForm>>({
   position: [{ required: true, message: '请选择产品分类', trigger: 'change' }],
   finishDate: [{ required: true, message: '请选择要求完成日期', trigger: 'change' }],
   artDesignType: [{ required: true, type: 'array', min: 1, message: '请选择设计类型', trigger: 'change' }],
-  linkAddress: [
-    {
-      validator: (_rule, value, callback) => {
-        if (form.taskType === '设计任务' && !value) {
-          callback(new Error('请输入需求文件共享文档地址'))
-        } else {
-          callback()
-        }
-      },
-      trigger: ['blur', 'change'],
-    },
-  ],
+  linkAddress: [{ required: true, message: '请输入需求文件共享文档地址', trigger: ['blur', 'change'] }],
   remark: [
     {
       validator: (_rule, value, callback) => {

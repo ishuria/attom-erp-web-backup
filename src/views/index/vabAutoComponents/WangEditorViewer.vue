@@ -95,6 +95,26 @@ onBeforeUnmount(() => {
       border: none !important;
       box-shadow: none !important;
       background: transparent !important;
+      font-size: 18px;
+
+      p,
+      span,
+      li,
+      div,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      td,
+      th,
+      strong,
+      em,
+      b,
+      i {
+        font-size: 18px;
+      }
     }
 
     :deep(.w-e-text) {
@@ -105,12 +125,10 @@ onBeforeUnmount(() => {
       min-height: auto !important;
     }
 
-    // 隐藏工具栏
     :deep(.w-e-toolbar) {
       display: none !important;
     }
 
-    // 图片可点击提示
     :deep(img) {
       cursor: zoom-in;
     }
