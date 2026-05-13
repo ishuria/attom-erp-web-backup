@@ -537,10 +537,10 @@ const handleCloseDialog = () => {
 const confirmUpdateEncasement = async () => {
   const { data } = await updateEncasement({
     id: props.encasementId,
-    grossWeight: Number(modifyForm.grossWeight),
-    length: Number(modifyForm.length),
-    width: Number(modifyForm.width),
-    height: Number(modifyForm.height),
+    grossWeight: modifyForm.grossWeight,
+    length: modifyForm.length,
+    width: modifyForm.width,
+    height: modifyForm.height,
     site: modifyForm.siteId,
     boxNumber: Number(modifyForm.boxNumber),
     skuList: skuDetailList.value,
