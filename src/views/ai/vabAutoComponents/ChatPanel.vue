@@ -105,7 +105,7 @@ const currentTitle = computed(() => aiStore.activeConversation?.title ?? '')
 const busyState = computed(() => aiStore.activeConversationBusyState)
 const hasActiveConversation = computed(() => !!aiStore.activeConversationId)
 const inputDisabled = computed(
-  () => (!hasActiveConversation.value && !aiStore.isNewChatMode) || aiStore.loading || aiStore.isStreaming || !!busyState.value
+  () => (!hasActiveConversation.value && !aiStore.isNewChatMode) || aiStore.activeLoading || aiStore.activeIsStreaming || !!busyState.value
 )
 const busyMessage = computed(() => busyState.value?.message ?? '')
 const inputPlaceholder = computed(() => {

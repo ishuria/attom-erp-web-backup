@@ -49,7 +49,7 @@
                   />
                 </div>
                 <div class="subtitle">
-                  <span>{{ formatRelativeTime(item.createdAt) }}</span>
+                  <span>{{ formatRelativeTime(item.lastMessageAt ?? item.createdAt) }}</span>
                   <span v-if="item.messageCount">· {{ item.messageCount }} 条消息</span>
                 </div>
               </div>

@@ -34,6 +34,7 @@ const normalizeConversation = (item: any): ChatConversation => ({
   id: item?.id ?? createLocalId('conv'),
   title: item?.title ?? '新建对话',
   createdAt: item?.createdAt ?? item?.createTime ?? dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  lastMessageAt: item?.lastMessageAt ?? undefined,
   unreadCount: Math.max(0, Number(item?.unreadCount ?? item?.unreadNum ?? item?.noReadCount ?? 0) || 0),
   messageCount: Math.max(0, Number(item?.messageCount ?? item?.msgCount ?? 0) || 0),
 })
@@ -227,9 +228,9 @@ export const useAiStore = defineStore('ai', {
   state: () => ({
     // 弹窗/侧边 AI 面板的打开状态。
     isOpen: true,
-    // 当前是否处于流式或请求中，供输入框和发送按钮禁用使用。
-    isStreaming: false,
-    loading: false,
+    // 按 conversationId 隔离的流式/loading 状态，支持多会话并行
+    streamingMap: {} as Record<string, boolean>,
+    loadingMap: {} as Record<string, boolean>,
     // 避免重复初始化会话列表。
     initialized: false,
     currentModel: 'gpt-4o-mini',
@@ -244,12 +245,12 @@ export const useAiStore = defineStore('ai', {
     networkOnline: true,
     // 新建聊天模式：无激活会话，输入框可用，发送时才创建会话。
     isNewChatMode: false,
-    // 当前流式中的"思考链"步骤事件（vertex / tool / error，含 summary 文案）
-    liveSteps: [] as AiStreamStepEvent[],
+    // 按 conversationId 隔离的"思考链"步骤事件（vertex / tool / error，含 summary 文案）
+    liveStepsMap: {} as Record<string, AiStreamStepEvent[]>,
     // 历史思考链缓存：key = requestId（来自 GET /flow-trace）
     stepsCache: {} as Record<string, AiStreamStepEvent[]>,
-    // 当前 sendMessage 的 AbortController，用于"停止"按钮中断 fetch
-    currentAbortController: null as AbortController | null,
+    // 按 conversationId 隔离的 AbortController，用于"停止"按钮中断 fetch
+    abortControllerMap: {} as Record<string, AbortController>,
   }),
   getters: {
     // 当前激活会话对象。
@@ -269,10 +270,22 @@ export const useAiStore = defineStore('ai', {
       const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
       return key ? !!state.feishuDocCreatingMap[key] : false
     },
+    activeIsStreaming(state) {
+      const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
+      return key ? !!state.streamingMap[key] : false
+    },
+    activeLoading(state) {
+      const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
+      return key ? !!state.loadingMap[key] : false
+    },
+    activeLiveSteps(state): AiStreamStepEvent[] {
+      const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
+      return key ? (state.liveStepsMap[key] ?? []) : []
+    },
     // 没有激活会话或请求进行中时，不允许发送。
     canSend(state) {
       const key = state.activeConversationId == null ? '' : String(state.activeConversationId)
-      return !state.loading && !state.isStreaming && !state.conversationBusyMap[key] && !!state.activeConversationId
+      return !!key && !state.loadingMap[key] && !state.streamingMap[key] && !state.conversationBusyMap[key]
     },
     // 基于搜索关键词过滤会话列表。
     filteredConversations(state) {
@@ -280,7 +293,7 @@ export const useAiStore = defineStore('ai', {
       if (!keyword) return state.conversations
       return state.conversations.filter((item) => item.title.toLowerCase().includes(keyword))
     },
-    // 按 createdAt 分为今天/昨天/更早三组。
+    // 按 lastMessageAt（无则回退 createdAt）分为今天/昨天/更早三组。
     groupedConversations() {
       const list = this.filteredConversations
       const now = dayjs()
@@ -289,7 +302,7 @@ export const useAiStore = defineStore('ai', {
       const earlier: ChatConversation[] = []
 
       for (const item of list) {
-        const d = dayjs(item.createdAt)
+        const d = dayjs(item.lastMessageAt ?? item.createdAt)
         if (d.isSame(now, 'day')) today.push(item)
         else if (d.isSame(now.subtract(1, 'day'), 'day')) yesterday.push(item)
         else earlier.push(item)
@@ -540,26 +553,34 @@ export const useAiStore = defineStore('ai', {
      * 原因：abort 会触发后端 emitter onError(Broken pipe)，按"客户端断开"分支处理（不取消 handle），
      * 必须先走显式 cancel API 才能取消 LangFlow。
      */
-    async cancelStream() {
-      const cid = this.activeConversationId
+    async cancelStream(conversationId?: number | string) {
+      const cid = conversationId ?? this.activeConversationId
       if (!cid) return
+      const key = String(cid)
       try {
         await cancelAiStream(cid)
       } catch (e) {
         console.warn('[ai] cancel API 失败', e)
       }
-      this.currentAbortController?.abort()
-      this.currentAbortController = null
+      this.abortControllerMap[key]?.abort()
+      delete this.abortControllerMap[key]
     },
     // 删除当前激活会话后，优先切到列表中的下一个；如果已空则保留零会话状态。
     async removeConversation(id: number | string) {
       await deleteAiConversation(id)
 
-      this.conversations = this.conversations.filter((item) => String(item.id) !== String(id))
-      delete this.messages[String(id)]
-      delete this.conversationBusyMap[String(id)]
+      const idKey = String(id)
+      this.conversations = this.conversations.filter((item) => String(item.id) !== idKey)
+      delete this.messages[idKey]
+      delete this.conversationBusyMap[idKey]
+      // 流式相关状态全部清理，并中止正在进行的 fetch
+      this.abortControllerMap[idKey]?.abort()
+      delete this.abortControllerMap[idKey]
+      delete this.streamingMap[idKey]
+      delete this.loadingMap[idKey]
+      delete this.liveStepsMap[idKey]
 
-      if (String(this.activeConversationId) === String(id)) {
+      if (String(this.activeConversationId) === idKey) {
         if (this.conversations.length > 0) await this.switchConversation(this.conversations[0].id)
         else {
           this.activeConversationId = null
@@ -628,14 +649,14 @@ export const useAiStore = defineStore('ai', {
         }
         this.messages[key] = list
       }
-      this.loading = true
-      this.isStreaming = true
-      // 重置思考过程实时面板，确保新一轮流式不会显示上次残留事件
-      this.liveSteps = []
+      this.loadingMap[key] = true
+      this.streamingMap[key] = true
+      // 重置该会话的思考过程实时面板，确保新一轮流式不会显示上次残留事件
+      this.liveStepsMap[key] = []
       // 创建 AbortController 让"停止"按钮能中断 fetch；旧的（理论上不会有）先 abort 防御
-      this.currentAbortController?.abort()
+      this.abortControllerMap[key]?.abort()
       const abortController = new AbortController()
-      this.currentAbortController = abortController
+      this.abortControllerMap[key] = abortController
 
       let accumulated = ''
       try {
@@ -652,8 +673,8 @@ export const useAiStore = defineStore('ai', {
               updateAssistantMessage({ content: accumulated })
             },
             onStep: (step) => {
-              // 结构化思考链步骤：累积到 liveSteps，前端 panel 实时渲染
-              this.liveSteps = [...this.liveSteps, { ...step, receivedAt: Date.now() }]
+              // 结构化思考链步骤：按会话 key 累积，前端 panel 实时渲染
+              this.liveStepsMap[key] = [...(this.liveStepsMap[key] ?? []), { ...step, receivedAt: Date.now() }]
             },
             onDone: (payload) => {
               updateAssistantMessage({
@@ -679,17 +700,17 @@ export const useAiStore = defineStore('ai', {
           })
         }
       } finally {
-        this.loading = false
-        this.isStreaming = false
-        // 仅当本次 controller 仍然挂在 store 上才清掉（避免覆盖后续新发起的 sendMessage）
-        if (this.currentAbortController === abortController) {
-          this.currentAbortController = null
+        delete this.loadingMap[key]
+        delete this.streamingMap[key]
+        // 仅当本次 controller 仍然挂在 map 上才清掉（避免覆盖后续新发起的 sendMessage）
+        if (this.abortControllerMap[key] === abortController) {
+          delete this.abortControllerMap[key]
         }
 
         // 流式结束后 reload 消息（让本地 assistant 消息拿到真实 requestId），
         // 并把 liveSteps 缓存到 stepsCache，避免用户立即点击"查看思考过程"再走一次接口
-        const cachedSteps = [...this.liveSteps]
-        this.liveSteps = []
+        const cachedSteps = [...(this.liveStepsMap[key] ?? [])]
+        delete this.liveStepsMap[key]
         try {
           await this.loadMessages(conversationId)
           if (cachedSteps.length > 0) {
@@ -842,8 +863,9 @@ export const useAiStore = defineStore('ai', {
         this.messages[key] = list
       }
 
-      this.isStreaming = true
-      this.loading = true
+      this.streamingMap[key] = true
+      this.loadingMap[key] = true
+      this.liveStepsMap[key] = []
 
       let accumulated = ''
       try {
@@ -855,7 +877,7 @@ export const useAiStore = defineStore('ai', {
               updatePlaceholder({ content: accumulated })
             },
             onStep: (step) => {
-              this.liveSteps = [...this.liveSteps, step]
+              this.liveStepsMap[key] = [...(this.liveStepsMap[key] ?? []), step]
             },
             onDone: (payload) => {
               const finalContent = accumulated || (typeof payload === 'object' ? payload?.content : '') || ''
@@ -872,8 +894,9 @@ export const useAiStore = defineStore('ai', {
           this.failConversationBusy(conversationId, accumulated || `请求失败：${streamError?.message ?? '响应异常'}`)
         }
       } finally {
-        this.isStreaming = false
-        this.loading = false
+        delete this.streamingMap[key]
+        delete this.loadingMap[key]
+        delete this.liveStepsMap[key]
       }
     },
     async handleCreateFeishuDoc(prompt?: string) {
@@ -965,8 +988,14 @@ export const useAiStore = defineStore('ai', {
     // 供页面卸载或重新进入时重置 AI 模块状态。
     resetState() {
       this.isOpen = true
-      this.isStreaming = false
-      this.loading = false
+      // 中止所有遗留 fetch
+      for (const key of Object.keys(this.abortControllerMap)) {
+        this.abortControllerMap[key]?.abort()
+      }
+      this.streamingMap = {}
+      this.loadingMap = {}
+      this.liveStepsMap = {}
+      this.abortControllerMap = {}
       this.initialized = false
       this.currentModel = 'gpt-4o-mini'
       this.conversations = []

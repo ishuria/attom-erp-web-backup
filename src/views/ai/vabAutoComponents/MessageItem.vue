@@ -156,7 +156,7 @@ const historySteps = ref<AiStreamStepEvent[]>([])
 const progressLoading = ref(false)
 
 const progressSteps = computed<AiStreamStepEvent[]>(() =>
-  isCurrentlyStreaming.value ? aiStore.liveSteps : historySteps.value,
+  isCurrentlyStreaming.value ? aiStore.activeLiveSteps : historySteps.value,
 )
 
 const toggleProgress = async () => {

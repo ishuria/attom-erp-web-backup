@@ -178,12 +178,12 @@
             生成飞书文档
           </el-button>
           <el-button
-            v-if="aiStore.isStreaming"
+            v-if="aiStore.activeIsStreaming"
             class="stop-btn"
             type="danger"
             circle
             title="停止生成"
-            @click="aiStore.cancelStream"
+            @click="aiStore.cancelStream()"
           >
             <vab-icon icon="stop-fill" />
           </el-button>

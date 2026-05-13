@@ -82,6 +82,8 @@ export interface ChatConversation {
   id: number | string
   title: string
   createdAt?: string
+  /** 最近一条消息时间，用于列表显示和分组排序 */
+  lastMessageAt?: string
   unreadCount?: number
   messageCount?: number
 }
