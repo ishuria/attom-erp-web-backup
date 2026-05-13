@@ -89,6 +89,11 @@ export interface IGetSignList {
   suppliserName?: string
 
   unit?: string
+
+  /**
+   * 是否需跟进 0否 1是
+   */
+  needFollowUp?: number
 }
 
 export interface IUpdateProductDate {

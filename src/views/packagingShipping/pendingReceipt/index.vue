@@ -240,8 +240,12 @@
                   <el-option v-for="item in problemReasonOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </div>
+              <div v-if="item.label === '需跟进产品'">
+                <el-checkbox v-model="row.needFollowUp" disabled :false-value="0" :true-value="1" />
+              </div>
             </template>
           </el-table-column>
+
 
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
@@ -501,6 +505,9 @@
               <div v-if="item.label === '问题原因'">
                 {{ problemReasonOption.find((item) => item.value === row.problemReason)?.label }}
               </div>
+              <div v-if="item.label === '需跟进产品'">
+                <el-checkbox v-model="row.needFollowUp" disabled :false-value="0" :true-value="1" />
+              </div>
             </template>
           </el-table-column>
 
@@ -662,7 +669,7 @@
       </template>
     </vab-dialog>
     <!-- PO明细 -->
-    <poDetail v-model="poDetailVisible" :poSkuId="poSkuId" :close="closePoDetail" />
+    <po-detail v-model="poDetailVisible" :close="closePoDetail" :poSkuId="poSkuId" />
   </div>
 </template>
 
