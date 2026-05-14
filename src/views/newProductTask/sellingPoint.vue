@@ -426,7 +426,6 @@ watch(
   () => route.query.id,
   async (newId, oldId) => {
     // 2. 核心判断：确保当前还在“卖点页面”（避免在其他页面因为 id 变化被误触发）
-    // 请将 'SellingPoint' 替换为你在路由配置中给该页面设置的实际 name
     if (route.name !== 'SellingPoint') return
 
     // 3. 确保 id 真的发生了变化，且新 id 存在
