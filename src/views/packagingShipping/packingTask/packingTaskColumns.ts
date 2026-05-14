@@ -191,6 +191,14 @@ export const packingTaskColumns: PackingTaskColumn[] = [
     width: 130,
     visibleInTabs: [7, 1, 5, 2, 3, 4], // 不在"未到货"显示
   },
+  // {
+  //   key: 'verifyStatus',
+  //   label: '验证状态',
+  //   prop: 'verifyStatus',
+  //   width: 140,
+  //   visibleInTabs: [5], // 仅"进行中"
+  //   customSlot: true,
+  // },
   {
     key: 'packageRemarkList',
     label: '打包注意事项',

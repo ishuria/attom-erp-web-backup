@@ -252,6 +252,7 @@
           @show-parts-list="handleShowPartsList"
           @show-quality-inspection-report="handleShowQualityInspectionReport"
           @show-split-task="showSplitTask"
+          @verify-bar-code="showVerifyBarCode"
         />
         <vab-pagination
           :current-page="taskingForm.pageNo"
@@ -1055,6 +1056,8 @@
     <vab-packing-inspection-report v-model="qualityInspectionReportVisible" :sku="sku" :task-id="taskId" />
     <!-- 打包反馈 -->
     <vab-package-feedback-dialog v-model="feedbackDialogVisible" :current-row="feedbackCurrentRow" @submitted="fetchDataByStatus" />
+    <!-- 验证 -->
+    <packaging-verify-bar-code-dialog v-model="verifyBarCodeDialogVisible" :site="verifyBarCodeSite" @verified="onVerified" />
   </div>
 </template>
 
@@ -1063,8 +1066,8 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { computed, ref } from 'vue'
-import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
 import { sizeOption } from '../constantOption'
+import PackagingVerifyBarCodeDialog from '../vabAutoComponents/PackagingVerifyBarCodeDialog.vue'
 import { getColumnsForTab, type PackingTaskColumn } from './packingTaskColumns'
 import {
   addQualityCheck,
@@ -1097,7 +1100,9 @@ import {
   splitPackageTask,
   updatePackageTask,
   updatePackageTaskSite,
+  verifyPackageTask,
 } from '/@/api/devlocal/packagingShipping'
+import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
 import { updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import PackingTaskPermission from '/@/permissions/packingTask'
 import { useUserStore } from '/@/store/modules/user'
@@ -1110,6 +1115,32 @@ defineOptions({
   name: 'PackingTask',
 })
 
+// 验证条形码
+const verifyBarCodeDialogVisible = ref<boolean>(false)
+const verifyBarCodeSite = ref<number>(-1)
+// 当前正在验证的任务行（弹窗 emit verified 时拿来回调接口用）
+const verifyCurrentRow = ref<any>(null)
+// 打开验证条形码
+const showVerifyBarCode = (row: any) => {
+  verifyCurrentRow.value = row
+  verifyBarCodeSite.value = row.siteCode
+  verifyBarCodeDialogVisible.value = true
+}
+// 扫码成功后回调，把验证结果落库
+const onVerified = async (product: { fnSkuOrUpc: string; sku: string }) => {
+  if (!verifyCurrentRow.value?.id) return
+  const { data } = await verifyPackageTask({
+    taskId: verifyCurrentRow.value.id,
+    fnSkuOrUpc: product.fnSkuOrUpc,
+    scannedSku: product.sku,
+  })
+  if (data) {
+    $baseMessage('验证成功', 'success')
+    await fetchTaskingData()
+  } else {
+    $baseMessage('验证写入失败，请重试', 'error')
+  }
+}
 const selectedRowIndex = ref<number>(-1)
 // 行点击处理函数
 const handleRowClick = (row: any, column: any, event: Event) => {
@@ -1159,11 +1190,7 @@ const handleInspectionChange = async (row: any) => {
   // 修改后不更新表格
   await updateProductQualityInspection(row)
 }
-// const handleOpenTest = async () => {
-//   testVisible.value = true
-//   const { data } = await getMorkPackageList()
-//   testList.value = data
-// }
+
 const selectTestRows = ref<any>([])
 const setSelectTestRows = (value: any) => {
   selectTestRows.value = value

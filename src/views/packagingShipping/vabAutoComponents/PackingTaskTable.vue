@@ -147,6 +147,20 @@
         </template>
       </el-table-column>
 
+      <!-- 验证状态 -->
+      <!-- <el-table-column v-else-if="column.key === 'verifyStatus'" :label="column.label" :prop="column.prop" :width="column.width">
+        <template #default="{ row }">
+          <el-tooltip v-if="row.verifyStatus === 1" effect="dark" placement="top">
+            <template #content>
+              <div>验证人：{{ row.verifyUserName || '-' }}</div>
+              <div>验证时间：{{ row.verifyTime ? formatDate(new Date(row.verifyTime)) : '-' }}</div>
+            </template>
+            <el-tag type="success">已验证 / {{ row.verifyUserName || '-' }}</el-tag>
+          </el-tooltip>
+          <el-tag v-else type="info">未验证</el-tag>
+        </template>
+      </el-table-column> -->
+
       <!-- 打包注意事项 -->
       <el-table-column
         v-else-if="column.key === 'packageRemarkList'"
@@ -181,6 +195,12 @@
                   @click="handleGetPackageCodePath(row)"
                 >
                   <el-link type="primary" underline="never">条码文件夹</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item
+                  v-if="props.showVerify && hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_VERIFY] })"
+                  @click="handleVerifyBarCode(row)"
+                >
+                  <el-link type="primary" underline="never">验证</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item
                   v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
@@ -263,9 +283,9 @@
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import { computed } from 'vue'
-import { updateIsClaimable } from '~/src/api/devlocal/packagingShipping'
-import { useAclStore } from '~/src/store/modules/acl'
+import { updateIsClaimable } from '/@/api/devlocal/packagingShipping'
 import PackingTaskPermission from '/@/permissions/packingTask'
+import { useAclStore } from '/@/store/modules/acl'
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 import { hasPermission } from '/@/utils/permission'
@@ -284,10 +304,13 @@ interface Props {
   cellStyle?: (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => any
   headerCellStyle?: any
   rowClassName?: (data: { row: any; rowIndex: number }) => string
+  // 仅"进行中"tab需要展示"验证"操作项，由父组件按 tab 传入
+  showVerify?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
+  showVerify: false,
 })
 
 const emit = defineEmits<{
@@ -307,6 +330,7 @@ const emit = defineEmits<{
   deleteTask: [row: any]
   showFeedback: [row: any]
   sortChange: [orderByField: string, orderDirection: string]
+  verifyBarCode: [row: any]
 }>()
 
 // 过滤出可见的列
@@ -340,6 +364,10 @@ const handleImageClick = (url: string) => {
 
 const handleGetPackageCodePath = (row: any) => {
   emit('getPackageCodePath', row)
+}
+
+const handleVerifyBarCode = (row: any) => {
+  emit('verifyBarCode', row)
 }
 
 const handleShowPartsList = (row: any) => {

@@ -217,6 +217,18 @@ export interface IGetPackageTaskList {
    * sku图片地址
    */
   skuImageUrl?: string
+  /**
+   * 验证状态 0未验证 1已验证
+   */
+  verifyStatus?: number
+  /**
+   * 验证时间
+   */
+  verifyTime?: string
+  /**
+   * 验证人姓名
+   */
+  verifyUserName?: string
   [property: string]: any
 }
 
@@ -805,6 +817,15 @@ export interface IUpdateAfterSalesLog {
 
 export interface ITaskId {
   taskId: number
+}
+
+/**
+ * 打包任务-扫码验证请求
+ */
+export interface IVerifyPackageTaskReq {
+  taskId: number
+  fnSkuOrUpc: string
+  scannedSku?: string
 }
 
 export interface IGetPackageTaskSplitList {

@@ -108,11 +108,15 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getEncasementSku, printBarcodeEncasement, submitEncasementSku } from '/@/api/devlocal/encasement'
+import { SiteEnum } from '/@/const/site'
 import { usePackingStore } from '/@/store/modules/packing'
 import type { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 import { flexColumnWidth } from '/@/utils/tableColum'
+
+// 走 GTIN 的站点（条码前可能带前导 00 需要剥掉）
+const GTIN_SITES: ReadonlySet<number> = new Set([SiteEnum.WALMART_US, SiteEnum.TIKTOK_US])
 
 let props = defineProps<{
   packingVisible: boolean
@@ -148,7 +152,7 @@ const confirmFormRules = reactive<FormRules<{ encaseCount: number | undefined }>
 const barcodeDisabled = ref<boolean>(false)
 watchEffect(() => {
   dflag.value = props.packingVisible
-  if (props.site === 4) {
+  if (props.site !== undefined && GTIN_SITES.has(props.site)) {
     upcOrFnSku.value = 'GTIN'
   }
   if (dflag.value) {
@@ -338,11 +342,9 @@ const processBarcodeScan = async (barcodeValue: string) => {
 
   packingForm.fnSkuOrUpc = barcodeValue
   let str = barcodeValue
-  if (props.site === 4 && barcodeValue.startsWith('00')) {
-    str = barcodeValue.substring(2) // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
-  }
-  if (props.site === 16 && barcodeValue.startsWith('00')) {
-    str = barcodeValue.substring(2) // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
+  // 沃尔玛/Tiktok 的 GTIN 扫枪可能带前导 00，需要去掉
+  if (props.site !== undefined && GTIN_SITES.has(props.site) && barcodeValue.startsWith('00')) {
+    str = barcodeValue.substring(2)
   }
 
   // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框

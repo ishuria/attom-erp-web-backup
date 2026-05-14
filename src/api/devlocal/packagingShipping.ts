@@ -68,6 +68,7 @@ import type {
   IPackageFeedbackUpdateStatusReq,
   IPackageFeedbackListResp,
   IPackageFeedbackItemResp,
+  IVerifyPackageTaskReq,
 } from '/@/type/packagingShipping/packagingType'
 
 import type {
@@ -545,6 +546,14 @@ export function getBarCodePath(params: ITaskId): Promise<IStringResp> {
     url: `${BASE_API}/package/task/getBarCodePath`,
     method: 'get',
     params,
+  })
+}
+// 打包任务-扫码验证
+export function verifyPackageTask(data: IVerifyPackageTaskReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/task/verify`,
+    method: 'post',
+    data,
   })
 }
 // 获取发货站点列表
