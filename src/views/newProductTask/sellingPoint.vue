@@ -404,9 +404,8 @@ const fetchSellingPointData = async () => {
     })
     _id.value = data.id!
     Object.assign(form, data)
-  } else {
+  } else if (querySkus && querySkus?.length > 0) {
     // 批量修改，直接从后端获取数据
-
     sku.value = querySkus.split(',').sort().join(',')
     const { data } = await getBatchArtDesignSellingPoint({
       skus: sku.value,
