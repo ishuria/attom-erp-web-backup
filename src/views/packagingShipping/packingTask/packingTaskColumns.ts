@@ -115,13 +115,6 @@ export const packingTaskColumns: PackingTaskColumn[] = [
     visibleInTabs: [7, 1, 5, 2, 3, 4, 0],
   },
   {
-    key: 'goodCount',
-    label: '完成数',
-    prop: 'goodCount',
-    width: 100,
-    visibleInTabs: [7, 1, 5, 2, 3, 4, 0],
-  },
-  {
     key: 'signCount',
     label: '签收数',
     prop: 'signCount',
