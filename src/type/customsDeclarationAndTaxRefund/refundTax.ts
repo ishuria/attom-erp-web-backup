@@ -299,6 +299,8 @@ export interface IGetTaxRefundInvoiceList {
   suppliser?: string
   remainingCount: number
   taxRefundId?: number
+  /** HS 征免税类型：退税 / 征税 / 免税 */
+  hsTaxType?: string
 }
 
 export interface IFinishTaxRefundInvoiceRes {
@@ -740,4 +742,6 @@ export interface IGetTaxRefundMainInvoiceList {
   /** 匹配发票数量 */
   matchInvoiceCount?: number
   purchaseName?: string
+  /** HS 征免税类型：退税 / 征税 / 免税 */
+  hsTaxType?: string
 }

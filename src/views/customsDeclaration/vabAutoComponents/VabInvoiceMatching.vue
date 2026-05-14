@@ -184,6 +184,11 @@
             <span>{{ row.preTaxPrice }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="征免税类型" prop="hsTaxType" :width="110">
+          <template #default="{ row }">
+            <el-tag v-if="row.hsTaxType" :type="hsTaxTypeTagMap[row.hsTaxType]">{{ row.hsTaxType }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           label="匹配合同号"
           prop="matchContractNumber"
@@ -466,6 +471,12 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'VabInvoiceMatching',
 })
+
+const hsTaxTypeTagMap: Record<string, 'primary' | 'success' | 'danger'> = {
+  退税: 'primary',
+  征税: 'danger',
+  免税: 'success',
+}
 
 const pdfVisible = ref<boolean>(false)
 const pdfLoading = ref<boolean>(false)

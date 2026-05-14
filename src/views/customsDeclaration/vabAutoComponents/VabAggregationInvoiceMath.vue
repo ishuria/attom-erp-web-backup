@@ -12,8 +12,8 @@
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
-<!--          <el-button type="primary" @click="showPathImport">发票路径导入</el-button>-->
-<!--          <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>-->
+          <!--          <el-button type="primary" @click="showPathImport">发票路径导入</el-button>-->
+          <!--          <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>-->
           <el-button type="primary" @click="showUploadInvoice('repeat')">发票导入</el-button>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
@@ -151,6 +151,11 @@
               />
             </div>
             <span>{{ row.preTaxPrice }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="征免税类型" prop="hsTaxType" :width="110">
+          <template #default="{ row }">
+            <el-tag v-if="row.hsTaxType" :type="hsTaxTypeTagMap[row.hsTaxType]">{{ row.hsTaxType }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -319,19 +324,17 @@
 </template>
 
 <script lang="ts" setup>
-import { InfoFilled, Search, UploadFilled } from '@element-plus/icons-vue'
+import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
   cancelTaxRefundMainInvoice,
-  cleanTaxRefundInvoice,
   cleanTaxRefundMainInvoice,
   dealTaxRefundInvoicePath,
   deleteTaxRefundInvoice,
   finishTaxRefundInvoice,
   finishTaxRefundInvoiceRepeat,
-  getInvoiceDetail,
   getTaxRefundMainInvoiceList,
   getTaxRefundMainInvoiceMatch,
   submitConfirmTaxRefundInvoiceMatch,
@@ -340,7 +343,6 @@ import {
   taxRefundInvoiceMatchFlag,
   updateTaxRefundInvoice,
   updateTaxRefundInvoiceDetail,
-  updateTaxRefundInvoiceMatchFlag,
   uploadTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import VabPdf from '/@/plugins/VabPdf'
@@ -357,6 +359,12 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'VabAggregationInvoiceMath',
 })
+
+const hsTaxTypeTagMap: Record<string, 'primary' | 'success' | 'danger'> = {
+  退税: 'primary',
+  征税: 'danger',
+  免税: 'success',
+}
 
 const pdfVisible = ref<boolean>(false)
 const pdfLoading = ref<boolean>(false)
@@ -655,19 +663,17 @@ const handleCleanInvoice = async (row: IGetTaxRefundMainInvoiceList) => {
 }
 // 删除发票
 const handleDeleteInvoice = async (row: IGetTaxRefundMainInvoiceList) => {
-    // 保存当前选中的行
-    selectedRowId.value = row.detailId!
-    $baseConfirm('确定要删除吗？', null, async () => {
-
-      const { data } = await deleteTaxRefundInvoice({
-        id: row.id!,
-      })
-      if (data) {
-        $baseMessage('删除成功！', 'success')
-        fetchData()
-      }
-
+  // 保存当前选中的行
+  selectedRowId.value = row.detailId!
+  $baseConfirm('确定要删除吗？', null, async () => {
+    const { data } = await deleteTaxRefundInvoice({
+      id: row.id!,
     })
+    if (data) {
+      $baseMessage('删除成功！', 'success')
+      fetchData()
+    }
+  })
 }
 // 匹配可见
 const matchVisible = ref<boolean>(false)
