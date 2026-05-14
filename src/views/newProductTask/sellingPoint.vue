@@ -194,9 +194,10 @@ const getQueryValue = (value: unknown) => {
   return Array.isArray(value) ? String(value[0] ?? '') : String(value ?? '')
 }
 const pageSkuTitle = computed(() => {
+  const skus = route.query.skus
   const querySku = getQueryValue(route.query.sku)
   if (querySku) return querySku
-  return getQueryValue(route.query.skus).split(',').filter(Boolean).join(' ，')
+  if (skus && skus?.length > 0) return getQueryValue(route.query.skus).split(',').filter(Boolean).join(' ，')
 })
 const selectSKUVisible = ref<boolean>(false)
 const selectedSKUForm = reactive<{ sku: string }>({
@@ -420,11 +421,19 @@ onBeforeMount(async () => {
   await fetchSellingPointData()
 })
 
-// 监听路由变化，切换产品时重新加载数据
 watch(
-  () => route.query,
-  async () => {
-    await fetchSellingPointData()
+  // 1. 只精准监听 query 中的 id 变化
+  () => route.query.id,
+  async (newId, oldId) => {
+    // 2. 核心判断：确保当前还在“卖点页面”（避免在其他页面因为 id 变化被误触发）
+    // 请将 'SellingPoint' 替换为你在路由配置中给该页面设置的实际 name
+    if (route.name !== 'SellingPoint') return
+
+    // 3. 确保 id 真的发生了变化，且新 id 存在
+    if (newId && newId !== oldId) {
+      console.log('检测到卖点页面 id 切换，重新加载数据:', newId)
+      await fetchSellingPointData()
+    }
   }
 )
 </script>
