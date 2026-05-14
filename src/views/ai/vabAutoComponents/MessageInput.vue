@@ -118,7 +118,7 @@
             v-if="file.type.startsWith('image/')"
             class="attachment-image"
             :class="{ 'is-error': file.status === 'error' }"
-            :title="`${file.name} (${formatFileSize(file.size)})`"
+            :title="file.name"
           >
             <el-image
               v-if="file.status === 'success' && file.url"
@@ -138,7 +138,7 @@
             </button>
           </div>
           <!-- 非图片类型：文件标签 -->
-          <div v-else class="attachment-chip" :title="`${file.name} (${formatFileSize(file.size)})`">
+          <div v-else class="attachment-chip" :title="file.name">
             <vab-icon :icon="getFileIcon(file.type)" class="chip-icon" />
             <span class="chip-name">{{ file.name }}</span>
             <span v-if="file.status === 'uploading'" class="chip-progress">{{ file.progress ?? 0 }}%</span>
@@ -334,12 +334,6 @@ const getFileExtension = (name: string) => {
   return idx === -1 ? '' : name.slice(idx).toLowerCase()
 }
 
-const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 const getFileIcon = (mimeType: string) => {
   if (mimeType.startsWith('image/')) return 'image-line'
   if (mimeType.includes('pdf')) return 'file-pdf-line'
@@ -469,15 +463,24 @@ const removeAttachment = async (id: string) => {
   aiStore.removePendingAttachment(id)
 }
 
+const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif'])
+
 const handleSend = () => {
   if (props.disabled) return
   const value = draft.value.trim()
   if (!value && !aiStore.pendingAttachments.length) return
-  // 仅上传图片不输入文字时，默认补一句"请分析图片中的内容"作为 content：
-  // 1) 聊天气泡显示该文字 + 图片，避免空白气泡
+  // 仅上传附件不输入文字时，按附件后缀给默认 content：
+  // 1) 聊天气泡显示该文字 + 附件，避免空白气泡
   // 2) LangFlow ChatInput 拿到非空 input_value，避开 chatbot flow required=true 限制
   // 3) AI 直接得到明确指令而不是空 prompt
-  emit('send', value || '请分析图片中的内容')
+  let content = value
+  if (!content) {
+    const hasNonImage = aiStore.pendingAttachments.some(
+      (a) => !IMAGE_EXTENSIONS.has(getFileExtension(a.name))
+    )
+    content = hasNonImage ? '请分识别文件内容' : '请分析图片中的内容'
+  }
+  emit('send', content)
   draft.value = ''
 }
 

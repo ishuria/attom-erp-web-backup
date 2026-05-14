@@ -30,7 +30,6 @@
           <vab-icon :icon="getFileIcon(doc.type)" class="doc-icon" />
           <div class="doc-info">
             <span class="doc-name">{{ doc.name }}</span>
-            <span class="doc-meta">{{ formatFileSize(doc.size) }}</span>
           </div>
           <el-button text size="small" @click="handleViewDoc(doc)">查看</el-button>
         </div>
@@ -193,12 +192,6 @@ watch(
 const showViewer = ref(false)
 const viewerList = ref<string[]>([])
 const viewerIndex = ref(0)
-
-const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
 
 const getFileIcon = (mimeType: string) => {
   if (mimeType.startsWith('image/')) return 'image-line'
@@ -499,11 +492,6 @@ const handleMarkdownAction = async (event: MouseEvent) => {
       color: var(--el-text-color-primary);
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    .doc-meta {
-      font-size: 11px;
-      color: var(--el-text-color-placeholder);
     }
   }
 
