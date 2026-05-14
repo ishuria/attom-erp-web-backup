@@ -1,9 +1,25 @@
 <template>
-  <vab-dialog v-model="visible" class="dialog" title="验证条形码" width="660px" @close="handleClose" @open="handlePackingOpen">
+  <vab-dialog
+    v-model="visible"
+    class="dialog"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    title="扫码验证"
+    width="660px"
+    @close="handleClose"
+    @opened="handleDialogOpened"
+  >
+    <el-alert
+      :closable="false"
+      show-icon
+      style="margin-bottom: 12px"
+      title="请扫描条形码，并核对扫描结果（SKU、产品名称、图片）与手中实物是否一致后再提交"
+      type="warning"
+    />
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form ref="packingFormRef" label-position="top" :model="packingForm" :rules="packingFormRules">
-          <el-form-item :label="upcOrFnSku" prop="fnSkuOrUpc">
+        <el-form label-position="top" :model="packingForm">
+          <el-form-item :label="upcOrFnSku">
             <el-input
               ref="barcodeInput"
               v-model="packingForm.fnSkuOrUpc"
@@ -14,10 +30,10 @@
               @keydown.enter="handleEnter"
             />
           </el-form-item>
-          <el-form-item label="SKU" prop="sku">
+          <el-form-item label="SKU">
             <el-input v-model="packingForm.sku" disabled />
           </el-form-item>
-          <el-form-item label="产品名称" prop="productName">
+          <el-form-item label="产品名称">
             <el-input v-model="packingForm.productName" disabled />
           </el-form-item>
         </el-form>
@@ -38,15 +54,16 @@
     </el-row>
     <template #footer>
       <div style="text-align: center">
-        <el-button @click="resetScan">重新扫描</el-button>
-        <el-button :disabled="!packingForm.sku" type="success" @click="handleConfirm">完成验证</el-button>
+        <el-button :disabled="submitting" @click="handleClose">关闭</el-button>
+        <el-button :disabled="submitting" @click="resetScan">重新扫描</el-button>
+        <el-button :disabled="!packingForm.sku || submitting" :loading="submitting" type="success" @click="handleConfirm">提交</el-button>
       </div>
     </template>
   </vab-dialog>
 </template>
 
 <script lang="ts" setup>
-import type { FormInstance, FormRules } from 'element-plus'
+import type { InputInstance } from 'element-plus'
 import { getEncasementSku } from '/@/api/devlocal/encasement'
 import { SiteEnum } from '/@/const/site'
 import type { IEncasementProduct } from '/@/type/packagingShipping/shippedType'
@@ -60,6 +77,8 @@ defineOptions({
 
 const props = defineProps<{
   site: number
+  // 父组件正在调验证接口，按钮置灰防双击；接口失败时父组件保持 visible=true，弹窗不会关
+  submitting?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -81,15 +100,8 @@ const packingForm = reactive<IEncasementProduct>({
   skuImageUrl: '',
 })
 
-const packingFormRef = ref<FormInstance>()
-const packingFormRules = computed<FormRules>(() => ({
-  fnSkuOrUpc: [{ required: true, message: `请输入${upcOrFnSku.value}`, trigger: 'blur' }],
-}))
-
-const barcodeInput = ref<HTMLInputElement | null>(null)
-// 防止首次打开扫枪触发的误回车
-const isInitialized = ref<boolean>(false)
-// 防止同一个条码被回车 + 失焦重复处理
+const barcodeInput = ref<InputInstance>()
+// 防止同一个条码被 enter + blur 各触发一次造成重复处理
 const lastProcessedBarcode = ref<string>('')
 
 const resetForm = () => {
@@ -98,16 +110,13 @@ const resetForm = () => {
   packingForm.productName = ''
   packingForm.skuImageUrl = ''
   barcodeDisabled.value = false
-  isInitialized.value = false
   lastProcessedBarcode.value = ''
-  packingFormRef.value?.clearValidate()
 }
 
-const handlePackingOpen = () => {
+// 用 @opened（动画结束后）而不是 @open（动画开始时），否则输入框还没 mount，focus() 会失败
+const handleDialogOpened = () => {
   resetForm()
-  nextTick(() => {
-    barcodeInput.value?.focus()
-  })
+  barcodeInput.value?.focus()
 }
 
 const handleClose = () => {
@@ -152,20 +161,12 @@ const processBarcodeScan = async (barcodeValue: string) => {
 }
 
 const handleEnter = async (event: Event) => {
-  if (!isInitialized.value) {
-    isInitialized.value = true
-    return
-  }
   const barcodeValue = (event.target as HTMLInputElement).value
   if (!barcodeValue?.trim()) return
   await processBarcodeScan(barcodeValue)
 }
 
 const handleBlur = async (event: FocusEvent) => {
-  if (!isInitialized.value) {
-    isInitialized.value = true
-    return
-  }
   const barcodeValue = (event.target as HTMLInputElement).value
   if (!barcodeValue?.trim()) return
   await processBarcodeScan(barcodeValue)
@@ -176,7 +177,9 @@ const handleConfirm = () => {
     $baseMessage('请先扫描条形码', 'warning')
     return
   }
+  // 仅 emit，不自动关闭。由父组件根据接口结果决定关闭时机：
+  // 成功 → 父组件把 v-model 置 false 关弹窗
+  // 失败 → 弹窗保持打开，用户可以重新扫描或重试
   emit('verified', { ...packingForm })
-  handleClose()
 }
 </script>

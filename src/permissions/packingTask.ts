@@ -27,7 +27,7 @@ class PackingTaskPermission {
   static readonly PACKING_TASK_DELETE = 'packing:task:delete'
   /** 打包任务-打包反馈权限 */
   static readonly PACKING_TASK_FEEDBACK = 'packing:task:feedback'
-  /** 打包任务-验证条形码权限（进行中tab） */
+  /** 打包任务-扫码验证权限（仅进行中tab可见） */
   static readonly PACKING_TASK_VERIFY = 'packing:task:verify'
 }
 

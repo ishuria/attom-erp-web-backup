@@ -824,8 +824,7 @@ export interface ITaskId {
  */
 export interface IVerifyPackageTaskReq {
   taskId: number
-  fnSkuOrUpc: string
-  scannedSku?: string
+  scannedSku: string
 }
 
 export interface IGetPackageTaskSplitList {

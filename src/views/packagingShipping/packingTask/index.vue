@@ -238,6 +238,7 @@
           :header-cell-style="headerCellStyle"
           :loading="listLoading"
           :row-class-name="tableRowClassName"
+          :show-verify="true"
           @cell-click="changeInput"
           @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
@@ -1057,7 +1058,12 @@
     <!-- 打包反馈 -->
     <vab-package-feedback-dialog v-model="feedbackDialogVisible" :current-row="feedbackCurrentRow" @submitted="fetchDataByStatus" />
     <!-- 验证 -->
-    <packaging-verify-bar-code-dialog v-model="verifyBarCodeDialogVisible" :site="verifyBarCodeSite" @verified="onVerified" />
+    <packaging-verify-bar-code-dialog
+      v-model="verifyBarCodeDialogVisible"
+      :site="verifyBarCodeSite"
+      :submitting="verifySubmitting"
+      @verified="onVerified"
+    />
   </div>
 </template>
 
@@ -1068,7 +1074,7 @@ import { debounce } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { sizeOption } from '../constantOption'
 import PackagingVerifyBarCodeDialog from '../vabAutoComponents/PackagingVerifyBarCodeDialog.vue'
-import { getColumnsForTab, type PackingTaskColumn } from './packingTaskColumns'
+import { getColumnsForTab, PackingTaskTab, type PackingTaskColumn } from './packingTaskColumns'
 import {
   addQualityCheck,
   checkGoOffWork,
@@ -1089,10 +1095,10 @@ import {
   getPackageAllTaskNewInspectionList,
   getPackageComponentList,
   getPackageSiteList,
+  getPackageTaskingList,
   getPackageTaskIsSplit,
   getPackageTaskList,
   getPackageTaskSplitList,
-  getPackageTaskingList,
   getQualityCheck,
   getSkuQualityList,
   getStartTaskList,
@@ -1118,6 +1124,8 @@ defineOptions({
 // 验证条形码
 const verifyBarCodeDialogVisible = ref<boolean>(false)
 const verifyBarCodeSite = ref<number>(-1)
+// 接口请求中，置 true 时弹窗按钮置灰防双击；失败时复位后弹窗仍保持打开
+const verifySubmitting = ref<boolean>(false)
 // 当前正在验证的任务行（弹窗 emit verified 时拿来回调接口用）
 const verifyCurrentRow = ref<any>(null)
 // 打开验证条形码
@@ -1126,19 +1134,25 @@ const showVerifyBarCode = (row: any) => {
   verifyBarCodeSite.value = row.siteCode
   verifyBarCodeDialogVisible.value = true
 }
-// 扫码成功后回调，把验证结果落库
-const onVerified = async (product: { fnSkuOrUpc: string; sku: string }) => {
+// 扫码成功后回调，把验证结果落库。只有接口返回成功才关闭弹窗，失败时让用户继续操作。
+const onVerified = async (product: { sku: string }) => {
   if (!verifyCurrentRow.value?.id) return
-  const { data } = await verifyPackageTask({
-    taskId: verifyCurrentRow.value.id,
-    fnSkuOrUpc: product.fnSkuOrUpc,
-    scannedSku: product.sku,
-  })
-  if (data) {
-    $baseMessage('验证成功', 'success')
-    await fetchTaskingData()
-  } else {
-    $baseMessage('验证写入失败，请重试', 'error')
+  verifySubmitting.value = true
+  try {
+    const { data } = await verifyPackageTask({
+      taskId: verifyCurrentRow.value.id,
+      scannedSku: product.sku,
+    })
+    if (data) {
+      $baseMessage('扫码验证成功', 'success')
+      verifyBarCodeDialogVisible.value = false
+      await fetchTaskingData()
+    } else {
+      $baseMessage('验证写入失败，请重试', 'error')
+    }
+  } finally {
+    // 无论成功失败都要解除 loading；失败时弹窗保持打开，按钮恢复可点
+    verifySubmitting.value = false
   }
 }
 const selectedRowIndex = ref<number>(-1)
@@ -1163,13 +1177,13 @@ const newQualityInspectionReportVisible = ref<boolean>(false)
 const activeName = ref<number>(7)
 
 // 获取各个tab的列配置
-const allTaskColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(7))
-const pendingPackColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(1))
-const taskingColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(5))
-const completedColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(2))
-const remainderColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(3))
-const afterSaleColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(4))
-const notArrivedColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(0))
+const allTaskColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.ALL))
+const pendingPackColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.PENDING))
+const taskingColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.TASKING))
+const completedColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.COMPLETED))
+const remainderColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.REMAINDER))
+const afterSaleColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.AFTER_SALES))
+const notArrivedColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.NOT_ARRIVED))
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []

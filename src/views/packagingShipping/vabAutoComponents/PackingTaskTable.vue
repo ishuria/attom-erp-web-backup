@@ -148,18 +148,20 @@
       </el-table-column>
 
       <!-- 验证状态 -->
-      <!-- <el-table-column v-else-if="column.key === 'verifyStatus'" :label="column.label" :prop="column.prop" :width="column.width">
+      <el-table-column v-else-if="column.key === 'verifyStatus'" :label="column.label" :prop="column.prop" :width="column.width">
         <template #default="{ row }">
           <el-tooltip v-if="row.verifyStatus === 1" effect="dark" placement="top">
             <template #content>
-              <div>验证人：{{ row.verifyUserName || '-' }}</div>
-              <div>验证时间：{{ row.verifyTime ? formatDate(new Date(row.verifyTime)) : '-' }}</div>
+              <div class="custom-tooltip">
+                <div>验证人：{{ row.verifyUserName || '-' }}</div>
+                <div>验证时间：{{ row.verifyTime ? formatDate(new Date(row.verifyTime)) : '-' }}</div>
+              </div>
             </template>
-            <el-tag type="success">已验证 / {{ row.verifyUserName || '-' }}</el-tag>
+            <el-tag type="success">已验证</el-tag>
           </el-tooltip>
           <el-tag v-else type="info">未验证</el-tag>
         </template>
-      </el-table-column> -->
+      </el-table-column>
 
       <!-- 打包注意事项 -->
       <el-table-column
@@ -200,7 +202,7 @@
                   v-if="props.showVerify && hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_VERIFY] })"
                   @click="handleVerifyBarCode(row)"
                 >
-                  <el-link type="primary" underline="never">验证</el-link>
+                  <el-link type="primary" underline="never">扫码验证</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item
                   v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
