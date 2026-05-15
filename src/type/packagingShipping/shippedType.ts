@@ -674,6 +674,10 @@ export interface IAddChannelFreightForwarderReq {
    * 重量系数
    */
   weightFactor?: number
+  /**
+   * 绑定领星code
+   */
+  lingXingCode?: string
 }
 
 export interface IUpdateSafeDaysFreightForwarder {

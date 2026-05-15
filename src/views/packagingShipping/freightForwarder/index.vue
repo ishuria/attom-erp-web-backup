@@ -306,6 +306,9 @@
               <el-input v-model="addNewChannelForm.destination" placeholder="目的地" style="flex: 1" />
             </div>
           </el-form-item>
+          <el-form-item label="绑定领星code" prop="lingXingCode">
+            <el-input v-model="addNewChannelForm.lingXingCode" clearable />
+          </el-form-item>
           <el-form-item label="名义时效" prop="nominalLimitation">
             <el-input v-model="addNewChannelForm.nominalLimitation" clearable />
           </el-form-item>
@@ -421,6 +424,9 @@
               <span>-</span>
               <el-input v-model="updateForm.destination" placeholder="目的地" style="flex: 1" />
             </div>
+          </el-form-item>
+          <el-form-item label="绑定领星code" prop="lingXingCode">
+            <el-input v-model="updateForm.lingXingCode" clearable />
           </el-form-item>
           <el-form-item label="名义时效" prop="nominalLimitation">
             <el-input v-model="updateForm.nominalLimitation" clearable />
@@ -752,6 +758,7 @@ const closeAddNewChannel = () => {
   addNewChannelForm.types = ''
   addNewChannelForm.channelName = ''
   addNewChannelForm.destination = ''
+  addNewChannelForm.lingXingCode = ''
   addNewChannelVisible.value = false
 }
 // 确认新增渠道
