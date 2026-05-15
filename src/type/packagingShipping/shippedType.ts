@@ -1139,6 +1139,7 @@ export interface IPrintBarcodeEncasementRes {
 export interface IFinishWalmartShipmentReq {
   encasementIds: string
   templateFile1Name: string
+  templateFile3Name: string
   contractNumber: string
   shipmentId: string
   site: number

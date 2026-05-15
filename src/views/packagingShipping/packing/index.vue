@@ -1334,6 +1334,7 @@ const submitShipmentWalmart = async () => {
     site: shipmentWalmartForm.siteId,
     channel: shipmentWalmartForm.channel,
     templateFile1Name: walmartFileName.value,
+    templateFile3Name: fileName3.value,
   })
   if (data) {
     $baseMessage('发货（沃尔玛）提交成功！', 'success')

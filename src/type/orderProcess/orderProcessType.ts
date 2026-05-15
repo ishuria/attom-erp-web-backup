@@ -610,6 +610,10 @@ export interface IreviewStepNo5SkuInfoPerfect {
    * 是否专利申请 0 不是 1是
    */
   patentFlag?: number
+  /**
+   * 品牌（非必填）
+   */
+  brand?: string
 }
 // 新品订货流程- 检查提交审核信息 - 保存
 export interface IreviewStepNo6SaveSix {
