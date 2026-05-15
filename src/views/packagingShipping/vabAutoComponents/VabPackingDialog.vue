@@ -131,7 +131,7 @@ let props = defineProps<{
   isReinsert: boolean
 }>()
 const dflag = ref<boolean>(false)
-const upcOrFnSku = ref<string>('FNSKU')
+const upcOrFnSku = computed<string>(() => (props.site !== undefined && GTIN_SITES.has(props.site) ? 'GTIN' : 'FNSKU'))
 
 // 上一个显示与否
 const previousVisible = ref<boolean>(false)
@@ -151,24 +151,39 @@ const confirmFormRef = ref<FormInstance>()
 const confirmForm = reactive<{ encaseCount: number | undefined }>({
   encaseCount: undefined,
 })
+const isPositiveInteger = (value: unknown) => /^[1-9]\d*$/.test(String(value ?? '').trim())
+const normalizePositiveInteger = (value: unknown) => Number(String(value ?? '').trim())
+const positiveIntegerValidator = (message: string) => (_rule: any, value: unknown, callback: (error?: Error) => void) => {
+  if (!isPositiveInteger(value)) {
+    callback(new Error(message))
+    return
+  }
+  callback()
+}
 const confirmFormRules = reactive<FormRules<{ encaseCount: number | undefined }>>({
-  encaseCount: [{ required: true, message: '请输入箱数', trigger: 'blur' }],
+  encaseCount: [
+    { required: true, message: '请输入箱数', trigger: 'blur' },
+    { validator: positiveIntegerValidator('箱数必须是正整数'), trigger: ['blur', 'change'] },
+  ],
 })
 // 扫描完的disabled
 const barcodeDisabled = ref<boolean>(false)
-watchEffect(() => {
-  dflag.value = props.packingVisible
-  if (props.site !== undefined && GTIN_SITES.has(props.site)) {
-    upcOrFnSku.value = 'GTIN'
+watch(
+  () => props.packingVisible,
+  (visible, oldVisible) => {
+    dflag.value = visible
+    if (visible && !oldVisible) {
+      // 首次打开先清空
+      _clearPacking()
+      // 第一次 上一个按钮隐藏，下一个按钮是一直存在
+      previousVisible.value = false
+      barcodeDisabled.value = false
+    }
+  },
+  {
+    immediate: true,
   }
-  if (dflag.value) {
-    // 首次打开先清空
-    _clearPacking()
-    // 第一次 上一个按钮隐藏，下一个按钮是一直存在
-    previousVisible.value = false
-    barcodeDisabled.value = false
-  }
-})
+)
 const emit = defineEmits(['update:packingVisible', 'update:finish'])
 const handleCloseDialog = () => {
   dflag.value = false
@@ -187,7 +202,10 @@ const packingForm = reactive<IEncasementProduct>({
 const packingFormRef = ref<FormInstance>()
 const packingFormRules = computed(() => ({
   fnSkuOrUpc: [{ required: true, message: `请输入${upcOrFnSku.value}`, trigger: 'blur' }],
-  count: [{ required: true, message: '请输入数量', trigger: 'blur' }],
+  count: [
+    { required: true, message: '请输入数量', trigger: 'blur' },
+    { validator: positiveIntegerValidator('数量必须是正整数'), trigger: ['blur', 'change'] },
+  ],
 }))
 const tempCurId = ref<string>('')
 const packingStore = usePackingStore()
@@ -238,10 +256,10 @@ const showConfirm = () => {
   } else {
     // 校验所有存储的是否是已填
     const countValid = packingStore.packingData.every((item: PackingType) => {
-      return item.count != null && item.count !== 0
+      return isPositiveInteger(item.count)
     })
     if (!countValid) {
-      $baseMessage(`数量不能为空`, 'error')
+      $baseMessage(`数量必须是正整数`, 'error')
       return
     }
     const upcOrFnSkuValid = packingStore.packingData.every((item: PackingType) => {
@@ -269,6 +287,7 @@ const closeConfirm = () => {
 const saveAndPrint = async () => {
   confirmFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
+      confirmForm.encaseCount = normalizePositiveInteger(confirmForm.encaseCount)
       const { data } = await submitEncasementSku({
         encaseCount: confirmForm.encaseCount,
         encasementNo: props.encasementNo,
@@ -295,6 +314,7 @@ const saveAndPrint = async () => {
 const save = async () => {
   confirmFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
+      confirmForm.encaseCount = normalizePositiveInteger(confirmForm.encaseCount)
       const { data } = await submitEncasementSku({
         encaseCount: confirmForm.encaseCount,
         encasementNo: props.encasementNo,
@@ -326,9 +346,14 @@ function generateUUID() {
 
 // 添加一个标志来防止重复处理同一个条码
 const lastProcessedBarcode = ref('')
+// 扫码查询中先锁住输入，避免扫码枪连扫触发并发查询
+const barcodeScanning = ref(false)
 
 // 通用的扫码处理函数
 const processBarcodeScan = async (barcodeValue: string) => {
+  if (barcodeScanning.value) {
+    return
+  }
   // 检查是否已经处理过这个条码
   if (lastProcessedBarcode.value === barcodeValue) {
     return
@@ -336,6 +361,8 @@ const processBarcodeScan = async (barcodeValue: string) => {
 
   // 记录当前处理的条码
   lastProcessedBarcode.value = barcodeValue
+  barcodeScanning.value = true
+  barcodeDisabled.value = true
 
   packingForm.fnSkuOrUpc = barcodeValue
   let str = barcodeValue
@@ -368,6 +395,9 @@ const processBarcodeScan = async (barcodeValue: string) => {
         packingForm.skuImageUrl = ''
         barcodeDisabled.value = false
         lastProcessedBarcode.value = ''
+        nextTick(() => {
+          barcodeInput.value?.focus()
+        })
         return
       }
       // console.log('packingData', packingStore.packingData)
@@ -379,14 +409,24 @@ const processBarcodeScan = async (barcodeValue: string) => {
     } else {
       // 查不到：清空表单和去重记录，允许重扫同一个码
       packingForm.fnSkuOrUpc = ''
+      barcodeDisabled.value = false
       lastProcessedBarcode.value = ''
       $baseMessage(`找不到该${upcOrFnSku.value}，请重新扫描`, 'error')
+      nextTick(() => {
+        barcodeInput.value?.focus()
+      })
     }
   } catch (e) {
     // 网络/后端异常：回滚状态，允许重扫
     packingForm.fnSkuOrUpc = ''
+    barcodeDisabled.value = false
     lastProcessedBarcode.value = ''
     $baseMessage('扫码查询失败，请重试', 'error')
+    nextTick(() => {
+      barcodeInput.value?.focus()
+    })
+  } finally {
+    barcodeScanning.value = false
   }
 }
 
@@ -412,7 +452,11 @@ const handleBlur = async (event: any) => {
 const handleUpdate = () => {
   // console.log('更新count后的', packingForm);
 
-  const updatePacking = { tempId: tempCurId.value, ...packingForm }
+  const updatePacking = {
+    tempId: tempCurId.value,
+    ...packingForm,
+    count: isPositiveInteger(packingForm.count) ? normalizePositiveInteger(packingForm.count) : packingForm.count,
+  }
   // console.log('updatePacking', updatePacking);
 
   _updatePacking(updatePacking)
