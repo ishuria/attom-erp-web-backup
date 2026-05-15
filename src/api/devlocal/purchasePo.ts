@@ -73,6 +73,15 @@ export function getPlanPoList(data?: IGetPlanPoListQuery): Promise<IGetPlanPoLis
   })
 }
 
+// 备货看板-运营备货列表
+export function getStockReplenishmentList(data: any): Promise<any> {
+  return request({
+    url: `${BASE_API}/purchase/planPo/stockReplenishment/list`,
+    method: 'post',
+    data,
+  })
+}
+
 // 查询po sku 零件采购注意事项
 export function getPoPurchaseMatters(params?: IId) {
   return request({

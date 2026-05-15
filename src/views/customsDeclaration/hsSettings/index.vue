@@ -35,7 +35,14 @@
           <el-checkbox v-model="row.isKgFlag" @change="checkIsKgFlg(row)" />
         </template>
       </el-table-column>
-      <el-table-column label="HS" min-width="" prop="hs" />
+      <el-table-column label="HS" min-width="" prop="hs">
+        <template #default="{ row }">
+          <span class="copySku" @click="handleClipboard($event, row.hs)">
+            {{ row.hs }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="法定第1单位" min-width="" prop="statutoryUnit">
         <template #default="{ row }">
           <div class="none">
@@ -142,6 +149,7 @@ import { isEqual } from 'lodash-es'
 import { addHSList, delHSList, getHSList, updateHSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type { IAddHSListReq, IGetHSList, IGetHSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import handleClipboard from '/@/utils/clipboard'
 
 defineOptions({
   name: 'HSettings',
@@ -333,6 +341,16 @@ onBeforeMount(() => {
 <style lang="scss" scoped>
 .none {
   display: none;
+}
+
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 
 :deep(.el-table) {
