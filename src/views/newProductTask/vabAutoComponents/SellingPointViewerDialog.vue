@@ -26,7 +26,10 @@
             </div>
             <div v-for="field in leftBottomFields" :key="field.label" class="readonly-field">
               <div class="readonly-label">{{ field.label }}</div>
-              <div class="readonly-box" :class="field.className">{{ formatFieldValue(field.value) }}</div>
+              <div v-if="field.isHtml" class="readonly-box readonly-box-html" :class="field.className">
+                <wang-editor-viewer :content="getRichContent(field.value)" />
+              </div>
+              <div v-else class="readonly-box" :class="field.className">{{ formatFieldValue(field.value) }}</div>
             </div>
           </section>
 
@@ -114,8 +117,8 @@ const leftTopFields = computed(() => [
 ])
 
 const leftBottomFields = computed(() => [
-  { label: '链接关键词', value: detail.linkKeywords, className: 'readonly-box-large' },
-  { label: '图片配色，风格和道具选用要求拍摄注意事项', value: detail.precautions, className: 'readonly-box-extra-large' },
+  { label: '链接关键词', value: detail.linkKeywords, className: 'readonly-box-large', isHtml: false },
+  { label: '图片配色，风格和道具选用要求拍摄注意事项', value: detail.precautions, className: 'readonly-box-extra-large', isHtml: true },
 ])
 
 const rightFields = computed(() => [
@@ -173,6 +176,16 @@ const getSelectionReasonLabel = (value?: number | null) => {
   return selectionReasonOptions.value.find((item) => item.id === Number(value))?.label || String(value)
 }
 const formatFieldValue = (value?: string | number | null) => String(value ?? '') || '暂无'
+
+// wangEditor 存的「视觉空」HTML (<p><br></p>) 要识别成空，让 viewer 显示 el-empty
+const getRichContent = (value?: string | null): string => {
+  if (!value) return ''
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = value
+  const hasImage = tempDiv.querySelector('img') !== null
+  const text = (tempDiv.textContent || '').trim()
+  return hasImage || text ? value : ''
+}
 
 watch(
   () => [visible.value, props.sku],
@@ -282,6 +295,20 @@ watch(
 
 .readonly-box-extra-large {
   min-height: 170px;
+}
+
+.readonly-box-html {
+  padding: 8px 10px;
+  white-space: normal;
+
+  :deep(img) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  :deep(.el-empty) {
+    padding: 12px 0;
+  }
 }
 
 .readonly-box-tall {

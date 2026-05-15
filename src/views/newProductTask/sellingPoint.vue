@@ -1,30 +1,21 @@
 <template>
   <div class="comprehensive-form-container">
     <div style="display: flex; flex-direction: column; min-height: calc(var(--el-container-height) - 44px)">
-      <el-page-header @back="goBack">
+      <el-page-header class="selling-point-page-header" @back="goBack">
         <template #content>
-          <span class="text-large font-600 mr-3">
-            {{ pageSkuTitle }}
-          </span>
-          <span class="text-large font-600 mr-3">&nbsp;卖点</span>
-          <span class="text-large font-600 mr-3" style="color: var(--el-color-primary)">
-            {{ route.query.sku ? '(输入后系统自动保存)' : '(批量填写)' }}
-          </span>
+          <div class="selling-point-title">
+            <span class="selling-point-title__name" :title="pageSkuTitle || '未选择 SKU'">{{ pageSkuTitle || '未选择 SKU' }}</span>
+            <el-divider direction="vertical" />
+            <span class="selling-point-title__sub">卖点填写</span>
+            <el-tag v-if="isBatchSellingPoint" effect="light" size="small" type="warning">批量填写</el-tag>
+          </div>
         </template>
       </el-page-header>
       <div style="display: flex; flex: 1; flex-direction: column">
-        <el-row :gutter="40" style="display: flex; flex-grow: 1; align-items: flex-start; justify-content: center; padding: 20px 0">
+        <el-row :gutter="40" style="display: flex; flex-grow: 1; align-items: flex-start; justify-content: center; padding: 0 0 20px">
           <!-- 左侧表单 -->
           <el-col :span="8" style="display: flex; flex-direction: column">
-            <el-form
-              ref="formRef1"
-              class="custom-form"
-              label-position="right"
-              label-width="15em"
-              :model="form"
-              :rules="formRules1"
-              style="width: 100%; padding-right: 80px"
-            >
+            <el-form ref="formRef1" class="custom-form" label-position="top" :model="form" :rules="formRules1" style="width: 100%">
               <el-form-item label="产品差异化程度" prop="productDifferences">
                 <el-select v-model="form.productDifferences" @change="debouncedSave">
                   <el-option v-for="item in differencesOption" :key="item.id" :label="item.label" :value="item.id" />
@@ -36,10 +27,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="与竞品相比差异化的地方" prop="competitiveProductDifferences">
-                <el-input v-model="form.competitiveProductDifferences" type="textarea" @change="debouncedSave" />
+                <el-input v-model="form.competitiveProductDifferences" :autosize="{ minRows: 2 }" type="textarea" @change="debouncedSave" />
               </el-form-item>
               <el-form-item label="目标客群" prop="targetAudience">
-                <el-input v-model="form.targetAudience" type="textarea" @change="debouncedSave" />
+                <el-input v-model="form.targetAudience" :autosize="{ minRows: 2 }" type="textarea" @change="debouncedSave" />
               </el-form-item>
               <el-form-item label="产品使用场景" prop="usageScenario">
                 <el-input v-model="form.usageScenario" clearable @change="debouncedSave" />
@@ -62,27 +53,41 @@
                 />
               </el-form-item>
               <el-form-item label="链接关键词" prop="linkKeywords">
-                <el-input v-model="form.linkKeywords" type="textarea" @change="debouncedSave" />
+                <el-input v-model="form.linkKeywords" :autosize="{ minRows: 2 }" type="textarea" @change="debouncedSave" />
               </el-form-item>
               <el-form-item label="图片配色，风格和道具选用要求拍摄注意事项" prop="precautions">
-                <el-input v-model="form.precautions" resize="none" :rows="8" type="textarea" @change="debouncedSave" />
+                <div class="precautions-editor-wrap">
+                  <toolbar
+                    class="precautions-editor-toolbar"
+                    :default-config="precautionsToolbarConfig"
+                    :editor="precautionsEditorRef"
+                    mode="default"
+                  />
+                  <editor
+                    v-model="form.precautions"
+                    class="precautions-editor-content"
+                    :default-config="precautionsEditorConfig"
+                    mode="default"
+                    @on-change="debouncedSave"
+                    @on-created="handlePrecautionsCreated"
+                  />
+                </div>
               </el-form-item>
             </el-form>
           </el-col>
 
           <!-- 中间表单 -->
           <el-col :span="8" style="display: flex; flex-direction: column">
-            <el-form :model="form" style="width: 100%">
+            <el-form label-position="top" :model="form" style="width: 100%">
               <el-form-item
-                label="功能/卖点/5点&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;(重要性从高到低排列)"
-                label-width="11.5em"
+                label="功能/卖点/5点 (重要性从高到低排列)"
                 prop="sellingPointContent"
                 :rules="[{ required: true, message: '请输入功能/卖点/5点(重要性从高到低排列)', trigger: 'blur' }]"
               >
                 <el-input
                   v-model="form.sellingPointContent"
+                  :autosize="{ minRows: 36 }"
                   resize="none"
-                  :rows="36"
                   style="flex-grow: 1"
                   type="textarea"
                   @change="debouncedSave"
@@ -93,28 +98,21 @@
 
           <!-- 右侧表单 -->
           <el-col :span="8" style="display: flex; flex-direction: column">
-            <el-form
-              ref="formRef"
-              class="custom-form"
-              label-position="right"
-              label-width="10.5em"
-              :model="form"
-              style="width: 100%; height: 100%"
-            >
+            <el-form ref="formRef" class="custom-form" label-position="top" :model="form" style="width: 100%; height: 100%">
               <el-form-item label="标题1" prop="title1">
-                <el-input v-model="form.title1" resize="none" :rows="4" type="textarea" @change="debouncedSave" />
+                <el-input v-model="form.title1" :autosize="{ minRows: 4 }" resize="none" type="textarea" @change="debouncedSave" />
               </el-form-item>
               <el-form-item label="标题2" prop="title2">
-                <el-input v-model="form.title2" resize="none" :rows="4" type="textarea" @change="debouncedSave" />
+                <el-input v-model="form.title2" :autosize="{ minRows: 4 }" resize="none" type="textarea" @change="debouncedSave" />
               </el-form-item>
               <el-form-item label="链接关键词(译文)" prop="linkKeywordsTs">
-                <el-input v-model="form.linkKeywordsTs" resize="none" :rows="4" type="textarea" @change="debouncedSave" />
+                <el-input v-model="form.linkKeywordsTs" :autosize="{ minRows: 4 }" resize="none" type="textarea" @change="debouncedSave" />
               </el-form-item>
               <el-form-item label="功能/卖点/5点(译文)" prop="sellingPointContentTs">
                 <el-input
                   v-model="form.sellingPointContentTs"
+                  :autosize="{ minRows: 20 }"
                   resize="none"
-                  :rows="20"
                   style="flex-grow: 1"
                   type="textarea"
                   @change="debouncedSave"
@@ -176,7 +174,11 @@ import {
   saveBatchArtDesignSellingPoint,
 } from '/@/api/devlocal/imageTask'
 
+import type { IDomEditor, IToolbarConfig } from '@wangeditor/editor'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css'
 import type { FormInstance, FormRules } from 'element-plus'
+import { uploadEditorImage } from '/@/api/devlocal/progress'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSellingPoint } from '/@/type/listingTask/imageTaskType'
@@ -193,11 +195,13 @@ const { delVisitedRoute } = tabsStore
 const getQueryValue = (value: unknown) => {
   return Array.isArray(value) ? String(value[0] ?? '') : String(value ?? '')
 }
+const querySku = computed(() => getQueryValue(route.query.sku))
+const querySkus = computed(() => getQueryValue(route.query.skus))
+const isSingleSellingPoint = computed(() => Boolean(querySku.value))
+const isBatchSellingPoint = computed(() => Boolean(querySkus.value))
 const pageSkuTitle = computed(() => {
-  const skus = route.query.skus
-  const querySku = getQueryValue(route.query.sku)
-  if (querySku) return querySku
-  if (skus && skus?.length > 0) return getQueryValue(route.query.skus).split(',').filter(Boolean).join(' ，')
+  if (querySku.value) return querySku.value
+  if (querySkus.value) return querySkus.value.split(',').filter(Boolean).join(' ，')
 })
 const selectSKUVisible = ref<boolean>(false)
 const selectedSKUForm = reactive<{ sku: string }>({
@@ -252,7 +256,7 @@ const handleConfirmSelectedSKU = async () => {
     form.id = _id.value!
 
     // 导入数据后自动保存（仅单个SKU）
-    if (route.query.sku) {
+    if (isSingleSellingPoint.value) {
       debouncedSave()
     }
     // 多个SKU时只赋值表单，不发送保存请求
@@ -266,7 +270,7 @@ const closeSelectedSKU = () => {
 const handleConfirmSave = async () => {
   formRef1.value?.validate(async (isValid) => {
     if (isValid) {
-      if (route.query.sku) {
+      if (isSingleSellingPoint.value) {
         const { summary, ...filteredForm } = form
         const { data } = await saveArtDesignSellingPoint({
           ...filteredForm,
@@ -336,7 +340,7 @@ const fetchReasonsOption = async () => {
 let saveTimer: NodeJS.Timeout | null = null
 const debouncedSave = () => {
   // 只有单个SKU才自动保存
-  if (!route.query.sku) {
+  if (!isSingleSellingPoint.value) {
     return
   }
 
@@ -351,7 +355,7 @@ const debouncedSave = () => {
 // 自动保存到后端（仅单个SKU）
 const autoSave = async () => {
   try {
-    if (route.query.sku) {
+    if (isSingleSellingPoint.value) {
       // 单个SKU保存
       const { summary, ...filteredForm } = form
       await saveArtDesignSellingPointRealtime({
@@ -390,29 +394,102 @@ const fetchSellingPointData = async () => {
   })
   _id.value = null
 
-  const querySku = getQueryValue(route.query.sku)
-  const querySkus = getQueryValue(route.query.skus)
-  if (!querySku && !querySkus) {
+  const currentSku = querySku.value
+  const currentSkus = querySkus.value
+  if (!currentSku && !currentSkus) {
     $baseMessage('目前没有SKU，无法获取卖点', 'warning')
     return
   }
-  if (querySku) {
+  if (currentSku) {
     // 单个SKU，直接从后端获取数据
-    sku.value = querySku
+    sku.value = currentSku
     const { data } = await getArtDesignSellingPoint({
       sku: sku.value,
     })
     _id.value = data.id!
     Object.assign(form, data)
-  } else if (querySkus && querySkus?.length > 0) {
+  } else if (currentSkus) {
     // 批量修改，直接从后端获取数据
-    sku.value = querySkus.split(',').sort().join(',')
+    sku.value = currentSkus.split(',').sort().join(',')
     const { data } = await getBatchArtDesignSellingPoint({
       skus: sku.value,
     })
     Object.assign(form, data)
   }
 }
+
+// 注意事项富文本编辑器
+const precautionsEditorRef = shallowRef<IDomEditor | undefined>()
+type InsertImageFnType = (url: string, alt?: string, href?: string) => void
+
+const precautionsToolbarConfig: Partial<IToolbarConfig> = {
+  excludeKeys: ['group-video', 'codeBlock', 'fullScreen'],
+}
+
+const precautionsEditorConfig = reactive<any>({
+  placeholder: '请输入拍摄注意事项，可粘贴或上传图片...',
+  MENU_CONF: {
+    uploadImage: {
+      allowedFileTypes: ['image/*'],
+      maxFileSize: 2 * 1024 * 1024,
+      maxNumberOfFiles: 1,
+      onBeforeUpload(file: File) {
+        if (!file.type.startsWith('image/')) {
+          $baseMessage('只能上传图片文件!', 'error', 'hey')
+          return false
+        }
+        if (file.size > 2 * 1024 * 1024) {
+          $baseMessage('图片大小不能超过 2MB!', 'error', 'hey')
+          return false
+        }
+        return file
+      },
+      async customUpload(file: File, insertFn: InsertImageFnType) {
+        try {
+          const formData = new FormData()
+          formData.append('file', file)
+          const { data } = await uploadEditorImage(formData)
+          let imageUrl = ''
+          if (data?.url) {
+            imageUrl = data.url
+          } else if (typeof data === 'string') {
+            imageUrl = data
+          } else {
+            throw new Error('上传失败：无法获取图片地址')
+          }
+          insertFn(imageUrl, file.name, imageUrl)
+          $baseMessage('图片上传成功!', 'success', 'hey')
+        } catch (error: any) {
+          console.error('图片上传失败:', error)
+          $baseMessage(error?.message || '图片上传失败，请重试', 'error', 'hey')
+        }
+      },
+    },
+  },
+})
+
+const handlePrecautionsCreated = (editor: IDomEditor) => {
+  precautionsEditorRef.value = Object.seal(editor)
+}
+
+// 数据从后端拉取后 Object.assign(form, data) 不会触发编辑器重渲，需要手动 setHtml
+watch(
+  () => form.precautions,
+  (newVal) => {
+    const editor = precautionsEditorRef.value
+    if (!editor) return
+    const current = editor.getHtml()
+    if (current !== (newVal || '')) {
+      editor.setHtml(newVal || '')
+    }
+  }
+)
+
+onBeforeUnmount(() => {
+  const editor = precautionsEditorRef.value
+  if (editor) editor.destroy()
+  precautionsEditorRef.value = undefined
+})
 
 onBeforeMount(async () => {
   fetchDifferencesOption()
@@ -439,7 +516,76 @@ watch(
 <style lang="scss" scoped>
 .custom-form {
   .el-form-item {
-    margin-bottom: 25px;
+    margin-bottom: 18px;
+  }
+}
+
+// label-position=top 时让标签更醒目、与 viewer 风格保持一致
+:deep(.el-form--label-top .el-form-item__label) {
+  padding-bottom: 6px;
+  color: var(--el-text-color-primary);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.selling-point-page-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.selling-point-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+:deep(.selling-point-page-header .el-page-header__content) {
+  min-width: 0;
+  flex: 1;
+}
+
+.selling-point-title__name {
+  max-width: min(68vw, 920px);
+  overflow: hidden;
+  color: var(--el-color-primary);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selling-point-title__sub {
+  color: var(--el-text-color-secondary);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.precautions-editor-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--el-border-color);
+  border-radius: var(--el-border-radius-base);
+  overflow: hidden;
+
+  .precautions-editor-toolbar {
+    border-bottom: 1px solid var(--el-border-color);
+  }
+
+  .precautions-editor-content {
+    min-height: 320px;
+    max-height: 600px;
+    overflow-y: auto;
+
+    :deep(img) {
+      max-width: 100%;
+    }
   }
 }
 </style>
