@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dflag" class="dialog" title="装箱" width="660px" @close="handleCloseDialog" @open="handlePackingOpen">
+  <vab-dialog v-model="dflag" class="dialog" title="装箱" width="660px" @close="handleCloseDialog" @opened="handlePackingOpen">
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form ref="packingFormRef" label-position="top" :model="packingForm" :rules="packingFormRules">
@@ -106,7 +106,7 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules, InputInstance } from 'element-plus'
 import { getEncasementSku, printBarcodeEncasement, submitEncasementSku } from '/@/api/devlocal/encasement'
 import { SiteEnum } from '/@/const/site'
 import { usePackingStore } from '/@/store/modules/packing'
@@ -186,9 +186,9 @@ const packingFormRules = computed(() => ({
 const tempCurId = ref<string>('')
 const packingStore = usePackingStore()
 // FNSKU输入框引用
-const barcodeInput = ref<HTMLInputElement | null>(null)
+const barcodeInput = ref<InputInstance>()
 // 装箱数量引用
-const packingCount = ref<HTMLInputElement | null>(null)
+const packingCount = ref<InputInstance>()
 // 确认可见
 const confirmVisible = ref<boolean>(false)
 
@@ -306,16 +306,9 @@ const save = async () => {
 }
 // 打开装箱时自动聚焦到FNSKU输入框
 const handlePackingOpen = () => {
-  // 重置初始化标志，确保每次打开弹窗都能正常工作
-  isInitialized.value = false
   // 重置上次处理的条码，确保每次打开弹窗都能正常扫码
   lastProcessedBarcode.value = ''
-
-  nextTick(() => {
-    if (barcodeInput.value) {
-      barcodeInput.value.focus()
-    }
-  })
+  barcodeInput.value?.focus()
 }
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, (c) => {
@@ -325,8 +318,6 @@ function generateUUID() {
   })
 }
 
-// 添加一个标志来防止初次打开时的误触发
-const isInitialized = ref(false)
 // 添加一个标志来防止重复处理同一个条码
 const lastProcessedBarcode = ref('')
 
@@ -379,45 +370,25 @@ const processBarcodeScan = async (barcodeValue: string) => {
     }
   } else {
     packingForm.fnSkuOrUpc = ''
-    $baseMessage(`找不到该${upcOrFnSku}，请重新扫描`, 'error')
+    $baseMessage(`找不到该${upcOrFnSku.value}，请重新扫描`, 'error')
   }
 }
 
 // 处理回车键事件（扫枪或用户手动回车）
 const handleEnter = async (event: any) => {
-  // 如果是初次打开，跳过处理
-  if (!isInitialized.value) {
-    isInitialized.value = true
-    return
-  }
-
   const barcodeValue = (event.target as HTMLInputElement).value
-
-  // 确保有条码值才进行处理
   if (!barcodeValue || !barcodeValue.trim()) {
     return
   }
-
   await processBarcodeScan(barcodeValue)
 }
 
 // 处理失焦事件
 const handleBlur = async (event: any) => {
-  // 如果是初次打开，跳过处理
-  if (!isInitialized.value) {
-    isInitialized.value = true
-    return
-  }
-
   const barcodeValue = (event.target as HTMLInputElement).value
-
-  // 确保有条码值才进行处理
   if (!barcodeValue || !barcodeValue.trim()) {
     return
   }
-
-  // 对于blur事件，我们可能需要一些额外的逻辑来避免重复处理
-  // 比如检查是否已经处理过这个条码
   await processBarcodeScan(barcodeValue)
 }
 
