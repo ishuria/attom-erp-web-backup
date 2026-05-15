@@ -20,7 +20,13 @@
             <el-input v-model="packingForm.productName" disabled />
           </el-form-item>
           <el-form-item label="数量" prop="count">
-            <el-input ref="packingCount" v-model="packingForm.count" clearable @change="handleUpdate" />
+            <el-input
+              ref="packingCount"
+              v-model="packingForm.count"
+              clearable
+              @change="handleUpdate"
+              @keydown.enter="switchNext"
+            />
           </el-form-item>
         </el-form>
       </el-col>
@@ -39,7 +45,7 @@
     <template #footer>
       <div style="text-align: center">
         <el-button v-show="previousVisible" @click="switchPrevious">上一个</el-button>
-        <el-button type="primary" @click="switchNext">下一个</el-button>
+        <el-button type="primary" @click="switchNext">下一个 (Enter)</el-button>
         <el-button type="success" @click="showConfirm">完成</el-button>
       </div>
     </template>
@@ -339,38 +345,48 @@ const processBarcodeScan = async (barcodeValue: string) => {
   }
 
   // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
-  const { data } = await getEncasementSku({
-    site: props.site!,
-    fnSkuOrUpc: str,
-  })
-  if (data) {
-    // Object.assign(packingForm, data)
-    // 更新 packingForm
-    for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(packingForm, key)) {
-        packingForm[key] = (data as any)[key]
+  try {
+    const { data } = await getEncasementSku({
+      site: props.site!,
+      fnSkuOrUpc: str,
+    })
+    if (data) {
+      // Object.assign(packingForm, data)
+      // 更新 packingForm
+      for (const key in data) {
+        if (Object.prototype.hasOwnProperty.call(packingForm, key)) {
+          packingForm[key] = (data as any)[key]
+        }
       }
-    }
-    // console.log('扫码后的form', packingForm);
+      // console.log('扫码后的form', packingForm);
 
-    tempCurId.value = generateUUID()
-    let flag = _addPacking(packingForm, tempCurId.value)
-    if (flag) {
-      // 如果是有相同的，就清空
-      packingFormRef.value?.resetFields()
-      packingForm.skuImageUrl = ''
-      barcodeDisabled.value = false
-      return
+      tempCurId.value = generateUUID()
+      let flag = _addPacking(packingForm, tempCurId.value)
+      if (flag) {
+        // 已存在相同条码：清空表单，并清掉去重记录，允许用户重新操作
+        packingFormRef.value?.resetFields()
+        packingForm.skuImageUrl = ''
+        barcodeDisabled.value = false
+        lastProcessedBarcode.value = ''
+        return
+      }
+      // console.log('packingData', packingStore.packingData)
+      barcodeDisabled.value = true
+      if (packingCount.value) {
+        packingCount.value.focus()
+        packingCount.value.select()
+      }
+    } else {
+      // 查不到：清空表单和去重记录，允许重扫同一个码
+      packingForm.fnSkuOrUpc = ''
+      lastProcessedBarcode.value = ''
+      $baseMessage(`找不到该${upcOrFnSku.value}，请重新扫描`, 'error')
     }
-    // console.log('packingData', packingStore.packingData)
-    barcodeDisabled.value = true
-    if (packingCount.value) {
-      packingCount.value.focus()
-      packingCount.value.select()
-    }
-  } else {
+  } catch (e) {
+    // 网络/后端异常：回滚状态，允许重扫
     packingForm.fnSkuOrUpc = ''
-    $baseMessage(`找不到该${upcOrFnSku.value}，请重新扫描`, 'error')
+    lastProcessedBarcode.value = ''
+    $baseMessage('扫码查询失败，请重试', 'error')
   }
 }
 
@@ -447,6 +463,7 @@ const switchNext = () => {
   // 首先判断是否都输入
   packingFormRef.value?.validate((isValid: boolean) => {
     if (isValid) {
+      handleUpdate()
       // 两种情况，一种是在中间点击下一个，跳到对应的数据位置；一种是在最后一个点击下一个，跳到新的数据
       const data = packingStore.packingData
       const length = data.length
@@ -455,13 +472,16 @@ const switchNext = () => {
         // 如果就是最后一个，创建一个新的
         packingFormRef.value?.resetFields()
         packingForm.skuImageUrl = ''
+        // 清掉上次扫码记录，让重复条码交给 store 层报错
+        lastProcessedBarcode.value = ''
         // console.log('最后一个下一个后的数据', packingStore.packingData)
         // 上一个按钮展示
         previousVisible.value = true
-        // 聚焦到FNSKU
-        barcodeInput.value?.focus()
-        // 扫枪扫码可以输入
+        // 扫枪扫码可以输入（先解禁，等 DOM 更新后再聚焦）
         barcodeDisabled.value = false
+        nextTick(() => {
+          barcodeInput.value?.focus()
+        })
       } else {
         // 如果是中间的，就再跳到下一个
         Object.assign(packingForm, data[index + 1])
