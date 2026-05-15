@@ -40,7 +40,7 @@
                   <el-input
                     v-model="queryForm.keyWord"
                     clearable
-                    placeholder="请输入 SKU"
+                    placeholder="请输入 SKU / 请购人"
                     style="width: 240px"
                     @input="handleQuery"
                     @keyup.enter="handleQuery"
