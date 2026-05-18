@@ -17,37 +17,42 @@
     </el-steps>
     <order-review-step1
       v-if="active === 0"
-      :review-id="route.query.reviewId"
-      :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo"
+      :edit-disabled="editDisabled"
+      :review-id="reviewId"
+      :review-status="reviewStatus"
+      :review-step-no="reviewStepNo"
       @change-step="handleSetStep"
     />
     <order-review-step2
       v-if="active === 1"
-      :review-id="route.query.reviewId"
-      :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo"
+      :edit-disabled="editDisabled"
+      :review-id="reviewId"
+      :review-status="reviewStatus"
+      :review-step-no="reviewStepNo"
       @change-step="handleSetStep"
     />
     <order-review-step3
       v-if="active === 2"
-      :review-id="route.query.reviewId"
-      :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo"
+      :edit-disabled="editDisabled"
+      :review-id="reviewId"
+      :review-status="reviewStatus"
+      :review-step-no="reviewStepNo"
       @change-step="handleSetStep"
     />
     <order-review-step4
       v-if="active === 3"
-      :review-id="route.query.reviewId"
-      :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo"
+      :edit-disabled="editDisabled"
+      :review-id="reviewId"
+      :review-status="reviewStatus"
+      :review-step-no="reviewStepNo"
       @change-step="handleSetStep"
     />
     <order-review-step5
       v-if="active === 4"
-      :review-id="route.query.reviewId"
-      :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo"
+      :edit-disabled="editDisabled"
+      :review-id="reviewId"
+      :review-status="reviewStatus"
+      :review-step-no="reviewStepNo"
       @change-step="handleSetStep"
     />
   </div>
@@ -60,6 +65,7 @@ import orderReviewStep2 from './orderingReviewStep/orderReviewStep2.vue'
 import orderReviewStep3 from './orderingReviewStep/orderReviewStep3.vue'
 import orderReviewStep4 from './orderingReviewStep/orderReviewStep4.vue'
 import orderReviewStep5 from './orderingReviewStep/orderReviewStep5.vue'
+import { reviewStepEditDisabledStatus } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 defineOptions({
@@ -70,28 +76,32 @@ defineOptions({
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-const active = ref<number>(Number(route.query.reviewStepNo))
-const orderStep1Ref = ref(null)
-const formData = ref<any>({})
+const reviewId = computed(() => Number(route.query.reviewId ?? 0))
+const reviewStatus = computed(() => Number(route.query.reviewStatus ?? 0))
+const reviewStepNo = computed(() => Number(route.query.reviewStepNo ?? 0))
+const active = ref<number>(reviewStepNo.value)
 
 const handleSetStep = (_active: any) => {
   active.value = _active
 }
-
-watch(active, (newActive) => {
-  if (newActive === 0) {
-    const orderStep1: any = orderStep1Ref.value
-    if (orderStep1) {
-      formData.value = orderStep1.form
-    }
-  }
-})
 
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
+const editDisabled = ref<boolean>(false)
+const fetchStepEditDisabledStatus = async () => {
+  editDisabled.value = false
+  const { data } = await reviewStepEditDisabledStatus({ reviewId: reviewId.value, step: active.value + 1 })
+  editDisabled.value = data
+}
+watch(active, () => {
+  fetchStepEditDisabledStatus()
+})
+onMounted(() => {
+  fetchStepEditDisabledStatus()
+})
 </script>
 
 <style lang="scss" scoped>

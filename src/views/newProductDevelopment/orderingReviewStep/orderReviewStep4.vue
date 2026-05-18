@@ -76,7 +76,7 @@
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
-import { reviewProductList, reviewStepNo4Fail, reviewStepNo5Pass, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
+import { reviewProductList, reviewStepNo4Fail, reviewStepNo5Pass } from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem } from '/@/type/review/review'
@@ -88,10 +88,12 @@ defineOptions({
 })
 
 const props = defineProps<{
-  reviewStatus: string
-  reviewStepNo: string
-  reviewId: string
+  reviewStatus: number
+  reviewStepNo: number
+  reviewId: number
+  editDisabled: boolean
 }>()
+const editDisabled = computed(() => props.editDisabled)
 // 发布Po的loading
 const releasePoLoading = ref<boolean>(false)
 // 控制预览图片的隐藏显示
@@ -176,7 +178,7 @@ const labelMap: Record<string, string> = {
 // 当点击运营重新分货的时候
 const handleGoback = async () => {
   $baseConfirm('确定要点击运营重新分货吗？', null, async () => {
-    const { data } = await reviewStepNo4Fail({ reviewId: Number(props.reviewId) })
+    const { data } = await reviewStepNo4Fail({ reviewId: props.reviewId })
     if (data === true) {
       $baseMessage('回退到运营分货成功', 'success', 'hey')
       await delVisitedRoute(handleActivePath(route, true))
@@ -189,7 +191,7 @@ const handleGoback = async () => {
 // 当点击通过的时候 采购审核通过
 const handleSaveAndContinue = async () => {
   $baseConfirm('确定要点击提交采购审核吗？', null, async () => {
-    const { data } = await reviewStepNo5Pass({ reviewId: Number(props.reviewId) })
+    const { data } = await reviewStepNo5Pass({ reviewId: props.reviewId })
     if (data === true) {
       $baseMessage('提交采购审核成功', 'success', 'hey')
       await delVisitedRoute(handleActivePath(route, true))
@@ -243,19 +245,11 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
-const editDisabled = ref<boolean>(false)
-const fetchSubmittedStatus = async () => {
-  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 4 })
-  if (data === 1) {
-    editDisabled.value = true
-  }
-}
 onMounted(() => {
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchSiteList()
   fetchData()
-  fetchSubmittedStatus()
 })
 </script>
 

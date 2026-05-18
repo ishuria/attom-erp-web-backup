@@ -177,7 +177,7 @@
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList, getReviewVineSelectList } from '/@/api/devlocal/orderProcess'
-import { getSkuVariantList, reviewStepNo2Fail, reviewStepNo2Pass, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
+import { getSkuVariantList, reviewStepNo2Fail, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
@@ -189,10 +189,12 @@ const variantList = ref<any[]>([])
 const variantSize = ref<number>(0)
 
 const props = defineProps<{
-  reviewStatus: string
-  reviewStepNo: string
-  reviewId: string
+  reviewStatus: number
+  reviewStepNo: number
+  reviewId: number
+  editDisabled: boolean
 }>()
+const editDisabled = computed(() => props.editDisabled)
 
 defineOptions({
   name: 'OrderReviewStep2',
@@ -364,7 +366,7 @@ const handleNotPassSubmit = (reason: string) => {
     ),
   ])
   $baseConfirm(deleteVNode, '系统提示', async () => {
-    const { data } = await reviewStepNo2Fail({ reviewId: Number(props.reviewId), reason })
+    const { data } = await reviewStepNo2Fail({ reviewId: props.reviewId, reason })
     if (data === true) {
       $baseMessage('审核不通过提交成功', 'success', 'hey')
       reasonVisible.value = false
@@ -437,16 +439,9 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
-const editDisabled = ref<boolean>(false)
-const fetchSubmittedStatus = async () => {
-  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 2 })
-  if (data === 1) {
-    editDisabled.value = true
-  }
-}
 const approvalBusinessList = ref<{ id: number; label: string }[]>([])
 const fetchApprovalBusinessList = async () => {
-  const { data } = await getReviewVineSelectList(Number(props.reviewId))
+  const { data } = await getReviewVineSelectList(props.reviewId)
   approvalBusinessList.value = data
 }
 onMounted(async () => {
@@ -455,7 +450,6 @@ onMounted(async () => {
   fetchPackagePositionOption()
   // fetchMoldData()
   fetchData()
-  fetchSubmittedStatus()
 })
 </script>
 

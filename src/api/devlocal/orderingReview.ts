@@ -167,10 +167,10 @@ export function reviewStepNo3Save(params?: IReviewCommonReq): Promise<IReviewSte
     params,
   })
 }
-// 查询步骤是否已提交
-export function reviewStepSubmittedStatus(params: { reviewId: number; step: number }): Promise<{ data: number }> {
+// 查询步骤是否禁止编辑
+export function reviewStepEditDisabledStatus(params: { reviewId: number; step: number }): Promise<{ data: boolean }> {
   return request({
-    url: `${BASE_API}/review/step/submitted/status`,
+    url: `${BASE_API}/review/step/edit-disabled/status`,
     method: 'get',
     params,
   })

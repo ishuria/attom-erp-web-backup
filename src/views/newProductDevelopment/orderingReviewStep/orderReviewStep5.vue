@@ -249,7 +249,7 @@
 import { isEqual } from 'lodash-es'
 import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 import { currencyList, invoicingList } from '../indexCommon'
-import { purchaseReviewNoFail, releasePo, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
+import { purchaseReviewNoFail, releasePo } from '/@/api/devlocal/orderingReview'
 import {
   reviewStepNo3ComponentList,
   reviewStepNo3ComponentUpdate,
@@ -268,10 +268,12 @@ defineOptions({
 })
 
 const props = defineProps<{
-  reviewStatus: string
-  reviewStepNo: string
-  reviewId: string
+  reviewStatus: number
+  reviewStepNo: number
+  reviewId: number
+  editDisabled: boolean
 }>()
+const editDisabled = computed(() => props.editDisabled)
 const tableLoading = ref<boolean>(false)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
@@ -330,7 +332,7 @@ const handleNotPassSubmit = (reason: string) => {
     ])
     $baseConfirm(deleteVNode, '系统提示', async () => {
       const { data } = await purchaseReviewNoFail({
-        reviewId: Number(props.reviewId),
+        reviewId: props.reviewId,
         reason: reason,
       })
       if (data) {
@@ -389,7 +391,7 @@ const fetchPurchaseAndRepository = async () => {
 // 获取拿样零件添加数据
 const fetchDataComponent = async () => {
   try {
-    const { data } = await reviewStepNo3ComponentList({ reviewId: Number(props.reviewId) })
+    const { data } = await reviewStepNo3ComponentList({ reviewId: props.reviewId })
     componentList.value = data
     componentList.value.forEach((item: any) => {
       item.currency = convertString(item.currency)
@@ -564,17 +566,9 @@ const clickCancel = async (event: any, value: any) => {
     }
   }
 }
-const editDisabled = ref<boolean>(false)
-const fetchSubmittedStatus = async () => {
-  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 5 })
-  if (data === 1) {
-    editDisabled.value = true
-  }
-}
 onBeforeMount(() => {
   fetchPurchaseAndRepository()
   fetchDataComponent()
-  fetchSubmittedStatus()
 })
 </script>
 

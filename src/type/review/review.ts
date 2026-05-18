@@ -51,7 +51,7 @@ export interface IReviewQueryItem {
  * 审核共通参数
  */
 export interface IReviewCommonReq {
-  reviewId: string
+  reviewId: number | string
 }
 
 /**
@@ -360,7 +360,7 @@ export interface IReviewStepNo1Req {
   /**
    * 审核id
    */
-  reviewId: string
+  reviewId: number | string
   /**
    * 变体列表
    */
@@ -396,7 +396,7 @@ export interface IReviewStepResp {
  * sku创建req
  */
 export interface IReviewStep2Req {
-  reviewId: string
+  reviewId: number | string
   variantList: IReviewStep2Item[]
 }
 

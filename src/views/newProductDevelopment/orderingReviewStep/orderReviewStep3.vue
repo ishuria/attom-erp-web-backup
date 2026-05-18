@@ -106,13 +106,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  getDistributionList,
-  reviewStepNo3Fail,
-  reviewStepNo3Save,
-  reviewStepSubmittedStatus,
-  updateReviewStepNo3Vine,
-} from '/@/api/devlocal/orderingReview'
+import { getDistributionList, reviewStepNo3Fail, reviewStepNo3Save, updateReviewStepNo3Vine } from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IUpdateReviewStepNo3Vine } from '/@/type/review/review'
@@ -127,10 +121,12 @@ defineOptions({
 
 const siteQuantityList = ref<any[]>([])
 const props = defineProps<{
-  reviewStatus: string
-  reviewStepNo: string
-  reviewId: string
+  reviewStatus: number
+  reviewStepNo: number
+  reviewId: number
+  editDisabled: boolean
 }>()
+const editDisabled = computed(() => props.editDisabled)
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
@@ -265,7 +261,7 @@ const validate = (): boolean => {
 }
 const goBackToStep2 = async () => {
   $baseConfirm('确定要点击不通过吗？', null, async () => {
-    const { data } = await reviewStepNo3Fail({ reviewId: Number(props.reviewId) })
+    const { data } = await reviewStepNo3Fail({ reviewId: props.reviewId })
     if (data === true) {
       $baseMessage('运营分货不通过成功', 'success', 'hey')
       await delVisitedRoute(handleActivePath(route, true))
@@ -291,7 +287,6 @@ const handleSaveAndContinue = async () => {
     $baseMessage('所有站点分货完成后才能提交！', 'warning', 'hey')
     return
   }
-  await fetchSubmittedStatus()
   if (editDisabled.value) {
     $baseMessage('此记录已提交过，请勿重复提交！', 'warning', 'hey')
     return
@@ -323,17 +318,9 @@ const fetchSiteList = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
-const editDisabled = ref<boolean>(false)
-const fetchSubmittedStatus = async () => {
-  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 3 })
-  if (data === 1) {
-    editDisabled.value = true
-  }
-}
 onMounted(() => {
   fetchSiteList()
   fetchData()
-  fetchSubmittedStatus()
 })
 </script>
 

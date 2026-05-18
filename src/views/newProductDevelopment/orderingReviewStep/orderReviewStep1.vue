@@ -110,42 +110,6 @@
       </el-table>
     </div>
 
-    <!-- <div style="padding-top: 50px;">
-      <el-table border :data="moldData" :header-cell-style="{ 'text-align': 'center' }" style="margin-top: 25px;">
-        <el-table-column align="center" label="提交日期">
-          <template #default="{ row }">
-            {{ formatDate(new Date(row.createTime)) }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="零件名" prop="component" />
-        <el-table-column align="center" label="供应商" prop="suppliser" />
-        <el-table-column align="center" label="状态">
-          <template #default="{ row }">
-            <el-tag v-if="row.status == 0" type="info">审批中</el-tag>
-            <el-tag v-if="row.status == 1" type="warning">待提交付款申请</el-tag>
-            <el-tag v-if="row.status == 2" type="success">已付款</el-tag>
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="开票类型">
-          <template #default="{ row }">
-            <span v-if="row.invoiceType == 0">专票</span>
-            <span v-if="row.invoiceType == 1">普票</span>
-            <span v-if="row.invoiceType == 2">不开票</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="付款金额" prop="payPrice"/>
-        <el-table-column align="center" label="处理方式">
-          <template #default="{ row }">
-            <span v-if="row.dealMethod == 0">不含在PO</span>
-            <span v-if="row.dealMethod == 1">含在该PO</span>
-            <span v-if="row.dealMethod == 2">含在其他PO</span>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div> -->
-
     <div style="padding-top: 50px">
       <el-table
         border
@@ -238,13 +202,7 @@
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { getProductPositionList, getReviewVariantPackageSampleList, getReviewVineSelectList } from '/@/api/devlocal/orderProcess'
-import {
-  getReviewByReviewId,
-  getVariantList,
-  reviewStepNo1Fail,
-  reviewStepNo1Pass,
-  reviewStepSubmittedStatus,
-} from '/@/api/devlocal/orderingReview'
+import { getReviewByReviewId, getVariantList, reviewStepNo1Fail, reviewStepNo1Pass } from '/@/api/devlocal/orderingReview'
 import { updateBulkGoodsStatusByReviewId } from '/@/api/devlocal/progress'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStepNo1Req, IReviewStepNo1Variant, IVariantInfoItem } from '/@/type/review/review'
@@ -252,10 +210,12 @@ import { handleActivePath } from '/@/utils/routes'
 import { useTableDataLineToColumn } from '/@/utils/tableColum'
 
 const props = defineProps<{
-  reviewStatus: string
-  reviewStepNo: string
-  reviewId: string
+  reviewStatus: number
+  reviewStepNo: number
+  reviewId: number
+  editDisabled: boolean
 }>()
+const editDisabled = computed(() => props.editDisabled)
 
 defineOptions({
   name: 'OrderReviewStep1',
@@ -453,7 +413,7 @@ const handleReviewStepNo1Fail = (reason: string) => {
         failReasonVisible.value = false
         await delVisitedRoute(handleActivePath(route, true))
         $baseMessage('审核不通过提交成功', 'success', 'hey')
-        await updateBulkGoodsStatusByReviewId({ reviewId: Number(props.reviewId), status: 1 })
+        await updateBulkGoodsStatusByReviewId({ reviewId: props.reviewId, status: 1 })
       }
     })
   } catch (error) {
@@ -526,16 +486,9 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
-const editDisabled = ref<boolean>(false)
-const fetchSubmittedStatus = async () => {
-  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 1 })
-  if (data === 1) {
-    editDisabled.value = true
-  }
-}
 const approvalBusinessList = ref<{ id: number; label: string }[]>([])
 const fetchApprovalBusinessList = async () => {
-  const { data } = await getReviewVineSelectList(Number(props.reviewId))
+  const { data } = await getReviewVineSelectList(props.reviewId)
   approvalBusinessList.value = data
 }
 onMounted(() => {
@@ -547,7 +500,6 @@ onMounted(() => {
   fetchChannelData()
   fetchSalesSiteList()
   fetchVariantData()
-  fetchSubmittedStatus()
 })
 </script>
 
