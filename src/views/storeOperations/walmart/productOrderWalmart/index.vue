@@ -238,6 +238,12 @@
             {{ row.recentlyInboundStorage }}
           </div>
 
+          <div v-else-if="item.label === '最晚补货'">
+            {{ row.latestRestock }}
+            <br />
+            <span>{{ row.avgTime }}天</span>
+          </div>
+
           <!-- 订货备注 -->
           <div v-else-if="item.label === '订货备注'">
             <el-tooltip effect="dark" placement="top">

@@ -284,11 +284,18 @@
           <span v-if="item.label === '库龄'">
             <span v-html="row.storageAge"></span>
           </span>
-          <span v-if="item.label === '订货#'">
+          <!-- <span v-if="item.label === '订货#'">
             {{ row.orderCount }}
             <br />
             <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
-          </span>
+          </span> -->
+          <el-tooltip v-else-if="item.label === '订货#'" content="点击查看订货明细" effect="dark" placement="top">
+            <div class="order-detail-link">
+              {{ row.orderCount }}
+              <br />
+              <span>{{ row.orderTotalNumber }}</span>
+            </div>
+          </el-tooltip>
           <span v-if="item.label === '最近入库'">
             <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
           </span>
@@ -369,6 +376,8 @@
       @confirm="handleReleaseOrder"
       @image-preview="imagePreviewShow"
     />
+    <!-- 订货明细弹窗 -->
+    <vab-product-order-table ref="productOrderTableRef" />
   </div>
 </template>
 
@@ -379,6 +388,7 @@ import { CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { IProductOrderTableRef } from '~/src/type/storeOperation/productOrdering.ts'
 import { months } from '../../constantOption.ts'
 import { getOperationTypeUserList } from '/@/api/devlocal/frontPage.ts'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
@@ -807,6 +817,7 @@ const handleSeasonalOpened = () => {
     }
   })
 }
+const productOrderTableRef = ref<IProductOrderTableRef>()
 const cellClick = async (row: any, column: any) => {
   const label = column.label
   switch (label) {
@@ -819,6 +830,13 @@ const cellClick = async (row: any, column: any) => {
     case '季节趋势': {
       seasonalVisible.value = true
       _seasonalCoefficient = row.seasonalCoefficient
+      break
+    }
+    case '订货#': {
+      productOrderTableRef.value?.open({
+        sku: row.sku,
+        site: row.site,
+      })
       break
     }
 
@@ -1238,6 +1256,17 @@ onBeforeMount(async () => {
   }
   &:hover {
     cursor: pointer;
+  }
+}
+.order-detail-link {
+  display: inline-block;
+  color: var(--el-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  span {
+    font-weight: bold;
   }
 }
 </style>
