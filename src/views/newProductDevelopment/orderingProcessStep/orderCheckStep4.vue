@@ -3,6 +3,7 @@
     <el-table
       ref="tableRef"
       border
+      class="table1"
       :data="exchangeList"
       :header-cell-style="{ 'text-align': 'center' }"
       :show-header="false"
@@ -367,7 +368,7 @@ onMounted(async () => {
   transform-origin: center; // 确保放大从中心开始
 }
 
-:deep(.el-table__body-wrapper tr:last-child) {
+:deep(.table1 .el-table__body-wrapper tr:last-child) {
   display: none;
 }
 
