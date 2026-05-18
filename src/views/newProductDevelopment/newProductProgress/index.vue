@@ -96,17 +96,17 @@
           </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
+              <!-- <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">
                     {{ removeHtmlTags(row.progressLog) }}
                     <span v-if="row.progressLog?.length >= 300">...</span>
                   </div>
-                </template>
-                <div class="multi-line-ellipsis">
-                  {{ removeHtmlTags(row.progressLog) }}
-                </div>
-              </el-tooltip>
+                </template> -->
+              <div class="multi-line-ellipsis">
+                {{ removeHtmlTags(row.progressLog) }}
+              </div>
+              <!-- </el-tooltip> -->
             </template>
           </el-table-column>
 
@@ -315,17 +315,17 @@
           </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
+              <!-- <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">
                     {{ removeHtmlTags(row.progressLog) }}
                     <span v-if="row.progressLog?.length >= 300">...</span>
                   </div>
-                </template>
-                <div class="multi-line-ellipsis">
-                  {{ removeHtmlTags(row.progressLog) }}
-                </div>
-              </el-tooltip>
+                </template> -->
+              <div class="multi-line-ellipsis">
+                {{ removeHtmlTags(row.progressLog) }}
+              </div>
+              <!-- </el-tooltip> -->
             </template>
           </el-table-column>
 
