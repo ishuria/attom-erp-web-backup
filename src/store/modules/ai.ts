@@ -729,6 +729,14 @@ export const useAiStore = defineStore('ai', {
         } catch {
           // reload 失败不影响主流程：用户再点开会自己走 historic API
         }
+
+        // 流式结束后给源会话本地未读 +1：用户停留在源会话时也要在 sidebar 出红点，
+        // 等待期间不显示、回复落定后才显示，避免被中途流式状态干扰；
+        // 用户下次手动点击该会话条目时 switchConversation 会触发 markRead 自动清零。
+        const targetConversation = this.conversations.find((item) => String(item.id) === key)
+        if (targetConversation) {
+          this.setConversationUnreadCount(conversationId, (targetConversation.unreadCount ?? 0) + 1)
+        }
       }
     },
     setConversationBusy(

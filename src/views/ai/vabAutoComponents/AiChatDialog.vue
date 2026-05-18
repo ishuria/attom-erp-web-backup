@@ -6,7 +6,7 @@
     :close-on-click-modal="true"
     :destroy-on-close="false"
     :title="title"
-    width="65vw"
+    width="84vw"
     @update:fullscreen="handleFullscreenChange"
   >
     <div :class="['ai-chat-dialog', { 'is-fullscreen': isFullscreen }]">
@@ -109,10 +109,11 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 12px;
-  height: min(82vh, 920px);
+  height: calc(min(82vh, 920px) / 1.3);
+  zoom: 1.3;
 
   &.is-fullscreen {
-    height: calc(100vh - 156px);
+    height: calc((100vh - 156px) / 1.3);
   }
 }
 
@@ -156,16 +157,16 @@ watch(
 
 @media screen and (max-width: 1280px) {
   .ai-chat-dialog {
-    height: min(78vh, 820px);
+    height: calc(min(78vh, 820px) / 1.3);
   }
 }
 
 @media screen and (max-width: 768px) {
   .ai-chat-dialog {
-    height: 74vh;
+    height: calc(74vh / 1.3);
 
     &.is-fullscreen {
-      height: calc(100vh - 96px);
+      height: calc((100vh - 96px) / 1.3);
     }
   }
 
