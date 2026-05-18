@@ -283,250 +283,24 @@
         </el-table-column>
       </el-table>
     </vab-dialog>
-    <!-- 新增渠道 -->
-    <vab-dialog v-model="addNewChannelVisible" class="dialog" title="新增渠道" top="5%" width="38%" @close="closeAddNewChannel">
-      <div style="max-height: 60vh; overflow: auto">
-        <el-form
-          ref="addNewChannelFormRef"
-          label-position="right"
-          label-width="auto"
-          :model="addNewChannelForm"
-          style="margin-right: 10px; margin-left: 10px"
-        >
-          <el-form-item label="渠道名">
-            <div style="display: flex; gap: 1%; align-items: center">
-              <el-select v-model="addNewChannelForm.freightForwarderId" placeholder="货代简称" style="flex: 1">
-                <el-option v-for="item in selectList" :key="item.id" :label="item.label" :value="item.id" />
-              </el-select>
-              <span>-</span>
-              <el-input v-model="addNewChannelForm.types" placeholder="货物类型" style="flex: 1" />
-              <span>-</span>
-              <el-input v-model="addNewChannelForm.channelName" placeholder="渠道名" style="flex: 1" />
-              <span>-</span>
-              <el-input v-model="addNewChannelForm.destination" placeholder="目的地" style="flex: 1" />
-            </div>
-          </el-form-item>
-          <el-form-item label="绑定领星code" prop="lingXingCode">
-            <el-input v-model="addNewChannelForm.lingXingCode" clearable />
-          </el-form-item>
-          <el-form-item label="名义时效" prop="nominalLimitation">
-            <el-input v-model="addNewChannelForm.nominalLimitation" clearable />
-          </el-form-item>
-          <el-form-item label="当前价格(kg)" prop="currentPriceWeight">
-            <el-input v-model="addNewChannelForm.currentPriceWeight" clearable />
-          </el-form-item>
-          <el-form-item label="当前价格(m3)" prop="currentPriceVolume">
-            <el-input v-model="addNewChannelForm.currentPriceVolume" clearable />
-          </el-form-item>
-          <el-form-item label="入仓费价格(m3)" prop="warehouseFeePrice">
-            <el-input v-model="addNewChannelForm.warehouseFeePrice" clearable />
-          </el-form-item>
-          <el-form-item label="体积系数" prop="volumeFactor">
-            <el-input v-model="addNewChannelForm.volumeFactor" clearable />
-          </el-form-item>
-          <el-form-item label="重量系数" prop="weightFactor">
-            <el-input v-model="addNewChannelForm.weightFactor" clearable />
-          </el-form-item>
-          <el-form-item label="起运量(kg)" prop="takeOffQuantityWeight">
-            <el-input v-model="addNewChannelForm.takeOffQuantityWeight" clearable />
-          </el-form-item>
-          <el-form-item label="起运量(m3)" prop="takeOffQuantityVolume">
-            <el-input v-model="addNewChannelForm.takeOffQuantityVolume" clearable />
-          </el-form-item>
-          <el-form-item label="最低单箱计费重量(kg)" prop="singleBoxBillingWeightMin">
-            <el-input v-model="addNewChannelForm.singleBoxBillingWeightMin" clearable />
-          </el-form-item>
-          <el-form-item label="最大单箱重量(kg)" prop="singleBoxBillingWeightMax">
-            <el-input v-model="addNewChannelForm.singleBoxBillingWeightMax" clearable />
-          </el-form-item>
-          <el-form-item label="单票最大运量(kg)" prop="takeOffQuantityMaxWeight">
-            <el-input v-model="addNewChannelForm.takeOffQuantityMaxWeight" clearable />
-          </el-form-item>
-          <el-form-item label="单票最大运量(m3)" prop="takeOffQuantityMaxVolume">
-            <el-input v-model="addNewChannelForm.takeOffQuantityMaxVolume" clearable />
-          </el-form-item>
-          <el-form-item label="买单报关费(RMB)" prop="customsDeclarationFeeBill">
-            <el-input v-model="addNewChannelForm.customsDeclarationFeeBill" clearable />
-          </el-form-item>
-          <el-form-item label="买单免费品名个数" prop="freeCountBill">
-            <el-input v-model="addNewChannelForm.freeCountBill" clearable />
-          </el-form-item>
-          <el-form-item label="买单每续页个数" prop="countBill">
-            <el-input v-model="addNewChannelForm.countBill" clearable />
-          </el-form-item>
-          <el-form-item label="买单每续页费用(RMB)" prop="purchaseOrderCostPerRenewal">
-            <el-input v-model="addNewChannelForm.purchaseOrderCostPerRenewal" clearable />
-          </el-form-item>
-          <el-form-item label="退税报关费(RMB)" prop="taxRefundCustomsFee">
-            <el-input v-model="addNewChannelForm.taxRefundCustomsFee" clearable />
-          </el-form-item>
-          <el-form-item label="退税免费品名个数" prop="taxRefundCustomsFreeCount">
-            <el-input v-model="addNewChannelForm.taxRefundCustomsFreeCount" clearable />
-          </el-form-item>
-          <el-form-item label="退税每续页个数" prop="taxRefundCustomsCount">
-            <el-input v-model="addNewChannelForm.taxRefundCustomsCount" clearable />
-          </el-form-item>
-          <el-form-item label="退税每续页费用(RMB)" prop="taxRefundPerRenewalPageFee">
-            <el-input v-model="addNewChannelForm.taxRefundPerRenewalPageFee" clearable />
-          </el-form-item>
-          <el-form-item label="清关费(USD)" prop="customsClearanceFee">
-            <el-input v-model="addNewChannelForm.customsClearanceFee" clearable />
-          </el-form-item>
-          <el-form-item label="清关免费个数" prop="customsClearanceFreeCount">
-            <el-input v-model="addNewChannelForm.customsClearanceFreeCount" clearable />
-          </el-form-item>
-          <el-form-item label="清关每续页个数" prop="customsClearancePageCount">
-            <el-input v-model="addNewChannelForm.customsClearancePageCount" clearable />
-          </el-form-item>
-          <el-form-item label="清关每续页费用(RMB)" prop="customsClearancePageCost">
-            <el-input v-model="addNewChannelForm.customsClearancePageCost" clearable />
-          </el-form-item>
-          <el-form-item label="FDA申报(USD)" prop="fad">
-            <el-input v-model="addNewChannelForm.fad" clearable />
-          </el-form-item>
-          <el-form-item label="EPA申报(USD)" prop="epa">
-            <el-input v-model="addNewChannelForm.epa" clearable />
-          </el-form-item>
-          <el-form-item label="DOT申报(USD)" prop="dot">
-            <el-input v-model="addNewChannelForm.dot" clearable />
-          </el-form-item>
-          <el-form-item label="是否包关税" prop="includeTariffs">
-            <el-select v-model="addNewChannelForm.includeTariffs">
-              <el-option v-for="item in includeTariffOption" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-      <template #footer>
-        <el-button @click="closeAddNewChannel">取消</el-button>
-        <el-button type="primary" @click="confirmAddNewChannel">确认</el-button>
-      </template>
-    </vab-dialog>
-    <!-- 修改or复制 -->
-    <vab-dialog
+    <channel-dialog
+      v-model="addNewChannelVisible"
+      v-model:form="addNewChannelForm"
+      :currency-num-list="currencyNumList"
+      :select-list="selectList"
+      type="add"
+      @cancel="closeAddNewChannel"
+      @confirm="confirmAddNewChannel"
+    />
+    <channel-dialog
       v-model="modifyOrCopyVisible"
-      class="addNewChannel"
-      :title="modifyOrCopy === 'modify' ? '修改' : '复制'"
-      top="5%"
-      width="38%"
-    >
-      <div style="max-height: 60vh; overflow: auto">
-        <el-form label-position="right" label-width="auto" :model="updateForm" style="margin-right: 10px; margin-left: 10px">
-          <el-form-item label="渠道名">
-            <div style="display: flex; gap: 1%; align-items: center">
-              <el-select v-model="updateForm.freightForwarderId" placeholder="货代简称" style="flex: 1">
-                <el-option v-for="item in selectList" :key="item.id" :label="item.label" :value="item.id" />
-              </el-select>
-              <span>-</span>
-              <el-input v-model="updateForm.types" placeholder="货物类型" style="flex: 1" />
-              <span>-</span>
-              <el-input v-model="updateForm.channelName" placeholder="渠道名" style="flex: 1" />
-              <span>-</span>
-              <el-input v-model="updateForm.destination" placeholder="目的地" style="flex: 1" />
-            </div>
-          </el-form-item>
-          <el-form-item label="绑定领星code" prop="lingXingCode">
-            <el-input v-model="updateForm.lingXingCode" clearable />
-          </el-form-item>
-          <el-form-item label="名义时效" prop="nominalLimitation">
-            <el-input v-model="updateForm.nominalLimitation" clearable />
-          </el-form-item>
-          <el-form-item label="当前价格(kg)" prop="currentPriceWeight">
-            <el-input v-model="updateForm.currentPriceWeight" clearable />
-          </el-form-item>
-          <el-form-item label="当前价格(m3)" prop="currentPriceVolume">
-            <el-input v-model="updateForm.currentPriceVolume" clearable />
-          </el-form-item>
-          <el-form-item label="入仓费价格(m3)" prop="warehouseFeePrice">
-            <el-input v-model="updateForm.warehouseFeePrice" clearable />
-          </el-form-item>
-          <el-form-item label="体积系数" prop="volumeFactor">
-            <el-input v-model="updateForm.volumeFactor" clearable />
-          </el-form-item>
-          <el-form-item label="重量系数" prop="weightFactor">
-            <el-input v-model="updateForm.weightFactor" clearable />
-          </el-form-item>
-          <el-form-item label="起运量(kg)" prop="takeOffQuantityWeight">
-            <el-input v-model="updateForm.takeOffQuantityWeight" clearable />
-          </el-form-item>
-          <el-form-item label="起运量(m3)" prop="takeOffQuantityVolume">
-            <el-input v-model="updateForm.takeOffQuantityVolume" clearable />
-          </el-form-item>
-          <el-form-item label="最低单箱计费重量(kg)" prop="singleBoxBillingWeightMin">
-            <el-input v-model="updateForm.singleBoxBillingWeightMin" clearable />
-          </el-form-item>
-          <el-form-item label="最大单箱重量(kg)" prop="singleBoxBillingWeightMax">
-            <el-input v-model="updateForm.singleBoxBillingWeightMax" clearable />
-          </el-form-item>
-          <el-form-item label="单票最大运量(kg)" prop="takeOffQuantityMaxWeight">
-            <el-input v-model="updateForm.takeOffQuantityMaxWeight" clearable />
-          </el-form-item>
-          <el-form-item label="单票最大运量(m3)" prop="takeOffQuantityMaxVolume">
-            <el-input v-model="updateForm.takeOffQuantityMaxVolume" clearable />
-          </el-form-item>
-          <el-form-item label="买单报关费(RMB)" prop="customsDeclarationFeeBill">
-            <el-input v-model="updateForm.customsDeclarationFeeBill" clearable />
-          </el-form-item>
-          <el-form-item label="买单免费品名个数" prop="freeCountBill">
-            <el-input v-model="updateForm.freeCountBill" clearable />
-          </el-form-item>
-          <el-form-item label="买单每续页个数" prop="countBill">
-            <el-input v-model="updateForm.countBill" :min="1" style="width: 100%" type="number" />
-          </el-form-item>
-          <el-form-item label="买单每续页费用(RMB)" prop="purchaseOrderCostPerRenewal">
-            <el-input v-model="updateForm.purchaseOrderCostPerRenewal" clearable />
-          </el-form-item>
-          <el-form-item label="退税报关费(RMB)" prop="taxRefundCustomsFee">
-            <el-input v-model="updateForm.taxRefundCustomsFee" clearable />
-          </el-form-item>
-          <el-form-item label="退税免费品名个数" prop="taxRefundCustomsFreeCount">
-            <el-input v-model="updateForm.taxRefundCustomsFreeCount" clearable />
-          </el-form-item>
-          <el-form-item label="退税每续页个数" prop="taxRefundCustomsCount">
-            <el-input v-model="updateForm.taxRefundCustomsCount" :min="1" style="width: 100%" type="number" />
-          </el-form-item>
-          <el-form-item label="退税每续页费用(RMB)" prop="taxRefundPerRenewalPageFee">
-            <el-input v-model="updateForm.taxRefundPerRenewalPageFee" clearable />
-          </el-form-item>
-          <el-form-item :label="modifyOrCopy === 'modify' ? '清关费' : '清关费(USD)'" prop="customsClearanceFee">
-            <el-input v-model="updateForm.customsClearanceFee" clearable />
-          </el-form-item>
-          <!-- 新加货币选项 -->
-          <el-form-item v-if="modifyOrCopy === 'modify'" label="货币" prop="customsClearanceCurrency">
-            <el-select v-model="updateForm.customsClearanceCurrency" placeholder="请选择货币">
-              <el-option v-for="item in currencyNumList" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="清关免费个数" prop="customsClearanceFreeCount">
-            <el-input v-model="updateForm.customsClearanceFreeCount" clearable />
-          </el-form-item>
-          <el-form-item label="清关每续页个数" prop="customsClearancePageCount">
-            <el-input v-model="updateForm.customsClearancePageCount" :min="1" style="width: 100%" type="number" />
-          </el-form-item>
-          <el-form-item label="清关每续页费用(RMB)" prop="customsClearancePageCost">
-            <el-input v-model="updateForm.customsClearancePageCost" clearable />
-          </el-form-item>
-          <el-form-item label="FDA申报(USD)" prop="fad">
-            <el-input v-model="updateForm.fad" clearable />
-          </el-form-item>
-          <el-form-item label="EPA申报(USD)" prop="epa">
-            <el-input v-model="updateForm.epa" clearable />
-          </el-form-item>
-          <el-form-item label="DOT申报(USD)" prop="dot">
-            <el-input v-model="updateForm.dot" clearable />
-          </el-form-item>
-          <el-form-item label="是否包关税" prop="includeTariffs">
-            <el-select v-model="updateForm.includeTariffs">
-              <el-option v-for="item in includeTariffOption" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-      <template #footer>
-        <el-button @click="modifyOrCopyVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmModifyOrCopy">确认</el-button>
-      </template>
-    </vab-dialog>
+      v-model:form="updateForm"
+      :currency-num-list="currencyNumList"
+      :select-list="selectList"
+      :type="modifyOrCopy"
+      @cancel="closeModifyOrCopy"
+      @confirm="confirmModifyOrCopy"
+    />
     <!-- 站点渠道设定 -->
     <vab-dialog v-model="channelSiteVisible" title="站点渠道设定" top="10vh" width="30%">
       <el-table border :data="channelSiteList" :header-cell-style="{ textAlign: 'center' }" stripe>
@@ -549,7 +323,6 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { includeTariffOption } from '../../packagingShipping/constantOption'
 import { getShipmentLegCurrencyList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import {
   addChannelFreightForwarder,
@@ -654,15 +427,20 @@ const addNewChannelForm = reactive<any>({
 })
 // 修改或复制表单
 const updateForm = reactive<any>({})
-const addNewChannelFormRef = ref<FormInstance>()
 // 修改or复制可见
 const modifyOrCopyVisible = ref<boolean>(false)
 // 标记修改还是复制
-const modifyOrCopy = ref<string>('')
+const modifyOrCopy = ref<'modify' | 'copy'>('modify')
 const selectId = ref<number>(0)
 const channelSiteList = ref<IGetChannelSiteList[]>([])
 // 发货站点渠道设定可见
 const channelSiteVisible = ref<boolean>(false)
+const clearForm = (form: Record<string, any>, defaultValue: Record<string, any> = {}) => {
+  Object.keys(form).forEach((key) => {
+    delete form[key]
+  })
+  Object.assign(form, defaultValue)
+}
 const handleChangeChannel = async (row: IGetChannelSiteList) => {
   await updateChannelSiteList({
     id: row.id,
@@ -753,27 +531,21 @@ const showForwarderList = async () => {
 }
 // 关闭新增渠道
 const closeAddNewChannel = () => {
-  addNewChannelFormRef.value?.resetFields()
-  addNewChannelForm.freightForwarderId = undefined
-  addNewChannelForm.types = ''
-  addNewChannelForm.channelName = ''
-  addNewChannelForm.destination = ''
-  addNewChannelForm.lingXingCode = ''
+  clearForm(addNewChannelForm, { includeTariffs: 0 })
   addNewChannelVisible.value = false
 }
+const closeModifyOrCopy = () => {
+  clearForm(updateForm)
+  modifyOrCopyVisible.value = false
+}
 // 确认新增渠道
-const confirmAddNewChannel = async () => {
-  addNewChannelFormRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      //执行新增渠道逻辑
-      const { data } = await addChannelFreightForwarder(addNewChannelForm)
-      if (data) {
-        $baseMessage('新增渠道成功', 'success')
-        closeAddNewChannel()
-        queryData()
-      }
-    }
-  })
+const confirmAddNewChannel = async (form: Record<string, any>) => {
+  const { data } = await addChannelFreightForwarder(form)
+  if (data) {
+    $baseMessage('新增渠道成功', 'success')
+    closeAddNewChannel()
+    queryData()
+  }
 }
 // 获取修改的列表
 const fetchUpdateList = async (id: number) => {
@@ -784,55 +556,35 @@ const fetchUpdateList = async (id: number) => {
 }
 // 展示修改
 const showModify = (row: any) => {
+  clearForm(updateForm)
   modifyOrCopyVisible.value = true
   modifyOrCopy.value = 'modify'
   fetchUpdateList(row.id)
 }
 // 展示复制
 const showCopy = (row: any) => {
+  clearForm(updateForm)
   modifyOrCopyVisible.value = true
   modifyOrCopy.value = 'copy'
   fetchUpdateList(row.id)
 }
 
 // 确认修改或复制
-const confirmModifyOrCopy = async () => {
-  // 验证三个字段不能为0，避免除0错误
-  if (Number(updateForm.countBill) === 0 || updateForm.countBill === null || updateForm.countBill === undefined) {
-    $baseMessage('买单每续页个数不能为0', 'error')
-    return
-  }
-  if (
-    Number(updateForm.taxRefundCustomsCount) === 0 ||
-    updateForm.taxRefundCustomsCount === null ||
-    updateForm.taxRefundCustomsCount === undefined
-  ) {
-    $baseMessage('退税每续页个数不能为0', 'error')
-    return
-  }
-  if (
-    Number(updateForm.customsClearancePageCount) === 0 ||
-    updateForm.customsClearancePageCount === null ||
-    updateForm.customsClearancePageCount === undefined
-  ) {
-    $baseMessage('清关每续页个数不能为0', 'error')
-    return
-  }
-
+const confirmModifyOrCopy = async (form: Record<string, any>) => {
   if (modifyOrCopy.value === 'modify') {
     // 执行修改逻辑
-    const { data } = await updateChannelFreightForwarder(updateForm)
+    const { data } = await updateChannelFreightForwarder(form)
     if (data) {
       $baseMessage('货代费用渠道修改成功', 'success')
-      modifyOrCopyVisible.value = false
+      closeModifyOrCopy()
       fetchData()
     }
   } else if (modifyOrCopy.value === 'copy') {
     // 执行复制逻辑
-    const data = await copyChannelFreightForwarder(updateForm)
+    const data = await copyChannelFreightForwarder(form)
     if (data) {
       $baseMessage('货代费用渠道复制成功', 'success')
-      modifyOrCopyVisible.value = false
+      closeModifyOrCopy()
       // 刷新数据
       fetchData()
     }

@@ -30,6 +30,7 @@ declare module 'vue' {
     AutomationRuleTable: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/AutomationRuleTable.vue')['default']
     AutomationSystemOperationLog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/AutomationSystemOperationLog.vue')['default']
     BatchUpdateDialog: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/BatchUpdateDialog.vue')['default']
+    ChannelDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/ChannelDialog.vue')['default']
     ChatPanel: typeof import('./../../../src/views/ai/vabAutoComponents/ChatPanel.vue')['default']
     CheckFreightTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/checkFreightTable.vue')['default']
     CommissionSitePie: typeof import('./../../../src/views/index/vabAutoComponents/CommissionSitePie.vue')['default']
