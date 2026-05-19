@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待签收" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel>
+          <vab-query-form-left-panel :span="8">
             <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" type="primary" @click="handleAllSigned">
               批量签收
             </el-button>
@@ -35,7 +35,7 @@
               <el-statistic class="compact-statistic" title="零件数量" :value="totalComponentNumber" />
             </el-space>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
+          <vab-query-form-right-panel :span="16">
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
@@ -76,6 +76,11 @@
                 <el-select v-model="queryForm.filterFollowLog" placeholder="筛选跟单日志" style="margin-left: 8px" @change="queryData">
                   <el-option v-for="item in followLogOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
+                <div class="filter-group">
+                  <el-checkbox-group v-model="queryForm.filters" @change="queryData">
+                    <el-checkbox value="needFollowUp">需跟进产品</el-checkbox>
+                  </el-checkbox-group>
+                </div>
                 <el-select v-model="queryForm.procurementManager" placeholder="筛选采购负责人" style="margin-left: 8px" @change="queryData">
                   <el-option v-for="item in procurementManagerList" :key="item.userId" :label="item.userName" :value="item.userId" />
                 </el-select>
@@ -260,7 +265,7 @@
       </el-tab-pane>
       <el-tab-pane label="已签收" :name="1">
         <vab-query-form>
-          <vab-query-form-left-panel>
+          <vab-query-form-left-panel :span="8">
             <el-button v-permissions="{ permission: [SignPermission.SIGN_EXPORT] }" type="primary" @click="handleShowReceiptExport">
               入库单导出
             </el-button>
@@ -294,7 +299,7 @@
               <el-option v-for="item in signDateOption" :key="item" :label="item" :value="item" />
             </el-select>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
+          <vab-query-form-right-panel :span="16">
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
@@ -335,6 +340,11 @@
                 <el-select v-model="queryForm.filterFollowLog" placeholder="筛选跟单日志" style="margin-left: 8px" @change="queryData">
                   <el-option v-for="item in followLogOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
+                <div class="filter-group">
+                  <el-checkbox-group v-model="queryForm.filters" @change="queryData">
+                    <el-checkbox value="needFollowUp">需跟进产品</el-checkbox>
+                  </el-checkbox-group>
+                </div>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   class="search-input"
@@ -955,9 +965,7 @@ const signForm = reactive<any>({
   signedBoxCount: '',
 })
 const signRules = reactive<any>({
-  signedBoxCount: [
-    { pattern: /^[1-9]\d*$/, message: '签收箱数必须为正整数', trigger: 'blur' },
-  ],
+  signedBoxCount: [{ pattern: /^[1-9]\d*$/, message: '签收箱数必须为正整数', trigger: 'blur' }],
   signCount: [{ required: true, message: '请输入签收数量', trigger: 'blur' }],
   signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }],
 })
@@ -1173,6 +1181,7 @@ const queryForm = reactive<any>({
   orderDirection: 'asc',
   filterProblemComponent: -1,
   filterFollowLog: -1,
+  filters: [],
   procurementManager: -1,
 })
 const handleSizeChange = (value: number) => {
@@ -1406,7 +1415,11 @@ const debouncedQueryData = debounce(() => {
 }, 700)
 const fetchData = async () => {
   listLoading.value = true
-  const { data } = await getSignList(queryForm)
+  const { filters, ...params } = queryForm
+  const { data } = await getSignList({
+    ...params,
+    filterNeedFollowUp: filters.includes('needFollowUp') ? 1 : -1,
+  })
   if (data) {
     list.value = data.list!
     total.value = data.total!
@@ -1632,9 +1645,11 @@ const closePoDetail = () => {
           }
         }
       }
-      .el-checkbox {
-        transform: scale(1.2); // 放大 20%
-        transform-origin: center; // 确保放大从中心开始
+      .el-table {
+        .el-checkbox {
+          transform: scale(1.2); // 放大 20%
+          transform-origin: center; // 确保放大从中心开始
+        }
       }
     }
   }
@@ -1695,6 +1710,18 @@ const closePoDetail = () => {
 // 搜索框宽度设置
 .search-input {
   width: 300px !important;
+}
+.filter-group {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  padding: 1px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f1f3f4;
+  }
 }
 .compact-statistic {
   :deep() {

@@ -3,6 +3,16 @@ export interface IGetSignListQuery {
   status: number
   pageNo: number
   pageSize: number
+  signUserId?: number
+  signDate?: string
+  orderByField?: string
+  orderDirection?: string
+  filterProblemComponent?: number
+  filterFollowLog?: number
+  filterNeedFollowUp?: number
+  filters?: string[]
+  procurementManager?: number
+  site?: number
 }
 export interface IGetSignListResp {
   code?: number
