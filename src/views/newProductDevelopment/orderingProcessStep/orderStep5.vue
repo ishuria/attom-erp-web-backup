@@ -125,8 +125,6 @@
             <el-select
               v-model="row[prop]"
               class="center-select"
-              collapse-tags
-              collapse-tags-tooltip
               multiple
               placeholder="请选择拍照留样情况"
               @change="handleSampleRetentionStatus(row, prop)"
