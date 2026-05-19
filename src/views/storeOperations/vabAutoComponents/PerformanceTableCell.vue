@@ -570,6 +570,7 @@ const label1Set = new Set([
   '盈亏售价',
   '30毛利售价',
   'B2B销售额',
+  'B2B月销售额',
   '当前实际售价',
 ])
 const label2Set = new Set([
@@ -600,6 +601,7 @@ const label1Map = new Map([
   ['盈亏售价', 'profitLossSellingPrice'],
   ['30毛利售价', 'grossSellingPrice'],
   ['B2B销售额', 'currentB2bSalesPrice'],
+  ['B2B月销售额', 'monthB2bSalesPrice'],
   ['当前实际售价', 'landedPrice'],
 ])
 const label2Map = new Map([

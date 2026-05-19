@@ -169,6 +169,18 @@ export interface IGetOperationAmazonSKUList {
    */
   monthTacos?: number
   /**
+   * B2B月销量
+   */
+  monthB2bSalesNumber?: number
+  /**
+   * B2B月订单数
+   */
+  monthB2bSalesOrder?: number
+  /**
+   * B2B月销售额
+   */
+  monthB2bSalesPrice?: number
+  /**
    * 上新天数
    */
   newArrivalDay?: number
@@ -599,6 +611,18 @@ export interface IGetOperationAsinList {
    * 月TACOS
    */
   monthTacos?: number
+  /**
+   * B2B月销量
+   */
+  monthB2bSalesNumber?: number
+  /**
+   * B2B月订单数
+   */
+  monthB2bSalesOrder?: number
+  /**
+   * B2B月销售额
+   */
+  monthB2bSalesPrice?: number
   /**
    * 上新天数
    */

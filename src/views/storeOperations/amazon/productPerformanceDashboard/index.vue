@@ -2155,6 +2155,8 @@ const fetchColumn = async () => {
         'pAsinMonthNetProfit',
         'monthOrderVolume',
         'currentB2bSalesOrder',
+
+        'monthB2bSalesOrder',
       ].includes(item.prop)
     ) {
       item.sortable = true
