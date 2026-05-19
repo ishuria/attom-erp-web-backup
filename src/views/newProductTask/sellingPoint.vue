@@ -41,19 +41,73 @@
               <el-form-item label="本产品知名品牌" prop="brand">
                 <el-input v-model="form.brand" clearable placeholder="链接文案需要规避的品牌词" @change="debouncedSave" />
               </el-form-item>
-              <el-form-item label="竞品ASIN" prop="competitiveAsin">
-                <el-input v-model="form.competitiveAsin" clearable @change="debouncedSave" />
-              </el-form-item>
-              <el-form-item label="同赛道ASIN" prop="sameTrackAsin">
+              <el-form-item prop="competitiveAsin">
+                <template #label>
+                  <span class="field-label-with-help">
+                    <span>竞品ASIN</span>
+                    <el-tooltip effect="dark" placement="top-start">
+                      <template #content>
+                        <span class="custom-tooltip">提供至少2个同类产品中销量好的产品</span>
+                      </template>
+                      <span class="field-help-trigger" @click.stop>
+                        <el-icon class="field-help-icon"><question-filled /></el-icon>
+                      </span>
+                    </el-tooltip>
+                  </span>
+                </template>
                 <el-input
-                  v-model="form.sameTrackAsin"
+                  v-model="form.competitiveAsin"
                   clearable
-                  placeholder="提供至少2个产品价格定位和类型与我们一致的ASIN：上线时间长卖得好的成熟ASIN，以及新品卖得好的"
+                  placeholder="提供至少2个同类产品中销量好的产品"
                   @change="debouncedSave"
                 />
               </el-form-item>
-              <el-form-item label="链接关键词" prop="linkKeywords">
-                <el-input v-model="form.linkKeywords" :autosize="{ minRows: 2 }" type="textarea" @change="debouncedSave" />
+              <el-form-item prop="sameTrackAsin">
+                <template #label>
+                  <span class="field-label-with-help">
+                    <span>同赛道ASIN</span>
+                    <el-tooltip effect="dark" placement="top-start">
+                      <template #content>
+                        <span class="custom-tooltip">
+                          提供至少2个产品价格定位和类型与我们一致的ASIN（1个是上线时间长的且卖得好的成熟ASIN；1个是新品卖得好的）
+                        </span>
+                      </template>
+                      <span class="field-help-trigger" @click.stop>
+                        <el-icon class="field-help-icon"><question-filled /></el-icon>
+                      </span>
+                    </el-tooltip>
+                  </span>
+                </template>
+                <el-input
+                  v-model="form.sameTrackAsin"
+                  clearable
+                  placeholder="至少2个价格定位和类型与我们一致的ASIN：1个成熟ASIN，1个新品ASIN"
+                  @change="debouncedSave"
+                />
+              </el-form-item>
+              <el-form-item prop="linkKeywords">
+                <template #label>
+                  <span class="field-label-with-help">
+                    <span>链接关键词</span>
+                    <el-tooltip effect="dark" placement="top-start">
+                      <template #content>
+                        <span class="custom-tooltip">
+                          产品相关的特点（中英文都可以）。会填到亚马逊产品链接里，影响搜索结果。例子：金属，钢铁，防锈，超大号，可调，有涂层，厚，硬，可爱，轻薄等
+                        </span>
+                      </template>
+                      <span class="field-help-trigger" @click.stop>
+                        <el-icon class="field-help-icon"><question-filled /></el-icon>
+                      </span>
+                    </el-tooltip>
+                  </span>
+                </template>
+                <el-input
+                  v-model="form.linkKeywords"
+                  :autosize="{ minRows: 2 }"
+                  placeholder="产品相关特点，中英文都可以；会填到亚马逊产品链接里，影响搜索结果。例：金属，钢铁，防锈，超大号，可调，有涂层，厚，硬，可爱，轻薄"
+                  type="textarea"
+                  @change="debouncedSave"
+                />
               </el-form-item>
               <el-form-item label="图片配色，风格和道具选用要求拍摄注意事项" prop="precautions">
                 <div class="precautions-editor-wrap">
@@ -174,6 +228,7 @@ import {
   saveBatchArtDesignSellingPoint,
 } from '/@/api/devlocal/imageTask'
 
+import { QuestionFilled } from '@element-plus/icons-vue'
 import type { IDomEditor, IToolbarConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
@@ -564,6 +619,35 @@ watch(
   font-weight: 600;
   line-height: 1.25;
   white-space: nowrap;
+}
+
+.field-label-with-help {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  vertical-align: top;
+
+  .field-help-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+  }
+
+  .field-help-icon {
+    color: var(--el-text-color-secondary);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    transition: color var(--el-transition-duration);
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
 }
 
 .precautions-editor-wrap {
