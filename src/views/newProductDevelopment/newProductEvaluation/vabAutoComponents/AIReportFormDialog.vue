@@ -45,8 +45,9 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
-import { createEvaluationResearchReportConversation } from '/@/api/devlocal/ai'
+import { checkFeishuDoc, createEvaluationResearchReportConversation, getFeishuUrl } from '/@/api/devlocal/ai'
 import { useAiStore } from '/@/store/modules/ai'
+import type { EvaluationResearchReportPayload } from '/@/type/ai/chat'
 
 defineOptions({
   name: 'AIReportFormDialog',
@@ -119,26 +120,10 @@ const normalizeAiConversationId = (response: any) => {
   return payload?.id ?? payload?.conversationId ?? payload?.conversation?.id ?? null
 }
 
-const submitAIReport = async () => {
-  if (!aiReportForm.evaluationId) {
-    $baseMessage('当前新款评估缺少编号，无法生成AI调研报告', 'error')
-    return
-  }
-
-  const valid = await aiReportFormRef.value?.validate().catch(() => false)
-  if (!valid) return
-
-  aiReportSubmitting.value = true
+const runReportCreation = async (payload: EvaluationResearchReportPayload) => {
   let conversationId: number | string | null = null
   try {
-    const createResponse = await createEvaluationResearchReportConversation({
-      evaluationId: aiReportForm.evaluationId,
-      productName: aiReportForm.productName.trim(),
-      competitorAsin: aiReportForm.competitorAsin.trim(),
-      coreKeyWord: aiReportForm.coreKeyWord.trim(),
-      count: aiReportForm.count,
-      userIdea: aiReportForm.userIdea.trim(),
-    })
+    const createResponse = await createEvaluationResearchReportConversation(payload)
     conversationId = normalizeAiConversationId(createResponse)
 
     if (conversationId == null || conversationId === '') {
@@ -166,6 +151,68 @@ const submitAIReport = async () => {
     $baseMessage(errorMessage, 'error')
   } finally {
     aiReportSubmitting.value = false
+  }
+}
+
+const submitAIReport = async () => {
+  if (!aiReportForm.evaluationId) {
+    $baseMessage('当前新款评估缺少编号，无法生成AI调研报告', 'error')
+    return
+  }
+
+  const valid = await aiReportFormRef.value?.validate().catch(() => false)
+  if (!valid) return
+
+  aiReportSubmitting.value = true
+
+  // 点击时快照表单数据：授权等待期间用户可能再次编辑表单，提交以快照为准
+  const payload: EvaluationResearchReportPayload = {
+    evaluationId: aiReportForm.evaluationId,
+    productName: aiReportForm.productName.trim(),
+    competitorAsin: aiReportForm.competitorAsin.trim(),
+    coreKeyWord: aiReportForm.coreKeyWord.trim(),
+    count: aiReportForm.count,
+    userIdea: aiReportForm.userIdea.trim(),
+  }
+
+  try {
+    const checkResponse = await checkFeishuDoc()
+    const canCreate = checkResponse?.data ?? checkResponse
+    if (!canCreate) {
+      const urlResponse = await getFeishuUrl(1)
+      const url = urlResponse?.data ?? urlResponse
+
+      $baseMessage('需要先完成飞书授权，已在新标签页打开授权页面，授权后将自动继续生成报告', 'info')
+
+      // 跨 origin 场景下（内网入口写、外网 origin 回调）localStorage 不共享，改用 postMessage：
+      // 回调 tab 完成 token 交换后通知本 tab，本 tab 用闭包里持有的 payload 直接发起报告创建。
+      let timeoutId!: ReturnType<typeof setTimeout>
+      const handler = async (event: MessageEvent) => {
+        if (event.data?.type !== 'feishu-doc-authorized') return
+        // 仅信任来自外部 origin 的消息，避免本页脚本误触
+        if (event.origin === window.location.origin) return
+        window.removeEventListener('message', handler)
+        clearTimeout(timeoutId)
+        await runReportCreation(payload)
+      }
+      window.addEventListener('message', handler)
+      timeoutId = setTimeout(
+        () => {
+          window.removeEventListener('message', handler)
+          aiReportSubmitting.value = false
+          $baseMessage('飞书授权等待超时，请重试', 'warning')
+        },
+        10 * 60 * 1000
+      )
+
+      window.open(url, '_blank')
+      return
+    }
+
+    await runReportCreation(payload)
+  } catch (error: any) {
+    aiReportSubmitting.value = false
+    $baseMessage(error?.msg ?? error?.message ?? '飞书授权校验失败', 'error')
   }
 }
 
