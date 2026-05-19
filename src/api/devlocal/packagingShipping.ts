@@ -137,7 +137,7 @@ export function signComponent(params: ISignComponent): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/sign/component`,
     method: 'post',
-    params,
+    data: params,
   })
 }
 // 查询签收记录

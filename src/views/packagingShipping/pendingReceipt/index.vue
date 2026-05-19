@@ -246,7 +246,6 @@
             </template>
           </el-table-column>
 
-
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -544,6 +543,7 @@
         @cell-click="changeModifyInput"
       >
         <el-table-column label="签收日期" prop="createTime" />
+        <el-table-column label="签收箱数" prop="signedBoxCount" />
         <el-table-column label="签收数量" prop="signCount" />
         <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
@@ -583,6 +583,7 @@
             {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
           </template>
         </el-table-column>
+        <el-table-column label="签收箱数" prop="signedBoxCount" />
         <el-table-column label="签收数量" prop="signCount" />
         <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
@@ -632,6 +633,9 @@
     <!-- 签收 -->
     <vab-dialog v-model="signVisible" title="签收" width="20%" @close="closeSignDialog">
       <el-form ref="signFormRef" label-position="right" label-width="auto" :model="signForm" :rules="signRules">
+        <el-form-item label="签收箱数" prop="signedBoxCount">
+          <el-input v-model="signForm.signedBoxCount" clearable />
+        </el-form-item>
         <el-form-item label="签收数量" prop="signCount">
           <el-input v-model="signForm.signCount" clearable />
         </el-form-item>
@@ -948,8 +952,13 @@ const signVisible = ref<boolean>(false)
 const signForm = reactive<any>({
   signCount: '',
   signOrder: '',
+  signedBoxCount: '',
 })
 const signRules = reactive<any>({
+  signedBoxCount: [
+    { pattern: /^[1-9]\d*$/, message: '签收箱数必须为正整数', trigger: 'blur' },
+  ],
+  signCount: [{ required: true, message: '请输入签收数量', trigger: 'blur' }],
   signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }],
 })
 const signFormRef = ref<FormInstance>()
@@ -960,6 +969,7 @@ const showSignDialog = (row: any) => {
   copyRow.value = row
   // 默认初始化签收数量为零件采购数量
   signForm.signCount = Number(row.purchaseCount - row.signCount)
+  signForm.signedBoxCount = ''
 }
 // 关闭签收弹窗
 const closeSignDialog = () => {
@@ -968,12 +978,17 @@ const closeSignDialog = () => {
 }
 // 确认签收
 const confirmSign = async () => {
+  const valid = await signFormRef.value?.validate().catch(() => false)
+  if (!valid) {
+    return
+  }
   try {
     signLoading.value = true
     signBntLoading.value = true
     const { data } = await signComponent({
       signId: copyRow.value.signId,
       signCount: signForm.signCount,
+      signedBoxCount: signForm.signedBoxCount ? Number(signForm.signedBoxCount) : undefined,
       signOrder: signForm.signOrder,
     })
     if (data) {
@@ -1289,7 +1304,7 @@ const cellStyle3 = (data: { row: any; column: any; rowIndex: number; columnIndex
   }
 }
 const cellStyle4 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
-  if (data.columnIndex === 0 || data.columnIndex === 1) {
+  if (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 2) {
     return {
       textAlign: 'center',
       color: '#bbb',

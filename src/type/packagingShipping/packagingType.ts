@@ -64,6 +64,10 @@ export interface IGetSignList {
    */
   signCount?: number
   /**
+   * 签收箱数
+   */
+  signedBoxCount?: string
+  /**
    * 签收日期
    */
   signDate?: string
@@ -122,12 +126,14 @@ export interface ISignIds {
 export interface ISignComponent {
   signId: number
   signCount: number
+  signedBoxCount?: number
   signOrder: string
 }
 export interface IGetSignRecord {
   createTime: string
   id: number
   signCount: number
+  signedBoxCount?: number
   signOrder: string
 }
 
@@ -859,6 +865,8 @@ export interface IPrintSignRes {
     printerName: string
     sku: string
     componentName: string
+    siteName?: string
+    signedBoxCount?: string
   }
 }
 /**
