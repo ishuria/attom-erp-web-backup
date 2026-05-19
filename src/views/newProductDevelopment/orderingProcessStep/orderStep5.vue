@@ -525,7 +525,7 @@ const labelMap: Record<string, string> = {
   column0: '',
   productImgUrl: '上传成套产品图片<br>(产品要和实际一致)',
   productPosition: '产品定位',
-  brand: '品牌',
+  brand: '品牌<br>(选填,不填系统根据品名自动匹配品牌)',
   oem: 'OEM',
   graphicDesign: '平面设计',
   productLength: '产品长(cm)',
