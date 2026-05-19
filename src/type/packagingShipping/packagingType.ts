@@ -129,6 +129,10 @@ export interface IUpdateSignLog {
   signId: number
   log: string
 }
+export interface IBatchUpdateSignLog {
+  signIds: string
+  log: string
+}
 export interface ISignIds {
   signIds: string
 }

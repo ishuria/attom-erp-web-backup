@@ -11,6 +11,8 @@ class SignPermission {
   static readonly SIGN_PRINT = 'sign:print'
   /** 入库单导出权限 */
   static readonly SIGN_EXPORT = 'sign:export'
+  /** 批量更新跟单日志 */
+  static readonly SIGN_BATCH_LOG = 'sign:batch:log'
 
   /**
    * 已签收操作列权限

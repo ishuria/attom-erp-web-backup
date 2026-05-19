@@ -3,9 +3,12 @@
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待签收" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel :span="8">
+          <vab-query-form-left-panel :span="11">
             <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" type="primary" @click="handleAllSigned">
               批量签收
+            </el-button>
+            <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH_LOG] }" type="primary" @click="handleBatchSignLog">
+              批量跟单日志
             </el-button>
             <el-button :loading="exportLoading" type="primary" @click="handlePendingSignExport">导出</el-button>
             <el-select
@@ -35,7 +38,7 @@
               <el-statistic class="compact-statistic" title="零件数量" :value="totalComponentNumber" />
             </el-space>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="16">
+          <vab-query-form-right-panel :span="13">
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
@@ -265,9 +268,12 @@
       </el-tab-pane>
       <el-tab-pane label="已签收" :name="1">
         <vab-query-form>
-          <vab-query-form-left-panel :span="8">
+          <vab-query-form-left-panel :span="11">
             <el-button v-permissions="{ permission: [SignPermission.SIGN_EXPORT] }" type="primary" @click="handleShowReceiptExport">
               入库单导出
+            </el-button>
+            <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH_LOG] }" type="primary" @click="handleBatchSignLog">
+              批量跟单日志
             </el-button>
             <el-select
               v-model="printer"
@@ -299,7 +305,7 @@
               <el-option v-for="item in signDateOption" :key="item" :label="item" :value="item" />
             </el-select>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="16">
+          <vab-query-form-right-panel :span="13">
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
@@ -375,8 +381,10 @@
           stripe
           @cell-click="changeInput"
           @row-click="handleRowClick"
+          @selection-change="setSelectRows"
           @sort-change="handleSortChange"
         >
+          <el-table-column fixed="left" type="selection" />
           <el-table-column v-permissions="SignPermission.signArchiveOperationColume()" fixed="left" label="操作" width="150">
             <template #default="{ row }">
               <el-dropdown>
@@ -698,6 +706,7 @@ import { printerOption } from '../constantOption'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
 import {
+  batchUpdateSignLog,
   deleteSign,
   deleteSignRecord,
   getPackageSiteList,
@@ -893,7 +902,7 @@ const printFormRules = reactive<FormRules>({
 const _id = ref<number>(0)
 
 const selectRows = ref<any>([])
-const setSelectRows = (value: string) => {
+const setSelectRows = (value: any[]) => {
   selectRows.value = value
 }
 const list = ref<IGetSignList[]>([])
@@ -1085,6 +1094,17 @@ const handleAllSigned = async () => {
   }
   signBatchVisible.value = true
 }
+const handleBatchSignLog = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning')
+    return
+  }
+  detailId.value = 0
+  progressLogCopy.value = ''
+  wangEditorTitle.value = '批量新增跟单日志'
+  classify.value = 'signBatchLog'
+  wangEditorLogVisible.value = true
+}
 const handleConfirmSignBatch = async () => {
   try {
     batchBtnLoading.value = true
@@ -1256,6 +1276,7 @@ const imagePreviewClose = () => {
 
 const handleTabClick = async (tab: TabsPaneContext) => {
   list.value = []
+  selectRows.value = []
   if (tab.props.name !== undefined) {
     const tabName = Number(tab.props.name)
     activeName.value = tabName
@@ -1397,6 +1418,17 @@ const clickModifyOrderCancel = async (event: any, value: any) => {
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {
+  if (classify.value === 'signBatchLog') {
+    const signIds = selectRows.value.map((item: any) => item.signId).join(',')
+    const { data } = await batchUpdateSignLog({ signIds, log: val })
+    if (data === true) {
+      $baseMessage('批量新增跟单日志成功', 'success')
+      wangEditorLogVisible.value = false
+      selectRows.value = []
+      await fetchData()
+    }
+    return
+  }
   const { data } = await updateSignLog({ signId: clickRow.value.signId, log: val })
   if (data === true) {
     progressLogCopy.value = val

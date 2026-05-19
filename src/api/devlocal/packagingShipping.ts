@@ -5,6 +5,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IAddQualityCheckReq,
   IBooleanResp,
+  IBatchUpdateSignLog,
   ICheckingPackagingTimeErrorReq,
   ICheckingPackagingTimeErrorRes,
   IConfirmEndTask,
@@ -120,6 +121,14 @@ export function getSignLog(params: ISignId): Promise<IStringResp> {
 export function updateSignLog(params: IUpdateSignLog): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/sign/update/log`,
+    method: 'post',
+    params,
+  })
+}
+// 批量新增签收零件跟踪日志
+export function batchUpdateSignLog(params: IBatchUpdateSignLog): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sign/batch/update/log`,
     method: 'post',
     params,
   })
