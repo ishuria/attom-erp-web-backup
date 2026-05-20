@@ -384,7 +384,7 @@
         </el-form-item>
         <el-form-item label="好" prop="goodCount">
           <div style="width: 85%; margin-right: 10px">
-            <el-input v-model.trim="packingCountForm.goodCount" clearable />
+            <el-input-number v-model="packingCountForm.goodCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
           </div>
           <div style="display: flex; align-items: center; width: 10%">
             <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer" @click="handleShowAdd"><circle-plus /></el-icon>
@@ -392,12 +392,12 @@
         </el-form-item>
         <el-form-item label="留样" prop="keepSampleCount">
           <div style="width: 85%">
-            <el-input v-model.trim="packingCountForm.keepSampleCount" clearable />
+            <el-input-number v-model="packingCountForm.keepSampleCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
           </div>
         </el-form-item>
         <el-form-item label="坏" prop="badCount">
           <div style="width: 85%">
-            <el-input v-model.trim="packingCountForm.badCount" clearable />
+            <el-input-number v-model="packingCountForm.badCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
           </div>
         </el-form-item>
         <el-form-item label="缺">
@@ -427,13 +427,13 @@
     <vab-dialog v-model="addVisible" title="增加" width="17%" @close="handleCloseAdd">
       <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-right: 20px; margin-left: 20px">
         <el-form-item label="好" prop="good">
-          <el-input v-model.trim="addForm.good" clearable />
+          <el-input-number v-model="addForm.good" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
         </el-form-item>
         <el-form-item label="留样" prop="sample">
-          <el-input v-model.trim="addForm.sample" clearable />
+          <el-input-number v-model="addForm.sample" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
         </el-form-item>
         <el-form-item label="坏" prop="bad">
-          <el-input v-model.trim="addForm.bad" clearable />
+          <el-input-number v-model="addForm.bad" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -1842,6 +1842,10 @@ onUnmounted(() => {
 }
 .add-icon:hover {
   color: var(--el-color-primary);
+}
+// 数字输入框文字左对齐，不居中
+.left-input-number :deep(.el-input__inner) {
+  text-align: left;
 }
 .dialog {
   .el-dialog {
