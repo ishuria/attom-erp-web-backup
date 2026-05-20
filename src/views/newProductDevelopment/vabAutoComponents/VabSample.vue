@@ -57,6 +57,25 @@
         <el-input v-model="sampleForm.bulkGoodsReturnable" type="input" />
       </el-form-item>
 
+      <el-form-item v-if="needProof" label="可退拿样金额证明" prop="proof" required>
+        <div class="proof-upload" @paste="handleProofPaste">
+          <div v-if="proofPreviews.length" class="proof-thumb-list">
+            <div v-for="(url, index) in proofPreviews" :key="index" class="proof-thumb">
+              <el-image fit="cover" :preview-src-list="proofPreviews" :preview-teleported="true" :src="url" :z-index="3000" />
+              <vab-icon class="proof-thumb__remove" icon="close-circle-fill" @click="removeProof(index)" />
+            </div>
+          </div>
+          <el-upload accept="image/*" :auto-upload="false" drag multiple :on-change="handleProofChange" :show-file-list="false">
+            <vab-icon class="proof-add-icon" icon="image-add-fill" />
+            <div class="el-upload__text">
+              拖拽 / 粘贴 图片到此处，或
+              <em>点击上传</em>
+              （可多张）
+            </div>
+          </el-upload>
+        </div>
+      </el-form-item>
+
       <el-form-item label="备注" prop="remark">
         <el-input v-model="sampleForm.remark" type="textarea" />
       </el-form-item>
@@ -71,7 +90,7 @@
 
 <script lang="ts" setup>
 import { CopyDocument } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules, UploadFile } from 'element-plus'
 import { addSample, getComponentInfoList, getSuppliserInfoList } from '/@/api/devlocal/progressSample'
 import type { ISampleAddReq, ISampleItem } from '/@/type/progress/sampleAndComponentType'
 import { handleClip } from '/@/utils/clipboard'
@@ -101,8 +120,20 @@ interface AddSampleForm {
   price: string
   bulkGoodsReturnable: string
   remark: string
+  // 可退拿样金额证明（仅用于表单校验，文件单独存于 proofFile）
+  proof?: string
 }
 const sampleVisible = ref<boolean>(false)
+
+// 可退拿样金额证明文件及预览（支持多张）
+const proofFiles = ref<File[]>([])
+const proofPreviews = ref<string[]>([])
+
+// 下大货可退拿样金额非空且不等于 0 时，需上传可退拿样金额证明
+const needProof = computed(() => {
+  const value = sampleForm.bulkGoodsReturnable
+  return value !== '' && value !== null && value !== undefined && Number(value) !== 0
+})
 
 const progressId = ref<string>()
 
@@ -178,6 +209,18 @@ const rules = reactive<FormRules<AddSampleForm>>({
       trigger: 'blur',
     },
   ],
+  proof: [
+    {
+      validator: (rule, value, callback) => {
+        if (needProof.value && proofFiles.value.length === 0) {
+          callback(new Error('请上传可退拿样金额证明！'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'change',
+    },
+  ],
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -212,7 +255,18 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         params.supplierName = sampleForm.suppliserInfo as string
       }
 
-      const { data } = await addSample({ ...params })
+      // 整体改为 multipart 提交，证明文件随表单一起上传
+      const formData = new FormData()
+      Object.entries(params).forEach(([key, val]) => {
+        if (val !== undefined && val !== null) {
+          formData.append(key, String(val))
+        }
+      })
+      if (needProof.value && proofFiles.value.length) {
+        proofFiles.value.forEach((file) => formData.append('file', file))
+      }
+
+      const { data } = await addSample(formData)
       if (data === true) {
         $baseMessage('新增拿样零件成功', 'success', 'hey')
         childCloseDialog()
@@ -242,8 +296,51 @@ const componentSelectChange = async (value: ISampleItem) => {
   }
 }
 
+// 追加一张可退拿样金额证明
+const addProofFile = (file: File) => {
+  if (!file.type.startsWith('image/')) {
+    $baseMessage('只能上传图片！', 'warning')
+    return
+  }
+  proofFiles.value.push(file)
+  proofPreviews.value.push(URL.createObjectURL(file))
+  sampleFormRef.value?.validateField('proof')
+}
+
+// 点击 / 拖拽上传（multiple 时每个文件触发一次）
+const handleProofChange = (uploadFile: UploadFile) => {
+  if (uploadFile.raw) addProofFile(uploadFile.raw)
+}
+
+// 截图粘贴上传
+const handleProofPaste = (event: ClipboardEvent) => {
+  const items = event.clipboardData?.items
+  if (!items) return
+  Array.from(items).forEach((item) => {
+    if (item.type.includes('image')) {
+      const file = item.getAsFile()
+      if (file) addProofFile(file)
+    }
+  })
+}
+
+// 移除一张证明
+const removeProof = (index: number) => {
+  URL.revokeObjectURL(proofPreviews.value[index])
+  proofFiles.value.splice(index, 1)
+  proofPreviews.value.splice(index, 1)
+  sampleFormRef.value?.validateField('proof')
+}
+
+const clearProof = () => {
+  proofPreviews.value.forEach((url) => URL.revokeObjectURL(url))
+  proofFiles.value = []
+  proofPreviews.value = []
+}
+
 const childCloseDialog = async () => {
   sampleFormRef.value!.resetFields()
+  clearProof()
   props.closeDialog()
 }
 const fetchData = async () => {
@@ -270,6 +367,48 @@ const fetchData = async () => {
     height: 24px;
     padding: 0;
     font-size: 12px;
+  }
+}
+
+// 可退拿样金额证明上传
+.proof-upload {
+  width: 100%;
+
+  .proof-thumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .proof-thumb {
+      position: relative;
+      width: 72px;
+      height: 72px;
+
+      .el-image {
+        width: 100%;
+        height: 100%;
+        border: 1px solid var(--el-border-color);
+        border-radius: 4px;
+      }
+
+      .proof-thumb__remove {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        font-size: 16px;
+        color: var(--el-color-danger);
+        cursor: pointer;
+        background: #fff;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .proof-add-icon {
+    margin-bottom: 8px;
+    font-size: 28px;
+    color: #999;
   }
 }
 </style>

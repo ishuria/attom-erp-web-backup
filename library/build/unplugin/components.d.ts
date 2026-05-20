@@ -221,6 +221,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SaleTrendDialog: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/SaleTrendDialog.vue')['default']
+    SampleFeeRefundDialog: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/SampleFeeRefundDialog.vue')['default']
     SampleFeeRefundTable: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/SampleFeeRefundTable.vue')['default']
     SeasonalCoefficientOperationLog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/seasonalCoefficientOperationLog.vue')['default']
     SegmentedBlock: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedBlock.vue')['default']

@@ -27,7 +27,6 @@ import type {
   IProgressEstimatedCostAccounting,
   IProgressProdcutComponent,
   IProgressSample,
-  ISampleAddReq,
   ISampleAddResp,
   ISampleComponentListReq,
   ISampleComponentListResp,
@@ -363,10 +362,11 @@ export function getSuppliserInfoList(params: ISampleSuppliserListReq): Promise<I
  * @param data
  * @returns
  */
-export function addSample(data?: ISampleAddReq): Promise<ISampleAddResp> {
+export function addSample(data?: FormData): Promise<ISampleAddResp> {
   return request({
     url: `${BASE_API}/progress/add/sample`,
     method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
     data,
   })
 }
@@ -555,6 +555,23 @@ export function updateSampleFeeRefund(params: { id: number; refundStatus: number
   })
 }
 /**
+ * 样品费退还-退款提交（仅用于「退款」操作，凭证已在上传时落库，此处带状态、识别金额、原因）
+ * @param data { id: number; status: number; refundAmount: number; refundReason: string }
+ * @returns { data: boolean }
+ */
+export function confirmSampleFeeRefund(data: {
+  id: number
+  status: number
+  refundAmount: number
+  refundReason: string
+}): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sample/fee/refund/confirm`,
+    method: 'post',
+    data,
+  })
+}
+/**
  * 样品费退还-修改备注
  * @param params { id: number; remark: string }
  * @returns { data: boolean }
@@ -571,7 +588,7 @@ export function updateSampleFeeRefundRemark(params: { id: number; refundRemark: 
  * @param data FormData
  * @returns { data: string }
  */
-export function updateSampleFeeRefundProof(data: FormData): Promise<{ data: string }> {
+export function updateSampleFeeRefundProof(data: FormData): Promise<{ data: { proofUrl: string; refundAmount: number } }> {
   return request({
     url: `${BASE_API}/sample/fee/refund/upload/proof`,
     method: 'post',

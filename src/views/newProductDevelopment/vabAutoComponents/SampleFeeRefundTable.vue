@@ -163,12 +163,20 @@
     />
     <!-- 退款凭证上传图片 -->
     <vab-image-upload v-model="refundProofUploadVisible" @image-upload="uploadRefundProof" />
+    <!-- 退款确认弹窗 -->
+    <sample-fee-refund-dialog
+      v-model="refundDialogVisible"
+      :row="selectedRow"
+      :submitting="refundSubmitting"
+      @confirm="handleRefundConfirm"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import {
+  confirmSampleFeeRefund,
   deleteSampleFeeRefundProof,
   getSampleFeeRefundList,
   updateSampleFeeRefund,
@@ -206,6 +214,8 @@ const queryForm = reactive({
 })
 const refundRemarkVisible = ref<boolean>(false)
 const refundProofUploadVisible = ref<boolean>(false)
+const refundDialogVisible = ref<boolean>(false)
+const refundSubmitting = ref<boolean>(false)
 const showUploadDialog = (row: any) => {
   refundProofUploadVisible.value = true
   selectedRow = row
@@ -217,8 +227,8 @@ const uploadRefundProof = async (file: File) => {
     uploadImgForm.append('id', `${selectedRow.sampleId}`)
 
     const { data } = await updateSampleFeeRefundProof(uploadImgForm)
-    if (data) {
-      selectedRow.refundProof = data
+    if (data?.proofUrl) {
+      selectedRow.refundProof = data.proofUrl
       $baseMessage('退款凭证上传成功！', 'success')
       refundProofUploadVisible.value = false
     } else {
@@ -306,17 +316,31 @@ const handleSizeChange = (pageSize: number) => {
   fetchData()
 }
 
-// 退款操作
-const handleRefund = async (row: any) => {
-  const { data } = await updateSampleFeeRefund({
-    id: row.sampleId,
-    refundStatus: 1,
-  })
-  if (data) {
-    $baseMessage('退款成功', 'success')
-    fetchData()
-  } else {
-    $baseMessage('退款失败', 'error')
+// 退款操作：打开退款确认弹窗
+const handleRefund = (row: any) => {
+  selectedRow = row
+  refundDialogVisible.value = true
+}
+// 退款确认：携带凭证、识别金额、原因提交
+const handleRefundConfirm = async (payload: { refundAmount: number; refundReason: string }) => {
+  if (refundSubmitting.value) return
+  refundSubmitting.value = true
+  try {
+    const { data } = await confirmSampleFeeRefund({
+      id: selectedRow.sampleId,
+      status: 1,
+      refundAmount: payload.refundAmount,
+      refundReason: payload.refundReason,
+    })
+    if (data) {
+      $baseMessage('退款成功', 'success')
+      refundDialogVisible.value = false
+      fetchData()
+    } else {
+      $baseMessage('退款失败', 'error')
+    }
+  } finally {
+    refundSubmitting.value = false
   }
 }
 const handleUnrefund = async (row: any) => {
