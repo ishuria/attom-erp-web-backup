@@ -117,132 +117,132 @@
           <el-button type="primary" @click="handleShareWeight">次要零件重量均摊</el-button>
         </el-form-item>
         <div style="overflow-x: auto">
-        <el-table
-          border
-          :cell-class-name="clearPadding"
-          :cell-style="componentListCellStyle"
-          :data="componentList"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-          @cell-click="changeComponentListInput"
-        >
-          <el-table-column label="图片" prop="componentImgUrl" width="75">
-            <template #default="{ row }">
-              <el-image
-                :src="row.componentImgUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.componentImgUrl)"
-              >
-                <template #error><el-icon /></template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')" />
-          <el-table-column label="材质1名称" prop="material1" :width="flexColumnWidth(componentList, '材质1名称 *', 'material1')">
-            <template #header>
-              材质1名称
-              <span style="margin-left: 4px; color: var(--el-color-danger)">*</span>
-            </template>
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.material1"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.material1 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="材质1重量(g)" prop="weight1">
-            <template #header>
-              材质1重量(g)
-              <span style="margin-left: 4px; color: var(--el-color-danger)">*</span>
-            </template>
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.weight1"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.weight1 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="材质2名称" prop="material2" :width="flexColumnWidth(componentList, '材质2名称', 'material2')">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.material2"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.material2 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="材质2重量(g)" prop="weight2">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.weight2"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.weight2 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="材质3名称" prop="material3" :width="flexColumnWidth(componentList, '材质3名称', 'material3')">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.material3"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.material3 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="材质3重量(g)" prop="weight3">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.weight3"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.weight3 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="材质4名称" prop="material4" :width="flexColumnWidth(componentList, '材质4名称', 'material4')">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.material4"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.material4 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="材质4重量(g)" prop="weight4">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.weight4"
-                  @blur="clickComponentListCancel($event, row)"
-                  @keyup.enter="clickComponentListCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.weight4 }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+          <el-table
+            border
+            :cell-class-name="clearPadding"
+            :cell-style="componentListCellStyle"
+            :data="componentList"
+            :header-cell-style="{ textAlign: 'center' }"
+            stripe
+            @cell-click="changeComponentListInput"
+          >
+            <el-table-column label="图片" prop="componentImgUrl" width="75">
+              <template #default="{ row }">
+                <el-image
+                  :src="row.componentImgUrl"
+                  style="display: block; width: 75px; height: 75px"
+                  @click="showPreviewImage(row.componentImgUrl)"
+                >
+                  <template #error><el-icon /></template>
+                </el-image>
+              </template>
+            </el-table-column>
+            <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')" />
+            <el-table-column label="材质1名称" prop="material1" :width="flexColumnWidth(componentList, '材质1名称 *', 'material1')">
+              <template #header>
+                材质1名称
+                <span style="margin-left: 4px; color: var(--el-color-danger)">*</span>
+              </template>
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.material1"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.material1 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="材质1重量(g)" prop="weight1">
+              <template #header>
+                材质1重量(g)
+                <span style="margin-left: 4px; color: var(--el-color-danger)">*</span>
+              </template>
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.weight1"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.weight1 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="材质2名称" prop="material2" :width="flexColumnWidth(componentList, '材质2名称', 'material2')">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.material2"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.material2 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="材质2重量(g)" prop="weight2">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.weight2"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.weight2 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="材质3名称" prop="material3" :width="flexColumnWidth(componentList, '材质3名称', 'material3')">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.material3"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.material3 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="材质3重量(g)" prop="weight3">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.weight3"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.weight3 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="材质4名称" prop="material4" :width="flexColumnWidth(componentList, '材质4名称', 'material4')">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.material4"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.material4 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="材质4重量(g)" prop="weight4">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.weight4"
+                    @blur="clickComponentListCancel($event, row)"
+                    @keyup.enter="clickComponentListCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.weight4 }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
         <el-divider style="margin-top: 30px"><span style="font-size: var(--el-font-size-base)">质检结果</span></el-divider>
         <vab-query-form>
@@ -251,35 +251,35 @@
           </vab-query-form-left-panel>
         </vab-query-form>
         <div style="overflow-x: auto">
-        <el-table
-          border
-          :cell-style="qualityInspectionCellStyle"
-          :data="reportDetailList"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-          @cell-click="changeQualityInspectionInput"
-        >
-          <el-table-column label="质检项目" min-width="330" prop="qualityInspection" />
-          <el-table-column label="检查类型" min-width="100" prop="type" />
-          <el-table-column label="质检站点" min-width="130" prop="site" />
-          <el-table-column label="通过" min-width="50" prop="pass">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.pass" :false-value="0" :true-value="1" @change="handleUpdatePackageInspectionPass(row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" min-width="150" prop="remark">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.remark"
-                  @blur="clickQualityInspectionCancel($event, row)"
-                  @keyup.enter="clickQualityInspectionCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.remark }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+          <el-table
+            border
+            :cell-style="qualityInspectionCellStyle"
+            :data="reportDetailList"
+            :header-cell-style="{ textAlign: 'center' }"
+            stripe
+            @cell-click="changeQualityInspectionInput"
+          >
+            <el-table-column label="质检项目" min-width="330" prop="qualityInspection" />
+            <el-table-column label="检查类型" min-width="100" prop="type" />
+            <el-table-column label="质检站点" min-width="130" prop="site" />
+            <el-table-column label="通过" min-width="50" prop="pass">
+              <template #default="{ row }">
+                <el-checkbox v-model="row.pass" :false-value="0" :true-value="1" @change="handleUpdatePackageInspectionPass(row)" />
+              </template>
+            </el-table-column>
+            <el-table-column label="备注" min-width="150" prop="remark">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.remark"
+                    @blur="clickQualityInspectionCancel($event, row)"
+                    @keyup.enter="clickQualityInspectionCancel($event, row)"
+                  />
+                </div>
+                <span>{{ row.remark }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </el-form>
 
@@ -903,6 +903,9 @@ const showUploadDialog = (type: number, index: number) => {
   imageUploadType.value = type
   imageUploadIndex.value = index
 }
+
+const isBlank = (value: unknown) => value === undefined || value === null || value === ''
+
 const validate = async () => {
   try {
     // 校验上面的表单
@@ -910,9 +913,19 @@ const validate = async () => {
     if (!formValid) return false
 
     // 校验表格数据
-    const hasEmptyMaterial = componentList.value.some((item) => !item.material1 || !item.weight1)
+    const hasEmptyMaterial = componentList.value.some((item) => isBlank(item.material1) || isBlank(item.weight1))
     if (hasEmptyMaterial) {
       $baseMessage('材质1名称和材质1重量(g)不能为空', 'error')
+      return false
+    }
+
+    const hasMaterialWithoutWeight = componentList.value.some((item) =>
+      [1, 2, 3, 4].some(
+        (index) => !isBlank(item[`material${index}` as keyof IComponentList]) && isBlank(item[`weight${index}` as keyof IComponentList])
+      )
+    )
+    if (hasMaterialWithoutWeight) {
+      $baseMessage('材质名称填写后，对应材质重量(g)不能为空', 'error')
       return false
     }
 
