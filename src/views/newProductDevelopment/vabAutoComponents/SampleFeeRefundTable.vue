@@ -121,11 +121,12 @@
               <img alt="" :src="row.refundProof" />
               <div class="image-actions">
                 <el-icon @click="handlePreviewImage(row.refundProof)"><zoom-in /></el-icon>
-                <el-icon @click="handleImageRemove(row)"><delete /></el-icon>
+                <!-- 已退款凭证只读，仅未退款可删除 -->
+                <el-icon v-if="props.status === 0" @click="handleImageRemove(row)"><delete /></el-icon>
               </div>
             </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+            <!-- 无图片时显示，仅未退款可上传 -->
+            <div v-else-if="props.status === 0" class="upload-placeholder" @click="showUploadDialog(row)">
               <el-icon><plus /></el-icon>
             </div>
           </div>
@@ -355,17 +356,20 @@ const handleUnrefund = async (row: any) => {
     $baseMessage('不可退款失败', 'error')
   }
 }
-const handleCancelRefund = async (row: any) => {
-  const { data } = await updateSampleFeeRefund({
-    id: row.sampleId,
-    refundStatus: 0,
+const handleCancelRefund = (row: any) => {
+  const confirmText = props.status === 1 ? '确定要取消退款吗' : '确定要移动到未退款吗'
+  $baseConfirm(confirmText, '系统提示', async () => {
+    const { data } = await updateSampleFeeRefund({
+      id: row.sampleId,
+      refundStatus: 0,
+    })
+    if (data) {
+      $baseMessage('取消退款成功', 'success')
+      fetchData()
+    } else {
+      $baseMessage('取消退款失败', 'error')
+    }
   })
-  if (data) {
-    $baseMessage('取消退款成功', 'success')
-    fetchData()
-  } else {
-    $baseMessage('取消退款失败', 'error')
-  }
 }
 
 // 监听状态变化，更新查询表单状态（不自动查询，由父组件控制）
