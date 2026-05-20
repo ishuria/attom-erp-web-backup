@@ -69,6 +69,18 @@ export interface IGetOperationAmazonSKUList {
    */
   currentSalesPrice?: number
   /**
+   * B2B销量
+   */
+  currentB2bSalesNumber?: number
+  /**
+   * B2B订单数
+   */
+  currentB2bSalesOrder?: number
+  /**
+   * B2B销售额
+   */
+  currentB2bSalesPrice?: number
+  /**
    * 开发人员
    */
   developName?: string
@@ -523,6 +535,18 @@ export interface IGetOperationAsinList {
    * 今销金额
    */
   currentSalesPrice?: number
+  /**
+   * B2B销量
+   */
+  currentB2bSalesNumber?: number
+  /**
+   * B2B订单数
+   */
+  currentB2bSalesOrder?: number
+  /**
+   * B2B销售额
+   */
+  currentB2bSalesPrice?: number
   /**
    * 开发人员
    */

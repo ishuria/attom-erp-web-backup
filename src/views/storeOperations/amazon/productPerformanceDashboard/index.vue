@@ -2154,8 +2154,9 @@ const fetchColumn = async () => {
         'newArrivalDay',
         'pAsinMonthNetProfit',
         'monthOrderVolume',
+        'currentB2bSalesNumber',
         'currentB2bSalesOrder',
-
+        'monthB2bSalesNumber',
         'monthB2bSalesOrder',
       ].includes(item.prop)
     ) {
@@ -2209,6 +2210,8 @@ const fetchAsinColumn = async () => {
         'monthOrderSales',
         'availableRate',
         'estimateNextMonthStorageFee',
+        'currentB2bSalesNumber',
+        'monthB2bSalesNumber',
       ].includes(item.prop)
     ) {
       item.sortable = true
