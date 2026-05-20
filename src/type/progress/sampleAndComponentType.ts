@@ -553,5 +553,10 @@ export interface ISampleFeeRefundItem {
    */
   refundProof: string
 
+  /**
+   * 样品可退证明（可多张）
+   */
+  proofImages: string[]
+
   userName: string
 }

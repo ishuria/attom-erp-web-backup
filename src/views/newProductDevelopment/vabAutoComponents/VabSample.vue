@@ -58,7 +58,7 @@
       </el-form-item>
 
       <el-form-item v-if="needProof" label="可退拿样金额证明" prop="proof" required>
-        <div class="proof-upload" @paste="handleProofPaste">
+        <div class="proof-upload">
           <div v-if="proofPreviews.length" class="proof-thumb-list">
             <div v-for="(url, index) in proofPreviews" :key="index" class="proof-thumb">
               <el-image fit="cover" :preview-src-list="proofPreviews" :preview-teleported="true" :src="url" :z-index="3000" />
@@ -286,6 +286,19 @@ watchEffect(() => {
   if (sampleVisible.value === true) fetchData()
 })
 
+// 弹窗打开期间在 document 上监听粘贴，解决首次粘贴因焦点不在上传区而失效的问题
+watch(sampleVisible, (val) => {
+  if (val) {
+    document.addEventListener('paste', handleProofPaste)
+  } else {
+    document.removeEventListener('paste', handleProofPaste)
+  }
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('paste', handleProofPaste)
+})
+
 // 零件名selct切换
 const componentSelectChange = async (value: ISampleItem) => {
   suppliserFlag.value = false
@@ -304,6 +317,8 @@ const addProofFile = (file: File) => {
   }
   proofFiles.value.push(file)
   proofPreviews.value.push(URL.createObjectURL(file))
+  // 同步表单值，满足 el-form-item 的 required 校验（证明文件单独存于 proofFiles）
+  sampleForm.proof = String(proofFiles.value.length)
   sampleFormRef.value?.validateField('proof')
 }
 
@@ -312,8 +327,9 @@ const handleProofChange = (uploadFile: UploadFile) => {
   if (uploadFile.raw) addProofFile(uploadFile.raw)
 }
 
-// 截图粘贴上传
+// 截图粘贴上传（弹窗打开期间于 document 监听，不依赖焦点落点；仅在需要证明时处理）
 const handleProofPaste = (event: ClipboardEvent) => {
+  if (!needProof.value) return
   const items = event.clipboardData?.items
   if (!items) return
   Array.from(items).forEach((item) => {
@@ -329,6 +345,7 @@ const removeProof = (index: number) => {
   URL.revokeObjectURL(proofPreviews.value[index])
   proofFiles.value.splice(index, 1)
   proofPreviews.value.splice(index, 1)
+  sampleForm.proof = proofFiles.value.length ? String(proofFiles.value.length) : ''
   sampleFormRef.value?.validateField('proof')
 }
 
@@ -336,6 +353,7 @@ const clearProof = () => {
   proofPreviews.value.forEach((url) => URL.revokeObjectURL(url))
   proofFiles.value = []
   proofPreviews.value = []
+  sampleForm.proof = ''
 }
 
 const childCloseDialog = async () => {

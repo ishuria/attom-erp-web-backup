@@ -93,6 +93,23 @@
       <el-table-column align="center" label="拿样人" min-width="100" prop="userName" />
       <el-table-column align="center" label="拿样金额" min-width="100" prop="price" />
       <el-table-column align="center" label="可退金额" min-width="100" prop="bulkGoodsReturnable" />
+      <!-- 样品可退证明（VabSample 上传的可退拿样金额证明，可多张），未退款/已退款均展示 -->
+      <el-table-column v-if="props.status !== 2" label="样品可退证明" prop="proofImages" width="100">
+        <template #default="{ row }">
+          <div v-if="row.proofImages && row.proofImages.length" class="proof-img-list">
+            <el-image
+              v-for="(img, index) in row.proofImages"
+              :key="index"
+              fit="cover"
+              :initial-index="index"
+              :preview-src-list="row.proofImages"
+              :preview-teleported="true"
+              :src="img"
+              :z-index="3000"
+            />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="拿样备注" min-width="200" prop="remark">
         <template #default="{ row }">
           <el-tooltip content=" " effect="dark" placement="top">
@@ -113,21 +130,15 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column v-if="props.status !== 2" label="退款凭证" prop="refundProof" width="90">
+      <!-- 退款凭证仅在「已退款」展示，且只读（未退款的凭证已在退款弹窗内上传） -->
+      <el-table-column v-if="props.status === 1" label="退款凭证" prop="refundProof" width="90">
         <template #default="{ row }">
           <div class="image-cell">
-            <!-- 有图片时显示 -->
             <div v-if="row.refundProof" class="image-preview">
               <img alt="" :src="row.refundProof" />
               <div class="image-actions">
                 <el-icon @click="handlePreviewImage(row.refundProof)"><zoom-in /></el-icon>
-                <!-- 已退款凭证只读，仅未退款可删除 -->
-                <el-icon v-if="props.status === 0" @click="handleImageRemove(row)"><delete /></el-icon>
               </div>
-            </div>
-            <!-- 无图片时显示，仅未退款可上传 -->
-            <div v-else-if="props.status === 0" class="upload-placeholder" @click="showUploadDialog(row)">
-              <el-icon><plus /></el-icon>
             </div>
           </div>
         </template>
@@ -162,8 +173,6 @@
       title="样品费退还跟进备注"
       @update:remark="handleUpdateRemark"
     />
-    <!-- 退款凭证上传图片 -->
-    <vab-image-upload v-model="refundProofUploadVisible" @image-upload="uploadRefundProof" />
     <!-- 退款确认弹窗 -->
     <sample-fee-refund-dialog
       v-model="refundDialogVisible"
@@ -175,13 +184,11 @@
 </template>
 
 <script setup lang="ts">
-import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import { Search, ZoomIn } from '@element-plus/icons-vue'
 import {
   confirmSampleFeeRefund,
-  deleteSampleFeeRefundProof,
   getSampleFeeRefundList,
   updateSampleFeeRefund,
-  updateSampleFeeRefundProof,
   updateSampleFeeRefundRemark,
 } from '/@/api/devlocal/progressSample'
 import { ISampleFeeRefundItem } from '/@/type/progress/sampleAndComponentType'
@@ -214,46 +221,8 @@ const queryForm = reactive({
   refundAmountZero: -1,
 })
 const refundRemarkVisible = ref<boolean>(false)
-const refundProofUploadVisible = ref<boolean>(false)
 const refundDialogVisible = ref<boolean>(false)
 const refundSubmitting = ref<boolean>(false)
-const showUploadDialog = (row: any) => {
-  refundProofUploadVisible.value = true
-  selectedRow = row
-}
-const uploadRefundProof = async (file: File) => {
-  try {
-    let uploadImgForm = new FormData() // 每次上传前重置 FormData
-    uploadImgForm.append('file', file)
-    uploadImgForm.append('id', `${selectedRow.sampleId}`)
-
-    const { data } = await updateSampleFeeRefundProof(uploadImgForm)
-    if (data?.proofUrl) {
-      selectedRow.refundProof = data.proofUrl
-      $baseMessage('退款凭证上传成功！', 'success')
-      refundProofUploadVisible.value = false
-    } else {
-      $baseMessage('退款凭证上传失败！', 'error')
-    }
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handleImageRemove = async (row: any) => {
-  try {
-    $baseConfirm('确定要删除此退款凭证吗', '系统提示', async () => {
-      const { data } = await deleteSampleFeeRefundProof({
-        id: row.sampleId,
-      })
-      if (data == true) {
-        row.refundProof = ''
-        $baseMessage('退款凭证删除成功!', 'success', 'hey')
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
 const handleUpdateRemark = async (remark: string) => {
   const { data } = await updateSampleFeeRefundRemark({
     id: selectedRow.sampleId,
@@ -399,6 +368,21 @@ watch(
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+// 样品可退证明缩略图列表
+.proof-img-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 0;
+
+  .el-image {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border: 1px solid var(--el-border-color);
+    border-radius: 2px;
+  }
 }
 // 图片样式
 .image-cell {
