@@ -103,6 +103,8 @@ const packingForm = reactive<IEncasementProduct>({
 const barcodeInput = ref<InputInstance>()
 // 防止同一个条码被 enter + blur 各触发一次造成重复处理
 const lastProcessedBarcode = ref<string>('')
+// 扫码查询中先锁住输入，避免扫码枪连扫触发并发查询
+const barcodeScanning = ref<boolean>(false)
 
 const resetForm = () => {
   packingForm.fnSkuOrUpc = ''
@@ -111,6 +113,7 @@ const resetForm = () => {
   packingForm.skuImageUrl = ''
   barcodeDisabled.value = false
   lastProcessedBarcode.value = ''
+  barcodeScanning.value = false
 }
 
 // 用 @opened（动画结束后）而不是 @open（动画开始时），否则输入框还没 mount，focus() 会失败
@@ -132,8 +135,11 @@ const resetScan = () => {
 }
 
 const processBarcodeScan = async (barcodeValue: string) => {
+  if (barcodeScanning.value) return
   if (lastProcessedBarcode.value === barcodeValue) return
   lastProcessedBarcode.value = barcodeValue
+  barcodeScanning.value = true
+  barcodeDisabled.value = true
 
   packingForm.fnSkuOrUpc = barcodeValue
   let str = barcodeValue
@@ -142,21 +148,37 @@ const processBarcodeScan = async (barcodeValue: string) => {
     str = barcodeValue.substring(2)
   }
 
-  const { data } = await getEncasementSku({
-    site: props.site,
-    fnSkuOrUpc: str,
-  })
-  if (data?.sku) {
-    packingForm.sku = data.sku ?? ''
-    packingForm.productName = data.productName ?? ''
-    packingForm.skuImageUrl = data.skuImageUrl ?? ''
-    barcodeDisabled.value = true
-    $baseMessage('扫码成功，请核对图片与实物是否一致', 'success')
-  } else {
+  try {
+    const { data } = await getEncasementSku({
+      site: props.site,
+      fnSkuOrUpc: str,
+    })
+    if (data?.sku) {
+      packingForm.sku = data.sku ?? ''
+      packingForm.productName = data.productName ?? ''
+      packingForm.skuImageUrl = data.skuImageUrl ?? ''
+      barcodeDisabled.value = true
+      $baseMessage('扫码成功，请核对图片与实物是否一致', 'success')
+    } else {
+      packingForm.fnSkuOrUpc = ''
+      barcodeDisabled.value = false
+      // 失败时清掉记录，允许重扫同一个码
+      lastProcessedBarcode.value = ''
+      $baseMessage(`找不到该${upcOrFnSku.value}，请重新扫描`, 'error')
+      nextTick(() => {
+        barcodeInput.value?.focus()
+      })
+    }
+  } catch (e) {
     packingForm.fnSkuOrUpc = ''
-    // 失败时清掉记录，允许重扫同一个码
+    barcodeDisabled.value = false
     lastProcessedBarcode.value = ''
-    $baseMessage(`找不到该${upcOrFnSku.value}，请重新扫描`, 'error')
+    $baseMessage('扫码查询失败，请重试', 'error')
+    nextTick(() => {
+      barcodeInput.value?.focus()
+    })
+  } finally {
+    barcodeScanning.value = false
   }
 }
 
