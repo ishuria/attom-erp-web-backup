@@ -40,10 +40,10 @@
         stripe
         @cell-click="changeInput"
       >
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" />
-        <el-table-column label="FNSKU" min-width="140" prop="fnSkuOrUpc" :width="flexColumnWidth(skuDetailList, 'FNSKU', 'fnSkuOrUpc')" />
-        <el-table-column label="说明" min-width="160" prop="productName" :width="flexColumnWidth(skuDetailList, '说明', 'productName')" />
-        <el-table-column align="center" label="数量" min-width="70" prop="count">
+        <el-table-column label="SKU" :min-width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" prop="sku" />
+        <el-table-column label="FNSKU" :min-width="120" prop="fnSkuOrUpc" />
+        <el-table-column label="说明" :min-width="flexColumnWidth(skuDetailList, '说明', 'productName')" prop="productName" />
+        <el-table-column align="center" label="数量" min-width="150" prop="count">
           <template #default="{ row }">
             <div class="none">
               <el-input-number
@@ -67,18 +67,25 @@
           <template #default="{ row }">
             <div v-if="row.packingImagePaths?.length" class="packing-image-list">
               <el-image
-                v-for="imagePath in row.packingImagePaths"
+                v-for="imagePath in getVisiblePackingImagePaths(row.packingImagePaths)"
                 :key="imagePath"
                 fit="cover"
                 :src="imagePath"
                 style="width: 50px; height: 50px; cursor: pointer"
                 @click.stop="imagePreviewShow(imagePath)"
               />
+              <el-button
+                v-if="getHiddenPackingImagePathCount(row.packingImagePaths) > 0"
+                class="packing-image-more"
+                @click.stop="showPackingImageInfoDialog(row.packingImagePaths)"
+              >
+                +{{ getHiddenPackingImagePathCount(row.packingImagePaths) }}
+              </el-button>
             </div>
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作">
+        <el-table-column align="center" fixed="right" label="操作" min-width="200">
           <template #default="{ row, $index }">
             <el-link type="primary" underline="never" @click="showInspection(row)">清点质检</el-link>
             <span style="margin: 0 5px"></span>
@@ -282,6 +289,10 @@
         <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 装箱图片完整信息 -->
+    <packing-image-info-dialog v-model="packingImageInfoVisible" :image-list="packingImageInfoList" />
+
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
@@ -325,6 +336,14 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewVisible.value = true
   imagePreviewList.value.push(url)
+}
+const getVisiblePackingImagePaths = (imagePaths: string[] = []) => imagePaths.slice(0, 3)
+const getHiddenPackingImagePathCount = (imagePaths: string[] = []) => Math.max(imagePaths.length - 3, 0)
+const packingImageInfoVisible = ref<boolean>(false)
+const packingImageInfoList = ref<string[]>([])
+const showPackingImageInfoDialog = (imagePaths: string[] = []) => {
+  packingImageInfoList.value = imagePaths
+  packingImageInfoVisible.value = true
 }
 let props = defineProps<{
   modifyVisible: boolean
@@ -742,6 +761,12 @@ const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIn
   justify-content: center;
   flex-wrap: wrap;
 }
+.packing-image-more {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+}
+
 // 数字输入框文字左对齐，不居中
 .left-input-number :deep(.el-input__inner) {
   text-align: left;

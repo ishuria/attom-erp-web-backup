@@ -306,7 +306,11 @@ export interface ISkuDetailList {
   /**
    * 合作人
    */
-  partner?: string[]
+  partner?: number[]
+  /**
+   * 合作人名称
+   */
+  partnerNames?: string[]
   /**
    * 装箱图片路径
    */
