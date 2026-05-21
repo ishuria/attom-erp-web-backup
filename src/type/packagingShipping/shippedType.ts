@@ -150,6 +150,8 @@ export interface IEncasementProduct {
   productName: string
   skuImageUrl: string
   count?: number
+  partner?: number[]
+  packingImages?: PackingImageItem[]
   [property: string]: any
 }
 /**
@@ -199,6 +201,21 @@ export interface EncasementDetailList {
    * SKU
    */
   sku?: string
+  /**
+   * 合作人
+   */
+  partner?: number[]
+  /**
+   * 装箱图片
+   */
+  packingImages?: PackingImageItem[]
+}
+
+export interface PackingImageItem {
+  uid: string
+  name: string
+  file: File
+  url: string
 }
 export interface IBooleanRes {
   data: boolean
@@ -1154,4 +1171,10 @@ export interface IGetChannelSiteList {
   id: number
   siteName: string
   channelId: number
+}
+
+export interface IVerifyPackingImageReq {
+  fnSkuOrUpc: string
+  site: number
+  files: FormData
 }

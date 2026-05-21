@@ -104,6 +104,17 @@ export const submitEncasementSku = (data: ISubmitEncasementSkuReq): Promise<IBoo
   })
 }
 /**
+ * 校验装箱图片
+ */
+export const verifyPackingImage = (data: FormData): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/packing/image/verify`,
+    method: 'post',
+    data,
+    headers: { 'content-type': 'multipart/form-data' },
+  })
+}
+/**
  * @description 装箱-修改
  */
 export const updateEncasement = (data: IUpdateEncasementReq): Promise<IBooleanRes> => {

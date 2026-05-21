@@ -1,6 +1,7 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
+import type { SelectOption } from '/@/type/common'
 
 import type {
   IAddQualityCheckReq,
@@ -643,6 +644,16 @@ export function generatePackageBarcode(data: IGeneratePackageBarcodeReq): Promis
 export function getMorkPackageList(): Promise<{ data: any }> {
   return request({
     url: `${BASE_API}/mork/package/list`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 获取打包角色人员下拉列表
+ */
+export function getPackagePackagerList(): Promise<{ data: SelectOption[] }> {
+  return request({
+    url: `${BASE_API}/package/packager/list`,
     method: 'get',
   })
 }

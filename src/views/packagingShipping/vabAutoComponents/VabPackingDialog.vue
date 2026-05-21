@@ -1,5 +1,12 @@
 <template>
   <vab-dialog v-model="dflag" class="dialog" title="装箱" width="660px" @close="handleCloseDialog" @opened="handlePackingOpen">
+    <el-alert
+      :closable="false"
+      show-icon
+      style="margin-bottom: 12px"
+      title="请扫描条形码，并核对扫描结果（SKU、产品名称、图片）与箱中是否一致，若存在混装箱的情况，请如实上传多张装箱图片"
+      type="warning"
+    />
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form ref="packingFormRef" label-position="top" :model="packingForm" :rules="packingFormRules">
@@ -20,13 +27,25 @@
             <el-input v-model="packingForm.productName" disabled />
           </el-form-item>
           <el-form-item label="数量" prop="count">
-            <el-input
-              ref="packingCount"
-              v-model="packingForm.count"
+            <el-input ref="packingCount" v-model="packingForm.count" clearable @change="handleUpdate" />
+          </el-form-item>
+          <el-form-item label="合作人">
+            <el-select
+              v-model="packingForm.partner"
               clearable
+              filterable
+              :loading="packagerOptionsLoading"
+              multiple
+              placeholder="请选择合作人"
+              style="width: 100%"
               @change="handleUpdate"
-              @keydown.enter="switchNext"
-            />
+            >
+              <el-option v-for="item in packagerOptions" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="装箱图片" prop="packingImages">
+            <!-- 拍照上传 -->
+            <packing-image-capture v-model="packingForm.packingImages" @change="handlePackingImagesChange" />
           </el-form-item>
         </el-form>
       </el-col>
@@ -45,8 +64,8 @@
     <template #footer>
       <div style="text-align: center">
         <el-button v-show="previousVisible" @click="switchPrevious">上一个</el-button>
-        <el-button type="primary" @click="switchNext">下一个 (Enter)</el-button>
-        <el-button type="success" @click="showConfirm">完成</el-button>
+        <el-button :loading="verifyImageLoading" type="primary" @click="switchNext">下一个</el-button>
+        <el-button :loading="verifyImageLoading" type="success" @click="showConfirm">完成</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -113,10 +132,14 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, InputInstance } from 'element-plus'
-import { getEncasementSku, printBarcodeEncasement, submitEncasementSku } from '/@/api/devlocal/encasement'
+import PackingImageCapture from './PackingImageCapture.vue'
+import { getEncasementSku, printBarcodeEncasement, submitEncasementSku, verifyPackingImage } from '/@/api/devlocal/encasement'
+import { getPackagePackagerList } from '/@/api/devlocal/packagingShipping'
 import { SiteEnum } from '/@/const/site'
 import { usePackingStore } from '/@/store/modules/packing'
-import type { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
+import { useUserStore } from '/@/store/modules/user'
+import type { SelectOption } from '/@/type/common'
+import type { EncasementDetailList, IEncasementProduct, PackingImageItem } from '/@/type/packagingShipping/shippedType'
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -160,6 +183,13 @@ const positiveIntegerValidator = (message: string) => (_rule: any, value: unknow
   }
   callback()
 }
+const packingImagesValidator = (_rule: any, value: unknown, callback: (error?: Error) => void) => {
+  if (!Array.isArray(value) || value.length === 0) {
+    callback(new Error('请上传至少一张装箱图片'))
+    return
+  }
+  callback()
+}
 const confirmFormRules = reactive<FormRules<{ encaseCount: number | undefined }>>({
   encaseCount: [
     { required: true, message: '请输入箱数', trigger: 'blur' },
@@ -185,12 +215,37 @@ watch(
   }
 )
 const emit = defineEmits(['update:packingVisible', 'update:finish'])
+const revokePackingImageUrls = (images?: PackingImageItem[]) => {
+  images?.forEach((image) => {
+    if (image.url) URL.revokeObjectURL(image.url)
+  })
+}
+const revokeAllPackingImageUrls = () => {
+  const urls = new Set<string>()
+  packingStore.packingData.forEach((item: PackingType) => {
+    item.packingImages?.forEach((image: PackingImageItem) => {
+      if (image.url) urls.add(image.url)
+    })
+  })
+  packingForm.packingImages?.forEach((image: PackingImageItem) => {
+    if (image.url) urls.add(image.url)
+  })
+  urls.forEach((url) => URL.revokeObjectURL(url))
+}
+const clearCurrentPackingImages = () => {
+  revokePackingImageUrls(packingForm.packingImages)
+  packingForm.packingImages = []
+}
 const handleCloseDialog = () => {
   dflag.value = false
   emit('update:packingVisible', dflag.value)
   // 表单也先清空
+  tempCurId.value = ''
+  revokeAllPackingImageUrls()
   packingFormRef.value?.resetFields()
   packingForm.skuImageUrl = ''
+  packingForm.partner = []
+  packingForm.packingImages = []
 }
 const packingForm = reactive<IEncasementProduct>({
   fnSkuOrUpc: '',
@@ -198,14 +253,57 @@ const packingForm = reactive<IEncasementProduct>({
   productName: '',
   count: undefined,
   skuImageUrl: '',
+  partner: [],
+  packingImages: [],
 })
 const packingFormRef = ref<FormInstance>()
+const userStore = useUserStore()
+// 打包人员选项
+const packagerOptions = ref<SelectOption[]>([])
+const packagerOptionsLoading = ref<boolean>(false)
+// 获取默认打包人员
+const getDefaultPartnerIds = () => {
+  const currentUserId = Number(userStore.getUserId)
+
+  if (!Number.isFinite(currentUserId)) {
+    return []
+  }
+
+  return packagerOptions.value.some((item) => item.id === currentUserId) ? [currentUserId] : []
+}
+// 设置默认打包人员
+const setDefaultPartners = () => {
+  packingForm.partner = getDefaultPartnerIds()
+}
+// 查询打包人员
+const fetchPackagerOptions = async () => {
+  if (packagerOptions.value.length > 0) {
+    setDefaultPartners()
+    return
+  }
+
+  if (packagerOptionsLoading.value) {
+    return
+  }
+
+  packagerOptionsLoading.value = true
+  try {
+    const { data } = await getPackagePackagerList()
+    packagerOptions.value = data ?? []
+    setDefaultPartners()
+  } catch {
+    $baseMessage('获取合作人列表失败，请刷新后重试', 'error')
+  } finally {
+    packagerOptionsLoading.value = false
+  }
+}
 const packingFormRules = computed(() => ({
   fnSkuOrUpc: [{ required: true, message: `请输入${upcOrFnSku.value}`, trigger: 'blur' }],
   count: [
     { required: true, message: '请输入数量', trigger: 'blur' },
     { validator: positiveIntegerValidator('数量必须是正整数'), trigger: ['blur', 'change'] },
   ],
+  packingImages: [{ validator: packingImagesValidator, trigger: 'change' }],
 }))
 const tempCurId = ref<string>('')
 const packingStore = usePackingStore()
@@ -248,8 +346,30 @@ const fetchData = () => {
   list.value = packingStore.packingData.slice((queryForm.pageNo - 1) * queryForm.pageSize, queryForm.pageNo * queryForm.pageSize)
   total.value = packingStore.packingData.length
 }
+const validatePackingForm = () => {
+  return new Promise<boolean>((resolve) => {
+    if (!packingFormRef.value) {
+      resolve(false)
+      return
+    }
+
+    packingFormRef.value.validate((isValid: boolean) => {
+      resolve(isValid)
+    })
+  })
+}
 // 展示确认/完成
-const showConfirm = () => {
+const showConfirm = async () => {
+  if (packingForm.fnSkuOrUpc || packingForm.count != null || packingForm.packingImages?.length) {
+    const isValid = await validatePackingForm()
+    if (!isValid) return
+
+    const imageValid = await handleVerifyPackingImage()
+    if (!imageValid) return
+
+    handleUpdate()
+  }
+
   // 先判断存入数据是否为空
   if (packingStore.packingData.length === 0) {
     $baseMessage(`请先填写${upcOrFnSku.value}`, 'error')
@@ -283,6 +403,15 @@ const closeConfirm = () => {
   handleCloseDialog()
   emit('update:finish')
 }
+const buildEncasementDetailList = (): EncasementDetailList[] => {
+  return packingStore.packingData.map((item: PackingType) => ({
+    fnSkuOrUpc: item.fnSkuOrUpc,
+    sku: item.sku,
+    productName: item.productName,
+    count: isPositiveInteger(item.count) ? normalizePositiveInteger(item.count) : item.count,
+    partner: item.partner,
+  }))
+}
 // 保存并打印
 const saveAndPrint = async () => {
   confirmFormRef.value?.validate(async (isValid: boolean) => {
@@ -292,7 +421,7 @@ const saveAndPrint = async () => {
         encaseCount: confirmForm.encaseCount,
         encasementNo: props.encasementNo,
         planSite: props.site,
-        encasementDetailList: packingStore.packingData,
+        encasementDetailList: buildEncasementDetailList(),
         isReinsert: props.isReinsert === true ? 1 : 0,
       })
       if (data) {
@@ -319,7 +448,7 @@ const save = async () => {
         encaseCount: confirmForm.encaseCount,
         encasementNo: props.encasementNo,
         planSite: props.site,
-        encasementDetailList: packingStore.packingData,
+        encasementDetailList: buildEncasementDetailList(),
         isReinsert: props.isReinsert === true ? 1 : 0,
       })
       if (data) {
@@ -334,6 +463,7 @@ const save = async () => {
 const handlePackingOpen = () => {
   // 重置上次处理的条码，确保每次打开弹窗都能正常扫码
   lastProcessedBarcode.value = ''
+  void fetchPackagerOptions()
   barcodeInput.value?.focus()
 }
 function generateUUID() {
@@ -391,8 +521,10 @@ const processBarcodeScan = async (barcodeValue: string) => {
       let flag = _addPacking(packingForm, tempCurId.value)
       if (flag) {
         // 已存在相同条码：清空表单，并清掉去重记录，允许用户重新操作
+        clearCurrentPackingImages()
         packingFormRef.value?.resetFields()
         packingForm.skuImageUrl = ''
+        setDefaultPartners()
         barcodeDisabled.value = false
         lastProcessedBarcode.value = ''
         nextTick(() => {
@@ -451,6 +583,9 @@ const handleBlur = async (event: any) => {
 // 更新表单
 const handleUpdate = () => {
   // console.log('更新count后的', packingForm);
+  if (!tempCurId.value) {
+    return
+  }
 
   const updatePacking = {
     tempId: tempCurId.value,
@@ -461,6 +596,10 @@ const handleUpdate = () => {
 
   _updatePacking(updatePacking)
   // console.log('更新', packingStore.packingData);
+}
+const handlePackingImagesChange = () => {
+  handleUpdate()
+  void packingFormRef.value?.validateField('packingImages')
 }
 
 // 切换上一个
@@ -502,11 +641,15 @@ const switchPrevious = () => {
     }
   })
 }
+const verifyImageLoading = ref<boolean>(false)
 // 切换下一个
 const switchNext = () => {
   // 首先判断是否都输入
-  packingFormRef.value?.validate((isValid: boolean) => {
+  packingFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
+      const imageValid = await handleVerifyPackingImage()
+      if (!imageValid) return
+
       handleUpdate()
       // 两种情况，一种是在中间点击下一个，跳到对应的数据位置；一种是在最后一个点击下一个，跳到新的数据
       const data = packingStore.packingData
@@ -514,8 +657,11 @@ const switchNext = () => {
       const index = data.findIndex((item: PackingType) => item.tempId === tempCurId.value)
       if (length - 1 === index) {
         // 如果就是最后一个，创建一个新的
+        tempCurId.value = ''
         packingFormRef.value?.resetFields()
         packingForm.skuImageUrl = ''
+        // 合作人不清空，装箱图片清空
+        packingForm.packingImages = []
         // 清掉上次扫码记录，让重复条码交给 store 层报错
         lastProcessedBarcode.value = ''
         // console.log('最后一个下一个后的数据', packingStore.packingData)
@@ -539,5 +685,43 @@ const switchNext = () => {
       }
     }
   })
+}
+// 点击下一个 或 完成的时候 调接口 触发校验图片
+const handleVerifyPackingImage = async () => {
+  if (!packingForm.fnSkuOrUpc) {
+    $baseMessage(`请先扫描${upcOrFnSku.value}`, 'error')
+    return false
+  }
+
+  if (props.site == null) {
+    $baseMessage('站点为空，无法校验装箱图片', 'error')
+    return false
+  }
+
+  if (!packingForm.packingImages?.length) {
+    $baseMessage('请上传至少一张装箱图片', 'error')
+    return false
+  }
+
+  const formData = new FormData()
+  formData.append('fnSkuOrUpc', packingForm.fnSkuOrUpc)
+  formData.append('site', String(props.site))
+  packingForm.packingImages.forEach((image: PackingImageItem) => {
+    formData.append('files', image.file)
+  })
+
+  try {
+    verifyImageLoading.value = true
+    const { data } = await verifyPackingImage(formData)
+    if (!data) {
+      $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
+      return false
+    }
+    return true
+  } catch {
+    return false
+  } finally {
+    verifyImageLoading.value = false
+  }
 }
 </script>
