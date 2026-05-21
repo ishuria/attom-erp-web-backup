@@ -495,13 +495,13 @@
     <vab-dialog v-model="modifyVisible" title="修改" width="20%">
       <el-form label-position="right" label-width="auto" :model="modifyForm" style="margin: 0">
         <el-form-item label="合同编号" prop="contractNumber">
-          <el-input v-model="modifyForm.contractNumber" clearable />
+          <el-input v-model.trim="modifyForm.contractNumber" clearable />
         </el-form-item>
         <el-form-item label="Reference ID" prop="referenceId">
-          <el-input v-model="modifyForm.referenceId" clearable />
+          <el-input v-model.trim="modifyForm.referenceId" clearable />
         </el-form-item>
         <el-form-item label="货代单号" prop="freightForwardingNumber">
-          <el-input v-model="modifyForm.freightForwardingNumber" clearable />
+          <el-input v-model.trim="modifyForm.freightForwardingNumber" clearable />
         </el-form-item>
       </el-form>
       <template #footer>
