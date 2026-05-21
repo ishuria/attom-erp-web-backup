@@ -61,3 +61,8 @@ export interface ISampleReturnBonusQuery {
   pageNo: number
   pageSize: number
 }
+
+export interface ISampleBonusRefundAmountUpdateReq {
+  id: number
+  refundAmount: number
+}

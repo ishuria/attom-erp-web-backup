@@ -43,6 +43,16 @@
         </template>
       </el-table-column>
       <el-table-column label="奖金" min-width="120" prop="price" />
+      <el-table-column
+        v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_SAMPLE_BONUS_UPDATE] })"
+        fixed="right"
+        label="操作"
+        width="100"
+      >
+        <template #default="{ row }">
+          <el-link type="primary" underline="never" @click="showRefundUpdate(row)">修改</el-link>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" />
       </template>
@@ -54,6 +64,24 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <vab-dialog v-model="refundUpdateVisible" title="修改实际退款" width="20%">
+      <el-form
+        ref="refundUpdateFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="refundUpdateForm"
+        :rules="refundUpdateFormRules"
+        style="margin: 0"
+      >
+        <el-form-item label="实际退款" prop="refundAmount">
+          <el-input v-model="refundUpdateForm.refundAmount" type="number" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="refundUpdateVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirmRefundUpdate">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -62,12 +90,16 @@ import {
   getSampleReturnBonusDetailMonth,
   getSampleReturnBonusDetailUserList,
   querySampleReturnBonusDetailList,
+  updateSampleBonusRefundAmount,
 } from '/@/api/devlocal/commission.ts'
 import { ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role.ts'
+import CommissionPermission from '/@/permissions/commission.ts'
 import { useAclStore } from '/@/store/modules/acl.ts'
 import { useUserStore } from '/@/store/modules/user.ts'
 import type { ISampleReturnBonusDetailList, ISampleReturnBonusQuery } from '/@/type/commission/sampleReturnBonusDetail.ts'
+import { hasPermission } from '/@/utils/permission.ts'
 import { Search } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
 
 defineOptions({
   name: 'SampleReturnBonusDetail',
@@ -123,6 +155,38 @@ const fetchMonthList = async () => {
   const { data } = await getSampleReturnBonusDetailMonth()
   monthList.value = data
   form.month = monthList.value[0] || ''
+}
+
+const refundUpdateVisible = ref<boolean>(false)
+const refundUpdateFormRef = ref<FormInstance>()
+const refundUpdateForm = reactive<{ id: number; refundAmount: number | string }>({
+  id: -1,
+  refundAmount: '',
+})
+const refundUpdateFormRules = reactive<FormRules>({
+  refundAmount: [{ required: true, message: '请输入实际退款', trigger: 'blur' }],
+})
+
+const showRefundUpdate = (row: ISampleReturnBonusDetailList) => {
+  refundUpdateVisible.value = true
+  refundUpdateForm.id = row.id
+  refundUpdateForm.refundAmount = row.refundAmount
+}
+
+const handleConfirmRefundUpdate = async () => {
+  refundUpdateFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await updateSampleBonusRefundAmount({
+        id: refundUpdateForm.id,
+        refundAmount: Number(refundUpdateForm.refundAmount),
+      })
+      if (data) {
+        $baseMessage('修改实际退款成功！', 'success')
+        refundUpdateVisible.value = false
+        fetchData()
+      }
+    }
+  })
 }
 
 const fetchData = async () => {

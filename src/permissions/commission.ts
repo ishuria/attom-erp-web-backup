@@ -31,6 +31,8 @@ class CommissionPermission {
   static readonly COMMISSION_TASK_REDUCTION_PASS = 'commission:task:reduction:pass'
   /** 提成任务-采购降本-审核不通过权限 */
   static readonly COMMISSION_TASK_REDUCTION_NOT_PASS = 'commission:task:reduction:not:pass'
+  /** 样品退还奖金明细-修改实际退款权限 */
+  static readonly COMMISSION_SAMPLE_BONUS_UPDATE = 'commission:sample:bonus:update'
 }
 
 export default CommissionPermission

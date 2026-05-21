@@ -39,7 +39,11 @@ import type {
 
 import { ITaxRefundBonusDetailResp, ITaxRefundBonusQuery } from '/@/type/commission/taxRefundBonusDetail.ts'
 
-import { ISampleReturnBonusDetailResp, ISampleReturnBonusQuery } from '/@/type/commission/sampleReturnBonusDetail.ts'
+import {
+  ISampleBonusRefundAmountUpdateReq,
+  ISampleReturnBonusDetailResp,
+  ISampleReturnBonusQuery,
+} from '/@/type/commission/sampleReturnBonusDetail.ts'
 
 /**
  * @description 提成系数设定-美工类型
@@ -534,6 +538,17 @@ export function getSampleReturnBonusDetailMonth(): Promise<{ data: string[] }> {
 export function querySampleReturnBonusDetailList(data: ISampleReturnBonusQuery): Promise<ISampleReturnBonusDetailResp> {
   return request({
     url: `${BASE_API}/commission/sample/bonus/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 样品退还奖金明细-修改实际退款
+ */
+export function updateSampleBonusRefundAmount(data: ISampleBonusRefundAmountUpdateReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/commission/sample/bonus/refund/update`,
     method: 'post',
     data,
   })
