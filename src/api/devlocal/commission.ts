@@ -39,6 +39,8 @@ import type {
 
 import { ITaxRefundBonusDetailResp, ITaxRefundBonusQuery } from '/@/type/commission/taxRefundBonusDetail.ts'
 
+import { ISampleReturnBonusDetailResp, ISampleReturnBonusQuery } from '/@/type/commission/sampleReturnBonusDetail.ts'
+
 /**
  * @description 提成系数设定-美工类型
  */
@@ -501,6 +503,37 @@ export function getTaxRefundBonusDetailMonth(): Promise<{ data: string[] }> {
 export function queryTaxRefundBonusDetailMonthList(data: ITaxRefundBonusQuery): Promise<ITaxRefundBonusDetailResp> {
   return request({
     url: `${BASE_API}/taxRefund/detail/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 获取样品退还奖金明细-用户列表
+ */
+export function getSampleReturnBonusDetailUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/commission/sample/bonus/user/list`,
+    method: 'get',
+  })
+}
+
+/**
+ * 获取样品退还奖金明细-月份列表
+ */
+export function getSampleReturnBonusDetailMonth(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/commission/sample/bonus/month/list`,
+    method: 'get',
+  })
+}
+
+/**
+ * 获取样品退还奖金明细数据
+ */
+export function querySampleReturnBonusDetailList(data: ISampleReturnBonusQuery): Promise<ISampleReturnBonusDetailResp> {
+  return request({
+    url: `${BASE_API}/commission/sample/bonus/list`,
     method: 'post',
     data,
   })
