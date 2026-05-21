@@ -394,10 +394,10 @@
         </el-form-item>
 
         <el-form-item label="合同号" prop="contractNumber">
-          <el-input v-model="shipmentWalmartForm.contractNumber" clearable />
+          <el-input v-model.trim="shipmentWalmartForm.contractNumber" clearable />
         </el-form-item>
         <el-form-item label="SHIPMENT ID" prop="shipmentId">
-          <el-input v-model="shipmentWalmartForm.shipmentId" clearable />
+          <el-input v-model.trim="shipmentWalmartForm.shipmentId" clearable />
         </el-form-item>
         <el-form-item label="发往站点" prop="site">
           <!-- <el-select v-model="shipmentAmazonForm.site" placeholder="请选择站点" >
@@ -477,10 +477,10 @@
         </el-form-item>
 
         <el-form-item label="合同号" prop="contractNumber">
-          <el-input v-model="shipmentAmazonForm.contractNumber" clearable />
+          <el-input v-model.trim="shipmentAmazonForm.contractNumber" clearable />
         </el-form-item>
         <el-form-item label="SHIPMENT ID" prop="shipmentId">
-          <el-input v-model="shipmentAmazonForm.shipmentId" clearable />
+          <el-input v-model.trim="shipmentAmazonForm.shipmentId" clearable />
         </el-form-item>
         <el-form-item label="发往站点" prop="site">
           <!-- <el-select v-model="shipmentAmazonForm.site" placeholder="请选择站点" >
