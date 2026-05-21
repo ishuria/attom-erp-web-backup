@@ -110,6 +110,26 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="数量" prop="count" :width="flexColumnWidth(list, '数量', 'count')" />
+      <el-table-column label="装箱人" min-width="200">
+        <template #default="{ row }">
+          <span>{{ row.partnerNames?.join(',') || '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="装箱图片" min-width="300">
+        <template #default="{ row }">
+          <div v-if="row.packingImages?.length" class="packing-image-list">
+            <el-image
+              v-for="image in row.packingImages"
+              :key="image.uid"
+              fit="cover"
+              :src="image.url"
+              style="width: 50px; height: 50px; cursor: pointer"
+              @click.stop="imagePreviewShow(image.url)"
+            />
+          </div>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
     </el-table>
     <vab-pagination
       :current-page="queryForm.pageNo"
@@ -133,7 +153,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, InputInstance } from 'element-plus'
 import PackingImageCapture from './PackingImageCapture.vue'
-import { getEncasementSku, printBarcodeEncasement, submitEncasementSku, verifyPackingImage } from '/@/api/devlocal/encasement'
+import { getEncasementSku, printBarcodeEncasement, submitEncasementSkuWithImages, verifyPackingImage } from '/@/api/devlocal/encasement'
 import { getPackagePackagerList } from '/@/api/devlocal/packagingShipping'
 import { SiteEnum } from '/@/const/site'
 import { usePackingStore } from '/@/store/modules/packing'
@@ -390,6 +410,11 @@ const showConfirm = async () => {
       $baseMessage(`${upcOrFnSku.value}不能为空`, 'error')
       return
     }
+    const packingImagesValid = packingStore.packingData.every((item: PackingType) => item.packingImages?.length)
+    if (!packingImagesValid) {
+      $baseMessage('请给每条装箱明细上传至少一张装箱图片', 'error')
+      return
+    }
     confirmForm.encaseCount = undefined // 每次打开数量置空
     confirmVisible.value = true
     fetchData()
@@ -412,18 +437,29 @@ const buildEncasementDetailList = (): EncasementDetailList[] => {
     partner: item.partner,
   }))
 }
+const buildSubmitFormData = () => {
+  const submitData = {
+    encaseCount: confirmForm.encaseCount,
+    encasementNo: props.encasementNo,
+    planSite: props.site,
+    encasementDetailList: buildEncasementDetailList(),
+    isReinsert: props.isReinsert === true ? 1 : 0,
+  }
+  const formData = new FormData()
+  formData.append('data', new Blob([JSON.stringify(submitData)], { type: 'application/json' }))
+  packingStore.packingData.forEach((item: PackingType, index: number) => {
+    item.packingImages?.forEach((image: PackingImageItem) => {
+      formData.append(`files_${index}`, image.file)
+    })
+  })
+  return formData
+}
 // 保存并打印
 const saveAndPrint = async () => {
   confirmFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       confirmForm.encaseCount = normalizePositiveInteger(confirmForm.encaseCount)
-      const { data } = await submitEncasementSku({
-        encaseCount: confirmForm.encaseCount,
-        encasementNo: props.encasementNo,
-        planSite: props.site,
-        encasementDetailList: buildEncasementDetailList(),
-        isReinsert: props.isReinsert === true ? 1 : 0,
-      })
+      const { data } = await submitEncasementSkuWithImages(buildSubmitFormData())
       if (data) {
         const req = `${getCurrentFormatDate()}-${props.encasementNo}-${confirmForm.encaseCount}`
         const { code } = await printBarcodeEncasement({ code: req })
@@ -444,13 +480,7 @@ const save = async () => {
   confirmFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       confirmForm.encaseCount = normalizePositiveInteger(confirmForm.encaseCount)
-      const { data } = await submitEncasementSku({
-        encaseCount: confirmForm.encaseCount,
-        encasementNo: props.encasementNo,
-        planSite: props.site,
-        encasementDetailList: buildEncasementDetailList(),
-        isReinsert: props.isReinsert === true ? 1 : 0,
-      })
+      const { data } = await submitEncasementSkuWithImages(buildSubmitFormData())
       if (data) {
         $baseMessage('保存成功', 'success')
       } else {

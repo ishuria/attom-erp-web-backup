@@ -209,6 +209,10 @@ export interface EncasementDetailList {
    * 装箱图片
    */
   packingImages?: PackingImageItem[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
 }
 
 export interface PackingImageItem {
@@ -299,6 +303,14 @@ export interface ISkuDetailList {
    * SKU
    */
   sku?: string
+  /**
+   * 合作人
+   */
+  partner?: string[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
 }
 
 export interface IGetEncasementInspectionReq {

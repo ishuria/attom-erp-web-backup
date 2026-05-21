@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 修改 -->
-    <vab-dialog v-model="dflag" :before-close="handleCloseDialog" :draggable="false" title="修改" top="7vh" width="40%">
+    <vab-dialog v-model="dflag" :before-close="handleCloseDialog" :draggable="false" title="修改" top="7vh" width="60%">
       <el-form
         ref="modifyFormRef"
         label-position="right"
@@ -56,6 +56,26 @@
               />
             </div>
             <span>{{ row.count }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="装箱人" min-width="200">
+          <template #default="{ row }">
+            <span>{{ row.partnerNames?.join(',') || '-' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="装箱图片" min-width="300">
+          <template #default="{ row }">
+            <div v-if="row.packingImagePaths?.length" class="packing-image-list">
+              <el-image
+                v-for="imagePath in row.packingImagePaths"
+                :key="imagePath"
+                fit="cover"
+                :src="imagePath"
+                style="width: 50px; height: 50px; cursor: pointer"
+                @click.stop="imagePreviewShow(imagePath)"
+              />
+            </div>
+            <span v-else>-</span>
           </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作">
@@ -171,7 +191,14 @@
         </el-form-item>
         <el-form-item label="好" prop="goodCount">
           <div style="width: 85%; margin-right: 10px">
-            <el-input-number v-model="packingCountForm.goodCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.goodCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
           <div style="display: flex; align-items: center; width: 10%">
             <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer" @click="handleShowAdd"><circle-plus /></el-icon>
@@ -179,12 +206,26 @@
         </el-form-item>
         <el-form-item label="留样" prop="keepSampleCount">
           <div style="width: 85%">
-            <el-input-number v-model="packingCountForm.keepSampleCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.keepSampleCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
         </el-form-item>
         <el-form-item label="坏" prop="badCount">
           <div style="width: 85%">
-            <el-input-number v-model="packingCountForm.badCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.badCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
           <!-- <el-button type="primary" @click="handleShowDetails">明细</el-button> -->
         </el-form-item>
@@ -223,7 +264,14 @@
           <el-input-number v-model="addForm.good" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
         </el-form-item>
         <el-form-item label="留样" prop="sample">
-          <el-input-number v-model="addForm.sample" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+          <el-input-number
+            v-model="addForm.sample"
+            class="left-input-number"
+            :controls="false"
+            :min="0"
+            :precision="0"
+            style="width: 100%"
+          />
         </el-form-item>
         <el-form-item label="坏" prop="bad">
           <el-input-number v-model="addForm.bad" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
@@ -686,6 +734,13 @@ const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIn
 }
 .none {
   display: none;
+}
+.packing-image-list {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 // 数字输入框文字左对齐，不居中
 .left-input-number :deep(.el-input__inner) {
