@@ -554,6 +554,11 @@ export interface ISampleFeeRefundItem {
   refundProof: string
 
   /**
+   * 退款日期
+   */
+  refundDate: string
+
+  /**
    * 样品可退证明（可多张）
    */
   proofImages: string[]

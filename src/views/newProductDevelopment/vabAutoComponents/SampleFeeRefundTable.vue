@@ -52,6 +52,11 @@
           </el-image>
         </template>
       </el-table-column>
+      <el-table-column v-if="props.status === 1" label="退款日期" prop="refundDate" width="115">
+        <template #default="{ row }">
+          {{ row.refundDate ? row.refundDate.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
       <el-table-column label="下单日期" width="115">
         <template #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
@@ -149,11 +154,15 @@
           <el-link type="danger" underline="never" @click="handleUnrefund(row)">不可退款</el-link>
         </template>
       </el-table-column>
-      <el-table-column v-if="props.status !== 0" align="center" fixed="right" label="操作" width="100">
+      <!-- 已退款（status===1）的「取消退款」按钮暂时注释掉 -->
+      <!-- <el-table-column v-if="props.status === 1" align="center" fixed="right" label="操作" width="100">
         <template #default="{ row }">
-          <el-link type="primary" underline="never" @click="handleCancelRefund(row)">
-            {{ props.status === 1 ? '取消退款' : '移动到未退款' }}
-          </el-link>
+          <el-link type="primary" underline="never" @click="handleCancelRefund(row)">取消退款</el-link>
+        </template>
+      </el-table-column> -->
+      <el-table-column v-if="props.status === 2" align="center" fixed="right" label="操作" width="100">
+        <template #default="{ row }">
+          <el-link type="primary" underline="never" @click="handleCancelRefund(row)">移动到未退款</el-link>
         </template>
       </el-table-column>
       <template #empty>
