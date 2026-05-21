@@ -384,7 +384,14 @@
         </el-form-item>
         <el-form-item label="好" prop="goodCount">
           <div style="width: 85%; margin-right: 10px">
-            <el-input-number v-model="packingCountForm.goodCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.goodCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
           <div style="display: flex; align-items: center; width: 10%">
             <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer" @click="handleShowAdd"><circle-plus /></el-icon>
@@ -392,12 +399,26 @@
         </el-form-item>
         <el-form-item label="留样" prop="keepSampleCount">
           <div style="width: 85%">
-            <el-input-number v-model="packingCountForm.keepSampleCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.keepSampleCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
         </el-form-item>
         <el-form-item label="坏" prop="badCount">
           <div style="width: 85%">
-            <el-input-number v-model="packingCountForm.badCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.badCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
         </el-form-item>
         <el-form-item label="缺">
@@ -430,7 +451,14 @@
           <el-input-number v-model="addForm.good" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
         </el-form-item>
         <el-form-item label="留样" prop="sample">
-          <el-input-number v-model="addForm.sample" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+          <el-input-number
+            v-model="addForm.sample"
+            class="left-input-number"
+            :controls="false"
+            :min="0"
+            :precision="0"
+            style="width: 100%"
+          />
         </el-form-item>
         <el-form-item label="坏" prop="bad">
           <el-input-number v-model="addForm.bad" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
@@ -672,6 +700,7 @@ let props = defineProps<{
   disabled1: boolean
   disabled2: boolean
   disabled3: boolean
+  siteName: string | undefined
 }>()
 // 只监听对话框打开状态，不监听 disabled props
 watch(
@@ -1063,10 +1092,13 @@ const handleShowMatch2 = (row: any) => {
   _originalCount.value = Number(row.encasementCount)
   // 匹配操作列是合并的 应该找到这个匹配对应数据的站点然后去重
   // 找到这个row的pid 和 id
-  const siteNames = list.value
+  let siteNames = list.value
     .filter((item: any) => item.id === row.id)
     .map((item: any) => item.site)
     .filter(Boolean)
+  if (siteNames.length === 0 && props.siteName) {
+    siteNames = [props.siteName]
+  }
   _siteName.value = [...new Set(siteNames)]
 
   // 先获取数据，再设置显示模式

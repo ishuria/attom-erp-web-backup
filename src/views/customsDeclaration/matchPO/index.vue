@@ -121,7 +121,7 @@
         prop="freightForwardingNumber"
         :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber', 50)"
       >
-         <template #default="{ row }">
+        <template #default="{ row }">
           <span v-show="row.freightForwardingNumber" class="copySku" @click="handleClipboard($event, row.freightForwardingNumber)">
             {{ row.freightForwardingNumber }}
             <vab-icon icon="file-copy-2-fill" />
@@ -469,6 +469,7 @@
       :disabled3="disabled3"
       :match-visible="matchVisible"
       :ship-id="shipId"
+      :site-name="mainSite"
       :status="status"
       @update-match-visible="handleCloseMatch"
     />
@@ -1392,6 +1393,7 @@ const disabled1 = ref<boolean>(false)
 const disabled2 = ref<boolean>(true)
 // 控制所有按钮不显示
 const disabled3 = ref<boolean>(false)
+const mainSite = ref<string>()
 // 展示匹配
 const showMatch = (row: IGetMatchPoList) => {
   // 行高亮
@@ -1416,6 +1418,7 @@ const showMatch = (row: IGetMatchPoList) => {
     // 1 0
     disabled1.value = true //开始匹配禁用, 所有按钮不显示
   }
+  mainSite.value = row.site
   matchVisible.value = true
 }
 // 关闭匹配
