@@ -96,7 +96,9 @@
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showSummaryDetail(row)">汇总明细</el-link>
               <span style="margin: 0 5px"></span>
-              <el-link type="primary" underline="never" @click="handleUploadLingxing(row)">上传领星</el-link>
+              <el-link :disabled="row.lingxingUploadStatus === 1" type="primary" underline="never" @click="handleUploadLingxing(row)">
+                上传领星
+              </el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="handleArchiveOutbound(row)">出库归档</el-link>
               <span style="margin: 0 5px"></span>
@@ -536,16 +538,23 @@ const confirmInvoiceCollection = async () => {
   })
 }
 
+const uploadLingxingLoading = ref<boolean>(false)
 const handleUploadLingxing = async (row: any) => {
   if (!row.exportDate) {
     $baseMessage('请先填写报关单出口日期！', 'warning')
     return
   }
   $baseConfirm('确定要上传领星吗？', null, async () => {
-    const { data } = await uploadLingxing({ id: row.id! })
-    if (data) {
-      $baseMessage('上传领星成功！', 'success')
-      fetchData()
+    if (uploadLingxingLoading.value) return
+    uploadLingxingLoading.value = true
+    try {
+      const { data } = await uploadLingxing({ id: row.id! })
+      if (data) {
+        $baseMessage('上传领星成功！', 'success')
+        fetchData()
+      }
+    } finally {
+      uploadLingxingLoading.value = false
     }
   })
 }
