@@ -557,16 +557,6 @@ export function updateSampleBonusRefundAmount(data: ISampleBonusRefundAmountUpda
 }
 
 /**
- * 获取装箱奖金明细-月份列表
- */
-export function getPackingBonusDetailMonth(): Promise<{ data: string[] }> {
-  return request({
-    url: `${BASE_API}/commission/packing/bonus/month/list`,
-    method: 'get',
-  })
-}
-
-/**
  * 获取装箱奖金明细数据
  */
 export function queryPackingBonusDetailList(data: IPackingBonusQuery): Promise<IPackingBonusDetailResp> {
