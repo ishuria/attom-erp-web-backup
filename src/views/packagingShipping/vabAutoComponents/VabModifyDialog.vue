@@ -301,6 +301,7 @@
 import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import {
   addDetailEncasement,
   delEncasementInspection,
@@ -311,6 +312,7 @@ import {
   updateEncasementDetailCount,
 } from '/@/api/devlocal/encasement'
 import { addQualityCheck, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
+import { useImagePreview } from '/@/hooks/useImagePreview'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -327,24 +329,19 @@ const skuDetailList = ref<ISkuDetailList[]>([])
 const inspectionList = ref<IGetEncasementInspection[]>([])
 const list = ref<any>()
 // 图片预览
-const imagePreviewVisible = ref<boolean>(false)
-const imagePreviewList = ref<string[]>([])
-const imagePreviewClose = () => {
-  imagePreviewVisible.value = false
-}
-const imagePreviewShow = (url: string) => {
-  imagePreviewList.value = []
-  imagePreviewVisible.value = true
-  imagePreviewList.value.push(url)
-}
-const getVisiblePackingImagePaths = (imagePaths: string[] = []) => imagePaths.slice(0, 3)
-const getHiddenPackingImagePathCount = (imagePaths: string[] = []) => Math.max(imagePaths.length - 3, 0)
-const packingImageInfoVisible = ref<boolean>(false)
-const packingImageInfoList = ref<string[]>([])
-const showPackingImageInfoDialog = (imagePaths: string[] = []) => {
-  packingImageInfoList.value = imagePaths
-  packingImageInfoVisible.value = true
-}
+const {
+  imagePreviewVisible,
+  imagePreviewList,
+  openImagePreview: imagePreviewShow,
+  closeImagePreview: imagePreviewClose,
+} = useImagePreview()
+const {
+  getVisiblePackingImages: getVisiblePackingImagePaths,
+  getHiddenPackingImageCount: getHiddenPackingImagePathCount,
+  packingImageInfoVisible,
+  packingImageInfoList,
+  showPackingImageInfoDialog,
+} = usePackingImageInfo<string>()
 let props = defineProps<{
   modifyVisible: boolean
   encasementId: number

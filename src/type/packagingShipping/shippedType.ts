@@ -492,6 +492,14 @@ export interface IGetShippedEncasementList {
    * 备注
    */
   remarks?: string
+  /**
+   * 装箱人名称
+   */
+  partnerNames?: string[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
   shipmentId?: string
   /**
    * 发货计划日期

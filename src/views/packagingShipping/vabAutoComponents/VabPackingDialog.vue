@@ -175,6 +175,7 @@ import PackingImageCapture from './PackingImageCapture.vue'
 import { getEncasementSku, printBarcodeEncasement, submitEncasementSkuWithImages, verifyPackingImage } from '/@/api/devlocal/encasement'
 import { getPackagePackagerList } from '/@/api/devlocal/packagingShipping'
 import { SiteEnum } from '/@/const/site'
+import { useImagePreview } from '/@/hooks/useImagePreview'
 import { usePackingStore } from '/@/store/modules/packing'
 import { useUserStore } from '/@/store/modules/user'
 import type { SelectOption } from '/@/type/common'
@@ -182,6 +183,7 @@ import type { EncasementDetailList, IEncasementProduct, PackingImageItem } from 
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 
 // 走 GTIN 的站点（条码前可能带前导 00 需要剥掉）
 const GTIN_SITES: ReadonlySet<number> = new Set([SiteEnum.WALMART_US, SiteEnum.TIKTOK_US])
@@ -198,24 +200,14 @@ const upcOrFnSku = computed<string>(() => (props.site !== undefined && GTIN_SITE
 // 上一个显示与否
 const previousVisible = ref<boolean>(false)
 // 图片预览
-const imagePreviewVisible = ref<boolean>(false)
-const imagePreviewList = ref<string[]>([])
-const imagePreviewClose = () => {
-  imagePreviewVisible.value = false
-}
-const imagePreviewShow = (url: string) => {
-  imagePreviewList.value = []
-  imagePreviewVisible.value = true
-  imagePreviewList.value.push(url)
-}
-const getVisiblePackingImages = (images: PackingImageItem[] = []) => images.slice(0, 3)
-const getHiddenPackingImageCount = (images: PackingImageItem[] = []) => Math.max(images.length - 3, 0)
-const packingImageInfoVisible = ref<boolean>(false)
-const packingImageInfoList = ref<string[]>([])
-const showPackingImageInfoDialog = (images: PackingImageItem[] = []) => {
-  packingImageInfoList.value = images.map((image) => image.url)
-  packingImageInfoVisible.value = true
-}
+const {
+  imagePreviewVisible,
+  imagePreviewList,
+  openImagePreview: imagePreviewShow,
+  closeImagePreview: imagePreviewClose,
+} = useImagePreview()
+const { getVisiblePackingImages, getHiddenPackingImageCount, packingImageInfoVisible, packingImageInfoList, showPackingImageInfoDialog } =
+  usePackingImageInfo<PackingImageItem>((image) => image.url)
 const confirmFormRef = ref<FormInstance>()
 // 确认的form
 const confirmForm = reactive<{ encaseCount: number | undefined }>({
