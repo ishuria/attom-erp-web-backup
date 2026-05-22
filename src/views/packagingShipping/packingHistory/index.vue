@@ -65,6 +65,11 @@
       <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight" />
       <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume" />
       <el-table-column label="箱规号" min-width="135" prop="encasementNo" />
+      <el-table-column label="装箱人" min-width="200">
+        <template #default="{ row }">
+          <span>{{ row.partnerNames?.join(',') || '-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="冻结箱号" min-width="110">
         <template #default="{ row }">
           <el-switch
@@ -81,11 +86,7 @@
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')" />
       <el-table-column label="数量" min-width="90" prop="number" />
-      <el-table-column label="装箱人" min-width="200">
-        <template #default="{ row }">
-          <span>{{ row.partnerNames?.join(',') || '-' }}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column label="装箱图片" min-width="300">
         <template #default="{ row }">
           <div v-if="row.packingImagePaths?.length" class="packing-image-list">
@@ -164,6 +165,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import { downloadFileP } from '/@/api/devlocal/download'
 import { encasementFreezeUpdate, getShippedEncasementList } from '/@/api/devlocal/encasement'
 import { useImagePreview } from '/@/hooks/useImagePreview'
@@ -171,7 +173,6 @@ import type { IGetShippedEncasementList } from '/@/type/packagingShipping/shippe
 import { formatDate } from '/@/utils/dateUtils'
 import { sumUniqueByField } from '/@/utils/mapUtil.ts'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 
 defineOptions({
   name: 'PackingHistory',
@@ -235,7 +236,7 @@ const totalProductNumber = computed(() => {
 const setSelectRows = (value: any) => {
   selectRows.value = value
 }
-const detailColumnLabels = new Set(['站点', 'SKU', 'Description', '数量', '装箱人', '装箱图片'])
+const detailColumnLabels = new Set(['站点', 'SKU', 'Description', '数量', '装箱图片'])
 // 装箱历史列合并方法
 const objectSpanMethod = ({ row, rowIndex, column }: any) => {
   // 设置需要合并的列

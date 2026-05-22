@@ -4,7 +4,7 @@
       <vab-query-form-left-panel>
         <el-form class="packing-bonus-query" inline :model="form" @submit.prevent>
           <el-form-item label="人员">
-            <el-select v-model="form.userId" placeholder="请选择" style="width: 270px" @change="queryData">
+            <el-select v-model="form.userId" :disabled="!isBoss" placeholder="请选择" style="width: 270px" @change="queryData">
               <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -66,7 +66,15 @@
       <el-table-column label="装箱总人数" min-width="130" prop="encasementUserCount" />
       <el-table-column label="个人折算箱数" min-width="140" prop="personalDiscountBoxCount" />
       <el-table-column label="个人奖金" min-width="130" prop="personalBonus" />
-      <el-table-column label="SHIPMENT ID" min-width="160" prop="shipmentId" />
+      <el-table-column label="SHIPMENT ID" min-width="180" prop="shipmentId">
+        <template #default="{ row }">
+          <span v-if="row.shipmentId" class="copyable-text" @click="handleClip(row.shipmentId)">
+            {{ row.shipmentId }}
+            <el-icon class="copyable-text__icon"><copy-document /></el-icon>
+          </span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -83,11 +91,15 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from '@element-plus/icons-vue'
+import { CopyDocument, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { queryPackingBonusDetailList } from '/@/api/devlocal/commission'
-import { getPackagePackagerList } from '~/src/api/devlocal/packagingShipping'
+import { getPackagePackagerList } from '/@/api/devlocal/packagingShipping'
+import { ROLE_BOSS_CODE } from '/@/const/role.ts'
+import { useAclStore } from '/@/store/modules/acl.ts'
+import { useUserStore } from '/@/store/modules/user.ts'
 import type { IPackingBonusDetailList, IPackingBonusQuery } from '/@/type/commission/packingBonusDetail.ts'
+import { handleClip } from '/@/utils/clipboard'
 
 defineOptions({
   name: 'PackingBonusDetail',
@@ -99,10 +111,14 @@ const bonus = ref<number>(0)
 const updateTime = ref<string>('')
 const userList = ref<{ id: number; label: string }[]>([])
 const packingBonusList = ref<IPackingBonusDetailList[]>([])
+const currentRoleCodeList = useAclStore().getRole
+const userStore = useUserStore()
+const isBoss = currentRoleCodeList.includes(ROLE_BOSS_CODE)
+const currentLoginUserId = Number(userStore.getUserId)
 
 const form = reactive<IPackingBonusQuery>({
   keyWord: '',
-  userId: -1,
+  userId: isBoss ? -1 : currentLoginUserId,
   month: dayjs().format('YYYY-MM'),
   pageNo: 1,
   pageSize: 50,
@@ -130,7 +146,19 @@ const queryData = () => {
 
 const fetchUserList = async () => {
   const { data } = await getPackagePackagerList()
-  userList.value = [{ id: -1, label: '全部' }, ...(data ?? [])]
+  if (isBoss) {
+    userList.value = [{ id: -1, label: '全部' }, ...(data ?? [])]
+    return
+  }
+
+  const currentUser = data?.find((item) => item.id === currentLoginUserId)
+  userList.value = [
+    {
+      id: currentLoginUserId,
+      label: currentUser?.label || userStore.getUsername,
+    },
+  ]
+  form.userId = currentLoginUserId
 }
 
 const fetchData = async () => {
@@ -167,6 +195,7 @@ onBeforeMount(async () => {
     font-size: 14px;
     color: var(--el-text-color-primary);
     white-space: nowrap;
+    margin-left: 15px;
   }
 
   .bonus-summary__label {
@@ -180,6 +209,21 @@ onBeforeMount(async () => {
   .bonus-summary__time {
     margin-left: 4px;
     color: var(--el-text-color-primary);
+  }
+
+  .copyable-text {
+    display: inline-flex;
+    align-items: center;
+
+    cursor: pointer;
+
+    &:hover {
+      color: var(--el-text-color-primary);
+    }
+  }
+
+  .copyable-text__icon {
+    margin-left: 4px;
   }
 }
 </style>
