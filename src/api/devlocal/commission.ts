@@ -45,6 +45,8 @@ import {
   ISampleReturnBonusQuery,
 } from '/@/type/commission/sampleReturnBonusDetail.ts'
 
+import type { IPackingBonusDetailResp, IPackingBonusQuery } from '/@/type/commission/packingBonusDetail.ts'
+
 /**
  * @description 提成系数设定-美工类型
  */
@@ -549,6 +551,27 @@ export function querySampleReturnBonusDetailList(data: ISampleReturnBonusQuery):
 export function updateSampleBonusRefundAmount(data: ISampleBonusRefundAmountUpdateReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/commission/sample/bonus/refund/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 获取装箱奖金明细-月份列表
+ */
+export function getPackingBonusDetailMonth(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/commission/packing/bonus/month/list`,
+    method: 'get',
+  })
+}
+
+/**
+ * 获取装箱奖金明细数据
+ */
+export function queryPackingBonusDetailList(data: IPackingBonusQuery): Promise<IPackingBonusDetailResp> {
+  return request({
+    url: `${BASE_API}/commission/packing/bonus/list`,
     method: 'post',
     data,
   })

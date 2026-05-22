@@ -339,41 +339,13 @@
     />
 
     <!-- 箱号 -->
-    <vab-dialog v-model="boxNumberVisible" class="dialog" title="箱号" :width="dialogWidth" @close="closeBoxNumber">
-      <el-form
-        ref="boxNumberFormRef"
-        label-position="right"
-        label-width="auto"
-        :model="boxNumberForm"
-        :rules="boxNumberFormRules"
-        style="margin-right: 10px; margin-left: 10px"
-      >
-        <el-form-item label="箱号" prop="boxNumber">
-          <el-input v-model="boxNumberForm.boxNumber" disabled />
-        </el-form-item>
-        <el-form-item label="发往站点" prop="site">
-          <el-select v-model="boxNumberForm.site" placeholder="请选择站点">
-            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div style="display: flex; justify-content: space-between">
-          <div>
-            <el-button type="primary" @click="reinsertBoxNumber">回插</el-button>
-            <el-button @click="increaseBoxNumber">递增</el-button>
-          </div>
-          <div>
-            <el-button type="primary" @click="showPacking">下一步</el-button>
-          </div>
-        </div>
-      </template>
-    </vab-dialog>
+    <vab-box-number-dialog v-model="boxNumberVisible" v-model:is-reinsert="isReinsert" :site-list="siteList" @next="handleBoxNumberNext" />
     <!-- 装箱 -->
     <vab-packing-dialog
       :encasement-no="encasementNo"
       :is-reinsert="isReinsert"
       :packing-visible="packingVisible"
+      :partner="boxPartner"
       :site="passSite"
       @update:finish="handleFinish"
       @update:packing-visible="handlePackingClose"
@@ -696,7 +668,6 @@ import { IGetOperationOrderTable } from '~/src/type/storeOperation/productOrderi
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
-  checkEncasementNo,
   checkEncasementShipment,
   confirmEncasementShipments,
   delEncasement,
@@ -711,9 +682,7 @@ import {
   getEncasementError,
   getEncasementList,
   getEncasementUserPrinter,
-  getIncrementBoxNo,
   getProductNewSkuList,
-  getReinsertionBoxNo,
   plusEncasementCount,
   printEncasement,
   reduceEncasementCount,
@@ -730,7 +699,7 @@ import {
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import EncasementPermission from '/@/permissions/encasement'
-import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
+import type { IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -1041,6 +1010,8 @@ const modifyVisible = ref<boolean>(false)
 const passSite = ref<number>()
 // 传递给装箱的装箱号
 const encasementNo = ref<number>(0)
+// 传递给装箱的合作人
+const boxPartner = ref<number[]>([])
 // 箱号可见
 const boxNumberVisible = ref<boolean>(false)
 // 装箱可见
@@ -1066,16 +1037,6 @@ const splitForm = reactive<{ splitCount: number | undefined }>({
 const splitFormRef = ref<FormInstance>()
 const splitFormRules = reactive<FormRules<{ splitCount: number | undefined }>>({
   splitCount: [{ required: true, message: '请输入拆分数量', trigger: 'blur' }],
-})
-
-// 箱号表单
-const boxNumberForm = reactive<IBoxNumberForm>({
-  boxNumber: undefined,
-  site: undefined,
-})
-const boxNumberFormRef = ref<FormInstance>()
-const boxNumberFormRules = reactive<FormRules<IBoxNumberForm>>({
-  site: [{ required: true, message: '请选择站点', trigger: 'change' }],
 })
 
 // 站点列表
@@ -1446,57 +1407,17 @@ const closeModify = (value: boolean) => {
 // 是回插还是递增
 const isReinsert = ref<boolean>(false)
 // 展示箱号
-const showBoxNumber = async () => {
-  if (isReinsert.value) {
-    const { data } = await getReinsertionBoxNo()
-    if (data) {
-      boxNumberForm.boxNumber = data
-      boxNumberVisible.value = true
-    }
-  } else {
-    const { data } = await getIncrementBoxNo()
-    if (data) {
-      boxNumberForm.boxNumber = data
-      boxNumberVisible.value = true
-    }
-  }
+const showBoxNumber = () => {
+  boxPartner.value = []
+  boxNumberVisible.value = true
 }
-// 点击递增
-const increaseBoxNumber = async () => {
-  isReinsert.value = false
-  const { data } = await getIncrementBoxNo()
-  if (data) {
-    boxNumberForm.boxNumber = data
-    $baseMessage('递增获取箱号成功', 'success')
-  }
-}
-// 点击回插
-const reinsertBoxNumber = async () => {
-  isReinsert.value = true
-  const { data } = await getReinsertionBoxNo()
-  if (data) {
-    boxNumberForm.boxNumber = data
-    $baseMessage('回插获取箱号成功', 'success')
-  }
-}
-// 关闭箱号
-const closeBoxNumber = () => {
-  boxNumberFormRef.value?.resetFields()
+const handleBoxNumberNext = (data: { boxNumber: number; site: number; partner: number[]; isReinsert: boolean }) => {
   boxNumberVisible.value = false
-}
-// 箱号的下一步，展示装箱
-const showPacking = async () => {
-  const { data } = await checkEncasementNo({ boxNo: boxNumberForm.boxNumber! })
-  if (data) {
-    await boxNumberFormRef.value?.validate((isValid: boolean) => {
-      if (isValid) {
-        boxNumberVisible.value = false
-        packingVisible.value = true
-        passSite.value = boxNumberForm.site
-        encasementNo.value = boxNumberForm.boxNumber!
-      }
-    })
-  }
+  packingVisible.value = true
+  passSite.value = data.site
+  encasementNo.value = data.boxNumber
+  boxPartner.value = [...data.partner]
+  isReinsert.value = data.isReinsert
 }
 // 装箱的关闭
 const handlePackingClose = (value: boolean) => {
@@ -1789,19 +1710,7 @@ const fetchSiteData = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
-const dialogWidth = computed<string>(() => {
-  // 获取屏幕宽度并根据不同设备返回宽度
-  const screenWidth = window.innerWidth
-  if (screenWidth <= 768) {
-    return '80%' // 手机设备
-  } else if (screenWidth <= 1024) {
-    return '60%' // 小型平板设备
-  } else if (screenWidth <= 1200) {
-    return '50%' // 中型平板设备
-  } else {
-    return '20%' // 大屏设备
-  }
-})
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getEncasementList(queryForm)

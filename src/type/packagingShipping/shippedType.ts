@@ -127,6 +127,7 @@ export interface IBoxNumber {
 export interface IBoxNumberForm {
   boxNumber: number | undefined
   site: number | undefined
+  partner?: number[]
 }
 /**
  * @description 开始装箱-根据站点和fnSku查询
@@ -150,7 +151,7 @@ export interface IEncasementProduct {
   productName: string
   skuImageUrl: string
   count?: number
-  partner?: number[]
+
   packingImages?: PackingImageItem[]
   [property: string]: any
 }
@@ -182,6 +183,10 @@ export interface ISubmitEncasementSkuReq {
    * 是否回插 0否 1是
    */
   isReinsert?: number
+  /**
+   * 合作人
+   */
+  partner?: number[]
 }
 
 export interface EncasementDetailList {
@@ -201,10 +206,6 @@ export interface EncasementDetailList {
    * SKU
    */
   sku?: string
-  /**
-   * 合作人
-   */
-  partner?: number[]
   /**
    * 装箱图片
    */
@@ -238,6 +239,7 @@ export interface IUpdateEncasementReq {
   height?: number
   site?: number
   boxNumber?: number
+  partner?: number[]
   skuList?: EncasementDetailList[]
 }
 /**
@@ -270,6 +272,10 @@ export interface IGetEncasementUpdateRes {
     height?: number
 
     length?: number
+    /**
+     * 装箱人ID
+     */
+    partner?: number[]
     /**
      * sku明细列表
      */

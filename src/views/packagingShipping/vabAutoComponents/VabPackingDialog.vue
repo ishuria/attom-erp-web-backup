@@ -12,7 +12,7 @@
       :closable="false"
       show-icon
       style="margin-bottom: 12px"
-      title="请扫描条形码，并核对扫描结果（SKU、产品名称、图片）与箱中是否一致，若存在混装箱的情况，请如实上传多张装箱图片"
+      title="请扫描条形码，并核对扫描结果（SKU、产品名称、图片）与箱中是否一致"
       type="warning"
     />
     <el-row :gutter="20">
@@ -36,20 +36,6 @@
           </el-form-item>
           <el-form-item label="数量" prop="count">
             <el-input ref="packingCount" v-model="packingForm.count" clearable @change="handleUpdate" />
-          </el-form-item>
-          <el-form-item label="合作人">
-            <el-select
-              v-model="packingForm.partner"
-              clearable
-              filterable
-              :loading="packagerOptionsLoading"
-              multiple
-              placeholder="请选择合作人"
-              style="width: 100%"
-              @change="handleUpdate"
-            >
-              <el-option v-for="item in packagerOptions" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
           </el-form-item>
           <el-form-item label="装箱图片" prop="packingImages">
             <!-- 拍照上传 -->
@@ -118,11 +104,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="数量" :min-width="90" prop="count" />
-      <el-table-column label="装箱人" min-width="200">
-        <template #default="{ row }">
-          <span>{{ getPartnerNames(row.partner) || '-' }}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column label="装箱图片" min-width="300">
         <template #default="{ row }">
           <div v-if="row.packingImages?.length" class="packing-image-list">
@@ -171,19 +153,18 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, InputInstance } from 'element-plus'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import PackingImageCapture from './PackingImageCapture.vue'
 import { getEncasementSku, printBarcodeEncasement, submitEncasementSkuWithImages, verifyPackingImage } from '/@/api/devlocal/encasement'
 import { getPackagePackagerList } from '/@/api/devlocal/packagingShipping'
 import { SiteEnum } from '/@/const/site'
 import { useImagePreview } from '/@/hooks/useImagePreview'
 import { usePackingStore } from '/@/store/modules/packing'
-import { useUserStore } from '/@/store/modules/user'
 import type { SelectOption } from '/@/type/common'
 import type { EncasementDetailList, IEncasementProduct, PackingImageItem } from '/@/type/packagingShipping/shippedType'
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 
 // 走 GTIN 的站点（条码前可能带前导 00 需要剥掉）
 const GTIN_SITES: ReadonlySet<number> = new Set([SiteEnum.WALMART_US, SiteEnum.TIKTOK_US])
@@ -193,6 +174,7 @@ let props = defineProps<{
   site: number | undefined
   encasementNo: number
   isReinsert: boolean
+  partner?: number[]
 }>()
 const dflag = ref<boolean>(false)
 const upcOrFnSku = computed<string>(() => (props.site !== undefined && GTIN_SITES.has(props.site) ? 'GTIN' : 'FNSKU'))
@@ -283,7 +265,6 @@ const handleCloseDialog = () => {
   revokeAllPackingImageUrls()
   packingFormRef.value?.resetFields()
   packingForm.skuImageUrl = ''
-  packingForm.partner = []
   packingForm.packingImages = []
 }
 const packingForm = reactive<IEncasementProduct>({
@@ -292,38 +273,22 @@ const packingForm = reactive<IEncasementProduct>({
   productName: '',
   count: undefined,
   skuImageUrl: '',
-  partner: [],
   packingImages: [],
 })
 const packingFormRef = ref<FormInstance>()
-const userStore = useUserStore()
 // 打包人员选项
 const packagerOptions = ref<SelectOption[]>([])
 const packagerOptionsLoading = ref<boolean>(false)
-// 获取默认打包人员
-const getDefaultPartnerIds = () => {
-  const currentUserId = Number(userStore.getUserId)
-
-  if (!Number.isFinite(currentUserId)) {
-    return []
-  }
-
-  return packagerOptions.value.some((item) => item.id === currentUserId) ? [currentUserId] : []
-}
-// 设置默认打包人员
-const setDefaultPartners = () => {
-  packingForm.partner = getDefaultPartnerIds()
-}
 const getPartnerNames = (partnerIds: number[] = []) => {
   return partnerIds
     .map((id) => packagerOptions.value.find((item) => item.id === id)?.label)
     .filter((name): name is string => Boolean(name))
     .join(',')
 }
+const boxPartnerNames = computed(() => getPartnerNames(props.partner ?? []))
 // 查询打包人员
 const fetchPackagerOptions = async () => {
   if (packagerOptions.value.length > 0) {
-    setDefaultPartners()
     return
   }
 
@@ -335,7 +300,6 @@ const fetchPackagerOptions = async () => {
   try {
     const { data } = await getPackagePackagerList()
     packagerOptions.value = data ?? []
-    setDefaultPartners()
   } catch {
     $baseMessage('获取合作人列表失败，请刷新后重试', 'error')
   } finally {
@@ -478,7 +442,6 @@ const buildEncasementDetailList = (): EncasementDetailList[] => {
     sku: item.sku,
     productName: item.productName,
     count: isPositiveInteger(item.count) ? normalizePositiveInteger(item.count) : item.count,
-    partner: item.partner,
   }))
 }
 const buildSubmitFormData = () => {
@@ -486,6 +449,7 @@ const buildSubmitFormData = () => {
     encaseCount: confirmForm.encaseCount,
     encasementNo: props.encasementNo,
     planSite: props.site,
+    partner: props.partner ?? [],
     encasementDetailList: buildEncasementDetailList(),
     isReinsert: props.isReinsert === true ? 1 : 0,
   }
@@ -610,7 +574,6 @@ const processBarcodeScan = async (barcodeValue: string) => {
         clearCurrentPackingImages()
         packingFormRef.value?.resetFields()
         packingForm.skuImageUrl = ''
-        setDefaultPartners()
         barcodeDisabled.value = false
         lastProcessedBarcode.value = ''
         nextTick(() => {

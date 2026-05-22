@@ -293,6 +293,7 @@ declare module 'vue' {
     VabBatchProfitMargin: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabBatchProfitMargin.vue')['default']
     VabBatchSummaryDetailDialog: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabBatchSummaryDetailDialog.vue')['default']
     VabBox: typeof import('./../../components/VabBox/index.vue')['default']
+    VabBoxNumberDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabBoxNumberDialog.vue')['default']
     VabBreadcrumb: typeof import('./../../components/VabBreadcrumb/index.vue')['default']
     VabCard: typeof import('./../../components/VabCard/index.vue')['default']
     VabChart: typeof import('./../../../src/plugins/VabChart/index.vue')['default']
