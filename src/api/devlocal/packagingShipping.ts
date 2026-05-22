@@ -234,8 +234,8 @@ export function getPackageTaskList(params: IGetPackageTaskListQuery): Promise<IG
 export function getPackageAllTaskList(params: IGetPackageTaskListQuery): Promise<IGetPackageTaskListResp> {
   return request({
     url: `${BASE_API}/package/task/all/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data: params,
   })
 }
 /**

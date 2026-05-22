@@ -31,6 +31,11 @@
                   <el-option v-for="item in operationUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="条形码筛选">
+                <el-select v-model="allTaskForm.barcodeStatus" placeholder="全部" @change="queryAllTaskData">
+                  <el-option v-for="item in barcodeStatusOptions" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </el-form-item>
             </el-form>
             <div class="summary-info">
               <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
@@ -2038,10 +2043,17 @@ const queryPendingNewInspectionData = () => {
   pendingNewInspectionForm.pageNo = 1
   fetchPendingNewInspectionData()
 }
+// 条形码筛选下拉选项：-1 全部，0 未生成，1 已生成
+const barcodeStatusOptions = [
+  { label: '全部', value: -1 },
+  { label: '未生成', value: 0 },
+  { label: '已生成', value: 1 },
+]
 const allTaskForm = reactive<any>({
   keyWord: '',
   site: undefined,
   releaseDate: null, // 日期范围，格式为 [startDate, endDate]
+  barcodeStatus: -1, // 条形码筛选，默认全部
   pageNo: 1,
   pageSize: 20,
   orderByField: '',
