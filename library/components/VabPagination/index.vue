@@ -32,6 +32,10 @@ defineOptions({
 
 const props = defineProps({
   ...ElPagination.props,
+  pageSizes: {
+    type: Array,
+    default: () => [10, 20, 30, 40, 50, 100, 200, 400, 500],
+  },
   layout: {
     type: String,
     default: 'total, sizes, prev, pager, next, jumper',
