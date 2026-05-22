@@ -304,7 +304,7 @@ export interface IGetTaxRefundInvoiceList {
 }
 
 export interface IFinishTaxRefundInvoiceRes {
-  data: boolean
+  data: string | null
   msg: string
 }
 
