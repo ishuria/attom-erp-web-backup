@@ -52,6 +52,7 @@
         </template>
         <template #default="{ row }">
           <performance-table-cell
+            :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
             :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
             :is-boss="isBoss"
             :item="item"
@@ -62,6 +63,7 @@
             :x-axis="xAxis"
             @image-preview="emit('imagePreview', $event)"
             @router-push="emit('routerPush', $event)"
+            @show-ai-selling-point-performance="emit('showAiSellingPointPerformance', $event)"
             @show-ai-title-optimization="emit('showAiTitleOptimization', $event)"
             @show-operation-log="emit('showOperationLog', $event)"
             @show-release-order="emit('showReleaseOrder', $event)"
@@ -104,6 +106,7 @@ interface Props {
   userName?: string
   isBoss?: boolean
   aiTitleOptimizationLoadingIds?: Array<number | string>
+  aiSellingPointPerformanceLoadingIds?: Array<number | string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -117,6 +120,7 @@ const props = withDefaults(defineProps<Props>(), {
   userName: '',
   isBoss: false,
   aiTitleOptimizationLoadingIds: () => [],
+  aiSellingPointPerformanceLoadingIds: () => [],
 })
 
 // Emits
@@ -129,6 +133,7 @@ const emit = defineEmits<{
   showReleaseOrder: [row: any]
   showRemark: [row: any]
   showAiTitleOptimization: [row: any]
+  showAiSellingPointPerformance: [row: any]
   updateOpeType: [row: any]
   updateStopStatus: [row: any]
   routerPush: [row: any]

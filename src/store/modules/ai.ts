@@ -821,7 +821,9 @@ export const useAiStore = defineStore('ai', {
       const timeoutMessage =
         busyState?.reason === 'evaluation-research-report'
           ? 'AI调研报告结果等待超时，请稍后重新进入会话查看。'
-          : '标题优化结果等待超时，请稍后重新进入会话查看。'
+          : busyState?.reason === 'selling-point'
+            ? 'AI生成5点结果等待超时，请稍后重新进入会话查看。'
+            : '标题优化结果等待超时，请稍后重新进入会话查看。'
       this.failConversationBusy(conversationId, timeoutMessage)
     },
     failConversationBusy(conversationId: number | string, errorMessage: string) {

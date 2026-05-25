@@ -140,6 +140,7 @@
         </vab-query-form>
         <performance-table
           :active-name="activeName"
+          :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
           :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
           :columns="checkList1"
           :data="list"
@@ -156,6 +157,7 @@
           @image-preview="imagePreviewShow"
           @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-ai-selling-point-performance="showAiSellingPointPerformance"
           @show-ai-title-optimization="showAiTitleOptimization"
           @show-operation-log="showOperationLog"
           @show-release-order="handleShowReleaseOrder"
@@ -300,6 +302,7 @@
         </vab-query-form>
         <performance-table
           :active-name="activeName"
+          :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
           :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
           :columns="checkList2"
           :data="asinList"
@@ -316,6 +319,7 @@
           @image-preview="imagePreviewShow"
           @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-ai-selling-point-performance="showAiSellingPointPerformance"
           @show-ai-title-optimization="showAiTitleOptimization"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
@@ -450,6 +454,7 @@
         </vab-query-form>
         <performance-table
           :active-name="activeName"
+          :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
           :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
           :columns="checkList3"
           :data="pAsinList"
@@ -466,6 +471,7 @@
           @image-preview="imagePreviewShow"
           @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-ai-selling-point-performance="showAiSellingPointPerformance"
           @show-ai-title-optimization="showAiTitleOptimization"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
@@ -565,6 +571,13 @@
       @confirm="handleReleaseOrder"
       @image-preview="imagePreviewShow"
     />
+    <selling-point-performance-dialog
+      v-if="sellingPointPerformanceVisible"
+      v-model:visible="sellingPointPerformanceVisible"
+      :row="sellingPointPerformanceRow"
+      :submitting="sellingPointPerformanceSubmitting"
+      @submit="handleSellingPointPerformanceSubmit"
+    />
     <!-- 文件上传 -->
     <sp-file-upload v-model:visible="spFileUploadVisible" :site-list="filteredSiteList" />
     <operation-log-manual-sum v-model:visible="logSummaryVisible" />
@@ -582,7 +595,7 @@ import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../../constantOption.ts'
 import { useUserStore } from '/@//store/modules/user'
-import { createAiConversation } from '/@/api/devlocal/ai'
+import { createAiConversation, createSellingPointPerformanceConversation } from '/@/api/devlocal/ai'
 import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis.ts'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
@@ -621,6 +634,7 @@ import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '/@/const/role'
 import StoreOperationPermission from '/@/permissions/storeOperation'
 import { useAclStore } from '/@/store/modules/acl'
 import { useAiStore } from '/@/store/modules/ai'
+import type { SellingPointPerformancePayload } from '/@/type/ai/chat'
 import type { IProductOrderTableRef } from '/@/type/storeOperation/productOrdering'
 import type {
   IGetOperationAmazonSKUList,
@@ -633,6 +647,7 @@ import type {
 import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { processField } from '/@/utils/tableColum'
+import SellingPointPerformanceDialog from './components/SellingPointPerformanceDialog.vue'
 
 defineOptions({
   name: 'ProductPerformanceDashboard',
@@ -653,6 +668,10 @@ let skuRow: any
 const spFileUploadVisible = ref<boolean>(false)
 const logSummaryVisible = ref<boolean>(false)
 const aiTitleOptimizationLoadingIds = ref<Array<number | string>>([])
+const aiSellingPointPerformanceLoadingIds = ref<Array<number | string>>([])
+const sellingPointPerformanceVisible = ref(false)
+const sellingPointPerformanceRow = ref<any>(null)
+const sellingPointPerformanceSubmitting = ref(false)
 // 打开发布订货
 const handleShowReleaseOrder = async (row: any) => {
   // currentRowId.value = row.id
@@ -1140,6 +1159,61 @@ const showAiTitleOptimization = async (row: any) => {
     $baseMessage(error?.msg ?? error?.message ?? '创建标题优化会话失败', 'error')
   } finally {
     aiTitleOptimizationLoadingIds.value = aiTitleOptimizationLoadingIds.value.filter((id) => String(id) !== loadingKey)
+  }
+}
+
+const showAiSellingPointPerformance = (row: any) => {
+  if (row?.id == null || row.id === '') {
+    $baseMessage('当前数据缺少业务标识，无法发起 5 点优化', 'error')
+    return
+  }
+  const loadingKey = String(row.id)
+  if (aiSellingPointPerformanceLoadingIds.value.some((id) => String(id) === loadingKey)) {
+    return
+  }
+  sellingPointPerformanceRow.value = row
+  sellingPointPerformanceVisible.value = true
+}
+
+const handleSellingPointPerformanceSubmit = async (payload: SellingPointPerformancePayload) => {
+  const operationSkuId = payload.operationSkuId
+  const loadingKey = String(operationSkuId)
+  if (aiSellingPointPerformanceLoadingIds.value.some((id) => String(id) === loadingKey)) {
+    return
+  }
+  aiSellingPointPerformanceLoadingIds.value = [...aiSellingPointPerformanceLoadingIds.value, operationSkuId]
+  sellingPointPerformanceSubmitting.value = true
+
+  try {
+    const createResponse = await createSellingPointPerformanceConversation(payload)
+    const conversationId = normalizeAiConversationId(createResponse)
+
+    if (conversationId == null || conversationId === '') {
+      throw new Error('会话创建成功但未返回有效会话 ID')
+    }
+
+    try {
+      await aiStore.ensureInitialized({
+        createIfEmpty: false,
+        forceRefresh: true,
+      })
+      await aiStore.switchConversation(conversationId)
+      aiStore.setConversationBusy(conversationId, {
+        reason: 'selling-point',
+        placeholderText: '已提交 5 点优化请求，正在等待模型返回结果...',
+      })
+      $baseMessage('已开始 5 点优化，当前会话会在结果返回前禁止发送新消息', 'success')
+      void aiStore.streamConversationReply(conversationId)
+      sellingPointPerformanceVisible.value = false
+    } catch (error: any) {
+      aiStore.failConversationBusy(conversationId, error?.msg ?? error?.message ?? '5 点优化任务创建成功，但消息发送失败')
+      $baseMessage(error?.msg ?? error?.message ?? '5 点优化任务创建成功，但消息发送失败', 'error')
+    }
+  } catch (error: any) {
+    $baseMessage(error?.msg ?? error?.message ?? '创建 5 点优化会话失败', 'error')
+  } finally {
+    aiSellingPointPerformanceLoadingIds.value = aiSellingPointPerformanceLoadingIds.value.filter((id) => String(id) !== loadingKey)
+    sellingPointPerformanceSubmitting.value = false
   }
 }
 

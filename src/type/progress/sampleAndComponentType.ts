@@ -534,6 +534,11 @@ export interface ISampleFeeRefundItem {
   bulkGoodsReturnable: string
 
   /**
+   * 实际退款金额
+   */
+  refundAmount: string
+
+  /**
    * 备注
    */
   remark: string

@@ -16,6 +16,14 @@
           <!-- 左侧表单 -->
           <el-col :span="8" style="display: flex; flex-direction: column">
             <el-form ref="formRef1" class="custom-form" label-position="top" :model="form" :rules="formRules1" style="width: 100%">
+              <el-form-item label="产品英文主品名" prop="productNameEn">
+                <el-input v-model="form.productNameEn" clearable @change="debouncedSave" />
+              </el-form-item>
+              <el-form-item label="卖点站点" prop="site">
+                <el-select v-model="form.site" clearable @change="debouncedSave">
+                  <el-option v-for="item in siteOption" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
               <el-form-item label="产品差异化程度" prop="productDifferences">
                 <el-select v-model="form.productDifferences" @change="debouncedSave">
                   <el-option v-for="item in differencesOption" :key="item.id" :label="item.label" :value="item.id" />
@@ -47,7 +55,11 @@
                     <span>竞品ASIN</span>
                     <el-tooltip effect="dark" placement="top-start">
                       <template #content>
-                        <span class="custom-tooltip">提供至少2个同类产品中销量好的产品</span>
+                        <div class="custom-tooltip">
+                          <div>提供至少2个同类产品中销量好的产品</div>
+                          <div>必须是逗号隔开格式，只能有ASIN不能有其他任何信息</div>
+                          <div>无ASIN填入对应的平台商品id</div>
+                        </div>
                       </template>
                       <span class="field-help-trigger" @click.stop>
                         <el-icon class="field-help-icon"><question-filled /></el-icon>
@@ -58,7 +70,7 @@
                 <el-input
                   v-model="form.competitiveAsin"
                   clearable
-                  placeholder="提供至少2个同类产品中销量好的产品"
+                  placeholder="多个ASIN用英文逗号隔开，不能含其他字符，例：B0XXXXXXXX,B0YYYYYYYY"
                   @change="debouncedSave"
                 />
               </el-form-item>
@@ -68,9 +80,11 @@
                     <span>同赛道ASIN</span>
                     <el-tooltip effect="dark" placement="top-start">
                       <template #content>
-                        <span class="custom-tooltip">
-                          提供至少2个产品价格定位和类型与我们一致的ASIN（1个是上线时间长的且卖得好的成熟ASIN；1个是新品卖得好的）
-                        </span>
+                        <div class="custom-tooltip">
+                          <div>提供至少2个产品价格定位和类型与我们一致的ASIN（1个是上线时间长的且卖得好的成熟ASIN；1个是新品卖得好的）</div>
+                          <div>必须是逗号隔开格式，只能有ASIN不能有其他任何信息</div>
+                          <div>无ASIN填入对应的平台商品id</div>
+                        </div>
                       </template>
                       <span class="field-help-trigger" @click.stop>
                         <el-icon class="field-help-icon"><question-filled /></el-icon>
@@ -81,7 +95,7 @@
                 <el-input
                   v-model="form.sameTrackAsin"
                   clearable
-                  placeholder="至少2个价格定位和类型与我们一致的ASIN：1个成熟ASIN，1个新品ASIN"
+                  placeholder="多个ASIN用英文逗号隔开，不能含其他字符，例：B0XXXXXXXX,B0YYYYYYYY"
                   @change="debouncedSave"
                 />
               </el-form-item>
@@ -133,11 +147,7 @@
           <!-- 中间表单 -->
           <el-col :span="8" style="display: flex; flex-direction: column">
             <el-form label-position="top" :model="form" style="width: 100%">
-              <el-form-item
-                label="功能/卖点/5点 (重要性从高到低排列)"
-                prop="sellingPointContent"
-                :rules="[{ required: true, message: '请输入功能/卖点/5点(重要性从高到低排列)', trigger: 'blur' }]"
-              >
+              <el-form-item label="功能/卖点/5点 (重要性从高到低排列)" prop="sellingPointContent">
                 <el-input
                   v-model="form.sellingPointContent"
                   :autosize="{ minRows: 36 }"
@@ -147,6 +157,24 @@
                   @change="debouncedSave"
                 />
               </el-form-item>
+              <div style="text-align: right">
+                <el-button
+                  :disabled="!isLeftFormFilled || !isSingleSellingPoint || _id == null || aiGenerating"
+                  :loading="aiGenerating"
+                  type="primary"
+                  @click="handleAiGenerate5Points"
+                >
+                  AI生成5点
+                </el-button>
+                <el-button
+                  :disabled="!form.sellingPointContent || _id == null || translating"
+                  :loading="translating"
+                  type="primary"
+                  @click="handleTranslate"
+                >
+                  翻译成译文
+                </el-button>
+              </div>
             </el-form>
           </el-col>
 
@@ -217,15 +245,18 @@
 </template>
 
 <script lang="ts" setup>
+import { createSellingPointConversation } from '/@/api/devlocal/ai'
 import {
   confirmOtherSkuArtDesignSellingPoint,
   getArtDesignSelectionReasons,
   getArtDesignSellingPoint,
   getArtDesignSellingPointDropdownList,
   getBatchArtDesignSellingPoint,
+  getSellingPointSiteList,
   saveArtDesignSellingPoint,
   saveArtDesignSellingPointRealtime,
   saveBatchArtDesignSellingPoint,
+  translateArtDesignSellingPoint,
 } from '/@/api/devlocal/imageTask'
 
 import { QuestionFilled } from '@element-plus/icons-vue'
@@ -235,7 +266,9 @@ import '@wangeditor/editor/dist/css/style.css'
 import type { FormInstance, FormRules } from 'element-plus'
 import { uploadEditorImage } from '/@/api/devlocal/progress'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
+import { useAiStore } from '/@/store/modules/ai'
 import { useTabsStore } from '/@/store/modules/tabs'
+import type { ChatMessage } from '/@/type/ai/chat'
 import type { IGetSellingPoint } from '/@/type/listingTask/imageTaskType'
 import { handleActivePath } from '/@/utils/routes'
 
@@ -246,7 +279,10 @@ const sku = ref<string>('')
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
+const aiStore = useAiStore()
 const { delVisitedRoute } = tabsStore
+const aiGenerating = ref(false)
+const translating = ref(false)
 const getQueryValue = (value: unknown) => {
   return Array.isArray(value) ? String(value[0] ?? '') : String(value ?? '')
 }
@@ -264,7 +300,10 @@ const selectedSKUForm = reactive<{ sku: string }>({
 })
 const differencesOption = ref<{ id: number; label: string }[]>([])
 const reasonsOption = ref<{ id: number; label: string }[]>([])
+const siteOption = ref<{ id: number; label: string }[]>([])
 const form = reactive<IGetSellingPoint>({
+  productNameEn: '',
+  site: undefined,
   productDifferences: 0,
   summary: 0,
   competitiveProductDifferences: '',
@@ -284,18 +323,56 @@ const form = reactive<IGetSellingPoint>({
   id: null,
 })
 
+// ASIN 列表格式校验：必须是英文逗号隔开的字母数字 ASIN，不能含空格或其他字符
+const asinListPattern = /^[A-Za-z0-9]+(,[A-Za-z0-9]+)*$/
+const validateAsinList = (_rule: unknown, value: string, callback: (err?: Error) => void) => {
+  if (!value) {
+    callback()
+    return
+  }
+  if (!asinListPattern.test(value)) {
+    callback(new Error('格式错误：必须是英文逗号隔开的ASIN，不能含空格或其他字符'))
+    return
+  }
+  callback()
+}
+
 const formRules1 = reactive<FormRules>({
+  productNameEn: [{ required: true, message: '请填写产品英文主品名', trigger: 'blur' }],
+  site: [{ required: true, message: '请选择卖点站点', trigger: 'change' }],
   productDifferences: [{ required: true, message: '请选择产品差异化程度', trigger: 'change' }],
   summary: [{ required: true, message: '请选择选品理由一句话概括', trigger: 'change' }],
   competitiveProductDifferences: [{ required: true, message: '请填写与竞品相比差异化的地方', trigger: 'blur' }],
   targetAudience: [{ required: true, message: '请填写目标客群', trigger: 'blur' }],
   material: [{ required: true, message: '请填写材质', trigger: 'blur' }],
   brand: [{ required: true, message: '请填写本产品知名品牌', trigger: 'blur' }],
-  competitiveAsin: [{ required: true, message: '请填写竞品ASIN', trigger: 'blur' }],
-  sameTrackAsin: [{ required: true, message: '请填写同赛道ASIN', trigger: 'blur' }],
+  competitiveAsin: [
+    { required: true, message: '请填写竞品ASIN', trigger: 'blur' },
+    { validator: validateAsinList, trigger: 'blur' },
+  ],
+  sameTrackAsin: [
+    { required: true, message: '请填写同赛道ASIN', trigger: 'blur' },
+    { validator: validateAsinList, trigger: 'blur' },
+  ],
   linkKeywords: [{ required: true, message: '请填写链接关键词', trigger: 'blur' }],
 })
 const formRef1 = ref<FormInstance>()
+
+// 左侧表单必填项是否全部填写完成（用于控制「AI生成5点」按钮的可点击状态）
+const isLeftFormFilled = computed(() => {
+  if (!form.productNameEn) return false
+  if (form.site == null) return false
+  if (form.productDifferences == null) return false
+  if (form.summary == null) return false
+  if (!form.competitiveProductDifferences) return false
+  if (!form.targetAudience) return false
+  if (!form.material) return false
+  if (!form.brand) return false
+  if (!form.competitiveAsin || !asinListPattern.test(form.competitiveAsin)) return false
+  if (!form.sameTrackAsin || !asinListPattern.test(form.sameTrackAsin)) return false
+  if (!form.linkKeywords) return false
+  return true
+})
 
 const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<{ value: string; label: string }[]>([]) //搜索选项
@@ -376,6 +453,93 @@ const remoteSKUMethod = async (query: string) => {
 const showSelectSKU = () => {
   selectSKUVisible.value = true
 }
+
+const handleTranslate = async () => {
+  if (!_id.value) {
+    $baseMessage('当前卖点缺少 ID，无法翻译', 'error')
+    return
+  }
+  if (translating.value) return
+
+  translating.value = true
+  try {
+    const { data } = await translateArtDesignSellingPoint(_id.value)
+    if (data) {
+      $baseMessage('翻译成功！', 'success')
+      await fetchSellingPointData()
+    } else {
+      $baseMessage('翻译失败！', 'error')
+    }
+  } finally {
+    translating.value = false
+  }
+}
+
+const normalizeAiConversationId = (response: any) => {
+  const payload = response?.data ?? response ?? {}
+  return payload?.id ?? payload?.conversationId ?? payload?.conversation?.id ?? null
+}
+
+const handleAiGenerate5Points = async () => {
+  if (!_id.value) {
+    $baseMessage('当前卖点缺少 ID，无法生成', 'error')
+    return
+  }
+  if (aiGenerating.value) return
+
+  const sellingPointId = _id.value
+  const productName = (form.productNameEn ?? '').trim()
+
+  aiGenerating.value = true
+  let conversationId: number | string | null = null
+
+  try {
+    const createResponse = await createSellingPointConversation({ sellingPointId, productName })
+    conversationId = normalizeAiConversationId(createResponse)
+    if (conversationId == null || conversationId === '') {
+      throw new Error('会话创建成功但未返回有效会话 ID')
+    }
+
+    await aiStore.ensureInitialized({ createIfEmpty: false, forceRefresh: true })
+    await aiStore.switchConversation(conversationId)
+    aiStore.setConversationBusy(conversationId, {
+      reason: 'selling-point',
+      placeholderText: '已提交AI生成5点请求，正在等待模型返回结果...',
+    })
+
+    const key = String(conversationId)
+    const placeholderId = aiStore.conversationBusyMap[key]?.placeholderMessageId
+
+    // 流式结束后重新拉取卖点数据，让后端持久化的 AI 结果回填到表单
+    if (placeholderId != null) {
+      const stop = watch(
+        () => aiStore.messages[key],
+        (list) => {
+          const msg = list?.find((m: ChatMessage) => String(m.id) === String(placeholderId))
+          if (!msg) return
+          if (msg.status === 'success') {
+            stop()
+            void fetchSellingPointData()
+          } else if (msg.status === 'error') {
+            stop()
+          }
+        },
+        { deep: true }
+      )
+    }
+
+    $baseMessage('已开始生成5点，结果会在左侧会话流式展示，完成后自动回填', 'success')
+    void aiStore.streamConversationReply(conversationId)
+  } catch (error: any) {
+    const errorMessage = error?.msg ?? error?.message ?? 'AI生成5点失败'
+    if (conversationId != null && conversationId !== '') {
+      aiStore.failConversationBusy(conversationId, errorMessage)
+    }
+    $baseMessage(errorMessage, 'error')
+  } finally {
+    aiGenerating.value = false
+  }
+}
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   router.push({
@@ -389,6 +553,10 @@ const fetchDifferencesOption = async () => {
 const fetchReasonsOption = async () => {
   const { data } = await getArtDesignSelectionReasons()
   reasonsOption.value = data
+}
+const fetchSiteOption = async () => {
+  const { data } = await getSellingPointSiteList()
+  siteOption.value = data
 }
 
 // 防抖保存函数，避免频繁调用接口（仅单个SKU）
@@ -429,6 +597,8 @@ const autoSave = async () => {
 const fetchSellingPointData = async () => {
   // 重置表单数据
   Object.assign(form, {
+    productNameEn: '',
+    site: undefined,
     productDifferences: 0,
     summary: 0,
     competitiveProductDifferences: '',
@@ -549,6 +719,7 @@ onBeforeUnmount(() => {
 onBeforeMount(async () => {
   fetchDifferencesOption()
   fetchReasonsOption()
+  fetchSiteOption()
   await fetchSellingPointData()
 })
 

@@ -213,6 +213,14 @@ export interface IGetSellingPoint {
   title2?: string
   linkKeywordsTs?: string
   sellingPointContentTs?: string
+  /**
+   * 产品英文主品名
+   */
+  productNameEn?: string
+  /**
+   * 卖点站点 id
+   */
+  site?: number
 }
 export interface IConfirmOtherSkuArtDesignSellingPointRes {
   data: IConfirmOtherSkuArtDesignSellingPoint

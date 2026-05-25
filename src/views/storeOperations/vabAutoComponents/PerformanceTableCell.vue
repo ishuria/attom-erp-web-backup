@@ -189,6 +189,14 @@
           <el-dropdown-item :disabled="isAiTitleOptimizationLoading" @click.stop="$emit('showAiTitleOptimization', row)">
             <el-link :disabled="isAiTitleOptimizationLoading" type="primary" underline="never">标题优化</el-link>
           </el-dropdown-item>
+          <el-dropdown-item
+            v-if="type === 'sku'"
+            :disabled="isAiSellingPointPerformanceLoading"
+            divided
+            @click.stop="$emit('showAiSellingPointPerformance', row)"
+          >
+            <el-link :disabled="isAiSellingPointPerformanceLoading" type="primary" underline="never">5 点优化</el-link>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -526,6 +534,7 @@ interface Props {
   userName?: string
   isBoss?: boolean
   aiTitleOptimizationLoadingIds?: Array<number | string>
+  aiSellingPointPerformanceLoadingIds?: Array<number | string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -535,12 +544,19 @@ const props = withDefaults(defineProps<Props>(), {
   userName: '',
   isBoss: false,
   aiTitleOptimizationLoadingIds: () => [],
+  aiSellingPointPerformanceLoadingIds: () => [],
 })
 
 const isAiTitleOptimizationLoading = computed(() => {
   const rowId = props.row?.id
   if (rowId == null) return false
   return props.aiTitleOptimizationLoadingIds.some((id) => String(id) === String(rowId))
+})
+
+const isAiSellingPointPerformanceLoading = computed(() => {
+  const rowId = props.row?.id
+  if (rowId == null) return false
+  return props.aiSellingPointPerformanceLoadingIds.some((id) => String(id) === String(rowId))
 })
 
 // 价格调整相关方法
@@ -550,6 +566,7 @@ const emit = defineEmits<{
   showRemark: [row: any]
   showOperationLog: [row: any]
   showAiTitleOptimization: [row: any]
+  showAiSellingPointPerformance: [row: any]
   updateOpeType: [row: any]
   updateStopStatus: [row: any]
   routerPush: [row: any]

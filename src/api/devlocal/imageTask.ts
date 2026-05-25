@@ -275,6 +275,24 @@ export function getArtDesignSelectionReasons(): Promise<{ data: { id: number; la
   })
 }
 /**
+ * @description 卖点站点下拉列表
+ */
+export function getSellingPointSiteList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/site/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 美工任务-卖点翻译成译文
+ */
+export function translateArtDesignSellingPoint(id: number): Promise<{ data: Partial<IGetSellingPoint> }> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/${id}/translate`,
+    method: 'post',
+  })
+}
+/**
  * @description 美工任务-选品理由设定列表
  */
 export function getArtDesignSelectionReasonsList(): Promise<{ data: IGetArtDesignSelectionReasonsList[] }> {

@@ -89,7 +89,7 @@ export interface ChatConversation {
 }
 
 export interface ChatConversationBusyState {
-  reason: 'chat' | 'title-optimization' | 'evaluation-research-report'
+  reason: 'chat' | 'title-optimization' | 'evaluation-research-report' | 'selling-point'
   message?: string
   placeholderMessageId?: number | string
 }
@@ -106,6 +106,19 @@ export interface EvaluationResearchReportPayload {
   coreKeyWord?: string
   count: number
   userIdea?: string
+}
+
+export interface SellingPointConversationPayload {
+  sellingPointId: number
+  productName: string
+}
+
+export interface SellingPointPerformancePayload {
+  operationSkuId: number | string
+  productName?: string
+  coreKeywordsUser?: string
+  mainSellingPoints?: string
+  competitorAsins?: string
 }
 
 export interface CreateConversationOptions {

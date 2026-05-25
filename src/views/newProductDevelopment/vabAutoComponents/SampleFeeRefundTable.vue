@@ -98,6 +98,7 @@
       <el-table-column align="center" label="拿样人" min-width="100" prop="userName" />
       <el-table-column align="center" label="拿样金额" min-width="100" prop="price" />
       <el-table-column align="center" label="可退金额" min-width="100" prop="bulkGoodsReturnable" />
+      <el-table-column v-if="props.status === 1" align="center" label="实际退款金额" min-width="110" prop="refundAmount" />
       <!-- 样品可退证明（VabSample 上传的可退拿样金额证明，可多张），未退款/已退款均展示 -->
       <el-table-column v-if="props.status !== 2" label="样品可退证明" prop="proofImages" width="100">
         <template #default="{ row }">

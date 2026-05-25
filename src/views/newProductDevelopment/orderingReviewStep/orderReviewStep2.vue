@@ -168,6 +168,7 @@
 
     <div class="pay-button-group">
       <el-button :disabled="editDisabled" type="danger" @click="goBackToStep1">不通过</el-button>
+      <el-button :disabled="editDisabled" type="success" >SKU创建</el-button>
       <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
     <vab-remark-dialog v-model="reasonVisible" :remark="reasonText" title="填写审核不通过原因" @update:remark="handleNotPassSubmit" />

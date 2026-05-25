@@ -1,7 +1,12 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import type { CreateConversationPayload, EvaluationResearchReportPayload } from '/@/type/ai/chat'
+import type {
+  CreateConversationPayload,
+  EvaluationResearchReportPayload,
+  SellingPointConversationPayload,
+  SellingPointPerformancePayload,
+} from '/@/type/ai/chat'
 
 const AI_BASE_API = `${BASE_API}/ai`
 
@@ -45,6 +50,28 @@ export const createCommonChatConversation = () => {
 export const createEvaluationResearchReportConversation = (data: EvaluationResearchReportPayload) => {
   return request({
     url: `${AI_BASE_API}/conversations/evaluation/add`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 卖点填写-AI 生成 5 点会话
+ */
+export const createSellingPointConversation = (data: SellingPointConversationPayload) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/selling-point/add`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 性能看板-5 点优化会话
+ */
+export const createSellingPointPerformanceConversation = (data: SellingPointPerformancePayload) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/selling-point/performance/add`,
     method: 'post',
     data,
   })
