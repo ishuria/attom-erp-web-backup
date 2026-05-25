@@ -1179,6 +1179,7 @@ const fetchData = async () => {
 }
 let _row: any = null
 const progressId = ref<number>(-1)
+let progressLogRequestSeq = 0
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -1199,18 +1200,27 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   currentRow.value = row
 
   if (column.property == 'progressLog') {
-    const { data } = await getProgressLog({ progressId: row.progressId })
-    progressLogCopy.value = data
+    const rowProgressId = row.progressId
+    const requestSeq = ++progressLogRequestSeq
+
+    wangEditorLogVisible.value = false
+    progressLogCopy.value = ''
     wangEditorTitle.value = '编辑开发日志'
     classify.value = 'progressLog'
-    progressId.value = row.progressId
-    wangEditorLogVisible.value = !wangEditorLogVisible.value
+    progressId.value = rowProgressId
+
+    const { data } = await getProgressLog({ progressId: rowProgressId })
+    if (requestSeq !== progressLogRequestSeq) return
+
+    progressLogCopy.value = data
+    await nextTick()
+    wangEditorLogVisible.value = true
   } else if (column.property == 'remark') {
     remarkCopy.value = row.remark
     wangEditorTitle.value = '编辑备注'
     classify.value = 'remark'
     progressId.value = row.progressId
-    wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
+    wangEditorRemarkVisible.value = true
   }
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
