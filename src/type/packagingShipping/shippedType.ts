@@ -192,7 +192,7 @@ export interface ISubmitEncasementSkuReq {
    */
   isReinsert?: number
   /**
-   * 合作人
+   * 装箱人
    */
   partner?: number[]
 }
@@ -320,11 +320,11 @@ export interface ISkuDetailList {
    */
   sku?: string
   /**
-   * 合作人
+   * 装箱人
    */
   partner?: number[]
   /**
-   * 合作人名称
+   * 装箱人名称
    */
   partnerNames?: string[]
   /**

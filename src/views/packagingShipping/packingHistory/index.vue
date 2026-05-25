@@ -55,7 +55,7 @@
           {{ formatDate(new Date(row.createTime)) }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱人员" prop="encasementUser" :width="flexColumnWidth(list, '装箱人员', 'encasementUser')" />
+      <!-- <el-table-column label="装箱人员" prop="encasementUser" :width="flexColumnWidth(list, '装箱人员', 'encasementUser')" /> -->
       <el-table-column label="箱数" min-width="90" prop="numberOfBoxes" />
       <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')" />
       <el-table-column label="毛重(kg)" min-width="100" prop="grossWeight" />

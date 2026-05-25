@@ -301,7 +301,7 @@ const fetchPackagerOptions = async () => {
     const { data } = await getPackagePackagerList()
     packagerOptions.value = data ?? []
   } catch {
-    $baseMessage('获取合作人列表失败，请刷新后重试', 'error')
+    $baseMessage('获取装箱人列表失败，请刷新后重试', 'error')
   } finally {
     packagerOptionsLoading.value = false
   }
@@ -716,7 +716,7 @@ const switchNext = async () => {
       tempCurId.value = ''
       packingFormRef.value?.resetFields()
       packingForm.skuImageUrl = ''
-      // 合作人不清空，装箱图片清空
+      // 装箱人不清空，装箱图片清空
       packingForm.packingImages = []
       // 清掉上次扫码记录，让重复条码交给 store 层报错
       lastProcessedBarcode.value = ''

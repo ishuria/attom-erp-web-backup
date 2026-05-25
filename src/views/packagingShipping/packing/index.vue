@@ -1059,7 +1059,7 @@ const modifyVisible = ref<boolean>(false)
 const passSite = ref<number>()
 // 传递给装箱的装箱号
 const encasementNo = ref<number>(0)
-// 传递给装箱的合作人
+// 传递给装箱的装箱人
 const boxPartner = ref<number[]>([])
 // 箱号可见
 const boxNumberVisible = ref<boolean>(false)

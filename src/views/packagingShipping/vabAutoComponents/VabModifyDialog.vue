@@ -29,14 +29,14 @@
             <el-option v-for="item in props.siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="合作人" prop="partner">
+        <el-form-item label="装箱人" prop="partner">
           <el-select
             v-model="modifyForm.partner"
             clearable
             filterable
             :loading="packagerOptionsLoading"
             multiple
-            placeholder="请选择合作人"
+            placeholder="请选择装箱人"
             style="width: 100%"
           >
             <el-option v-for="item in packagerOptions" :key="item.id" :label="item.label" :value="item.id" />
@@ -336,7 +336,13 @@ import { addQualityCheck, getPackagePackagerList, getQualityCheck, verificationC
 import { useImagePreview } from '/@/hooks/useImagePreview'
 import type { SelectOption } from '/@/type/common'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
-import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList, PackingImageItem } from '/@/type/packagingShipping/shippedType'
+import type {
+  IAddDetailEncasementReq,
+  IGetEncasementInspection,
+  ISiteOption,
+  ISkuDetailList,
+  PackingImageItem,
+} from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -526,7 +532,7 @@ const fetchPackagerOptions = async () => {
     const { data } = await getPackagePackagerList()
     packagerOptions.value = data ?? []
   } catch {
-    $baseMessage('获取合作人列表失败，请刷新后重试', 'error')
+    $baseMessage('获取装箱人列表失败，请刷新后重试', 'error')
   } finally {
     packagerOptionsLoading.value = false
   }

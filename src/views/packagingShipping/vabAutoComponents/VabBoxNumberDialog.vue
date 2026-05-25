@@ -19,14 +19,14 @@
       <el-form-item label="箱号" prop="boxNumber">
         <el-input v-model="boxNumberForm.boxNumber" disabled />
       </el-form-item>
-      <el-form-item label="合作人" prop="partner">
+      <el-form-item label="装箱人" prop="partner">
         <el-select
           v-model="boxNumberForm.partner"
           clearable
           filterable
           :loading="packagerOptionsLoading"
           multiple
-          placeholder="请选择合作人"
+          placeholder="请选择装箱人"
           style="width: 100%"
         >
           <el-option v-for="item in packagerOptions" :key="item.id" :label="item.label" :value="item.id" />
@@ -86,7 +86,7 @@ const boxNumberForm = reactive<IBoxNumberForm>({
 // 校验规则
 const partnerValidator = (_rule: any, value: number[] | undefined, callback: (error?: Error) => void) => {
   if (!Array.isArray(value) || value.length === 0) {
-    callback(new Error('请选择合作人员'))
+    callback(new Error('请选择装箱人员'))
     return
   }
   callback()
@@ -111,7 +111,7 @@ const fetchPackagerOptions = async () => {
     const { data } = await getPackagePackagerList()
     packagerOptions.value = data ?? []
   } catch {
-    $baseMessage('获取合作人列表失败，请刷新后重试', 'error')
+    $baseMessage('获取装箱人列表失败，请刷新后重试', 'error')
   } finally {
     packagerOptionsLoading.value = false
   }
