@@ -201,6 +201,29 @@
         <template v-else-if="item.label === '装箱日期'" #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
+        <template v-else-if="item.label === '装箱人'" #default="{ row }">
+          <span>{{ row.partnerNames?.join(',') || '-' }}</span>
+        </template>
+        <template v-else-if="item.label === '装箱图片'" #default="{ row }">
+          <div v-if="row.packingImagePaths?.length" class="packing-image-list">
+            <el-image
+              v-for="imagePath in getVisiblePackingImagePaths(row.packingImagePaths)"
+              :key="imagePath"
+              fit="cover"
+              :src="imagePath"
+              style="width: 50px; height: 50px; cursor: pointer"
+              @click.stop="imagePreviewShow(imagePath)"
+            />
+            <el-button
+              v-if="getHiddenPackingImagePathCount(row.packingImagePaths) > 0"
+              class="packing-image-more"
+              @click.stop="showPackingImageInfoDialog(row.packingImagePaths)"
+            >
+              +{{ getHiddenPackingImagePathCount(row.packingImagePaths) }}
+            </el-button>
+          </div>
+          <span v-else>-</span>
+        </template>
         <template v-else-if="item.label === '冻结箱号'" #default="{ row }">
           <el-switch
             v-model="row.freeze"
@@ -339,41 +362,13 @@
     />
 
     <!-- 箱号 -->
-    <vab-dialog v-model="boxNumberVisible" class="dialog" title="箱号" :width="dialogWidth" @close="closeBoxNumber">
-      <el-form
-        ref="boxNumberFormRef"
-        label-position="right"
-        label-width="auto"
-        :model="boxNumberForm"
-        :rules="boxNumberFormRules"
-        style="margin-right: 10px; margin-left: 10px"
-      >
-        <el-form-item label="箱号" prop="boxNumber">
-          <el-input v-model="boxNumberForm.boxNumber" disabled />
-        </el-form-item>
-        <el-form-item label="发往站点" prop="site">
-          <el-select v-model="boxNumberForm.site" placeholder="请选择站点">
-            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div style="display: flex; justify-content: space-between">
-          <div>
-            <el-button type="primary" @click="reinsertBoxNumber">回插</el-button>
-            <el-button @click="increaseBoxNumber">递增</el-button>
-          </div>
-          <div>
-            <el-button type="primary" @click="showPacking">下一步</el-button>
-          </div>
-        </div>
-      </template>
-    </vab-dialog>
+    <vab-box-number-dialog v-model="boxNumberVisible" v-model:is-reinsert="isReinsert" :site-list="siteList" @next="handleBoxNumberNext" />
     <!-- 装箱 -->
     <vab-packing-dialog
       :encasement-no="encasementNo"
       :is-reinsert="isReinsert"
       :packing-visible="packingVisible"
+      :partner="boxPartner"
       :site="passSite"
       @update:finish="handleFinish"
       @update:packing-visible="handlePackingClose"
@@ -683,6 +678,8 @@
 
     <!-- 发货计划渠道配置弹窗 -->
     <vab-shipping-plan-channel-dialog v-model="shippingPlanChannelVisible" />
+    <packing-image-info-dialog v-model="packingImageInfoVisible" :image-list="packingImageInfoList" />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
@@ -693,10 +690,10 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationOrderTable } from '~/src/api/devlocal/productOrdering'
 import { IGetOperationOrderTable } from '~/src/type/storeOperation/productOrdering'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
-  checkEncasementNo,
   checkEncasementShipment,
   confirmEncasementShipments,
   delEncasement,
@@ -711,9 +708,7 @@ import {
   getEncasementError,
   getEncasementList,
   getEncasementUserPrinter,
-  getIncrementBoxNo,
   getProductNewSkuList,
-  getReinsertionBoxNo,
   plusEncasementCount,
   printEncasement,
   reduceEncasementCount,
@@ -729,8 +724,9 @@ import {
 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
+import { useImagePreview } from '/@/hooks/useImagePreview'
 import EncasementPermission from '/@/permissions/encasement'
-import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
+import type { IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -753,6 +749,19 @@ const columns = ref<any>([])
 const checkList = computed(() => {
   return columns.value.filter((item: any) => item.checked)
 })
+const {
+  imagePreviewVisible,
+  imagePreviewList,
+  openImagePreview: imagePreviewShow,
+  closeImagePreview: imagePreviewClose,
+} = useImagePreview()
+const {
+  getVisiblePackingImages: getVisiblePackingImagePaths,
+  getHiddenPackingImageCount: getHiddenPackingImagePathCount,
+  packingImageInfoVisible,
+  packingImageInfoList,
+  showPackingImageInfoDialog,
+} = usePackingImageInfo<string>()
 
 const sendShipmentCheckVisible = ref<boolean>(false)
 const sendShipmentLoading = ref<boolean>(false)
@@ -815,6 +824,12 @@ const handleCalculateWidth = (item: any) => {
     case '产品总数': {
       return flexColumnWidth(list.value, '产品总数', 'productTotalNumber')
     }
+    case '装箱人': {
+      return Math.max(flexColumnWidth(list.value, '装箱人', 'partnerNames'), 160)
+    }
+    case '装箱图片': {
+      return 210
+    }
     default: {
       return item.minWidth
     }
@@ -831,19 +846,22 @@ const handleMove = (event: any) => {
   return true // 允许其他操作
 }
 const handleEnd = async () => {
-  const req = columns.value.map((item: any, index: number) => {
-    return {
-      userId: item.userId,
-      columnId: item.columnId,
-      sort: index,
-      // label: item.label
-    }
-  })
+  const req = columns.value
+    .filter((item: any) => item.columnId)
+    .map((item: any, index: number) => {
+      return {
+        userId: item.userId,
+        columnId: item.columnId,
+        sort: index,
+        // label: item.label
+      }
+    })
   await updateSortOperationColumn(req)
 }
 // 是否显示或隐藏列
 const handleChecked = async (item: any) => {
   item.checked = !item.checked
+  if (!item.columnId) return
   const status = item.checked === true ? 1 : 0
   await hideOrShowOperationColumn({
     userId: item.userId,
@@ -1041,6 +1059,8 @@ const modifyVisible = ref<boolean>(false)
 const passSite = ref<number>()
 // 传递给装箱的装箱号
 const encasementNo = ref<number>(0)
+// 传递给装箱的装箱人
+const boxPartner = ref<number[]>([])
 // 箱号可见
 const boxNumberVisible = ref<boolean>(false)
 // 装箱可见
@@ -1066,16 +1086,6 @@ const splitForm = reactive<{ splitCount: number | undefined }>({
 const splitFormRef = ref<FormInstance>()
 const splitFormRules = reactive<FormRules<{ splitCount: number | undefined }>>({
   splitCount: [{ required: true, message: '请输入拆分数量', trigger: 'blur' }],
-})
-
-// 箱号表单
-const boxNumberForm = reactive<IBoxNumberForm>({
-  boxNumber: undefined,
-  site: undefined,
-})
-const boxNumberFormRef = ref<FormInstance>()
-const boxNumberFormRules = reactive<FormRules<IBoxNumberForm>>({
-  site: [{ required: true, message: '请选择站点', trigger: 'change' }],
 })
 
 // 站点列表
@@ -1446,57 +1456,17 @@ const closeModify = (value: boolean) => {
 // 是回插还是递增
 const isReinsert = ref<boolean>(false)
 // 展示箱号
-const showBoxNumber = async () => {
-  if (isReinsert.value) {
-    const { data } = await getReinsertionBoxNo()
-    if (data) {
-      boxNumberForm.boxNumber = data
-      boxNumberVisible.value = true
-    }
-  } else {
-    const { data } = await getIncrementBoxNo()
-    if (data) {
-      boxNumberForm.boxNumber = data
-      boxNumberVisible.value = true
-    }
-  }
+const showBoxNumber = () => {
+  boxPartner.value = []
+  boxNumberVisible.value = true
 }
-// 点击递增
-const increaseBoxNumber = async () => {
-  isReinsert.value = false
-  const { data } = await getIncrementBoxNo()
-  if (data) {
-    boxNumberForm.boxNumber = data
-    $baseMessage('递增获取箱号成功', 'success')
-  }
-}
-// 点击回插
-const reinsertBoxNumber = async () => {
-  isReinsert.value = true
-  const { data } = await getReinsertionBoxNo()
-  if (data) {
-    boxNumberForm.boxNumber = data
-    $baseMessage('回插获取箱号成功', 'success')
-  }
-}
-// 关闭箱号
-const closeBoxNumber = () => {
-  boxNumberFormRef.value?.resetFields()
+const handleBoxNumberNext = (data: { boxNumber: number; site: number; partner: number[]; isReinsert: boolean }) => {
   boxNumberVisible.value = false
-}
-// 箱号的下一步，展示装箱
-const showPacking = async () => {
-  const { data } = await checkEncasementNo({ boxNo: boxNumberForm.boxNumber! })
-  if (data) {
-    await boxNumberFormRef.value?.validate((isValid: boolean) => {
-      if (isValid) {
-        boxNumberVisible.value = false
-        packingVisible.value = true
-        passSite.value = boxNumberForm.site
-        encasementNo.value = boxNumberForm.boxNumber!
-      }
-    })
-  }
+  packingVisible.value = true
+  passSite.value = data.site
+  encasementNo.value = data.boxNumber
+  boxPartner.value = [...data.partner]
+  isReinsert.value = data.isReinsert
 }
 // 装箱的关闭
 const handlePackingClose = (value: boolean) => {
@@ -1761,7 +1731,8 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
     label !== '总可售' &&
     label !== '断货' &&
     label !== '木制品' &&
-    label !== '玩具'
+    label !== '玩具' &&
+    label !== '装箱图片'
   ) {
     // 获取当前row的零件id
     const id = row.id
@@ -1789,19 +1760,7 @@ const fetchSiteData = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
-const dialogWidth = computed<string>(() => {
-  // 获取屏幕宽度并根据不同设备返回宽度
-  const screenWidth = window.innerWidth
-  if (screenWidth <= 768) {
-    return '80%' // 手机设备
-  } else if (screenWidth <= 1024) {
-    return '60%' // 小型平板设备
-  } else if (screenWidth <= 1200) {
-    return '50%' // 中型平板设备
-  } else {
-    return '20%' // 大屏设备
-  }
-})
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getEncasementList(queryForm)
@@ -1824,6 +1783,18 @@ const fetchDefaultPrinter = async () => {
 const fetchColumn = async () => {
   const { data } = await getOperationColumnList({ type: 15 })
   columns.value = data
+  const fallbackColumns = [
+    { label: '装箱人', prop: 'partnerNames', width: 160, checked: true },
+    { label: '装箱图片', prop: 'packingImagePaths', width: 210, checked: true },
+  ]
+  fallbackColumns.forEach((column) => {
+    if (!columns.value.some((item: any) => item.label === column.label || item.prop === column.prop)) {
+      columns.value.push({
+        ...column,
+        localOnly: true,
+      })
+    }
+  })
   columns.value.forEach((item: any) => {
     item.minWidth = item.width
     if (['shipmentPlanDate', 'createTime', 'grossWeight', 'totalVolume'].includes(item.prop)) {
@@ -1887,6 +1858,19 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
+}
+
+.packing-image-list {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.packing-image-more {
+  width: 50px;
+  height: 50px;
+  padding: 0;
 }
 
 /* 发货计划区域样式 */

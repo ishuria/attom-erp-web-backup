@@ -9,6 +9,14 @@
     @opened="handleDialogOpened"
   >
     <div v-if="dflag" class="wang-editor-container">
+      <el-alert
+        v-if="draftRestored"
+        class="draft-alert"
+        :closable="false"
+        show-icon
+        title="5分钟内修改过本记录，当前显示本地草稿。继续编辑请点保存；如需查看最新内容，请刷新页面后重新打开。"
+        type="warning"
+      />
       <toolbar :default-config="toolbarConfig" :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
       <editor
         v-model="html"
@@ -59,17 +67,17 @@ let props = defineProps<{
   wangEditorVisible: boolean
   content: string | undefined
   classify: string
-  progressId?: number
+  // 历史命名为 progressId，实际用于区分草稿缓存所属的业务记录。
+  progressId?: number | string
 }>()
-
-let { content } = toRefs(props)
 
 const dflag = ref<boolean>(false)
 
 const editorRef = shallowRef<IDomEditor | undefined>()
 
 // 初始化时使用 props 中的内容
-const html = ref<any>(content.value || '')
+const html = ref<any>(props.content || '')
+const draftRestored = ref<boolean>(false)
 
 const handleDialogOpened = async () => {
   await nextTick()
@@ -90,11 +98,17 @@ const handleDialogOpened = async () => {
 // 草稿过期时间：7 天
 const DRAFT_EXPIRE_MS = 7 * 24 * 60 * 60 * 1000
 
-const getDraftKey = () =>
-  props.progressId ? `${props.classify}_${props.progressId}` : props.classify
+const getDraftKey = () => {
+  const recordId = Number(props.progressId)
+  if (!props.classify || !Number.isFinite(recordId) || recordId <= 0) return ''
+
+  return `${props.classify}_${recordId}`
+}
 
 const clearDraft = () => {
   const key = getDraftKey()
+  if (!key) return
+
   localStorage.removeItem(key)
   localStorage.removeItem(`${key}_timestamp`)
 }
@@ -102,6 +116,8 @@ const clearDraft = () => {
 // 过期或无时间戳的草稿视为无效，顺带清掉避免僵尸数据
 const readValidDraft = (): string | null => {
   const key = getDraftKey()
+  if (!key) return null
+
   const draft = localStorage.getItem(key)
   if (!draft) return null
 
@@ -113,34 +129,26 @@ const readValidDraft = (): string | null => {
   return draft
 }
 
-// 对话框打开时的内容选择逻辑
-// ---------------------------------------------------------
-// 【草稿生命周期】
-//   写入：编辑器点击后启动 1s 间隔的 setInterval，把 html.value 写入 localStorage（key + _timestamp）
-//   过期：超过 7 天的草稿在 readValidDraft 里自动清掉，视为无草稿
-//   清理：点「保存」/「确认」→ clearDraft 清光 key 和 _timestamp；点「取消」/关闭 → 保留草稿
-//
-// 【打开对话框时的 4 种分支】
-//   1. 后端有 + 草稿有(7天内)：5 分钟裁决
-//        - 草稿写入时间 ≤ 5min → 用草稿（假设用户在续写）
-//        - 超过 5min                → 用后端（假设用户已放弃草稿）
-//   2. 只有后端           → 用后端
-//   3. 只有草稿(7天内)    → 用草稿（如新建场景）
-//   4. 都没有             → 空
-//
-// 【已知风险】
-//   多人协作场景下，5min 裁决可能用旧草稿覆盖后端新版本
-//   （后端无 updateTime，没法做真正的时间戳比较，待后续优化）
+// 对话框打开、内容或业务记录 id 变化时，同步编辑器内容。
+// progressId 是历史 prop 名，可能传 progressId、detailId、零件明细 id 等。
+// 草稿 key 必须带有效业务记录 id，避免不同记录共用缓存。
+// 内容优先级：
+// 1. 后端内容和 5 分钟内草稿同时存在时，使用草稿续写。
+// 2. 草稿超过 5 分钟时，使用后端内容。
+// 3. 只有一方有内容时，使用已有内容；都没有则置空。
+// 点「保存」/「确认」会清草稿；点「取消」/关闭会保留草稿。
 watch(
-  () => props.wangEditorVisible,
-  (newValue) => {
+  () => [props.wangEditorVisible, props.content, props.progressId, props.classify] as const,
+  ([newValue]) => {
     dflag.value = newValue
 
     if (newValue) {
       const key = getDraftKey()
       const tempContent = readValidDraft()
+      const content = props.content || ''
+      draftRestored.value = false
 
-      if (content.value && !isEmptyHtml(content.value) && tempContent && !isEmptyHtml(tempContent)) {
+      if (content && !isEmptyHtml(content) && tempContent && !isEmptyHtml(tempContent)) {
         // 两者都有内容，比较时间戳
         const cacheTimestamp = localStorage.getItem(`${key}_timestamp`)
         const currentTime = Date.now()
@@ -148,16 +156,18 @@ watch(
         if (cacheTimestamp && currentTime - parseInt(cacheTimestamp) < 5 * 60 * 1000) {
           // 缓存是5分钟内的，使用缓存（用户可能正在编辑）
           html.value = tempContent
+          draftRestored.value = true
         } else {
           // 缓存过期或没有时间戳，使用后端内容
-          html.value = content.value
+          html.value = content
         }
-      } else if (content.value && !isEmptyHtml(content.value)) {
+      } else if (content && !isEmptyHtml(content)) {
         // 只有后端有内容
-        html.value = content.value
+        html.value = content
       } else if (tempContent && !isEmptyHtml(tempContent)) {
         // 只有缓存有内容
         html.value = tempContent
+        draftRestored.value = true
       } else {
         // 都没有
         html.value = ''
@@ -268,7 +278,7 @@ const toolbarConfig: Partial<IToolbarConfig> = {
   excludeKeys: ['group-video', 'codeBlock'],
 }
 
-// 检查HTML内容是否为空 - 使用 WangEditor 官方 API
+// 检查HTML内容是否为空
 // 注意：只有图片没有文字的内容不应该被判断为空
 const isEmptyHtml = (html: string): boolean => {
   if (!html) return true
@@ -284,18 +294,8 @@ const isEmptyHtml = (html: string): boolean => {
     return false
   }
 
-  // 判断是否为空
-  if (editorRef.value) {
-    // 如果编辑器已存在，使用 getText() 方法
-    const tempEditor = editorRef.value
-    tempEditor.setHtml(html)
-    const text = tempEditor.getText()
-    return text.trim() === ''
-  } else {
-    // 如果编辑器不存在，使用简单的文本检查
-    const textContent = tempDiv.textContent || tempDiv.innerText || ''
-    return textContent.trim() === ''
-  }
+  const textContent = tempDiv.textContent || tempDiv.innerText || ''
+  return textContent.trim() === ''
 }
 // 插入日期
 const insertDate = () => {
@@ -333,6 +333,8 @@ const handleClick = () => {
 
   intervalTimerLog = setInterval(() => {
     const key = getDraftKey()
+    if (!key) return
+
     // 直接使用 localStorage.setItem 保存 HTML 内容，避免 JSON.stringify 添加引号
     localStorage.setItem(key, html.value)
     // 同时保存时间戳，用于判断缓存是否过期
@@ -347,6 +349,7 @@ const handlerCloseDialog = () => {
   clearTimer()
   emit('clickBoolean', false)
   dflag.value = false
+  draftRestored.value = false
 }
 /**
  * 当取消对话框时
@@ -355,6 +358,7 @@ const handleCloseDialog = () => {
   clearTimer()
   emit('clickBoolean', false)
   dflag.value = false
+  draftRestored.value = false
 }
 // 点击保存
 const handleSave = () => {
@@ -367,6 +371,7 @@ const handleSave = () => {
   $baseMessage(`${props.title}保存成功`, 'success', 'hey')
   clearTimer()
   clearDraft()
+  draftRestored.value = false
 }
 /**
  * 当确认对话框的时候
@@ -383,6 +388,7 @@ const handleConfirmDialog = () => {
   dflag.value = false
   clearTimer()
   clearDraft()
+  draftRestored.value = false
 }
 
 const handleCreated = (editor: IDomEditor) => {
@@ -416,8 +422,8 @@ onBeforeUnmount(() => {
   // 只有在对话框打开状态下才清理localStorage缓存
   // 这样可以避免路由切换时误清理缓存
   if (dflag.value) {
-    const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
-    localStorage.removeItem(`${key}_timestamp`)
+    const key = getDraftKey()
+    if (key) localStorage.removeItem(`${key}_timestamp`)
   }
 })
 onUnmounted(() => {
@@ -459,6 +465,11 @@ onUnmounted(() => {
 
       .w-e-toolbar-init {
         border-bottom: 1px solid var(--el-border-color) !important;
+      }
+
+      .draft-alert {
+        width: 70%;
+        margin: 0 auto 8px;
       }
 
       .wang-editor-content {

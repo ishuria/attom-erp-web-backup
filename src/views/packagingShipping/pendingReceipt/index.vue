@@ -677,19 +677,7 @@
         <el-button :loading="batchBtnLoading" type="primary" @click="handleConfirmSignBatch">确认</el-button>
       </template>
     </vab-dialog>
-    <!-- 打印 -->
-    <vab-dialog v-model="printCountVisible" title="打印数量" width="20%">
-      <el-form ref="printFormRef" :model="printForm" :rules="printFormRules" style="margin: 0">
-        <el-form-item label="数量" prop="count">
-          <el-input v-model="printForm.count" type="number" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div style="text-align: center">
-          <el-button type="primary" @click="handleConfirmPrint">打印</el-button>
-        </div>
-      </template>
-    </vab-dialog>
+    <vab-print-count-dialog v-model="printCountVisible" :sign-id="_id" />
     <!-- PO明细 -->
     <po-detail v-model="poDetailVisible" :close="closePoDetail" :poSkuId="poSkuId" />
   </div>
@@ -715,7 +703,6 @@ import {
   getSignLog,
   getSignRecord,
   getSignUserList,
-  printSign,
   signBatch,
   signComponent,
   signMoreRecord,
@@ -892,13 +879,6 @@ const signLoading = ref<boolean>(false)
 const printer = ref<string>('')
 const activeName = ref<number>(0)
 const printCountVisible = ref<boolean>(false)
-const printForm = reactive<{ count: number | undefined }>({
-  count: undefined,
-})
-const printFormRef = ref<FormInstance>()
-const printFormRules = reactive<FormRules>({
-  count: [{ required: true, message: '请输入打印数量', trigger: 'blur' }],
-})
 const _id = ref<number>(0)
 
 const selectRows = ref<any>([])
@@ -929,36 +909,8 @@ const handleChangePrinter = async () => {
     $baseMessage(error, 'error')
   }
 }
-const handleConfirmPrint = async () => {
-  if (Number(printForm.count!) > 50) {
-    $baseMessage('打印数量不能超过50', 'error')
-    return
-  }
-  printFormRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      const { data } = await printSign({
-        signId: _id.value,
-        quantity: printForm.count!,
-      })
-      if (data) {
-        // const { data: res } = await printSignSuccess(
-        //   JSON.stringify(data)
-        // )
-        // if (res.errorId === "0") {
-        $baseMessage('打印成功!', 'success')
-        printCountVisible.value = false
-        // } else {
-        //   $baseMessage('打印失败!', 'error')
-        // }
-      } else {
-        $baseMessage('打印失败!', 'error')
-      }
-    }
-  })
-}
 const showPrint = (row: any) => {
   _id.value = row.signId
-  printFormRef.value?.resetFields()
   printCountVisible.value = true
 }
 const handleCancelSignBatch = () => {

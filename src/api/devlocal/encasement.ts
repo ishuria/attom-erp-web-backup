@@ -104,6 +104,28 @@ export const submitEncasementSku = (data: ISubmitEncasementSkuReq): Promise<IBoo
   })
 }
 /**
+ * @description 开始装箱-校验并上传装箱图片后保存
+ */
+export const submitEncasementSkuWithImages = (data: FormData): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/encasement/sku/submit/with-images`,
+    method: 'post',
+    data,
+    headers: { 'content-type': 'multipart/form-data' },
+  })
+}
+/**
+ * 校验装箱图片
+ */
+export const verifyPackingImage = (data: FormData): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/packing/image/verify`,
+    method: 'post',
+    data,
+    headers: { 'content-type': 'multipart/form-data' },
+  })
+}
+/**
  * @description 装箱-修改
  */
 export const updateEncasement = (data: IUpdateEncasementReq): Promise<IBooleanRes> => {
@@ -121,6 +143,17 @@ export const addDetailEncasement = (data: IAddDetailEncasementReq): Promise<IBoo
     url: `${BASE_API}/awaiting/shipment/encasement/add/detail`,
     method: 'post',
     data,
+  })
+}
+/**
+ * @description 装箱-修改页面-新增新的明细（带装箱图片）
+ */
+export const addDetailEncasementWithImages = (data: FormData): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/awaiting/shipment/encasement/add/detail/with-images`,
+    method: 'post',
+    data,
+    headers: { 'content-type': 'multipart/form-data' },
   })
 }
 /**

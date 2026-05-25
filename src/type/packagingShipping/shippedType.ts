@@ -78,6 +78,14 @@ export interface IEncasementList {
    */
   productTotalNumber?: number
   /**
+   * 装箱人名称
+   */
+  partnerNames?: string[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
+  /**
    * 备注
    */
   remarks?: string
@@ -127,6 +135,7 @@ export interface IBoxNumber {
 export interface IBoxNumberForm {
   boxNumber: number | undefined
   site: number | undefined
+  partner?: number[]
 }
 /**
  * @description 开始装箱-根据站点和fnSku查询
@@ -150,6 +159,8 @@ export interface IEncasementProduct {
   productName: string
   skuImageUrl: string
   count?: number
+
+  packingImages?: PackingImageItem[]
   [property: string]: any
 }
 /**
@@ -180,6 +191,10 @@ export interface ISubmitEncasementSkuReq {
    * 是否回插 0否 1是
    */
   isReinsert?: number
+  /**
+   * 装箱人
+   */
+  partner?: number[]
 }
 
 export interface EncasementDetailList {
@@ -199,6 +214,21 @@ export interface EncasementDetailList {
    * SKU
    */
   sku?: string
+  /**
+   * 装箱图片
+   */
+  packingImages?: PackingImageItem[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
+}
+
+export interface PackingImageItem {
+  uid: string
+  name: string
+  file: File
+  url: string
 }
 export interface IBooleanRes {
   data: boolean
@@ -217,6 +247,7 @@ export interface IUpdateEncasementReq {
   height?: number
   site?: number
   boxNumber?: number
+  partner?: number[]
   skuList?: EncasementDetailList[]
 }
 /**
@@ -224,10 +255,12 @@ export interface IUpdateEncasementReq {
  */
 export interface IAddDetailEncasementReq {
   id?: number
+  site?: number
   fnSkuOrUpc?: string
   sku?: string
   productName?: string
   count?: number
+  packingImages?: PackingImageItem[]
 }
 
 export interface IEncasementId {
@@ -249,6 +282,10 @@ export interface IGetEncasementUpdateRes {
     height?: number
 
     length?: number
+    /**
+     * 装箱人ID
+     */
+    partner?: number[]
     /**
      * sku明细列表
      */
@@ -282,6 +319,18 @@ export interface ISkuDetailList {
    * SKU
    */
   sku?: string
+  /**
+   * 装箱人
+   */
+  partner?: number[]
+  /**
+   * 装箱人名称
+   */
+  partnerNames?: string[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
 }
 
 export interface IGetEncasementInspectionReq {
@@ -459,6 +508,14 @@ export interface IGetShippedEncasementList {
    * 备注
    */
   remarks?: string
+  /**
+   * 装箱人名称
+   */
+  partnerNames?: string[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
   shipmentId?: string
   /**
    * 发货计划日期
@@ -1154,4 +1211,10 @@ export interface IGetChannelSiteList {
   id: number
   siteName: string
   channelId: number
+}
+
+export interface IVerifyPackingImageReq {
+  fnSkuOrUpc: string
+  site: number
+  files: FormData
 }

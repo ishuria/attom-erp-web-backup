@@ -55,7 +55,7 @@
           {{ formatDate(new Date(row.createTime)) }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱人员" prop="encasementUser" :width="flexColumnWidth(list, '装箱人员', 'encasementUser')" />
+      <!-- <el-table-column label="装箱人员" prop="encasementUser" :width="flexColumnWidth(list, '装箱人员', 'encasementUser')" /> -->
       <el-table-column label="箱数" min-width="90" prop="numberOfBoxes" />
       <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')" />
       <el-table-column label="毛重(kg)" min-width="100" prop="grossWeight" />
@@ -65,6 +65,11 @@
       <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight" />
       <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume" />
       <el-table-column label="箱规号" min-width="135" prop="encasementNo" />
+      <el-table-column label="装箱人" min-width="200">
+        <template #default="{ row }">
+          <span>{{ row.partnerNames?.join(',') || '-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="冻结箱号" min-width="110">
         <template #default="{ row }">
           <el-switch
@@ -81,6 +86,29 @@
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')" />
       <el-table-column label="数量" min-width="90" prop="number" />
+
+      <el-table-column label="装箱图片" min-width="300">
+        <template #default="{ row }">
+          <div v-if="row.packingImagePaths?.length" class="packing-image-list">
+            <el-image
+              v-for="imagePath in getVisiblePackingImagePaths(row.packingImagePaths)"
+              :key="imagePath"
+              fit="cover"
+              :src="imagePath"
+              style="width: 50px; height: 50px; cursor: pointer"
+              @click.stop="imagePreviewShow(imagePath)"
+            />
+            <el-button
+              v-if="getHiddenPackingImagePathCount(row.packingImagePaths) > 0"
+              class="packing-image-more"
+              @click.stop="showPackingImageInfoDialog(row.packingImagePaths)"
+            >
+              +{{ getHiddenPackingImagePathCount(row.packingImagePaths) }}
+            </el-button>
+          </div>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column label="产品总数" min-width="100" prop="productTotalNumber" />
       <el-table-column label="备注" min-width="100" prop="remarks">
         <template #default="{ row }">
@@ -129,14 +157,18 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <packing-image-info-dialog v-model="packingImageInfoVisible" :image-list="packingImageInfoList" />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import { downloadFileP } from '/@/api/devlocal/download'
 import { encasementFreezeUpdate, getShippedEncasementList } from '/@/api/devlocal/encasement'
+import { useImagePreview } from '/@/hooks/useImagePreview'
 import type { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { sumUniqueByField } from '/@/utils/mapUtil.ts'
@@ -156,6 +188,19 @@ const queryForm = reactive<any>({
 })
 const total = ref<number>(0)
 const list = ref<IGetShippedEncasementList[]>([])
+const {
+  imagePreviewVisible,
+  imagePreviewList,
+  openImagePreview: imagePreviewShow,
+  closeImagePreview: imagePreviewClose,
+} = useImagePreview()
+const {
+  getVisiblePackingImages: getVisiblePackingImagePaths,
+  getHiddenPackingImageCount: getHiddenPackingImagePathCount,
+  packingImageInfoVisible,
+  packingImageInfoList,
+  showPackingImageInfoDialog,
+} = usePackingImageInfo<string>()
 const queryData = () => {
   queryForm.pageNo = 1
   router.push({
@@ -191,10 +236,11 @@ const totalProductNumber = computed(() => {
 const setSelectRows = (value: any) => {
   selectRows.value = value
 }
+const detailColumnLabels = new Set(['站点', 'SKU', 'Description', '数量', '装箱图片'])
 // 装箱历史列合并方法
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod = ({ row, rowIndex, column }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 15 && columnIndex !== 16 && columnIndex !== 17 && columnIndex !== 18) {
+  if (!detailColumnLabels.has(column.label)) {
     // 获取当前row的零件id
     const id = row.id
     // 默认不跨行
@@ -312,8 +358,8 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getShippedEncasementList(queryForm)
-  total.value = data?.total!
-  list.value = data?.list!
+  total.value = data?.total ?? 0
+  list.value = data?.list ?? []
   listLoading.value = false
 }
 onBeforeMount(() => {
@@ -353,5 +399,19 @@ onBeforeMount(() => {
       font-size: 18px;
     }
   }
+}
+
+.packing-image-list {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.packing-image-more {
+  width: 50px;
+  height: 50px;
+  padding: 0;
 }
 </style>

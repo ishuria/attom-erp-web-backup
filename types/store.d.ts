@@ -135,6 +135,8 @@ declare interface PackingType {
   productName: string
   count?: number
   skuImageUrl: string
+  partner?: number[]
+  packingImages?: any[]
 }
 declare interface PackingModuleType {
   packingData: PackingType[]

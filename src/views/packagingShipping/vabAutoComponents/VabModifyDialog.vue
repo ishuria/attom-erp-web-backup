@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 修改 -->
-    <vab-dialog v-model="dflag" :before-close="handleCloseDialog" :draggable="false" title="修改" top="7vh" width="40%">
+    <vab-dialog v-model="dflag" :before-close="handleCloseDialog" :draggable="false" title="修改" top="7vh" width="60%">
       <el-form
         ref="modifyFormRef"
         label-position="right"
@@ -29,6 +29,19 @@
             <el-option v-for="item in props.siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
+        <el-form-item label="装箱人" prop="partner">
+          <el-select
+            v-model="modifyForm.partner"
+            clearable
+            filterable
+            :loading="packagerOptionsLoading"
+            multiple
+            placeholder="请选择装箱人"
+            style="width: 100%"
+          >
+            <el-option v-for="item in packagerOptions" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <el-button style="margin-top: 10px; margin-bottom: 10px" type="primary" @click="handleOpenAdd">新增</el-button>
       <el-table
@@ -40,10 +53,10 @@
         stripe
         @cell-click="changeInput"
       >
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" />
-        <el-table-column label="FNSKU" min-width="140" prop="fnSkuOrUpc" :width="flexColumnWidth(skuDetailList, 'FNSKU', 'fnSkuOrUpc')" />
-        <el-table-column label="说明" min-width="160" prop="productName" :width="flexColumnWidth(skuDetailList, '说明', 'productName')" />
-        <el-table-column align="center" label="数量" min-width="70" prop="count">
+        <el-table-column label="SKU" :min-width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" prop="sku" />
+        <el-table-column label="FNSKU" :min-width="120" prop="fnSkuOrUpc" />
+        <el-table-column label="说明" :min-width="flexColumnWidth(skuDetailList, '说明', 'productName')" prop="productName" />
+        <el-table-column align="center" label="数量" min-width="150" prop="count">
           <template #default="{ row }">
             <div class="none">
               <el-input-number
@@ -58,7 +71,30 @@
             <span>{{ row.count }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作">
+
+        <el-table-column label="装箱图片" min-width="300">
+          <template #default="{ row }">
+            <div v-if="row.packingImagePaths?.length" class="packing-image-list">
+              <el-image
+                v-for="imagePath in getVisiblePackingImagePaths(row.packingImagePaths)"
+                :key="imagePath"
+                fit="cover"
+                :src="imagePath"
+                style="width: 50px; height: 50px; cursor: pointer"
+                @click.stop="imagePreviewShow(imagePath)"
+              />
+              <el-button
+                v-if="getHiddenPackingImagePathCount(row.packingImagePaths) > 0"
+                class="packing-image-more"
+                @click.stop="showPackingImageInfoDialog(row.packingImagePaths)"
+              >
+                +{{ getHiddenPackingImagePathCount(row.packingImagePaths) }}
+              </el-button>
+            </div>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" min-width="200">
           <template #default="{ row, $index }">
             <el-link type="primary" underline="never" @click="showInspection(row)">清点质检</el-link>
             <span style="margin: 0 5px"></span>
@@ -79,7 +115,14 @@
       </template>
     </vab-dialog>
     <!-- 新增新的明细 -->
-    <vab-dialog v-model="addNewVisible" title="新增" width="660px" @close="closeAddNewDetail">
+    <vab-dialog v-model="addNewVisible" title="新增" width="660px" @close="closeAddNewDetail" @opened="handleAddNewOpened">
+      <el-alert
+        :closable="false"
+        show-icon
+        style="margin-bottom: 12px"
+        title="请扫描条形码，并核对扫描结果（SKU、产品名称、图片）与箱中是否一致"
+        type="warning"
+      />
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form ref="addNewFormRef" label-position="top" :model="addNewForm" :rules="addNewFormRules">
@@ -95,6 +138,9 @@
             <el-form-item label="SKU" prop="sku"><el-input v-model="addNewForm.sku" disabled /></el-form-item>
             <el-form-item label="产品名称" prop="productName"><el-input v-model="addNewForm.productName" disabled /></el-form-item>
             <el-form-item label="数量" prop="count"><el-input ref="packingCount" v-model="addNewForm.count" clearable /></el-form-item>
+            <el-form-item label="装箱图片" prop="packingImages">
+              <packing-image-capture v-model="addNewForm.packingImages" @change="handleAddNewPackingImagesChange" />
+            </el-form-item>
           </el-form>
         </el-col>
         <el-col :span="12">
@@ -111,7 +157,7 @@
       </el-row>
       <template #footer>
         <el-button @click="closeAddNewDetail">取消</el-button>
-        <el-button type="primary" @click="confirmAddNewDetail">确认</el-button>
+        <el-button :loading="addNewSubmitLoading" type="primary" @click="confirmAddNewDetail">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 清点质检 -->
@@ -171,7 +217,14 @@
         </el-form-item>
         <el-form-item label="好" prop="goodCount">
           <div style="width: 85%; margin-right: 10px">
-            <el-input-number v-model="packingCountForm.goodCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.goodCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
           <div style="display: flex; align-items: center; width: 10%">
             <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer" @click="handleShowAdd"><circle-plus /></el-icon>
@@ -179,12 +232,26 @@
         </el-form-item>
         <el-form-item label="留样" prop="keepSampleCount">
           <div style="width: 85%">
-            <el-input-number v-model="packingCountForm.keepSampleCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.keepSampleCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
         </el-form-item>
         <el-form-item label="坏" prop="badCount">
           <div style="width: 85%">
-            <el-input-number v-model="packingCountForm.badCount" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+            <el-input-number
+              v-model="packingCountForm.badCount"
+              class="left-input-number"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              style="width: 100%"
+            />
           </div>
           <!-- <el-button type="primary" @click="handleShowDetails">明细</el-button> -->
         </el-form-item>
@@ -223,7 +290,14 @@
           <el-input-number v-model="addForm.good" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
         </el-form-item>
         <el-form-item label="留样" prop="sample">
-          <el-input-number v-model="addForm.sample" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
+          <el-input-number
+            v-model="addForm.sample"
+            class="left-input-number"
+            :controls="false"
+            :min="0"
+            :precision="0"
+            style="width: 100%"
+          />
         </el-form-item>
         <el-form-item label="坏" prop="bad">
           <el-input-number v-model="addForm.bad" class="left-input-number" :controls="false" :min="0" :precision="0" style="width: 100%" />
@@ -234,6 +308,10 @@
         <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 装箱图片完整信息 -->
+    <packing-image-info-dialog v-model="packingImageInfoVisible" :image-list="packingImageInfoList" />
+
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
@@ -242,18 +320,29 @@
 import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
+import PackingImageCapture from './PackingImageCapture.vue'
 import {
-  addDetailEncasement,
+  addDetailEncasementWithImages,
   delEncasementInspection,
   getEncasementInspection,
   getEncasementSku,
   getEncasementUpdate,
   updateEncasement,
   updateEncasementDetailCount,
+  verifyPackingImage,
 } from '/@/api/devlocal/encasement'
-import { addQualityCheck, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
+import { addQualityCheck, getPackagePackagerList, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
+import { useImagePreview } from '/@/hooks/useImagePreview'
+import type { SelectOption } from '/@/type/common'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
-import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
+import type {
+  IAddDetailEncasementReq,
+  IGetEncasementInspection,
+  ISiteOption,
+  ISkuDetailList,
+  PackingImageItem,
+} from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -263,21 +352,27 @@ const packingCount = ref<HTMLInputElement | null>(null)
 const dflag = ref<boolean>(false)
 // 新增可见
 const addNewVisible = ref<boolean>(false)
+const addNewSubmitLoading = ref<boolean>(false)
 const addVisible = ref<boolean>(false)
 const skuDetailList = ref<ISkuDetailList[]>([])
+const packagerOptions = ref<SelectOption[]>([])
+const packagerOptionsLoading = ref<boolean>(false)
 const inspectionList = ref<IGetEncasementInspection[]>([])
 const list = ref<any>()
 // 图片预览
-const imagePreviewVisible = ref<boolean>(false)
-const imagePreviewList = ref<string[]>([])
-const imagePreviewClose = () => {
-  imagePreviewVisible.value = false
-}
-const imagePreviewShow = (url: string) => {
-  imagePreviewList.value = []
-  imagePreviewVisible.value = true
-  imagePreviewList.value.push(url)
-}
+const {
+  imagePreviewVisible,
+  imagePreviewList,
+  openImagePreview: imagePreviewShow,
+  closeImagePreview: imagePreviewClose,
+} = useImagePreview()
+const {
+  getVisiblePackingImages: getVisiblePackingImagePaths,
+  getHiddenPackingImageCount: getHiddenPackingImagePathCount,
+  packingImageInfoVisible,
+  packingImageInfoList,
+  showPackingImageInfoDialog,
+} = usePackingImageInfo<string>()
 let props = defineProps<{
   modifyVisible: boolean
   encasementId: number
@@ -290,17 +385,15 @@ const handleOpenAdd = () => {
   addNewVisible.value = true
   barcodeDisabled.value = false
   lastProcessedBarcode.value = ''
-  Object.assign(addNewForm, {
-    fnSkuOrUpc: '',
-    sku: '',
-    productName: '',
-    count: '',
-    skuImageUrl: '',
-  })
+  resetAddNewForm()
 
   nextTick(() => {
-    barcodeInput.value?.focus()
+    addNewFormRef.value?.clearValidate()
   })
+}
+const handleAddNewOpened = () => {
+  addNewFormRef.value?.clearValidate()
+  barcodeInput.value?.focus()
 }
 const isInitialized = ref<boolean>(false)
 // 添加一个标志来防止重复处理同一个条码
@@ -420,13 +513,28 @@ const clickCancel = async (event: any, value: any) => {
   }
 }
 const fetchData = async () => {
+  void fetchPackagerOptions()
   const { data } = await getEncasementUpdate({
     encasementId: props.encasementId,
   })
   if (data) {
     Object.assign(modifyForm, data)
+    modifyForm.partner = data.partner || []
     skuDetailList.value = data.list
     fetchSkuData()
+  }
+}
+const fetchPackagerOptions = async () => {
+  if (packagerOptions.value.length > 0 || packagerOptionsLoading.value) return
+
+  packagerOptionsLoading.value = true
+  try {
+    const { data } = await getPackagePackagerList()
+    packagerOptions.value = data ?? []
+  } catch {
+    $baseMessage('获取装箱人列表失败，请刷新后重试', 'error')
+  } finally {
+    packagerOptionsLoading.value = false
   }
 }
 const fetchSkuData = () => {
@@ -445,13 +553,24 @@ const modifyFormRef = ref<FormInstance>()
 // 新增新的明细
 const addNewForm = reactive<any>({
   fnSkuOrUpc: '',
+  sku: '',
+  productName: '',
   count: '',
   skuImageUrl: '',
+  packingImages: [],
 })
 const addNewFormRef = ref<FormInstance>()
+const packingImagesValidator = (_rule: any, value: unknown, callback: (error?: Error) => void) => {
+  if (!Array.isArray(value) || value.length === 0) {
+    callback(new Error('请上传至少一张装箱图片'))
+    return
+  }
+  callback()
+}
 const addNewFormRules = reactive<FormRules<IAddDetailEncasementReq>>({
   fnSkuOrUpc: [{ required: true, message: '请输入FNSKU', trigger: 'blur' }],
   count: [{ required: true, message: '请输入数量', trigger: 'blur' }],
+  packingImages: [{ validator: packingImagesValidator, trigger: 'change' }],
 })
 interface IAddForm {
   good: number | null
@@ -499,17 +618,25 @@ const confirmQualityCheck = async () => {
   }
 }
 const copyRow = ref<any>()
+const resetQualityCheckSwitch = (row: any) => {
+  row.qualityCheckStatus = 0
+}
 // 展示清点质检
 const handleShowPackingCount = async (row: any) => {
   // 点击了清单质检
   if (row.qualityCheckStatus === 1) {
     copyRow.value = row
-    const { data: res } = await verificationCheckQuality({
-      taskId: row.taskId,
-    })
-    if (res) {
+    try {
+      const { data: res } = await verificationCheckQuality({
+        taskId: row.taskId,
+      })
+      if (!res) {
+        resetQualityCheckSwitch(row)
+        return
+      }
       packingCountVisible.value = true
-    } else {
+    } catch {
+      resetQualityCheckSwitch(row)
       return
     }
     const { data } = await getQualityCheck({
@@ -543,6 +670,7 @@ const confirmUpdateEncasement = async () => {
     height: modifyForm.height,
     site: modifyForm.siteId,
     boxNumber: Number(modifyForm.boxNumber),
+    partner: modifyForm.partner,
     skuList: skuDetailList.value,
   })
   if (data) {
@@ -626,27 +754,101 @@ const handleShowAdd = () => {
 }
 // 关闭新增新的明细
 const closeAddNewDetail = () => {
+  resetAddNewForm()
   addNewFormRef.value?.resetFields()
+  addNewSubmitLoading.value = false
   addNewVisible.value = false
+}
+const revokeAddNewPackingImageUrls = () => {
+  addNewForm.packingImages?.forEach((image: PackingImageItem) => {
+    if (image.url) URL.revokeObjectURL(image.url)
+  })
+}
+const resetAddNewForm = () => {
+  revokeAddNewPackingImageUrls()
+  Object.assign(addNewForm, {
+    fnSkuOrUpc: '',
+    sku: '',
+    productName: '',
+    count: '',
+    skuImageUrl: '',
+    packingImages: [],
+  })
+}
+const handleAddNewPackingImagesChange = () => {
+  void addNewFormRef.value?.validateField('packingImages')
+}
+const handleVerifyAddNewPackingImage = async () => {
+  if (!addNewForm.fnSkuOrUpc) {
+    $baseMessage('请先扫描FNSKU', 'error')
+    return false
+  }
+
+  if (modifyForm.siteId == null) {
+    $baseMessage('站点为空，无法校验装箱图片', 'error')
+    return false
+  }
+
+  if (!addNewForm.packingImages?.length) {
+    $baseMessage('请上传至少一张装箱图片', 'error')
+    return false
+  }
+
+  const formData = new FormData()
+  formData.append('fnSkuOrUpc', addNewForm.fnSkuOrUpc)
+  formData.append('site', String(modifyForm.siteId))
+  addNewForm.packingImages.forEach((image: PackingImageItem) => {
+    formData.append('files', image.file)
+  })
+
+  try {
+    const { data } = await verifyPackingImage(formData)
+    if (!data) {
+      $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
+      return false
+    }
+    return true
+  } catch {
+    return false
+  }
+}
+const buildAddNewFormData = () => {
+  const submitData: IAddDetailEncasementReq = {
+    id: props.encasementId,
+    site: modifyForm.siteId,
+    fnSkuOrUpc: addNewForm.fnSkuOrUpc,
+    sku: addNewForm.sku,
+    productName: addNewForm.productName,
+    count: Number(addNewForm.count),
+  }
+  const formData = new FormData()
+  formData.append('data', new Blob([JSON.stringify(submitData)], { type: 'application/json' }))
+  addNewForm.packingImages.forEach((image: PackingImageItem) => {
+    formData.append('files', image.file)
+  })
+  return formData
 }
 // 确认新增新的明细
 const confirmAddNewDetail = async () => {
-  addNewFormRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      const { data } = await addDetailEncasement({
-        id: props.encasementId,
-        fnSkuOrUpc: addNewForm.fnSkuOrUpc,
-        sku: addNewForm.sku,
-        productName: addNewForm.productName,
-        count: addNewForm.count,
-      })
-      if (data) {
-        $baseMessage('新增成功', 'success')
-        fetchData()
-        closeAddNewDetail()
-      }
+  if (addNewSubmitLoading.value) return
+
+  const isValid = await addNewFormRef.value?.validate().catch(() => false)
+  if (!isValid) return
+
+  addNewSubmitLoading.value = true
+  try {
+    const imageValid = await handleVerifyAddNewPackingImage()
+    if (!imageValid) return
+
+    const { data } = await addDetailEncasementWithImages(buildAddNewFormData())
+    if (data) {
+      $baseMessage('新增成功', 'success')
+      fetchData()
+      closeAddNewDetail()
     }
-  })
+  } finally {
+    addNewSubmitLoading.value = false
+  }
 }
 const queryForm = reactive<any>({
   keyWord: '',
@@ -687,6 +889,19 @@ const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIn
 .none {
   display: none;
 }
+.packing-image-list {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.packing-image-more {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+}
+
 // 数字输入框文字左对齐，不居中
 .left-input-number :deep(.el-input__inner) {
   text-align: left;
