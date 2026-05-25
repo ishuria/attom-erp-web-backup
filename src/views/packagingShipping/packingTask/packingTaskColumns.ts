@@ -125,6 +125,14 @@ export const packingTaskColumns: PackingTaskColumn[] = [
     customSlot: true,
   },
   {
+    key: 'barcodeStatus',
+    label: '条形码状态',
+    prop: 'barcodeStatus',
+    width: 130,
+    visibleInTabs: [PackingTaskTab.ALL],
+    customSlot: true,
+  },
+  {
     key: 'priorityPackaging',
     label: '优先打包',
     prop: 'priorityPackaging',

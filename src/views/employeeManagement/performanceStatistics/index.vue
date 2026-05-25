@@ -623,6 +623,7 @@
           </el-table-column>
           <el-table-column label="采购降本" min-width="100" prop="procurementCostReduction" />
           <el-table-column label="退税奖金" min-width="100" prop="taxRefundPrice" />
+          <el-table-column label="样品退还奖金" min-width="100" prop="sampleBonus" />
 
           <template #empty>
             <el-empty class="vab-data-empty" />

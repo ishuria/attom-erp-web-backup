@@ -102,6 +102,15 @@
         </template>
       </el-table-column>
 
+      <!-- 产品条形码状态 -->
+      <el-table-column v-else-if="column.key === 'barcodeStatus'" :label="column.label" :prop="column.prop" :width="column.width">
+        <template #default="{ row }">
+          <el-tag :type="row.barcodeStatus === 1 ? 'info' : 'danger'">
+            {{ row.barcodeStatus === 1 ? '已生成' : '未生成' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
       <!-- 优先打包 -->
       <el-table-column v-else-if="column.key === 'priorityPackaging'" :label="column.label" :prop="column.prop" :width="column.width">
         <template #default="{ row }">

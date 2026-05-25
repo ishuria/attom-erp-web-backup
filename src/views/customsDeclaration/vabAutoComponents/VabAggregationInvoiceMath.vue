@@ -617,14 +617,12 @@ const handleFinishUpload = async () => {
       const { data } = await uploadTaxRefund(formData)
       if (data) {
         $baseMessage('发票上传成功', 'success')
-        const { data: resData, msg } = await finishTaxRefundInvoiceRepeat(data)
+        const { data: resData } = await finishTaxRefundInvoiceRepeat(data)
         if (resData) {
-          $baseMessage('发票导入成功', 'success')
-          await fetchData()
-        } else {
-          uploadInvoiceVisible.value = false
-          await fetchData()
+          $baseAlert(resData)
         }
+        uploadInvoiceVisible.value = false
+        await fetchData()
       }
     } catch {
       $baseMessage('发票文件上传失败', 'error')
