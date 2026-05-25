@@ -168,7 +168,7 @@
 
     <div class="pay-button-group">
       <el-button :disabled="editDisabled" type="danger" @click="goBackToStep1">不通过</el-button>
-      <el-button :disabled="editDisabled" type="success" >SKU创建</el-button>
+      <el-button :disabled="editDisabled || !hasEmptySku" type="success" @click="handleGenerateSku">SKU创建</el-button>
       <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
     <vab-remark-dialog v-model="reasonVisible" :remark="reasonText" title="填写审核不通过原因" @update:remark="handleNotPassSubmit" />
@@ -178,7 +178,7 @@
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList, getReviewVineSelectList } from '/@/api/devlocal/orderProcess'
-import { getSkuVariantList, reviewStepNo2Fail, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
+import { generateReviewSku, getSkuVariantList, reviewStepNo2Fail, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
@@ -340,6 +340,40 @@ const handleSaveAndContinue = async () => {
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords',
       })
+    }
+  })
+}
+// SKU 为空的变体数量（用于控制「SKU创建」按钮可点状态及确认文案）
+const emptySkuCount = computed(() => {
+  const skuRow = variantList.value.find((row) => row['column0'] === 'sku')
+  if (!skuRow) return 0
+  let count = 0
+  for (let i = 1; i <= variantSize.value; i++) {
+    const v = skuRow[i]
+    if (v === undefined || v === null || String(v).trim() === '') count++
+  }
+  return count
+})
+const hasEmptySku = computed(() => emptySkuCount.value > 0)
+// 点击「SKU创建」生成 SKU
+const handleGenerateSku = () => {
+  const confirmText = emptySkuCount.value > 1 ? '确认要批量生成 SKU 吗？' : '确认要生成 SKU 吗？'
+  const confirmVNode = h('div', {}, [
+    h(
+      'p',
+      {
+        style: {
+          color: 'origin',
+        },
+      },
+      confirmText
+    ),
+  ])
+  $baseConfirm(confirmVNode, '系统提示', async () => {
+    const { data } = await generateReviewSku(props.reviewId)
+    if (data === true) {
+      $baseMessage('SKU 生成成功！', 'success', 'hey')
+      await fetchData()
     }
   })
 }

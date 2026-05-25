@@ -108,6 +108,14 @@ export function reviewStepNo2Fail(data: { reviewId: number; reason: string }): P
   })
 }
 
+// 新品订货审批-终审 SKU 批量生成
+export function generateReviewSku(reviewId: number): Promise<IReviewStepResp> {
+  return request({
+    url: `${BASE_API}/review/sku/generate/${reviewId}`,
+    method: 'post',
+  })
+}
+
 // 新品订货审批-运营分货查询接口
 export function getDistributionList(params?: IReviewCommonReq): Promise<IReviewCommonResp> {
   return request({
