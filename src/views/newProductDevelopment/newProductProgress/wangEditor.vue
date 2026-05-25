@@ -9,6 +9,14 @@
     @opened="handleDialogOpened"
   >
     <div v-if="dflag" class="wang-editor-container">
+      <el-alert
+        v-if="draftRestored"
+        class="draft-alert"
+        :closable="false"
+        show-icon
+        title="5分钟内修改过本记录，当前显示本地草稿。继续编辑请点保存；如需查看最新内容，请刷新页面后重新打开。"
+        type="warning"
+      />
       <toolbar :default-config="toolbarConfig" :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
       <editor
         v-model="html"
@@ -69,6 +77,7 @@ const editorRef = shallowRef<IDomEditor | undefined>()
 
 // 初始化时使用 props 中的内容
 const html = ref<any>(props.content || '')
+const draftRestored = ref<boolean>(false)
 
 const handleDialogOpened = async () => {
   await nextTick()
@@ -137,6 +146,7 @@ watch(
       const key = getDraftKey()
       const tempContent = readValidDraft()
       const content = props.content || ''
+      draftRestored.value = false
 
       if (content && !isEmptyHtml(content) && tempContent && !isEmptyHtml(tempContent)) {
         // 两者都有内容，比较时间戳
@@ -146,6 +156,7 @@ watch(
         if (cacheTimestamp && currentTime - parseInt(cacheTimestamp) < 5 * 60 * 1000) {
           // 缓存是5分钟内的，使用缓存（用户可能正在编辑）
           html.value = tempContent
+          draftRestored.value = true
         } else {
           // 缓存过期或没有时间戳，使用后端内容
           html.value = content
@@ -156,6 +167,7 @@ watch(
       } else if (tempContent && !isEmptyHtml(tempContent)) {
         // 只有缓存有内容
         html.value = tempContent
+        draftRestored.value = true
       } else {
         // 都没有
         html.value = ''
@@ -337,6 +349,7 @@ const handlerCloseDialog = () => {
   clearTimer()
   emit('clickBoolean', false)
   dflag.value = false
+  draftRestored.value = false
 }
 /**
  * 当取消对话框时
@@ -345,6 +358,7 @@ const handleCloseDialog = () => {
   clearTimer()
   emit('clickBoolean', false)
   dflag.value = false
+  draftRestored.value = false
 }
 // 点击保存
 const handleSave = () => {
@@ -357,6 +371,7 @@ const handleSave = () => {
   $baseMessage(`${props.title}保存成功`, 'success', 'hey')
   clearTimer()
   clearDraft()
+  draftRestored.value = false
 }
 /**
  * 当确认对话框的时候
@@ -373,6 +388,7 @@ const handleConfirmDialog = () => {
   dflag.value = false
   clearTimer()
   clearDraft()
+  draftRestored.value = false
 }
 
 const handleCreated = (editor: IDomEditor) => {
@@ -449,6 +465,11 @@ onUnmounted(() => {
 
       .w-e-toolbar-init {
         border-bottom: 1px solid var(--el-border-color) !important;
+      }
+
+      .draft-alert {
+        width: 70%;
+        margin: 0 auto 8px;
       }
 
       .wang-editor-content {

@@ -376,6 +376,7 @@ declare module 'vue' {
     VabPaneSplit: typeof import('./../../../src/plugins/VabPaneSplit/index.vue')['default']
     VabPlayer: typeof import('./../../../src/plugins/VabPlayer/index.vue')['default']
     VabPlayerHls: typeof import('./../../../src/plugins/VabPlayer/VabPlayerHls.vue')['default']
+    VabPrintCountDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabPrintCountDialog.vue')['default']
     VabProductOrderTable: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabProductOrderTable.vue')['default']
     VabQualityInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabQualityInspectionReport.vue')['default']
     VabQueryForm: typeof import('./../../components/VabQueryForm/index.vue')['default']
