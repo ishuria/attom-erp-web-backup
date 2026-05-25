@@ -618,17 +618,25 @@ const confirmQualityCheck = async () => {
   }
 }
 const copyRow = ref<any>()
+const resetQualityCheckSwitch = (row: any) => {
+  row.qualityCheckStatus = 0
+}
 // 展示清点质检
 const handleShowPackingCount = async (row: any) => {
   // 点击了清单质检
   if (row.qualityCheckStatus === 1) {
     copyRow.value = row
-    const { data: res } = await verificationCheckQuality({
-      taskId: row.taskId,
-    })
-    if (res) {
+    try {
+      const { data: res } = await verificationCheckQuality({
+        taskId: row.taskId,
+      })
+      if (!res) {
+        resetQualityCheckSwitch(row)
+        return
+      }
       packingCountVisible.value = true
-    } else {
+    } catch {
+      resetQualityCheckSwitch(row)
       return
     }
     const { data } = await getQualityCheck({
