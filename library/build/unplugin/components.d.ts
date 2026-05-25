@@ -163,7 +163,6 @@ declare module 'vue' {
     MessageItem: typeof import('./../../../src/views/ai/vabAutoComponents/MessageItem.vue')['default']
     MessageList: typeof import('./../../../src/views/ai/vabAutoComponents/MessageList.vue')['default']
     MessageProgressPanel: typeof import('./../../../src/views/ai/vabAutoComponents/MessageProgressPanel.vue')['default']
-    ModelSelector: typeof import('./../../../src/views/ai/vabAutoComponents/ModelSelector.vue')['default']
     MonthlyAssessmentTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyAssessmentTable.vue')['default']
     MonthlyProductProfitTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyProductProfitTable.vue')['default']
     NewProductSaleDayChart: typeof import('./../../../src/views/index/vabAutoComponents/NewProductSaleDayChart.vue')['default']
