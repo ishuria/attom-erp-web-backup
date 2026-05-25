@@ -78,6 +78,14 @@ export interface IEncasementList {
    */
   productTotalNumber?: number
   /**
+   * 装箱人名称
+   */
+  partnerNames?: string[]
+  /**
+   * 装箱图片路径
+   */
+  packingImagePaths?: string[]
+  /**
    * 备注
    */
   remarks?: string

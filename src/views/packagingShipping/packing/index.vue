@@ -201,6 +201,29 @@
         <template v-else-if="item.label === '装箱日期'" #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
+        <template v-else-if="item.label === '装箱人'" #default="{ row }">
+          <span>{{ row.partnerNames?.join(',') || '-' }}</span>
+        </template>
+        <template v-else-if="item.label === '装箱图片'" #default="{ row }">
+          <div v-if="row.packingImagePaths?.length" class="packing-image-list">
+            <el-image
+              v-for="imagePath in getVisiblePackingImagePaths(row.packingImagePaths)"
+              :key="imagePath"
+              fit="cover"
+              :src="imagePath"
+              style="width: 50px; height: 50px; cursor: pointer"
+              @click.stop="imagePreviewShow(imagePath)"
+            />
+            <el-button
+              v-if="getHiddenPackingImagePathCount(row.packingImagePaths) > 0"
+              class="packing-image-more"
+              @click.stop="showPackingImageInfoDialog(row.packingImagePaths)"
+            >
+              +{{ getHiddenPackingImagePathCount(row.packingImagePaths) }}
+            </el-button>
+          </div>
+          <span v-else>-</span>
+        </template>
         <template v-else-if="item.label === '冻结箱号'" #default="{ row }">
           <el-switch
             v-model="row.freeze"
@@ -655,6 +678,8 @@
 
     <!-- 发货计划渠道配置弹窗 -->
     <vab-shipping-plan-channel-dialog v-model="shippingPlanChannelVisible" />
+    <packing-image-info-dialog v-model="packingImageInfoVisible" :image-list="packingImageInfoList" />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
@@ -665,6 +690,7 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationOrderTable } from '~/src/api/devlocal/productOrdering'
 import { IGetOperationOrderTable } from '~/src/type/storeOperation/productOrdering'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
@@ -698,6 +724,7 @@ import {
 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
+import { useImagePreview } from '/@/hooks/useImagePreview'
 import EncasementPermission from '/@/permissions/encasement'
 import type { IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
@@ -722,6 +749,19 @@ const columns = ref<any>([])
 const checkList = computed(() => {
   return columns.value.filter((item: any) => item.checked)
 })
+const {
+  imagePreviewVisible,
+  imagePreviewList,
+  openImagePreview: imagePreviewShow,
+  closeImagePreview: imagePreviewClose,
+} = useImagePreview()
+const {
+  getVisiblePackingImages: getVisiblePackingImagePaths,
+  getHiddenPackingImageCount: getHiddenPackingImagePathCount,
+  packingImageInfoVisible,
+  packingImageInfoList,
+  showPackingImageInfoDialog,
+} = usePackingImageInfo<string>()
 
 const sendShipmentCheckVisible = ref<boolean>(false)
 const sendShipmentLoading = ref<boolean>(false)
@@ -784,6 +824,12 @@ const handleCalculateWidth = (item: any) => {
     case '产品总数': {
       return flexColumnWidth(list.value, '产品总数', 'productTotalNumber')
     }
+    case '装箱人': {
+      return Math.max(flexColumnWidth(list.value, '装箱人', 'partnerNames'), 160)
+    }
+    case '装箱图片': {
+      return 210
+    }
     default: {
       return item.minWidth
     }
@@ -800,19 +846,22 @@ const handleMove = (event: any) => {
   return true // 允许其他操作
 }
 const handleEnd = async () => {
-  const req = columns.value.map((item: any, index: number) => {
-    return {
-      userId: item.userId,
-      columnId: item.columnId,
-      sort: index,
-      // label: item.label
-    }
-  })
+  const req = columns.value
+    .filter((item: any) => item.columnId)
+    .map((item: any, index: number) => {
+      return {
+        userId: item.userId,
+        columnId: item.columnId,
+        sort: index,
+        // label: item.label
+      }
+    })
   await updateSortOperationColumn(req)
 }
 // 是否显示或隐藏列
 const handleChecked = async (item: any) => {
   item.checked = !item.checked
+  if (!item.columnId) return
   const status = item.checked === true ? 1 : 0
   await hideOrShowOperationColumn({
     userId: item.userId,
@@ -1682,7 +1731,8 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
     label !== '总可售' &&
     label !== '断货' &&
     label !== '木制品' &&
-    label !== '玩具'
+    label !== '玩具' &&
+    label !== '装箱图片'
   ) {
     // 获取当前row的零件id
     const id = row.id
@@ -1733,6 +1783,18 @@ const fetchDefaultPrinter = async () => {
 const fetchColumn = async () => {
   const { data } = await getOperationColumnList({ type: 15 })
   columns.value = data
+  const fallbackColumns = [
+    { label: '装箱人', prop: 'partnerNames', width: 160, checked: true },
+    { label: '装箱图片', prop: 'packingImagePaths', width: 210, checked: true },
+  ]
+  fallbackColumns.forEach((column) => {
+    if (!columns.value.some((item: any) => item.label === column.label || item.prop === column.prop)) {
+      columns.value.push({
+        ...column,
+        localOnly: true,
+      })
+    }
+  })
   columns.value.forEach((item: any) => {
     item.minWidth = item.width
     if (['shipmentPlanDate', 'createTime', 'grossWeight', 'totalVolume'].includes(item.prop)) {
@@ -1796,6 +1858,19 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
+}
+
+.packing-image-list {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.packing-image-more {
+  width: 50px;
+  height: 50px;
+  padding: 0;
 }
 
 /* 发货计划区域样式 */
