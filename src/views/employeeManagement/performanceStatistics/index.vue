@@ -358,6 +358,7 @@
           </el-table-column>
 
           <el-table-column label="打包时长(小时)" min-width="100" prop="packageDuration" />
+          <el-table-column label="装箱奖金" min-width="100" prop="packingBonus" />
 
           <template #empty>
             <el-empty class="vab-data-empty" />

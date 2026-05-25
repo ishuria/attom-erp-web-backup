@@ -196,7 +196,7 @@
     </el-row>
 
     <!-- 第四层 -->
-    <el-row v-if="ableViewAttendanceOverviewCard" class="row-spacing" :gutter="20">
+    <el-row v-if="ableViewAttendanceOverviewCard || ableViewPersonalBonusCard" class="row-spacing" :gutter="20">
       <el-col v-if="ableViewAttendanceOverviewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <!-- 考勤概况 -->
         <attendance-overview-card :list="attendanceOverviewList" @sort-change="handleAttendanceOverviewSortChange">
@@ -212,7 +212,7 @@
           </template>
         </attendance-overview-card>
       </el-col>
-      <el-col v-if="currentRoleCode !== ROLE_BOSS_CODE" :lg="4" :md="24" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableViewPersonalBonusCard" :lg="4" :md="24" :sm="24" :xl="4" :xs="24">
         <personal-bonus-card :data="personalBonusData" :loading="personalBonusLoading">
           <template #select>
             <el-select v-model="selectPersonalBonusMonth" placeholder="月份" style="max-width: 5em" @change="fetchPersonalBonus">
@@ -601,6 +601,7 @@ const ableViewShippingErrorCard =
   currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE ||
   currentRoleCode === ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
+const ableViewPersonalBonusCard = currentRoleCode !== ROLE_BOSS_CODE
 const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewArtDesignDashboardCard = currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE
 const ableViewAsinSummaryCard =

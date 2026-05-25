@@ -29,6 +29,19 @@
             <el-option v-for="item in props.siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
+        <el-form-item label="合作人" prop="partner">
+          <el-select
+            v-model="modifyForm.partner"
+            clearable
+            filterable
+            :loading="packagerOptionsLoading"
+            multiple
+            placeholder="请选择合作人"
+            style="width: 100%"
+          >
+            <el-option v-for="item in packagerOptions" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <el-button style="margin-top: 10px; margin-bottom: 10px" type="primary" @click="handleOpenAdd">新增</el-button>
       <el-table
@@ -58,11 +71,7 @@
             <span>{{ row.count }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="装箱人" min-width="200">
-          <template #default="{ row }">
-            <span>{{ row.partnerNames?.join(',') || '-' }}</span>
-          </template>
-        </el-table-column>
+
         <el-table-column label="装箱图片" min-width="300">
           <template #default="{ row }">
             <div v-if="row.packingImagePaths?.length" class="packing-image-list">
@@ -301,6 +310,7 @@
 import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
+import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import {
   addDetailEncasement,
   delEncasementInspection,
@@ -310,7 +320,9 @@ import {
   updateEncasement,
   updateEncasementDetailCount,
 } from '/@/api/devlocal/encasement'
-import { addQualityCheck, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
+import { addQualityCheck, getPackagePackagerList, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
+import { useImagePreview } from '/@/hooks/useImagePreview'
+import type { SelectOption } from '/@/type/common'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -324,27 +336,24 @@ const dflag = ref<boolean>(false)
 const addNewVisible = ref<boolean>(false)
 const addVisible = ref<boolean>(false)
 const skuDetailList = ref<ISkuDetailList[]>([])
+const packagerOptions = ref<SelectOption[]>([])
+const packagerOptionsLoading = ref<boolean>(false)
 const inspectionList = ref<IGetEncasementInspection[]>([])
 const list = ref<any>()
 // 图片预览
-const imagePreviewVisible = ref<boolean>(false)
-const imagePreviewList = ref<string[]>([])
-const imagePreviewClose = () => {
-  imagePreviewVisible.value = false
-}
-const imagePreviewShow = (url: string) => {
-  imagePreviewList.value = []
-  imagePreviewVisible.value = true
-  imagePreviewList.value.push(url)
-}
-const getVisiblePackingImagePaths = (imagePaths: string[] = []) => imagePaths.slice(0, 3)
-const getHiddenPackingImagePathCount = (imagePaths: string[] = []) => Math.max(imagePaths.length - 3, 0)
-const packingImageInfoVisible = ref<boolean>(false)
-const packingImageInfoList = ref<string[]>([])
-const showPackingImageInfoDialog = (imagePaths: string[] = []) => {
-  packingImageInfoList.value = imagePaths
-  packingImageInfoVisible.value = true
-}
+const {
+  imagePreviewVisible,
+  imagePreviewList,
+  openImagePreview: imagePreviewShow,
+  closeImagePreview: imagePreviewClose,
+} = useImagePreview()
+const {
+  getVisiblePackingImages: getVisiblePackingImagePaths,
+  getHiddenPackingImageCount: getHiddenPackingImagePathCount,
+  packingImageInfoVisible,
+  packingImageInfoList,
+  showPackingImageInfoDialog,
+} = usePackingImageInfo<string>()
 let props = defineProps<{
   modifyVisible: boolean
   encasementId: number
@@ -487,13 +496,28 @@ const clickCancel = async (event: any, value: any) => {
   }
 }
 const fetchData = async () => {
+  void fetchPackagerOptions()
   const { data } = await getEncasementUpdate({
     encasementId: props.encasementId,
   })
   if (data) {
     Object.assign(modifyForm, data)
+    modifyForm.partner = data.partner || []
     skuDetailList.value = data.list
     fetchSkuData()
+  }
+}
+const fetchPackagerOptions = async () => {
+  if (packagerOptions.value.length > 0 || packagerOptionsLoading.value) return
+
+  packagerOptionsLoading.value = true
+  try {
+    const { data } = await getPackagePackagerList()
+    packagerOptions.value = data ?? []
+  } catch {
+    $baseMessage('获取合作人列表失败，请刷新后重试', 'error')
+  } finally {
+    packagerOptionsLoading.value = false
   }
 }
 const fetchSkuData = () => {
@@ -610,6 +634,7 @@ const confirmUpdateEncasement = async () => {
     height: modifyForm.height,
     site: modifyForm.siteId,
     boxNumber: Number(modifyForm.boxNumber),
+    partner: modifyForm.partner,
     skuList: skuDetailList.value,
   })
   if (data) {
