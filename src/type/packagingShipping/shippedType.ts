@@ -255,10 +255,12 @@ export interface IUpdateEncasementReq {
  */
 export interface IAddDetailEncasementReq {
   id?: number
+  site?: number
   fnSkuOrUpc?: string
   sku?: string
   productName?: string
   count?: number
+  packingImages?: PackingImageItem[]
 }
 
 export interface IEncasementId {

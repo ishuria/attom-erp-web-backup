@@ -146,6 +146,17 @@ export const addDetailEncasement = (data: IAddDetailEncasementReq): Promise<IBoo
   })
 }
 /**
+ * @description 装箱-修改页面-新增新的明细（带装箱图片）
+ */
+export const addDetailEncasementWithImages = (data: FormData): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/awaiting/shipment/encasement/add/detail/with-images`,
+    method: 'post',
+    data,
+    headers: { 'content-type': 'multipart/form-data' },
+  })
+}
+/**
  * @description 装箱-修改前获取具体数据
  */
 export const getEncasementUpdate = (params: IEncasementId): Promise<IGetEncasementUpdateRes> => {
