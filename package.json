@@ -56,6 +56,8 @@
     "@vueuse/head": "^2.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
+    "@zxing/browser": "0.1.5",
+    "@zxing/library": "0.21.3",
     "axios": "^1.10.0",
     "core-security": "^1.2.0",
     "dayjs": "^1.11.13",

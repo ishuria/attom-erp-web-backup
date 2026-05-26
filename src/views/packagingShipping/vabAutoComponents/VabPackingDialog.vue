@@ -155,13 +155,14 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, InputInstance } from 'element-plus'
 import { usePackingImageInfo } from '../composables/usePackingImageInfo'
 import PackingImageCapture from './PackingImageCapture.vue'
-import { getEncasementSku, printBarcodeEncasement, submitEncasementSkuWithImages, verifyPackingImage } from '/@/api/devlocal/encasement'
+import { getEncasementSku, printBarcodeEncasement, submitEncasementSkuWithImages } from '/@/api/devlocal/encasement'
 import { getPackagePackagerList } from '/@/api/devlocal/packagingShipping'
 import { SiteEnum } from '/@/const/site'
 import { useImagePreview } from '/@/hooks/useImagePreview'
 import { usePackingStore } from '/@/store/modules/packing'
 import type { SelectOption } from '/@/type/common'
 import type { EncasementDetailList, IEncasementProduct, PackingImageItem } from '/@/type/packagingShipping/shippedType'
+import { hasOneDimensionalBarcodeInImages } from '/@/utils/barcodeDetector'
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -760,21 +761,28 @@ const handleVerifyPackingImage = async () => {
     return false
   }
 
-  const formData = new FormData()
-  formData.append('fnSkuOrUpc', packingForm.fnSkuOrUpc)
-  formData.append('site', String(props.site))
-  packingForm.packingImages.forEach((image: PackingImageItem) => {
-    formData.append('files', image.file)
-  })
+  // 后端校验先保留，当前为了打包效率改为前端只校验是否存在一维码。
+  // const formData = new FormData()
+  // formData.append('fnSkuOrUpc', packingForm.fnSkuOrUpc)
+  // formData.append('site', String(props.site))
+  // packingForm.packingImages.forEach((image: PackingImageItem) => {
+  //   formData.append('files', image.file)
+  // })
 
   try {
-    const { data } = await verifyPackingImage(formData)
-    if (!data) {
-      $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
+    const hasBarcode = await hasOneDimensionalBarcodeInImages(packingForm.packingImages)
+    if (!hasBarcode) {
+      $baseMessage('装箱图片未识别到条形码，请重新拍摄', 'error')
       return false
     }
+    // const { data } = await verifyPackingImage(formData)
+    // if (!data) {
+    //   $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
+    //   return false
+    // }
     return true
-  } catch {
+  } catch (error) {
+    $baseMessage(error instanceof Error ? error.message : '装箱图片校验失败，请重新拍摄', 'error')
     return false
   }
 }
