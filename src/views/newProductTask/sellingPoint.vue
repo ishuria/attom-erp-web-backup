@@ -34,7 +34,7 @@
                   <el-option v-for="item in reasonsOption" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
-              <el-form-item label="与竞品相比差异化的地方" prop="competitiveProductDifferences">
+              <el-form-item label="主要卖点以及与竞品相比差异化的地方" prop="competitiveProductDifferences">
                 <el-input v-model="form.competitiveProductDifferences" :autosize="{ minRows: 2 }" type="textarea" @change="debouncedSave" />
               </el-form-item>
               <el-form-item label="目标客群" prop="targetAudience">
@@ -342,7 +342,7 @@ const formRules1 = reactive<FormRules>({
   site: [{ required: true, message: '请选择卖点站点', trigger: 'change' }],
   productDifferences: [{ required: true, message: '请选择产品差异化程度', trigger: 'change' }],
   summary: [{ required: true, message: '请选择选品理由一句话概括', trigger: 'change' }],
-  competitiveProductDifferences: [{ required: true, message: '请填写与竞品相比差异化的地方', trigger: 'blur' }],
+  competitiveProductDifferences: [{ required: true, message: '请填写主要卖点以及与竞品相比差异化的地方', trigger: 'blur' }],
   targetAudience: [{ required: true, message: '请填写目标客群', trigger: 'blur' }],
   material: [{ required: true, message: '请填写材质', trigger: 'blur' }],
   brand: [{ required: true, message: '请填写本产品知名品牌', trigger: 'blur' }],

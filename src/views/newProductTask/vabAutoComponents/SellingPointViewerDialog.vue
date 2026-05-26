@@ -109,7 +109,7 @@ const productDifferencesOptions = [
 const leftTopFields = computed(() => [
   { label: '产品差异化程度', value: getProductDifferencesLabel(detail.productDifferences) },
   { label: '选品理由一句话概括', value: getSelectionReasonLabel(detail.summary) },
-  { label: '与竞品相比差异化的地方', value: detail.competitiveProductDifferences, className: 'readonly-box-large' },
+  { label: '主要卖点以及与竞品相比差异化的地方', value: detail.competitiveProductDifferences, className: 'readonly-box-large' },
   { label: '目标客群', value: detail.targetAudience, className: 'readonly-box-large' },
   { label: '产品使用场景', value: detail.usageScenario },
   { label: '材质', value: detail.material },
