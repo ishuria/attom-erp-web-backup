@@ -55,8 +55,8 @@
           >
             <el-table-column label="PO" min-width="100" prop="po" />
             <el-table-column label="打包日期" min-width="130" prop="startTime" />
-            <el-table-column label="任务工时(分钟)" min-width="110" prop="workingHours" />
-            <el-table-column label="产品工时(分钟)" min-width="110" prop="productWorkHours" />
+            <el-table-column label="关联任务总工时(分钟)" min-width="110" prop="workingHours" />
+            <el-table-column label="均摊工时(分钟)" min-width="110" prop="productWorkHours" />
             <el-table-column label="完成数量" min-width="100" prop="goodCount" />
             <el-table-column label="每个用时(秒)" min-width="110" prop="eachTime" />
             <template #empty>
