@@ -162,7 +162,7 @@ import { useImagePreview } from '/@/hooks/useImagePreview'
 import { usePackingStore } from '/@/store/modules/packing'
 import type { SelectOption } from '/@/type/common'
 import type { EncasementDetailList, IEncasementProduct, PackingImageItem } from '/@/type/packagingShipping/shippedType'
-import { hasOneDimensionalBarcodeInImages } from '/@/utils/barcodeDetector'
+// import { hasOneDimensionalBarcodeInImages } from '/@/utils/barcodeDetector'
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -768,23 +768,25 @@ const handleVerifyPackingImage = async () => {
   // packingForm.packingImages.forEach((image: PackingImageItem) => {
   //   formData.append('files', image.file)
   // })
+  //
+  // try {
+  //   const hasBarcode = await hasOneDimensionalBarcodeInImages(packingForm.packingImages)
+  //   if (!hasBarcode) {
+  //     $baseMessage('装箱图片未识别到条形码，请重新拍摄', 'error')
+  //     return false
+  //   }
+  //   // const { data } = await verifyPackingImage(formData)
+  //   // if (!data) {
+  //   //   $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
+  //   //   return false
+  //   // }
+  //   return true
+  // } catch (error) {
+  //   $baseMessage(error instanceof Error ? error.message : '装箱图片校验失败，请重新拍摄', 'error')
+  //   return false
+  // }
 
-  try {
-    const hasBarcode = await hasOneDimensionalBarcodeInImages(packingForm.packingImages)
-    if (!hasBarcode) {
-      $baseMessage('装箱图片未识别到条形码，请重新拍摄', 'error')
-      return false
-    }
-    // const { data } = await verifyPackingImage(formData)
-    // if (!data) {
-    //   $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
-    //   return false
-    // }
-    return true
-  } catch (error) {
-    $baseMessage(error instanceof Error ? error.message : '装箱图片校验失败，请重新拍摄', 'error')
-    return false
-  }
+  return true
 }
 </script>
 

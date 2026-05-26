@@ -342,7 +342,7 @@ import type {
   ISkuDetailList,
   PackingImageItem,
 } from '/@/type/packagingShipping/shippedType'
-import { hasOneDimensionalBarcodeInImages } from '/@/utils/barcodeDetector'
+// import { hasOneDimensionalBarcodeInImages } from '/@/utils/barcodeDetector'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -801,23 +801,25 @@ const handleVerifyAddNewPackingImage = async () => {
   // addNewForm.packingImages.forEach((image: PackingImageItem) => {
   //   formData.append('files', image.file)
   // })
+  //
+  // try {
+  //   const hasBarcode = await hasOneDimensionalBarcodeInImages(addNewForm.packingImages)
+  //   if (!hasBarcode) {
+  //     $baseMessage('装箱图片未识别到条形码，请重新拍摄', 'error')
+  //     return false
+  //   }
+  //   // const { data } = await verifyPackingImage(formData)
+  //   // if (!data) {
+  //   //   $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
+  //   //   return false
+  //   // }
+  //   return true
+  // } catch (error) {
+  //   $baseMessage(error instanceof Error ? error.message : '装箱图片校验失败，请重新拍摄', 'error')
+  //   return false
+  // }
 
-  try {
-    const hasBarcode = await hasOneDimensionalBarcodeInImages(addNewForm.packingImages)
-    if (!hasBarcode) {
-      $baseMessage('装箱图片未识别到条形码，请重新拍摄', 'error')
-      return false
-    }
-    // const { data } = await verifyPackingImage(formData)
-    // if (!data) {
-    //   $baseMessage('装箱图片校验失败，请重新拍摄', 'error')
-    //   return false
-    // }
-    return true
-  } catch (error) {
-    $baseMessage(error instanceof Error ? error.message : '装箱图片校验失败，请重新拍摄', 'error')
-    return false
-  }
+  return true
 }
 const buildAddNewFormData = () => {
   const submitData: IAddDetailEncasementReq = {
