@@ -54,6 +54,7 @@
           <performance-table-cell
             :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
             :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
+            :ai-new-product-ad-keyword-loading-ids="aiNewProductAdKeywordLoadingIds"
             :is-boss="isBoss"
             :item="item"
             :row="row"
@@ -65,6 +66,7 @@
             @router-push="emit('routerPush', $event)"
             @show-ai-selling-point-performance="emit('showAiSellingPointPerformance', $event)"
             @show-ai-title-optimization="emit('showAiTitleOptimization', $event)"
+            @show-ai-new-product-ad-keyword="emit('showAiNewProductAdKeyword', $event)"
             @show-operation-log="emit('showOperationLog', $event)"
             @show-release-order="emit('showReleaseOrder', $event)"
             @show-remark="emit('showRemark', $event)"
@@ -107,6 +109,7 @@ interface Props {
   isBoss?: boolean
   aiTitleOptimizationLoadingIds?: Array<number | string>
   aiSellingPointPerformanceLoadingIds?: Array<number | string>
+  aiNewProductAdKeywordLoadingIds?: Array<number | string>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -121,6 +124,7 @@ const props = withDefaults(defineProps<Props>(), {
   isBoss: false,
   aiTitleOptimizationLoadingIds: () => [],
   aiSellingPointPerformanceLoadingIds: () => [],
+  aiNewProductAdKeywordLoadingIds: () => [],
 })
 
 // Emits
@@ -134,6 +138,7 @@ const emit = defineEmits<{
   showRemark: [row: any]
   showAiTitleOptimization: [row: any]
   showAiSellingPointPerformance: [row: any]
+  showAiNewProductAdKeyword: [row: any]
   updateOpeType: [row: any]
   updateStopStatus: [row: any]
   routerPush: [row: any]

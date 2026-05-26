@@ -78,6 +78,17 @@ export const createSellingPointPerformanceConversation = (data: SellingPointPerf
 }
 
 /**
+ * 性能看板-新品广告选词会话
+ */
+export const createNewProductAdKeywordConversation = (data: { operationSkuId: number | string }) => {
+  return request({
+    url: `${AI_BASE_API}/conversations/new-product-ad-copy/add`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
  * 删除指定 AI 会话
  * @param id 会话 ID
  */

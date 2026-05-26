@@ -142,6 +142,7 @@
           :active-name="activeName"
           :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
           :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
+          :ai-new-product-ad-keyword-loading-ids="aiNewProductAdKeywordLoadingIds"
           :columns="checkList1"
           :data="list"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
@@ -159,6 +160,7 @@
           @row-click="handleRowClick"
           @show-ai-selling-point-performance="showAiSellingPointPerformance"
           @show-ai-title-optimization="showAiTitleOptimization"
+          @show-ai-new-product-ad-keyword="showAiNewProductAdKeyword"
           @show-operation-log="showOperationLog"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
@@ -304,6 +306,7 @@
           :active-name="activeName"
           :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
           :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
+          :ai-new-product-ad-keyword-loading-ids="aiNewProductAdKeywordLoadingIds"
           :columns="checkList2"
           :data="asinList"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
@@ -321,6 +324,7 @@
           @row-click="handleRowClick"
           @show-ai-selling-point-performance="showAiSellingPointPerformance"
           @show-ai-title-optimization="showAiTitleOptimization"
+          @show-ai-new-product-ad-keyword="showAiNewProductAdKeyword"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
           @sort-change="asinSortChange"
@@ -456,6 +460,7 @@
           :active-name="activeName"
           :ai-selling-point-performance-loading-ids="aiSellingPointPerformanceLoadingIds"
           :ai-title-optimization-loading-ids="aiTitleOptimizationLoadingIds"
+          :ai-new-product-ad-keyword-loading-ids="aiNewProductAdKeywordLoadingIds"
           :columns="checkList3"
           :data="pAsinList"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
@@ -473,6 +478,7 @@
           @row-click="handleRowClick"
           @show-ai-selling-point-performance="showAiSellingPointPerformance"
           @show-ai-title-optimization="showAiTitleOptimization"
+          @show-ai-new-product-ad-keyword="showAiNewProductAdKeyword"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
           @sort-change="pAsinSortChange"
@@ -595,7 +601,7 @@ import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../../constantOption.ts'
 import { useUserStore } from '/@//store/modules/user'
-import { createAiConversation, createSellingPointPerformanceConversation } from '/@/api/devlocal/ai'
+import { createAiConversation, createNewProductAdKeywordConversation, createSellingPointPerformanceConversation } from '/@/api/devlocal/ai'
 import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis.ts'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
@@ -669,6 +675,7 @@ const spFileUploadVisible = ref<boolean>(false)
 const logSummaryVisible = ref<boolean>(false)
 const aiTitleOptimizationLoadingIds = ref<Array<number | string>>([])
 const aiSellingPointPerformanceLoadingIds = ref<Array<number | string>>([])
+const aiNewProductAdKeywordLoadingIds = ref<Array<number | string>>([])
 const sellingPointPerformanceVisible = ref(false)
 const sellingPointPerformanceRow = ref<any>(null)
 const sellingPointPerformanceSubmitting = ref(false)
@@ -1173,6 +1180,43 @@ const showAiSellingPointPerformance = (row: any) => {
   }
   sellingPointPerformanceRow.value = row
   sellingPointPerformanceVisible.value = true
+}
+
+const showAiNewProductAdKeyword = async (row: any) => {
+  const operationSkuId = row?.id
+  if (operationSkuId == null || operationSkuId === '') {
+    $baseMessage('当前数据缺少业务标识，无法发起新品广告选词', 'error')
+    return
+  }
+  const loadingKey = String(operationSkuId)
+  if (aiNewProductAdKeywordLoadingIds.value.some((id) => String(id) === loadingKey)) {
+    return
+  }
+  aiNewProductAdKeywordLoadingIds.value = [...aiNewProductAdKeywordLoadingIds.value, operationSkuId]
+  try {
+    const createResponse = await createNewProductAdKeywordConversation({ operationSkuId })
+    const conversationId = normalizeAiConversationId(createResponse)
+    if (conversationId == null || conversationId === '') {
+      throw new Error('会话创建成功但未返回有效会话 ID')
+    }
+    try {
+      await aiStore.ensureInitialized({ createIfEmpty: false, forceRefresh: true })
+      await aiStore.switchConversation(conversationId)
+      aiStore.setConversationBusy(conversationId, {
+        reason: 'new-product-ad-keyword',
+        placeholderText: '已提交新品广告选词请求，正在等待模型返回结果...',
+      })
+      $baseMessage('已开始新品广告选词，当前会话会在结果返回前禁止发送新消息', 'success')
+      void aiStore.streamConversationReply(conversationId)
+    } catch (error: any) {
+      aiStore.failConversationBusy(conversationId, error?.msg ?? error?.message ?? '新品广告选词任务创建成功，但消息发送失败')
+      $baseMessage(error?.msg ?? error?.message ?? '新品广告选词任务创建成功，但消息发送失败', 'error')
+    }
+  } catch (error: any) {
+    $baseMessage(error?.msg ?? error?.message ?? '创建新品广告选词会话失败', 'error')
+  } finally {
+    aiNewProductAdKeywordLoadingIds.value = aiNewProductAdKeywordLoadingIds.value.filter((id) => String(id) !== loadingKey)
+  }
 }
 
 const handleSellingPointPerformanceSubmit = async (payload: SellingPointPerformancePayload) => {
