@@ -24,6 +24,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="pendingCellClassName"
           :cell-style="pendingCellStyle"
@@ -159,6 +160,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="contactedCellClassName"
           :cell-style="contactedCellStyle"
@@ -296,10 +298,13 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
             <template #default="{ row }">
-              <el-space>
-                <el-button text type="primary">采购申请</el-button>
-                <el-button text type="primary" @click="handleArchive(row)">归档</el-button>
-              </el-space>
+              <div class="after-sales-actions">
+                <el-link class="after-sales-actions__archive" type="primary" @click="handleArchive(row)">归档</el-link>
+                <div class="after-sales-actions__secondary">
+                  <el-link type="primary">采购申请</el-link>
+                  <el-link type="primary" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
+                </div>
+              </div>
             </template>
           </el-table-column>
           <template #empty>
@@ -337,6 +342,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="contactedCellClassName"
           :cell-style="contactedCellStyle"
@@ -491,6 +497,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="pendingCellClassName"
           :cell-style="pendingCellStyle"
@@ -792,6 +799,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="pendingCellClassName"
           :cell-style="pendingCellStyle"
@@ -958,7 +966,7 @@
         <el-table-column label="缺" min-width="100" prop="lackCount" />
         <el-table-column label="坏" min-width="100" prop="badCount" />
         <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
-        <el-table-column label="日志类型" min-width="100" prop="logType" />
+        <el-table-column label="日志类型" min-width="180" prop="logType" />
         <el-table-column label="备注" min-width="180" prop="remark" />
       </el-table>
     </vab-dialog>
@@ -973,7 +981,7 @@
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- PO明细 -->
-    <poDetail v-model="poDetailVisible" :poSkuId="poSkuId" :close="closePoDetail" />
+    <po-detail v-model="poDetailVisible" :close="closePoDetail" :poSkuId="poSkuId" />
   </div>
 </template>
 
@@ -1549,5 +1557,27 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
+}
+
+.after-sales-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 54px;
+}
+
+.after-sales-actions__archive {
+  font-weight: 600;
+}
+
+.after-sales-actions__secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  white-space: nowrap;
 }
 </style>
