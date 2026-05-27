@@ -23,7 +23,7 @@
         </template>
         <el-input v-model.trim="aiReportForm.coreKeyWord" clearable placeholder="例如：Power bank, portable charger, battery" />
       </el-form-item>
-      <el-form-item label="除了已给到的核心关键词外，需要AI自行挖掘并调研的核心关键词数量" prop="count">
+      <el-form-item label="除了已给到的核心关键词外，需要AI自行挖掘并调研的核心关键词数量，建议1-3个" prop="count">
         <el-input-number v-model="aiReportForm.count" controls-position="right" :min="0" :precision="0" :step="1" />
         <div class="form-tip">未填写调研核心关键词时，此数量不能为0。</div>
       </el-form-item>
