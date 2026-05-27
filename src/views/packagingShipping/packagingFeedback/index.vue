@@ -21,30 +21,6 @@
     </vab-query-form>
 
     <el-table v-loading="loading" border :data="tableData" stripe @sort-change="handleSortChange">
-      <el-table-column align="center" label="状态" width="120">
-        <template #default="{ row }">
-          <el-dropdown trigger="click" @command="(cmd: number) => handleStatusChange(row, cmd)">
-            <el-tag style="cursor: pointer" :type="statusTagType(row.status)">
-              {{ statusLabel(row.status) }}
-              <el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-tag>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item :command="0">
-                  <el-tag size="small" type="warning">待讨论</el-tag>
-                </el-dropdown-item>
-                <el-dropdown-item :command="1">
-                  <el-tag size="small" type="primary">待执行</el-tag>
-                </el-dropdown-item>
-                <el-dropdown-item :command="2">
-                  <el-tag size="small" type="success">已解决</el-tag>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-
       <el-table-column label="反馈日期" prop="feedbackDate" sortable="custom" width="170">
         <template #default="{ row }">
           {{ row.feedbackDate ? formatDateTime(row.feedbackDate) : '' }}
@@ -95,7 +71,29 @@
       </el-table-column>
 
       <el-table-column label="产品经理" min-width="100" prop="productManager" />
-
+      <el-table-column align="center" label="状态" width="120">
+        <template #default="{ row }">
+          <el-dropdown trigger="click" @command="(cmd: number) => handleStatusChange(row, cmd)">
+            <el-tag style="cursor: pointer" :type="statusTagType(row.status)">
+              {{ statusLabel(row.status) }}
+              <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-tag>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item :command="0">
+                  <el-tag size="small" type="warning">待讨论</el-tag>
+                </el-dropdown-item>
+                <el-dropdown-item :command="1">
+                  <el-tag size="small" type="primary">待执行</el-tag>
+                </el-dropdown-item>
+                <el-dropdown-item :command="2">
+                  <el-tag size="small" type="success">已解决</el-tag>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
