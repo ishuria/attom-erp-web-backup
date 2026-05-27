@@ -3613,7 +3613,9 @@ const handleCreatePlanPo = async () => {
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
-  if (route.query.from === 'plannedPoDetail' || route.query.from === 'plannedPoCreate') {
+  if (route.query.source === 'stockReplenishmentDashboard') {
+    router.push({ path: '/storeOperations/stockReplenishmentDashboard' })
+  } else if (route.query.from === 'plannedPoDetail' || route.query.from === 'plannedPoCreate') {
     router.push({ path: '/purchase/plannedPo' })
   } else {
     router.push({ path: '/purchase/po' })

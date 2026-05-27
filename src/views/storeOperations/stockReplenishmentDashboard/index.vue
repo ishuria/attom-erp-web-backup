@@ -267,15 +267,16 @@ const handleDelete = (row: IStockReplenishmentItem) => {
 const handleCreate = async () => {
   createLoading.value = true
   try {
+    const query = { title: '采购计划创建', from: 'plannedPoCreate', source: 'stockReplenishmentDashboard' }
     const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
     const tab = handleTabs({
       ...matched.at(-1),
-      query: { title: '采购计划创建', from: 'plannedPoCreate' },
+      query,
     })
     if (tab) {
       await router.push({
         path: '/purchase/poDetail',
-        query: { title: '采购计划创建', from: 'plannedPoCreate' },
+        query,
       })
       await changeTabsMeta({ title: 'PO详情', meta: { title: `${tab.query.title}` } })
     }
