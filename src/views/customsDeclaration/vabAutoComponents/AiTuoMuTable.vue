@@ -7,6 +7,7 @@
           <el-button type="primary" @click="$emit('import')">发票导入</el-button>
           <el-button type="success" @click="$emit('match')">发票匹配</el-button>
           <el-button type="danger" @click="$emit('update-status')">无法开票</el-button>
+          <el-button type="warning" @click="$emit('archive-no-invoice')">无需开票归档</el-button>
         </template>
         <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
           <el-date-picker
@@ -195,6 +196,19 @@
       <el-table-column v-if="showInvoice" label="开票数量" min-width="100" prop="invoiceCount" />
       <el-table-column v-if="showInvoice" label="发票单位" min-width="100" prop="invoiceUnit" />
       <el-table-column v-if="showInvoice" label="发票金额" min-width="100" prop="includingTaxPrice" />
+      <el-table-column v-if="showRemark" :label="remarkLabel" min-width="220" prop="remark">
+        <template #default="{ row }">
+          <el-input
+            v-model="row.remark"
+            clearable
+            placeholder="请输入备注"
+            resize="none"
+            :rows="2"
+            type="textarea"
+            @change="$emit('update-remark', row)"
+          />
+        </template>
+      </el-table-column>
       <el-table-column v-if="showActions" align="center" label="操作" width="120">
         <template #default="{ row }">
           <el-button text type="danger" @click="$emit('delete-match', row)">删除匹配</el-button>
@@ -231,6 +245,8 @@ const props = defineProps<{
   showButtons: boolean
   showActions: boolean
   showInvoice: boolean
+  showRemark?: boolean
+  remarkLabel?: string
   queryForm: Record<string, any>
   total: number
   totalPrice: number
@@ -245,6 +261,8 @@ const emit = defineEmits([
   'size-change',
   'obtain-id-list',
   'update-status',
+  'archive-no-invoice',
+  'update-remark',
 ])
 
 const imagePreviewVisible = ref<boolean>(false)

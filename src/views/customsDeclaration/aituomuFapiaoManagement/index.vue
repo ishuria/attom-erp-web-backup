@@ -11,6 +11,7 @@
           :showButtons="true"
           :total="total"
           :totalPrice="totalPrice"
+          @archive-no-invoice="handleArchiveNoInvoice"
           @export="atmExportVisible = true"
           @import="importVisible = true"
           @match="checkMatch"
@@ -42,18 +43,40 @@
           :list="list"
           :loading="listLoading"
           :query-form="queryForm"
+          remark-label="备注"
           :show-invoice="false"
           :showActions="false"
           :showButtons="false"
+          :showRemark="true"
           :total="total"
           :totalPrice="totalPrice"
           @delete-match="deleteMatch"
           @page-change="handleCurrentChange"
           @query="queryData"
           @size-change="handleSizeChange"
+          @update-remark="handleUpdateRemark"
         />
       </el-tab-pane>
-      <el-tab-pane label="发票" :name="3">
+      <el-tab-pane label="无需开票" :name="3">
+        <ai-tuo-mu-table
+          :list="list"
+          :loading="listLoading"
+          :query-form="queryForm"
+          remark-label="无需开票原因"
+          :show-invoice="false"
+          :showActions="false"
+          :showButtons="false"
+          :showRemark="true"
+          :total="total"
+          :totalPrice="totalPrice"
+          @delete-match="deleteMatch"
+          @page-change="handleCurrentChange"
+          @query="queryData"
+          @size-change="handleSizeChange"
+          @update-remark="handleUpdateRemark"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="发票" :name="4">
         <ai-tuo-mu-invoice-table
           v-model:queryForm="invoiceQueryForm"
           :list="invoiceList"
@@ -90,6 +113,18 @@
       <template #footer>
         <el-button @click="atmExportVisible = false">取消</el-button>
         <el-button :loading="exportLoading" type="primary" @click="handleExportATM">导出</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 无需开票归档 -->
+    <vab-dialog v-model="archiveVisible" title="无需开票归档" width="24%">
+      <el-form label-position="top">
+        <el-form-item label="原因" required>
+          <el-input v-model.trim="archiveReason" placeholder="请输入无需开票原因" :rows="5" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="archiveVisible = false">取消</el-button>
+        <el-button :loading="archiveLoading" type="primary" @click="handleArchiveConfirm">确定</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -136,11 +171,15 @@ const importVisible = ref<boolean>(false)
 const matchVisible = ref<boolean>(false)
 const atmExportVisible = ref<boolean>(false)
 const exportLoading = ref<boolean>(false)
+const archiveVisible = ref<boolean>(false)
+const archiveLoading = ref<boolean>(false)
+const archiveReason = ref<string>('')
 const selectChildIdList = ref<number[]>([])
 
 const handleTabChange = (tab: TabsPaneContext) => {
   activeName.value = Number(tab.props.name)
-  if (activeName.value === 3) {
+  selectChildIdList.value = []
+  if (activeName.value === 4) {
     queryInvoiceData()
   } else {
     queryForm.status = activeName.value
@@ -165,12 +204,57 @@ const handleUpdateStatus = async () => {
     return
   }
   $baseConfirm('确定要修改为无法开票吗？', null, async () => {
-    const { data } = await aiTuoMuUpdateStatus({ ids: selectChildIdList.value })
+    const { data } = await aiTuoMuUpdateStatus({ ids: selectChildIdList.value, status: 2 })
     if (data) {
       $baseMessage('修改为无法开票成功！', 'success')
+      selectChildIdList.value = []
       queryData()
     }
   })
+}
+const handleArchiveNoInvoice = () => {
+  if (selectChildIdList.value.length === 0) {
+    $baseMessage('请选择无需开票归档的零件！！', 'error')
+    return
+  }
+  archiveReason.value = ''
+  archiveVisible.value = true
+}
+const handleArchiveConfirm = async () => {
+  if (!archiveReason.value) {
+    $baseMessage('请输入无需开票原因！', 'error')
+    return
+  }
+  archiveLoading.value = true
+  try {
+    const { data } = await aiTuoMuUpdateStatus({
+      ids: selectChildIdList.value,
+      status: 3,
+      remark: archiveReason.value,
+    })
+    if (data) {
+      $baseMessage('无需开票归档成功！', 'success')
+      selectChildIdList.value = []
+      archiveVisible.value = false
+      queryData()
+    }
+  } finally {
+    archiveLoading.value = false
+  }
+}
+const handleUpdateRemark = async (row: IAiTuoMuItem) => {
+  if (activeName.value === 3 && !row.remark) {
+    $baseMessage('请输入无需开票原因！', 'error')
+    return
+  }
+  const { data } = await aiTuoMuUpdateStatus({
+    ids: [row.id],
+    status: activeName.value,
+    remark: row.remark || '',
+  })
+  if (data) {
+    $baseMessage('备注保存成功！', 'success')
+  }
 }
 // 埃托姆发票导出
 const handleExportATM = async () => {
@@ -265,7 +349,7 @@ const handleAiTuoMuTableData = (data: IAiTuoMuItem[]) => {
 }
 
 onBeforeMount(() => {
-  if (activeName.value === 3) {
+  if (activeName.value === 4) {
     fetchInvoiceData()
   } else {
     fetchData()

@@ -64,6 +64,10 @@ export interface IAiTuoMuItem {
   contractNumber?: string
   /** 发票数量 */
   invoiceCount?: number
+  /** 发票匹配状态 */
+  status?: number
+  /** 备注/归档原因 */
+  remark?: string
 }
 
 export interface IAiTuoMuListReq {
@@ -80,7 +84,7 @@ export interface IAiTuoMuListReq {
    */
   pageSize?: number
   /**
-   * 状态 0未匹配 1已匹配
+   * 状态 0未匹配 1已匹配 2无法开票 3无需开票
    */
   status?: number
   /*

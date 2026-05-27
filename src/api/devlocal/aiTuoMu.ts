@@ -141,11 +141,11 @@ export const aiTuoMuInvoiceMatchDelete = (data: IAiTuoMuMatchDeleteReq): Promise
   })
 }
 /**
- * 埃托姆-更新无法开票
+ * 埃托姆-更新状态/备注
  * @param data
  * @returns
  */
-export const aiTuoMuUpdateStatus = (data: { ids: number[] }): Promise<IAiTuoMuBoolean> => {
+export const aiTuoMuUpdateStatus = (data: { ids: number[]; status?: number; remark?: string }): Promise<IAiTuoMuBoolean> => {
   return request({
     url: `${BASE_API}/aituomu/update/status`,
     method: 'post',
