@@ -666,18 +666,9 @@
       </template>
     </vab-dialog>
     <!-- 批量签收 -->
-    <vab-dialog v-model="signBatchVisible" title="批量签收" width="20%">
-      <el-form ref="signBatchFormRef" label-position="top" :model="signBatchForm" :rules="signBatchFormRules">
-        <el-form-item label="签收物流单号" prop="signOrder">
-          <el-input v-model="signBatchForm.signOrder" clearable />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="handleCancelSignBatch">取消</el-button>
-        <el-button :loading="batchBtnLoading" type="primary" @click="handleConfirmSignBatch">确认</el-button>
-      </template>
-    </vab-dialog>
-    <vab-print-count-dialog v-model="printCountVisible" :sign-id="_id" />
+    <vab-sign-batch-dialog v-model="signBatchVisible" :loading="batchBtnLoading" @confirm="handleConfirmSignBatch" />
+    <!-- 打印 -->
+    <vab-print-count-dialog v-model="printCountVisible" :show-signed-box-count="activeName === 0" :sign-id="_id" />
     <!-- PO明细 -->
     <po-detail v-model="poDetailVisible" :close="closePoDetail" :poSkuId="poSkuId" />
   </div>
@@ -685,7 +676,7 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
+import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash-es'
 import { CSSProperties, ref } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
@@ -721,6 +712,7 @@ import { hasPermission } from '/@/utils/permission'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import poDetail from '/@/views/packagingShipping/components/poDetail.vue'
+import VabSignBatchDialog from '/@/views/packagingShipping/vabAutoComponents/VabSignBatchDialog.vue'
 
 defineOptions({
   name: 'PendingReceipt',
@@ -890,13 +882,6 @@ const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 // 批量签收可见
 const signBatchVisible = ref<boolean>(false)
-const signBatchForm = reactive<{ signOrder: string }>({
-  signOrder: '',
-})
-const signBatchFormRef = ref<FormInstance>()
-const signBatchFormRules = reactive<FormRules<{ signOrder: string }>>({
-  signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }],
-})
 // 获取默认打印机
 const fetchDefaultPrinter = async () => {
   const { data } = await getEncasementUserPrinter()
@@ -913,10 +898,6 @@ const showPrint = (row: any) => {
   _id.value = row.signId
   printCountVisible.value = true
 }
-const handleCancelSignBatch = () => {
-  signBatchFormRef.value?.resetFields()
-  signBatchVisible.value = false
-}
 // 签收可见
 const signVisible = ref<boolean>(false)
 // 签收form
@@ -932,13 +913,14 @@ const signRules = reactive<any>({
 })
 const signFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
+const getLatestSignedBoxCount = (signedBoxCount?: string) => signedBoxCount?.split(',')[0]?.trim() || ''
 // 展示签收弹窗
 const showSignDialog = (row: any) => {
   signVisible.value = true
   copyRow.value = row
   // 默认初始化签收数量为零件采购数量
   signForm.signCount = Number(row.purchaseCount - row.signCount)
-  signForm.signedBoxCount = ''
+  signForm.signedBoxCount = getLatestSignedBoxCount(row.signedBoxCount)
 }
 // 关闭签收弹窗
 const closeSignDialog = () => {
@@ -1057,16 +1039,17 @@ const handleBatchSignLog = () => {
   classify.value = 'signBatchLog'
   wangEditorLogVisible.value = true
 }
-const handleConfirmSignBatch = async () => {
+const handleConfirmSignBatch = async (form: { signedBoxCount?: number; signOrder: string }) => {
   try {
     batchBtnLoading.value = true
     const signIds = selectRows.value.map((item: any) => item.signId).join(',')
     const { data } = await signBatch({
       signIds,
-      signOrder: signBatchForm.signOrder,
+      signedBoxCount: form.signedBoxCount,
+      signOrder: form.signOrder,
     })
     if (data) {
-      handleCancelSignBatch()
+      signBatchVisible.value = false
       batchBtnLoading.value = false
       $baseMessage('批量签收成功', 'success')
       fetchData()

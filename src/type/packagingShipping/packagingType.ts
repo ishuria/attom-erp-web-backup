@@ -861,6 +861,7 @@ export interface IUpdatePackageTaskSite {
 
 export interface ISignBatch {
   signIds: string
+  signedBoxCount?: number
   signOrder: string
 }
 /**
@@ -869,6 +870,7 @@ export interface ISignBatch {
 export interface IPrintSignReq {
   signId: number
   quantity: number
+  signedBoxCount?: number | null
 }
 /**
  * 零件签收打印响应数据

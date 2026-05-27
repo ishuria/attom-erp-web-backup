@@ -400,6 +400,7 @@ declare module 'vue' {
     VabShipmentQuantityInspection: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabShipmentQuantityInspection.vue')['default']
     VabShippingPlanChannelDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabShippingPlanChannelDialog.vue')['default']
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']
+    VabSignBatchDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabSignBatchDialog.vue')['default']
     VabSiteOperationUserSelect: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSiteOperationUserSelect.vue')['default']
     VabSiteQuantityTable: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSiteQuantityTable.vue')['default']
     VabSkuDeliveryTimeDetails: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabSkuDeliveryTimeDetails.vue')['default']
