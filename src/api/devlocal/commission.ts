@@ -678,6 +678,16 @@ export function getWalmartOperationSiteList(): Promise<{ data: { id: number; lab
   })
 }
 /**
+ * @description 运营奖金-TikTok站点列表
+ */
+export function getTikTokOperationSiteList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/platform/tiktok/site/list`,
+    method: 'get',
+  })
+}
+
+/**
  * @description 运营奖金-Amazon站点列表
  */
 export function getAmazonOperationSiteList(): Promise<{ data: { id: number; label: string }[] }> {
@@ -814,6 +824,56 @@ export function getWalmartDetailMonthList(): Promise<{ data: string[] }> {
 }
 
 /**
+ * @description 获取TikTok明细-月份列表
+ */
+export function getTikTokDetailMonthList(): Promise<{ data?: { list?: unknown[] } | unknown[]; list?: unknown[] }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/detail/month`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 运营奖金-TikTok奖金明细列表
+ */
+export function getOperationBonusTikTokCommissionDetailList(data: {
+  userId: number
+  month: string
+  site: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  orderByField: string
+  orderDirection: string
+}): Promise<{ data: { list: any[]; total: number; totalPrice: number } }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/commission/detail`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 运营奖金-TikTok明细列表
+ */
+export function getOperationBonusTikTokDetailList(data: {
+  userId: number
+  month: string
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  orderByField: string
+  orderDirection: string
+  currency?: number
+}): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/detail`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
  * @description 获取运营奖金明细-月份列表
  */
 export function getOperationCommissionDateList(): Promise<{ data: string[] }> {
@@ -877,6 +937,27 @@ export function getCurrencyOperationAsinDetail(): Promise<{ data: number }> {
 }
 
 /**
+ * @description TikTok汇总-获取币种
+ */
+export function getCurrencyOperationTikTokSummary(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/summary/currency`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description TikTok汇总-修改币种
+ */
+export function updateCurrencyOperationTikTokSummary(params: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/summary/currency/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
  * @description Walmart汇总-修改币种
  */
 export function updateCurrencyOperationWalmartSummary(params: { currency: number }): Promise<{ data: boolean }> {
@@ -894,6 +975,27 @@ export function getCurrencyOperationWalmartSummary(): Promise<{ data: number }> 
   return request({
     url: `${BASE_API}/walmart/operation/summary/currency`,
     method: 'get',
+  })
+}
+
+/**
+ * @description TikTok明细-获取币种
+ */
+export function getCurrencyOperationTikTokDetail(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/detail/currency`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description TikTok明细-修改币种
+ */
+export function updateCurrencyOperationTikTokDetail(params: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/detail/currency/update`,
+    method: 'post',
+    params,
   })
 }
 
