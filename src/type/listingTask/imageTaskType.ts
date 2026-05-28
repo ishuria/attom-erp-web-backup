@@ -551,6 +551,8 @@ export interface IPublishApprovalReq {
 export interface IPublishApprovalListReq {
   /** 搜索关键词 */
   keyword?: string
+  /** 审批状态 0待审批 1通过 2驳回 */
+  approvalStatus?: number
   pageNo: number
   pageSize: number
 }
@@ -578,4 +580,6 @@ export interface IPublishApprovalItem {
   createTime: string
   /** 审批时间 */
   approvalTime: string
+  /** 当前登录用户是否可以审批该记录 */
+  canApprove: boolean
 }

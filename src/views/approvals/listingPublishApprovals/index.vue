@@ -1,7 +1,15 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-right-panel :span="24">
+      <vab-query-form-left-panel>
+        <el-select v-model="queryForm.approvalStatus" clearable placeholder="审批状态筛选" @change="queryData">
+          <el-option label="全部" value="" />
+          <el-option label="待审批" :value="0" />
+          <el-option label="已通过" :value="1" />
+          <el-option label="已驳回" :value="2" />
+        </el-select>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input
@@ -12,6 +20,7 @@
               @keyup.enter="queryData"
             />
           </el-form-item>
+
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
@@ -117,16 +126,16 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="驳回原因" min-width="150" prop="rejectionReason">
+      <el-table-column v-if="showRejectionReasonColumn" label="驳回原因" min-width="150" prop="rejectionReason">
         <template #default="{ row }">
           <span v-if="row.rejectionReason">{{ row.rejectionReason }}</span>
           <span v-else>-</span>
         </template>
       </el-table-column>
 
-      <el-table-column fixed="right" label="操作" width="150">
+      <el-table-column v-if="showOperationColumn" fixed="right" label="操作" width="150">
         <template #default="{ row }">
-          <template v-if="row.approvalStatus === 0">
+          <template v-if="row.canApprove">
             <el-space>
               <el-link type="success" :underline="false" @click="handleApprove(row)">通过</el-link>
               <el-link type="danger" :underline="false" @click="handleReject(row)">不通过</el-link>
@@ -182,7 +191,10 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
   keyword: '',
+  approvalStatus: '',
 })
+const showOperationColumn = computed(() => queryForm.approvalStatus === '' || queryForm.approvalStatus === 0)
+const showRejectionReasonColumn = computed(() => queryForm.approvalStatus !== 1)
 
 // 驳回弹窗
 const rejectDialogVisible = ref<boolean>(false)
@@ -196,6 +208,7 @@ const fetchData = async () => {
       keyword: queryForm.keyword,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
+      approvalStatus: typeof queryForm.approvalStatus === 'number' ? queryForm.approvalStatus : undefined,
     })
     list.value = data?.list || []
     total.value = data?.total || 0
@@ -261,7 +274,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 }
 
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.columnIndex === 1) return 'clear-padding'
+  if (data.column.label === '图片') return 'clear-padding'
   return ''
 }
 
