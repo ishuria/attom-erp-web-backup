@@ -9,6 +9,9 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
+                <operation-column-setting v-model:columns="columns" />
+              </el-form-item>
+              <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   clearable
@@ -36,87 +39,19 @@
           @cell-click="contactedInputChange"
           @row-click="handleRowClick"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
-              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="订货日期" min-width="115" prop="orderTime">
-            <template #default="{ row }">
-              {{ row.orderTime ? row.orderTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="82">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
-            <template #default="{ row }">
-              {{ row.sku }}
-              <br />
-              {{ row.productName }}
-            </template>
-          </el-table-column>
-          <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)">
-            <template #default="{ row }">
-              <span v-html="row.suppliser"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="PO总数" prop="purchaseSkuNumber" />
-          <el-table-column label="好" prop="goodCount" />
-          <el-table-column label="多" prop="manyCount" />
-          <el-table-column label="留样" prop="keepSampleCount" />
-          <el-table-column label="缺" prop="lackCount" />
-          <el-table-column label="坏" prop="badCount" />
-          <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
-          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis" v-html="row.remark"></div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="售后日志" min-width="200" prop="salesLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+          <after-sales-data-columns
+            :active-name="activeName"
+            :after-sales-option="afterSalesOption"
+            :columns="columns"
+            :list="list"
+            :upload-image="uploadImage"
+            @open-po-detail="openPoDetail"
+            @preview-file="handlePreview"
+            @remove-image="handleRemove"
+            @show-preview-image="showPreviewImage"
+            @update-after-sales="handleUpdateAfterSales"
+          />
+
           <el-table-column fixed="right" label="操作" width="260">
             <template #default="{ row }">
               <el-space>
@@ -145,6 +80,9 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
+                <operation-column-setting v-model:columns="columns" />
+              </el-form-item>
+              <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   clearable
@@ -172,130 +110,19 @@
           @cell-click="contactedInputChange"
           @row-click="handleRowClick"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
-              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="订货日期" min-width="115" prop="orderTime">
-            <template #default="{ row }">
-              {{ row.orderTime ? row.orderTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="82">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
-            <template #default="{ row }">
-              {{ row.sku }}
-              <br />
-              {{ row.productName }}
-            </template>
-          </el-table-column>
-          <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)">
-            <template #default="{ row }">
-              <span v-html="row.suppliser"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="PO总数" prop="purchaseSkuNumber" />
-          <el-table-column label="好" prop="goodCount" />
-          <el-table-column label="多" prop="manyCount" />
-          <el-table-column label="留样" prop="keepSampleCount" />
-          <el-table-column label="缺" prop="lackCount" />
-          <el-table-column label="坏" prop="badCount" />
-          <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
-          <el-table-column label="已退款￥" min-width="100" prop="refundAmount">
-            <template #default="{ row }">
-              <el-input v-model="row.refundAmount" clearable @change="handleUpdateAfterSales(row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="当前售后方式" min-width="150" prop="afterSalesMethod">
-            <template #default="{ row }">
-              <el-select v-model="row.afterSalesMethod" style="min-width: 100%" @change="handleUpdateAfterSales(row)">
-                <el-option v-for="item in afterSalesOption" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="凭证上传" width="82">
-            <template #header>
-              凭证
-              <br />
-              上传
-            </template>
-            <template #default="{ row }">
-              <el-upload
-                class="component-upload"
-                :class="{ hide: row.hide }"
-                :file-list="row.imageList"
-                :http-request="(file) => uploadImage(file, row)"
-                list-type="picture-card"
-              >
-                <el-icon><plus /></el-icon>
-                <template #file="{ file }">
-                  <div>
-                    <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                    <span class="el-upload-list__item-actions">
-                      <span class="el-upload-list__item-preview" @click="handlePreview(file)">
-                        <el-icon><zoom-in /></el-icon>
-                      </span>
-                      <span class="el-upload-list__item-delete" @click="handleRemove(row)">
-                        <el-icon><delete /></el-icon>
-                      </span>
-                    </span>
-                  </div>
-                </template>
-              </el-upload>
-            </template>
-          </el-table-column>
-          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis" v-html="row.remark"></div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="售后日志" min-width="200" prop="salesLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+          <after-sales-data-columns
+            :active-name="activeName"
+            :after-sales-option="afterSalesOption"
+            :columns="columns"
+            :list="list"
+            :upload-image="uploadImage"
+            @open-po-detail="openPoDetail"
+            @preview-file="handlePreview"
+            @remove-image="handleRemove"
+            @show-preview-image="showPreviewImage"
+            @update-after-sales="handleUpdateAfterSales"
+          />
+
           <el-table-column fixed="right" label="操作" width="200">
             <template #default="{ row }">
               <div class="after-sales-actions">
@@ -327,6 +154,9 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
+                <operation-column-setting v-model:columns="columns" />
+              </el-form-item>
+              <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   clearable
@@ -354,114 +184,19 @@
           @cell-click="contactedInputChange"
           @row-click="handleRowClick"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
-              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="订货日期" min-width="115" prop="orderTime">
-            <template #default="{ row }">
-              {{ row.orderTime ? row.orderTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="82">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
-            <template #default="{ row }">
-              {{ row.sku }}
-              <br />
-              {{ row.productName }}
-            </template>
-          </el-table-column>
-          <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)">
-            <template #default="{ row }">
-              <span v-html="row.suppliser"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="PO总数" prop="purchaseSkuNumber" />
-          <el-table-column label="好" prop="goodCount" />
-          <el-table-column label="多" prop="manyCount" />
-          <el-table-column label="留样" prop="keepSampleCount" />
-          <el-table-column label="缺" prop="lackCount" />
-          <el-table-column label="坏" prop="badCount" />
-          <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
-          <el-table-column label="已退款￥" min-width="100" prop="refundAmount" />
-          <el-table-column label="当前售后方式" min-width="150" prop="afterSalesMethod">
-            <template #default="{ row }">
-              <el-select v-model="row.afterSalesMethod" disabled style="min-width: 100%">
-                <el-option v-for="item in afterSalesOption" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="凭证上传" width="82">
-            <template #header>
-              凭证
-              <br />
-              上传
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.voucherUrl"
-                style="display: block; width: 100%; height: 100%"
-                @click="showPreviewImage(row.voucherUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis" v-html="row.remark"></div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="售后日志" min-width="200" prop="salesLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+          <after-sales-data-columns
+            :active-name="activeName"
+            :after-sales-option="afterSalesOption"
+            :columns="columns"
+            :list="list"
+            :upload-image="uploadImage"
+            @open-po-detail="openPoDetail"
+            @preview-file="handlePreview"
+            @remove-image="handleRemove"
+            @show-preview-image="showPreviewImage"
+            @update-after-sales="handleUpdateAfterSales"
+          />
+
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -481,6 +216,9 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <operation-column-setting v-model:columns="columns" />
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -509,87 +247,19 @@
           @cell-click="contactedInputChange"
           @row-click="handleRowClick"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
-              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="订货日期" min-width="115" prop="orderTime">
-            <template #default="{ row }">
-              {{ row.orderTime ? row.orderTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="82">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
-            <template #default="{ row }">
-              {{ row.sku }}
-              <br />
-              {{ row.productName }}
-            </template>
-          </el-table-column>
-          <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)">
-            <template #default="{ row }">
-              <span v-html="row.suppliser"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="PO总数" prop="purchaseSkuNumber" />
-          <el-table-column label="好" prop="goodCount" />
-          <el-table-column label="多" prop="manyCount" />
-          <el-table-column label="留样" prop="keepSampleCount" />
-          <el-table-column label="缺" prop="lackCount" />
-          <el-table-column label="坏" prop="badCount" />
-          <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
-          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis" v-html="row.remark"></div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="售后日志" min-width="200" prop="salesLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+          <after-sales-data-columns
+            :active-name="activeName"
+            :after-sales-option="afterSalesOption"
+            :columns="columns"
+            :list="list"
+            :upload-image="uploadImage"
+            @open-po-detail="openPoDetail"
+            @preview-file="handlePreview"
+            @remove-image="handleRemove"
+            @show-preview-image="showPreviewImage"
+            @update-after-sales="handleUpdateAfterSales"
+          />
+
           <el-table-column fixed="right" label="操作" width="260">
             <template #default="{ row }">
               <el-space>
@@ -646,6 +316,9 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
+                <operation-column-setting v-model:columns="columns" />
+              </el-form-item>
+              <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   clearable
@@ -673,95 +346,19 @@
           @cell-click="contactedInputChange"
           @row-click="handleRowClick"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
-              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="订货日期" min-width="115" prop="orderTime">
-            <template #default="{ row }">
-              {{ row.orderTime ? row.orderTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="82">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
-            <template #default="{ row }">
-              {{ row.sku }}
-              <br />
-              {{ row.productName }}
-            </template>
-          </el-table-column>
-          <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)">
-            <template #default="{ row }">
-              <span v-html="row.suppliser"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="PO总数" prop="purchaseSkuNumber" />
-          <el-table-column label="好" prop="goodCount" />
-          <el-table-column label="多" prop="manyCount" />
-          <el-table-column label="留样" prop="keepSampleCount" />
-          <el-table-column label="缺" prop="lackCount" />
-          <el-table-column label="坏" prop="badCount" />
-          <el-table-column label="待售后￥(含税)" min-width="100" prop="salesPrice">
-            <template #header>
-              待售后￥
-              <br />
-              (含税)
-            </template>
-          </el-table-column>
-          <el-table-column label="已退款￥" min-width="100" prop="refundAmount" />
-          <el-table-column label="坏账金额￥" min-width="110" prop="badDebtPrice" />
-          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis" v-html="row.remark"></div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="售后日志" min-width="200" prop="salesLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+          <after-sales-data-columns
+            :active-name="activeName"
+            :after-sales-option="afterSalesOption"
+            :columns="columns"
+            :list="list"
+            :upload-image="uploadImage"
+            @open-po-detail="openPoDetail"
+            @preview-file="handlePreview"
+            @remove-image="handleRemove"
+            @show-preview-image="showPreviewImage"
+            @update-after-sales="handleUpdateAfterSales"
+          />
+
           <el-table-column fixed="right" label="操作" width="140">
             <template #default="{ row }">
               <el-link type="primary" underline="never" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
@@ -783,6 +380,9 @@
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <operation-column-setting v-model:columns="columns" />
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -811,89 +411,18 @@
           @cell-click="contactedInputChange"
           @row-click="handleRowClick"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
-              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="订货日期" min-width="115" prop="orderTime">
-            <template #default="{ row }">
-              {{ row.orderTime ? row.orderTime.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link type="primary" :underline="true" @click="openPoDetail(row.poSkuId)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="82">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
-            <template #default="{ row }">
-              {{ row.sku }}
-              <br />
-              {{ row.productName }}
-            </template>
-          </el-table-column>
-          <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)">
-            <template #default="{ row }">
-              <span v-html="row.suppliser"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="PO总数" prop="purchaseSkuNumber" />
-          <el-table-column label="好" prop="goodCount" />
-          <el-table-column label="多" prop="manyCount" />
-          <el-table-column label="留样" prop="keepSampleCount" />
-          <el-table-column label="缺" prop="lackCount" />
-          <el-table-column label="坏" prop="badCount" />
-          <el-table-column label="总发货" prop="sendCount" />
-          <el-table-column label="总订货" prop="orderCount" />
-          <el-table-column label="待售后￥" min-width="100" prop="salesPrice" />
-          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis" v-html="row.remark"></div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="售后日志" min-width="200" prop="salesLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+          <after-sales-data-columns
+            :active-name="activeName"
+            :after-sales-option="afterSalesOption"
+            :columns="columns"
+            :list="list"
+            :upload-image="uploadImage"
+            @open-po-detail="openPoDetail"
+            @preview-file="handlePreview"
+            @remove-image="handleRemove"
+            @show-preview-image="showPreviewImage"
+            @update-after-sales="handleUpdateAfterSales"
+          />
 
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
@@ -986,10 +515,9 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
-import { CSSProperties } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
+import type { CSSProperties } from 'vue'
 import { getDefaultStringTime } from '~/src/utils/dateUtils'
 import {
   archiveAfterSales,
@@ -1004,7 +532,9 @@ import {
   updateSalesStatus,
   uploadAfterSales,
 } from '/@/api/devlocal/packagingShipping'
-import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { getOperationColumnList } from '/@/api/devlocal/productPerformance'
+import OperationColumnSetting from '/@/components/OperationColumnSetting.vue'
+import type { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import poDetail from '/@/views/packagingShipping/components/poDetail.vue'
 
@@ -1037,6 +567,8 @@ const queryForm = reactive<any>({
   keyWord: '',
   status: 0,
 })
+
+const columns = ref<IGetOperationColumnList[]>([])
 
 const fakePurchaseData = [
   {
@@ -1320,9 +852,15 @@ const handlePreview = (file: UploadFile) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(file.url!)
 }
+
+const fetchOperationColumns = async () => {
+  const { data } = await getOperationColumnList({ type: 23 })
+  columns.value = data
+}
+
 // 待联系cellStyle
 const pendingCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex !== 4 && data.columnIndex !== 6 && data.columnIndex !== 14 && data.columnIndex !== 15) {
+  if (!['sku', 'suppliser', 'remark', 'salesLog'].includes(data.column.property)) {
     return {
       textAlign: 'center' as const,
     }
@@ -1333,10 +871,10 @@ const pendingCellStyle = (data: { row: any; column: any; rowIndex: number; colum
 }
 // 前四个tab去掉padding和颜色显示
 const pendingCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 3) {
+  if (data.column.property === 'skuImageUrl') {
     return 'clear-padding'
   }
-  if (data.columnIndex === 8) {
+  if (data.column.property === 'goodCount') {
     if (data.row.goodCount >= data.row.purchaseSkuNumber) {
       return 'green'
     }
@@ -1346,10 +884,10 @@ const pendingCellClassName = (data: { row: any; column: any; rowIndex: number; c
 }
 // 已联系和已完成去掉padding和颜色显示
 const contactedCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 3 || data.columnIndex === 16) {
+  if (['skuImageUrl', 'voucherUrl'].includes(data.column.property)) {
     return 'clear-padding'
   }
-  if (data.columnIndex === 8) {
+  if (data.column.property === 'goodCount') {
     if (data.row.goodCount >= data.row.purchaseSkuNumber) {
       return 'green'
     }
@@ -1359,10 +897,10 @@ const contactedCellClassName = (data: { row: any; column: any; rowIndex: number;
 }
 // 坏账去掉padding和颜色显示
 const badDebtsCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 3) {
+  if (data.column.property === 'skuImageUrl') {
     return 'clear-padding'
   }
-  if (data.columnIndex === 9) {
+  if (data.column.property === 'goodCount') {
     if (data.row.goodCount >= data.row.purchaseSkuNumber) {
       return 'green'
     }
@@ -1422,7 +960,7 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
@@ -1434,6 +972,7 @@ onBeforeMount(() => {
     activeName.value = Number(tab)
     queryForm.status = Number(tab)
   }
+  await fetchOperationColumns()
   fetchData()
 })
 </script>
@@ -1458,25 +997,25 @@ onBeforeMount(() => {
         flex-direction: column;
         height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
 
-        .vab-query-form {
-          .left-panel {
-            margin-bottom: 5px !important;
-          }
-          .el-form {
-            .el-form-item:first-child {
-              margin: 0 !important;
+        // .vab-query-form {
+        //   .left-panel {
+        //     margin-bottom: 5px !important;
+        //   }
+        //   .el-form {
+        //     .el-form-item:first-child {
+        //       margin: 0 !important;
 
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
-              }
-            }
-            .el-form-item:last-child {
-              margin: 0 !important;
-            }
-          }
-        }
+        //       .el-check-tag,
+        //       .el-form-item__label {
+        //         margin: 0 10px 5px 0;
+        //         border-radius: 99px;
+        //       }
+        //     }
+        //     .el-form-item:last-child {
+        //       margin: 0 !important;
+        //     }
+        //   }
+        // }
 
         .el-table {
           flex: 1;
@@ -1506,27 +1045,6 @@ onBeforeMount(() => {
 :deep(.green) {
   color: #67c23a;
 }
-// 设置下面表格的图片
-.component-upload {
-  width: 81px;
-  height: 81.2px;
-}
-.component-upload :deep(.el-upload-list--picture-card) {
-  width: 100%;
-  height: 100%;
-}
-.component-upload :deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  transition: none;
-}
-.component-upload :deep(.el-upload--picture-card) {
-  width: 100%;
-  height: 100%;
-}
 .overflow-text {
   display: block;
   max-height: 65.2px;
@@ -1547,16 +1065,6 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
-}
-
-.copySku {
-  cursor: pointer;
-  -webkit-user-select: text;
-  user-select: text;
-  transition: all 0.3s;
-  &:hover {
-    color: #000;
-  }
 }
 
 .after-sales-actions {
