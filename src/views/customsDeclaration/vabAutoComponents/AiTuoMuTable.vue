@@ -7,8 +7,8 @@
           <el-button type="primary" @click="$emit('import')">发票导入</el-button>
           <el-button type="success" @click="$emit('match')">发票匹配</el-button>
           <el-button type="danger" @click="$emit('update-status')">无法开票</el-button>
-          <el-button type="warning" @click="$emit('archive-no-invoice')">无需开票归档</el-button>
         </template>
+        <el-button v-if="showButtons || showArchiveNoInvoice" type="warning" @click="$emit('archive-no-invoice')">无需开票归档</el-button>
         <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
           <el-date-picker
             v-model="queryForm.purchaseDate"
@@ -245,6 +245,7 @@ const props = defineProps<{
   showButtons: boolean
   showActions: boolean
   showInvoice: boolean
+  showArchiveNoInvoice?: boolean
   showRemark?: boolean
   remarkLabel?: string
   queryForm: Record<string, any>
