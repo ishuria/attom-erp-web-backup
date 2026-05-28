@@ -10,6 +10,7 @@ import type {
   IGetOperationAmazonParentAsinRankListReq,
   IGetOperationAmazonSKUListReq,
   IGetOperationAmazonSKUListRes,
+  IGetOperationTiktokListRes,
   IGetOperationAmazonSkuRankListReq,
   IGetOperationAmazonSkuRankListRes,
   IGetOperationAmazonSkuVocListRes,
@@ -622,6 +623,56 @@ export function getWalmartOptionUserList(): Promise<{ data: { id: number; label:
   return request({
     url: `${BASE_API}/walmart/operation/user/list`,
     method: 'get',
+  })
+}
+
+// ------------------------------ Tiktok ------------------------------
+/**
+ * @description 产品表现-Tiktok列表
+ */
+export function getOperationTiktokList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationTiktokListRes> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/list`,
+    method: 'post',
+    data,
+  })
+}
+
+export function getTiktokSiteList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/platform/tiktok/site/list`,
+    method: 'get',
+  })
+}
+
+export function getTiktokOptionUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/tiktok/operation/user/list`,
+    method: 'get',
+  })
+}
+
+export function updateOperationTiktokOperateTypeList(data: { id: number; typeId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/operateType/update`,
+    method: 'post',
+    data,
+  })
+}
+
+export function updateRemarkTiktokOperation(data: { id: number; remark: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/remark/update`,
+    method: 'post',
+    data,
+  })
+}
+
+export function updateOperationTiktokDisContinuedStatus(data: { skuId: number; status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/tiktok/discontinuedStatus/update`,
+    method: 'post',
+    data,
   })
 }
 

@@ -15,6 +15,77 @@ export interface IGetOperationAmazonSKUListRes {
   }
 }
 
+export interface IGetOperationTiktokListRes {
+  data: {
+    list: IGetOperationTiktokList[]
+    total: number
+  }
+}
+
+export interface IGetOperationTiktokList {
+  id?: number
+  sku?: string
+  skuId?: number
+  skuImgUrl?: string
+  productDesc?: string
+  productId?: string
+  address?: string
+  site?: number
+  siteName?: string
+  flag?: string
+  status?: string
+  currentSalesNumber?: number
+  currentSalesOrder?: number
+  stopProductStatus?: number
+  operationTypeId?: number
+  operationTypeList?: OperationTypeList[]
+  operationUserId?: number
+  operationUserName?: string
+  operationRemark?: string
+  sellingPrice?: number
+  grossProfit?: number
+  monthSalesVolume?: number
+  monthSalesPrice?: number
+  monthGrossProfit?: number
+  monthReturnGoods?: number
+  monthRefund?: number
+  newArrivalDay?: number
+  availableInventory?: number
+  fbaCount?: number
+  acceptingCount?: number
+  recentlyInboundStorage?: string
+  inboundStorageTotal?: number
+  esAvailableSaleDay?: number
+  esAvailableSaleDayTotal?: number
+  outOfStock?: number
+  profitLossSellingPrice?: number
+  grossSellingPrice?: number
+  operateSuggestion?: string
+  rating?: number
+  commentsNumbers?: number
+  inventoryAgeLevel1Days?: number
+  inventoryAgeLevel1Value?: number
+  inventoryAgeLevel2Days?: number
+  inventoryAgeLevel2Value?: number
+  inventoryAgeLevel3Days?: number
+  inventoryAgeLevel3Value?: number
+  currencyIcon?: string
+  currencyCode?: string
+  nowSupplementCalcu?: number
+  originalNowSupplement?: number
+  orderRemark?: string
+  recommendCount?: number
+  avgTime?: string
+  latestRestock?: string
+  developName?: string
+  procurementManager?: string
+  orderCount?: number
+  orderTotalNumber?: number
+  quantityReceived?: number
+  totalClaimCount?: number
+  saleVolumeList?: number[]
+}
+
 export interface IGetOperationAmazonSKUList {
   /**
    * 接受中数量
@@ -1279,6 +1350,8 @@ export interface IGetOperationColumnList {
   width?: string
   minWidth?: string
   isFixed?: boolean
+  align?: string
+  showOverflowTooltip?: boolean
   sortable?: boolean
 }
 /**
