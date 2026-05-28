@@ -19,6 +19,45 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
+              </template>
+              <vab-draggable
+                v-model="columns"
+                :animation="600"
+                filter=".non-draggable"
+                handle=".handle"
+                :on-end="handleEnd"
+                :on-move="handleMove"
+              >
+                <div
+                  v-for="item in columns"
+                  :key="item.label"
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon icon="eye-line" />
+                  </span>
+                  <span
+                    v-else
+                    class="icon-hover"
+                    style="display: flex; align-items: center; cursor: pointer"
+                    @click="handleChecked(item)"
+                  >
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
+          </el-form-item>
+          <el-form-item>
             <el-input
               v-model.trim="queryForm.keyWord"
               class="search-input"
@@ -66,235 +105,183 @@
         </template>
       </el-table-column>
       <el-table-column fixed="left" label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
-      <el-table-column fixed="left" label="已有零件id" prop="componentId" :width="flexColumnWidth(list, '已有零件id', 'componentId')" />
+      <el-table-column fixed="left" label="已有零件ID" prop="componentId" :width="flexColumnWidth(list, '已有零件ID', 'componentId')" />
       <el-table-column fixed="left" label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
-      <el-table-column label="属于SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 80, 27)">
-        <template #default="{ row }">
-          <div v-html="row.sku"></div>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="UPC" prop="upc" :width="calculateBrColumnWidth(list, (row: any) => row.upc, 40)">
-        <template #default="{ row }">
-          <div v-html="row.upc"></div>
-        </template>
-      </el-table-column>
       <el-table-column
-        label="北美FNSKU"
-        prop="northAmericaFnSku"
-        :width="calculateBrColumnWidth(list, (row: any) => row.northAmericaFnSku, 90)"
+        v-for="(col, index) in checkList"
+        :key="index"
+        :align="col.align"
+        :fixed="col.isFixed"
+        :label="col.label"
+        :min-width="handleWidth(col)"
+        :prop="col.prop"
+        :show-overflow-tooltip="col.showOverflowTooltip"
+        :width="col.width"
       >
-        <template #default="{ row }">
-          <div v-html="row.northAmericaFnSku"></div>
+        <template #header>
+          <template v-if="col.prop === 'count'">
+            每零件单位有
+            <br />
+            多少个开票单位
+          </template>
+          <template v-else-if="col.prop === 'unit'">
+            开票
+            <br />
+            单位
+          </template>
+          <template v-else-if="col.prop === 'bgWeightStatus'">
+            报关重量使用
+            <br />
+            开票重量
+          </template>
+          <template v-else-if="col.prop === 'statutoryUnit'">
+            法定第
+            <br />
+            1单位
+          </template>
+          <template v-else-if="col.prop === 'statutoryCount'">
+            每零件单位有多少
+            <br />
+            个法定第1单位
+          </template>
+          <template v-else-if="col.prop === 'taxRate'">
+            出口退
+            <br />
+            税税率
+          </template>
+          <template v-else>{{ col.label }}</template>
         </template>
-      </el-table-column>
-      <el-table-column label="欧洲FNSKU" prop="europeFnSku" :width="calculateBrColumnWidth(list, (row: any) => row.europeFnSku, 90)">
+
         <template #default="{ row }">
-          <div v-html="row.europeFnSku"></div>
-        </template>
-      </el-table-column>
-      <el-table-column label="不报关" min-width="80" prop="customsDeclarationStatus">
-        <template #default="{ row }">
-          <el-checkbox
-            v-model="row.customsDeclarationStatus"
-            class="custom-checkbox"
-            :false-value="0"
-            :true-value="1"
-            @change="handleChangeCustomsStatus(row)"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="货源地" min-width="120" prop="placeOrigin">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.placeOrigin" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
-          </div>
-          <span>{{ row.placeOrigin }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="中国报关品名" min-width="140" prop="customsDeclarationNameZh">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input
-              v-model.trim="row.customsDeclarationNameZh"
-              @blur="clickCancel2($event, row)"
-              @keypress.enter="clickCancel2($event, row)"
+          <template v-if="identifierColumnProps.includes(col.prop)">
+            <el-tooltip v-if="isIdentifierOverflow(row, col.prop)" effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip identifier-tooltip" v-html="getIdentifierFullHtml(row, col.prop)"></div>
+              </template>
+              <div class="identifier-cell" v-html="getIdentifierDisplayHtml(row, col.prop)"></div>
+            </el-tooltip>
+            <div v-else class="identifier-cell" v-html="getIdentifierDisplayHtml(row, col.prop)"></div>
+          </template>
+          <template v-else-if="col.prop === 'customsDeclarationStatus'">
+            <el-checkbox
+              v-model="row.customsDeclarationStatus"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleChangeCustomsStatus(row)"
             />
-          </div>
-          <span>{{ row.customsDeclarationNameZh }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="每零件单位有多少个开票单位" min-width="140" prop="count">
-        <template #header>
-          每零件单位有
-          <br />
-          多少个开票单位
-        </template>
-        <template #default="{ row }">
-          <div class="none">
-            <el-input
-              v-model="row.count"
-              min="0"
-              placeholder="请输入正数"
-              step="0.01"
-              type="number"
-              @blur="clickCancel2($event, row)"
-              @keypress.enter="clickCancel2($event, row)"
-            />
-          </div>
-          <span>{{ row.count }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="开票单位" min-width="90" prop="unit">
-        <template #header>
-          开票
-          <br />
-          单位
-        </template>
-        <template #default="{ row }">
-          <div class="none">
-            <el-input
-              v-model="row.unit"
-              placeholder="请输入文字，不能为纯数字"
-              @blur="clickCancel2($event, row)"
-              @keypress.enter="clickCancel2($event, row)"
-            />
-          </div>
-          <span>{{ row.unit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="报关重量使用开票重量" min-width="140" prop="bgWeightStatus">
-        <template #header>
-          报关重量使用
-          <br />
-          开票重量
-        </template>
-        <template #default="{ row }">
-          <el-select style="min-width: 100%" @change="handleCustomsChange(row)">
-            <el-option v-for="item in option" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column label="开票型号" min-width="100" prop="type">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.type" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
-          </div>
-          <span>{{ row.type }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="法定第1单位" min-width="90" prop="statutoryUnit">
-        <template #header>
-          法定第
-          <br />
-          1单位
-        </template>
-        <!-- <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.statutoryUnit" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
-          </div>
-          <span>{{ row.statutoryUnit }}</span>
-        </template> -->
-      </el-table-column>
-      <el-table-column label="每零件单位有多少个法定第1单位" min-width="160" prop="statutoryCount">
-        <template #header>
-          每零件单位有多少
-          <br />
-          个法定第1单位
-        </template>
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.statutoryCount" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
-          </div>
-          <span>{{ row.statutoryCount }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column label="" min-width="100" prop="coveredWeightStatus" >
-        <template #header>
-          报关覆盖<br>实际净重
-        </template>
-        <template #default="{ row }">
-          <el-checkbox v-model="row.coveredWeightStatus" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleWeightStatusChange(row)"/>
-        </template>
-      </el-table-column> -->
-      <el-table-column label="品牌" prop="brank" :width="flexColumnWidth(list, '品牌', 'brank', 30)">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.brank }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="HS" min-width="180" prop="hsId">
-        <template #default="{ row }">
-          <div class="hs-select-container">
-            <el-select v-model="row.hsId" filterable placeholder="请选择HS" @change="handleCustomsChange(row)">
-              <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
+          </template>
+          <template v-else-if="col.prop === 'placeOrigin'">
+            <div class="none">
+              <el-input v-model="row.placeOrigin" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
+            </div>
+            <span>{{ row.placeOrigin }}</span>
+          </template>
+          <template v-else-if="col.prop === 'customsDeclarationNameZh'">
+            <div class="none">
+              <el-input
+                v-model.trim="row.customsDeclarationNameZh"
+                @blur="clickCancel2($event, row)"
+                @keypress.enter="clickCancel2($event, row)"
+              />
+            </div>
+            <span>{{ row.customsDeclarationNameZh }}</span>
+          </template>
+          <template v-else-if="col.prop === 'count'">
+            <div class="none">
+              <el-input
+                v-model="row.count"
+                min="0"
+                placeholder="请输入正数"
+                step="0.01"
+                type="number"
+                @blur="clickCancel2($event, row)"
+                @keypress.enter="clickCancel2($event, row)"
+              />
+            </div>
+            <span>{{ row.count }}</span>
+          </template>
+          <template v-else-if="col.prop === 'unit'">
+            <div class="none">
+              <el-input
+                v-model="row.unit"
+                placeholder="请输入文字，不能为纯数字"
+                @blur="clickCancel2($event, row)"
+                @keypress.enter="clickCancel2($event, row)"
+              />
+            </div>
+            <span>{{ row.unit }}</span>
+          </template>
+          <template v-else-if="col.prop === 'bgWeightStatus'">
+            <el-select style="min-width: 100%" @change="handleCustomsChange(row)">
+              <el-option v-for="item in option" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <el-button
-              v-if="row.hsId"
-              circle
-              class="copy-btn"
-              :icon="CopyDocument"
-              size="small"
-              type="primary"
-              @click="handleClip(getHsName(row.hsId))"
-            />
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="出口退税税率" min-width="90" prop="taxRate">
-        <template #header>
-          出口退
-          <br />
-          税税率
-        </template>
-        <template #default="{ row }">
-          {{ row.taxRate != null ? row.taxRate + '%' : '' }}
-        </template>
-      </el-table-column>
-      <el-table-column label="申报要素" min-width="200" prop="declarationElements">
-        <template #default="{ row }">
-          <el-tooltip effect="dark" placement="top">
-            <template #content>
-              <div class="custom-tooltip">{{ row.declarationElements }}</div>
-            </template>
-            <div class="multi-line-ellipsis">{{ row.declarationElements }}</div>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="申报要素缩写" min-width="230" prop="declarationElementsAbbreviation">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input
-              v-model="row.declarationElementsAbbreviation"
-              type="textarea"
-              @blur="clickCancel($event, row)"
-              @keypress.enter="clickCancel($event, row)"
-            />
-          </div>
-          <span>{{ row.declarationElementsAbbreviation }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column label="云舟采购合同品名" min-width="180" prop="contractName">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.contractName" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.contractName }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column label="云舟采购价格系数" min-width="100" prop="ratio">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.ratio" clearable @blur="clickRatioCancel($event, row)" @keyup.enter="clickRatioCancel($event, row)" />
-          </div>
-          <span>{{ row.ratio }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="历史SKU" min-width="300" prop="historySku">
-        <template #default="{ row }">
-          <span class="history-sku-text">{{ row.historySku }}</span>
+          </template>
+          <template v-else-if="col.prop === 'type'">
+            <div class="none">
+              <el-input v-model="row.type" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
+            </div>
+            <span>{{ row.type }}</span>
+          </template>
+          <template v-else-if="col.prop === 'statutoryCount'">
+            <div class="none">
+              <el-input v-model="row.statutoryCount" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
+            </div>
+            <span>{{ row.statutoryCount }}</span>
+          </template>
+          <template v-else-if="col.prop === 'brank'">
+            <div class="none">
+              <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.brank }}</span>
+          </template>
+          <template v-else-if="col.prop === 'hsId'">
+            <div class="hs-select-container">
+              <el-select v-model="row.hsId" filterable placeholder="请选择HS" @change="handleCustomsChange(row)">
+                <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
+              </el-select>
+              <el-button
+                v-if="row.hsId"
+                circle
+                class="copy-btn"
+                :icon="CopyDocument"
+                size="small"
+                type="primary"
+                @click="handleClip(getHsName(row.hsId))"
+              />
+            </div>
+          </template>
+          <template v-else-if="col.prop === 'taxRate'">
+            {{ row.taxRate != null ? row.taxRate + '%' : '' }}
+          </template>
+          <template v-else-if="col.prop === 'declarationElements'">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ row.declarationElements }}</div>
+              </template>
+              <div class="multi-line-ellipsis">{{ row.declarationElements }}</div>
+            </el-tooltip>
+          </template>
+          <template v-else-if="col.prop === 'declarationElementsAbbreviation'">
+            <div class="none">
+              <el-input
+                v-model="row.declarationElementsAbbreviation"
+                type="textarea"
+                @blur="clickCancel($event, row)"
+                @keypress.enter="clickCancel($event, row)"
+              />
+            </div>
+            <span>{{ row.declarationElementsAbbreviation }}</span>
+          </template>
+          <template v-else-if="col.prop === 'ratio'">
+            <div class="none">
+              <el-input v-model="row.ratio" clearable @blur="clickRatioCancel($event, row)" @keyup.enter="clickRatioCancel($event, row)" />
+            </div>
+            <span>{{ row.ratio }}</span>
+          </template>
+          <template v-else>
+            {{ row[col.prop] }}
+          </template>
         </template>
       </el-table-column>
       <template #empty>
@@ -367,6 +354,7 @@ import { CopyDocument, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import {
   getCustomsClearanceRatio,
   getHsSelectList,
@@ -376,7 +364,9 @@ import {
   updateProductCustomsClearance,
   updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import SkuPermission from '/@/permissions/sku'
+import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
 import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -509,42 +499,63 @@ const handleStatus2Change = async () => {
   await fetchData()
   status2Loading.value = false
 }
-const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const label = data.column.label
 
-  if (['零件名', '供应商', '属于SKU', 'UPC', '北美FNSKU', '欧洲FNSKU'].includes(label)) {
+const readonlyProps = new Set([
+  'componentImgUrl',
+  'componentName',
+  'componentId',
+  'suppliser',
+  'sku',
+  'upc',
+  'northAmericaFnSku',
+  'europeFnSku',
+  'taxRate',
+  'statutoryUnit',
+  'historySku',
+])
+const identifierColumnProps = ['sku', 'upc', 'northAmericaFnSku', 'europeFnSku', 'historySku']
+const leftAlignProps = new Set([
+  'componentName',
+  'suppliser',
+  'sku',
+  'upc',
+  'northAmericaFnSku',
+  'europeFnSku',
+  'declarationElements',
+  'declarationElementsAbbreviation',
+  'historySku',
+])
+
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const prop = data.column.property
+  const textAlign = leftAlignProps.has(prop) ? 'left' : 'center'
+
+  if (readonlyProps.has(prop)) {
     return {
-      color: '#999',
-      cursor: 'not-allowed',
-      textAlign: 'left',
-    }
-  } else if (label === '申报要素' || label === '申报要素缩写') {
-    return {
-      textAlign: 'left',
-      cursor: 'pointer',
-    }
-  } else if (label === '出口退税税率' || label === '法定第1单位') {
-    return {
-      color: '#999',
-      cursor: 'not-allowed',
-      textAlign: 'center',
-    }
-  } else if (label === '历史SKU') {
-    return {
-      textAlign: 'left',
+      cursor: 'default',
+      textAlign,
     }
   } else {
     return {
-      textAlign: 'center',
       cursor: 'pointer',
+      textAlign,
     }
   }
 }
 const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
+  const classNames: string[] = []
   if (data.columnIndex === 0) {
-    return 'clear-padding'
+    classNames.push('clear-padding')
   }
-  return ''
+  if (readonlyProps.has(data.column.property)) {
+    classNames.push('readonly-cell')
+  } else {
+    classNames.push('editable-cell')
+  }
+  if (identifierColumnProps.includes(data.column.property)) {
+    classNames.push('full-content-cell')
+  }
+  return classNames.join(' ')
 }
 let copyRow: any
 let _row: any
@@ -779,42 +790,71 @@ const handleCustomsChange = async (row: any) => {
   }
 }
 
+// 不合并(按供应商行独立展示)的列
+const noMergeProps = new Set([
+  'componentImgUrl',
+  'suppliser',
+  'europeFnSku',
+  'customsDeclarationStatus',
+  'placeOrigin',
+  'customsDeclarationNameZh',
+  'count',
+  'unit',
+  'bgWeightStatus',
+  'statutoryCount',
+])
 // col合并方法
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  // 设置需要合并的列
-  if (
-    columnIndex !== 0 &&
-    columnIndex !== 3 &&
-    columnIndex !== 7 &&
-    columnIndex !== 8 &&
-    columnIndex !== 9 &&
-    columnIndex !== 10 &&
-    columnIndex !== 11 &&
-    columnIndex !== 12 &&
-    columnIndex !== 13 &&
-    columnIndex !== 16
-  ) {
-    // 获取当前row的零件id
-    const pId = row.pId
-    // 默认不跨行
-    let rowspan = 1
-    // 遍历后端返回的数据
-    for (let i = rowIndex + 1; i < list.value.length; i++) {
-      // 如果零件id一样需要合并
-      if (list.value[i].pId === pId) {
-        rowspan++
-      } else {
-        break
-      }
-    }
-    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || list.value[rowIndex - 1].pId !== pId) {
-      return { rowspan, colspan: 1 }
+const objectSpanMethod = ({ row, rowIndex, column }: any) => {
+  if (noMergeProps.has(column.property)) return
+  // 获取当前row的零件id
+  const pId = row.pId
+  // 默认不跨行
+  let rowspan = 1
+  // 遍历后端返回的数据
+  for (let i = rowIndex + 1; i < list.value.length; i++) {
+    // 如果零件id一样需要合并
+    if (list.value[i].pId === pId) {
+      rowspan++
     } else {
-      return { rowspan: 0, colspan: 0 }
+      break
     }
   }
+  // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+  if (rowIndex === 0 || list.value[rowIndex - 1].pId !== pId) {
+    return { rowspan, colspan: 1 }
+  } else {
+    return { rowspan: 0, colspan: 0 }
+  }
 }
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+const splitIdentifierValue = (value: unknown) =>
+  String(value ?? '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .split(/[,，\n]/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+
+const getIdentifierParts = (row: any, prop: string) => splitIdentifierValue(row[prop])
+
+const getIdentifierDisplayHtml = (row: any, prop: string) => {
+  const parts = getIdentifierParts(row, prop)
+  const displayParts = parts.length > 3 ? [...parts.slice(0, 3), '...'] : parts
+  return displayParts.map(escapeHtml).join('<br />')
+}
+
+const getIdentifierFullHtml = (row: any, prop: string) => getIdentifierParts(row, prop).map(escapeHtml).join('<br />')
+
+const isIdentifierOverflow = (row: any, prop: string) => getIdentifierParts(row, prop).length > 3
+
+const getIdentifierWidthContent = (row: any, prop: string) => getIdentifierParts(row, prop).join('<br />')
 
 const fetchData = async () => {
   listLoading.value = true
@@ -822,12 +862,6 @@ const fetchData = async () => {
   list.value = data.list
   total.value = data.total
   listLoading.value = false
-  list.value.forEach((item: any) => {
-    item.sku = item.sku.replaceAll(',', '<br />')
-    item.northAmericaFnSku = item.northAmericaFnSku.replaceAll(',', '<br />')
-    item.upc = item.upc.replaceAll(',', '<br />')
-    item.europeFnSku = item.europeFnSku.replaceAll(',', '<br />')
-  })
   // list.value.sort((a: any, b: any) => {
   //   return b.pId - a.pId
   // })
@@ -865,11 +899,73 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 
+// 列自定义(显示/隐藏 + 拖拽排序)
+const COLUMN_META: Record<string, { align?: string; showOverflowTooltip?: boolean; width?: (rows: any[]) => string | number }> = {
+  sku: { width: (rows) => calculateBrColumnWidth(rows, (row: any) => getIdentifierWidthContent(row, 'sku'), 80, 27) },
+  northAmericaFnSku: { width: (rows) => calculateBrColumnWidth(rows, (row: any) => getIdentifierWidthContent(row, 'northAmericaFnSku'), 90) },
+  europeFnSku: { width: (rows) => calculateBrColumnWidth(rows, (row: any) => getIdentifierWidthContent(row, 'europeFnSku'), 90) },
+  brank: { width: (rows) => flexColumnWidth(rows, '品牌', 'brank', 30) },
+  declarationElements: { showOverflowTooltip: true },
+  declarationElementsAbbreviation: { showOverflowTooltip: true },
+  historySku: { width: (rows) => calculateBrColumnWidth(rows, (row: any) => getIdentifierWidthContent(row, 'historySku'), 120, 27) },
+}
+
+const handleWidth = (col: any) => {
+  const metaWidth = COLUMN_META[col.prop]?.width?.(list.value)
+  return metaWidth ?? col.minWidth
+}
+
+const columns = ref<any>([])
+const checkList = computed(() => columns.value.filter((_: any) => _.checked))
+
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 22 })
+  columns.value = data
+  columns.value.forEach((item: IGetOperationColumnList) => {
+    item.minWidth = item.width
+    delete item.width
+    const meta = COLUMN_META[item.prop]
+    if (meta?.align) item.align = meta.align
+    if (meta?.showOverflowTooltip) item.showOverflowTooltip = meta.showOverflowTooltip
+  })
+}
+
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
+
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false
+  }
+  return true
+}
+
+const handleEnd = async () => {
+  const req = columns.value.map((item: IGetOperationColumnList, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+
 onBeforeMount(() => {
   const { pageNo, pageSize } = route.query
   if (pageNo) queryForm.pageNo = Number(pageNo)
   if (pageSize) queryForm.pageSize = Number(pageSize)
   fetchHsSelectList()
+  fetchColumn()
   fetchData()
 })
 
@@ -887,6 +983,9 @@ const getHsName = (id: number | string) => {
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
+}
+:deep(.el-table .el-table__body td.full-content-cell .cell) {
+  max-height: none;
 }
 
 .custom-checkbox {
@@ -913,6 +1012,18 @@ const getHsName = (id: number | string) => {
 .el-table :deep(.select-row > td) {
   background-color: #7bddde !important;
 }
+.el-table :deep(td.editable-cell) {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.el-table :deep(td.editable-cell:hover) {
+  background-color: var(--el-color-primary-light-9) !important;
+  box-shadow: inset 0 0 0 1px var(--el-color-primary-light-5);
+}
+.el-table :deep(.select-row > td) {
+  background-color: #7bddde !important;
+}
 
 .hs-select-container {
   display: flex;
@@ -930,5 +1041,33 @@ const getHsName = (id: number | string) => {
 .history-sku-text {
   white-space: pre-wrap;
   word-break: break-all;
+}
+.identifier-cell,
+.identifier-tooltip {
+  white-space: normal;
+  word-break: break-all;
+}
+.identifier-tooltip {
+  max-width: 420px;
+  max-height: 360px;
+  overflow: auto;
+}
+.handle {
+  cursor: grab;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2;
+}
+.disabled-handle {
+  cursor: not-allowed;
 }
 </style>
