@@ -30,6 +30,12 @@
               <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleOpenFilter">筛选</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
+          </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="6">
@@ -92,7 +98,6 @@
       </el-table-column>
       <el-table-column label="产品描述" min-width="230" prop="productDesc" show-overflow-tooltip />
       <el-table-column label="站点" prop="siteName" width="110" />
-      <el-table-column label="币种" prop="currencyCode" width="78" />
       <el-table-column label="状态" prop="status" width="110">
         <template #default="{ row }">
           <el-tag :type="row.status === 'PUBLISHED' || row.status === 'ONLINE' ? 'success' : 'info'">{{ row.status || '-' }}</el-tag>
@@ -236,6 +241,19 @@
 
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
 
+    <vab-operational-classify :ope-classify-visible="opeClassifyVisible" @update-visible="closeOpeClassify" />
+
+    <vab-filter-walmart-dialog
+      :fetch-operation-user-api="getTiktokOptionUserList"
+      :filter-visible="filterVisible"
+      :loading="filterLoading"
+      month-profit-label="月毛利润"
+      :operation-user-id="queryForm.operationUserId"
+      :saved-filter-data="queryForm"
+      @update-filter="handleConfirmFilter"
+      @update-visible="handleCloseFilterDialog"
+    />
+
     <vab-dialog v-model="remarkVisible" title="运营备注" width="420px">
       <el-input v-model="remark" placeholder="请输入运营备注" :rows="12" type="textarea" />
       <template #footer>
@@ -288,6 +306,9 @@ const imagePreviewList = ref<string[]>([])
 const remarkVisible = ref(false)
 const remark = ref('')
 const currentRow = ref<IGetOperationTiktokList>({})
+const filterLoading = ref(false)
+const filterVisible = ref(false)
+const opeClassifyVisible = ref(false)
 
 const queryForm = reactive<any>({
   keyWord: '',
@@ -384,6 +405,28 @@ const handleUpdateStopStatus = async (row: IGetOperationTiktokList) => {
     skuId: row.id!,
     status: row.stopProductStatus!,
   })
+}
+
+const handleOpenFilter = () => {
+  filterVisible.value = true
+}
+
+const handleCloseFilterDialog = (value: boolean) => {
+  filterVisible.value = value
+}
+
+const handleConfirmFilter = (filterForm: any) => {
+  Object.assign(queryForm, filterForm)
+  filterVisible.value = false
+  queryData()
+}
+
+const showOpeClassify = () => {
+  opeClassifyVisible.value = true
+}
+
+const closeOpeClassify = () => {
+  opeClassifyVisible.value = false
 }
 
 const confirmUpdateRemark = async () => {

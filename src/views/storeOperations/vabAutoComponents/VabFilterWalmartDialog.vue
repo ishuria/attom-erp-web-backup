@@ -23,7 +23,7 @@
           <el-input-number v-model="filterForm.sellPriceMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
-      <el-form-item label="月净利润">
+      <el-form-item :label="monthProfitLabel">
         <div class="flex">
           <el-input-number v-model="filterForm.monthProfitMin" :min="0" placeholder="最小值" style="flex: 1" />
           <span style="color: #303133; white-space: nowrap">至</span>
@@ -87,14 +87,18 @@ const props = defineProps<{
   loading: boolean
   savedFilterData?: any
   operationUserId?: number
+  fetchOperationUserApi?: () => Promise<{ data: { id: number; label: string }[] }>
+  monthProfitLabel?: string
 }>()
 watchEffect(() => {
   dflag.value = props.filterVisible
 })
 const myName = useUserStore().getUsername
+const monthProfitLabel = computed(() => props.monthProfitLabel || '月净利润')
 const operationUserList = ref<{ id: number; label: string }[]>([])
 const fetchOperationUserList = async () => {
-  const { data } = await getWalmartOptionUserList()
+  const operationUserApi = props.fetchOperationUserApi || getWalmartOptionUserList
+  const { data } = await operationUserApi()
   operationUserList.value = data
   operationUserList.value.unshift({ id: -1, label: '全部' })
   filterForm.operationUserId = props.operationUserId || -1
