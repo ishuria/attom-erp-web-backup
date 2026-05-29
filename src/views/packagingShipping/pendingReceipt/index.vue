@@ -543,9 +543,10 @@
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <wang-editor
-      :classify="classify"
       :content="progressLogCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="pendingReceipt"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="clickLogBool"
@@ -1036,7 +1037,7 @@ const handleBatchSignLog = () => {
   detailId.value = 0
   progressLogCopy.value = ''
   wangEditorTitle.value = '批量新增跟单日志'
-  classify.value = 'signBatchLog'
+  draftField.value = 'signBatchLog'
   wangEditorLogVisible.value = true
 }
 const handleConfirmSignBatch = async (form: { signedBoxCount?: number; signOrder: string }) => {
@@ -1198,7 +1199,7 @@ const wangEditorTitle = ref<string>('')
 // 点击日志弹出富文本框是否显示
 const wangEditorLogVisible = ref<boolean>(false)
 const progressLogCopy = ref<string | undefined>('')
-const classify = ref<string>('')
+const draftField = ref<string>('')
 
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
@@ -1293,7 +1294,7 @@ const changeInput = async (row: any, column: any) => {
     progressLogCopy.value = data
     row.log = data
     wangEditorTitle.value = '编辑跟单日志'
-    classify.value = 'signLog'
+    draftField.value = 'signLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
 }
@@ -1353,7 +1354,7 @@ const clickModifyOrderCancel = async (event: any, value: any) => {
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {
-  if (classify.value === 'signBatchLog') {
+  if (draftField.value === 'signBatchLog') {
     const signIds = selectRows.value.map((item: any) => item.signId).join(',')
     const { data } = await batchUpdateSignLog({ signIds, log: val })
     if (data === true) {

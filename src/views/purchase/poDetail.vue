@@ -1721,9 +1721,10 @@
       </div>
     </div>
     <wang-editor
-      :classify="classify"
       :content="editorContent"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="poDetail"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorVisible"
       @click-boolean="clickEditorCancel"
@@ -2486,15 +2487,15 @@ const handleRemarksChange = async () => {
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
-// 分类
-const classify = ref<string>('')
+// 草稿字段
+const draftField = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 const editorContent = ref<string>('')
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickEditorConfirm = async (val: any) => {
-  switch (classify.value) {
+  switch (draftField.value) {
     case 'purchaseMatters': {
       await updatePoPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val })
 
@@ -2555,7 +2556,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       editorContent.value = data
       row.purchaseMatters = data
       wangEditorTitle.value = '零件采购注意事项'
-      classify.value = 'purchaseMatters'
+      draftField.value = 'purchaseMatters'
       wangEditorVisible.value = true
 
       break
@@ -2566,7 +2567,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       editorContent.value = data
       row.contractTerms = data
       wangEditorTitle.value = '合同条款'
-      classify.value = 'contractTerms'
+      draftField.value = 'contractTerms'
       wangEditorVisible.value = true
 
       break
@@ -2577,7 +2578,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       editorContent.value = data
       row.componentSuitDetail = data
       wangEditorTitle.value = '零件明细'
-      classify.value = 'componentSuitDetail'
+      draftField.value = 'componentSuitDetail'
       wangEditorVisible.value = true
 
       break
@@ -2607,21 +2608,21 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
     detailId.value = row.id
     editorContent.value = row.purchaseMatters
     wangEditorTitle.value = '零件采购注意事项'
-    classify.value = 'purchaseMatters'
+    draftField.value = 'purchaseMatters'
     wangEditorVisible.value = true
   } else if (column.property == 'contractTerms') {
     clickRow.value = row
     detailId.value = row.id
     editorContent.value = row.contractTerms
     wangEditorTitle.value = '合同条款'
-    classify.value = 'contractTerms'
+    draftField.value = 'contractTerms'
     wangEditorVisible.value = true
   } else if (column.property == 'componentSuitDetail') {
     clickRow.value = row
     detailId.value = row.id
     editorContent.value = row.componentSuitDetail
     wangEditorTitle.value = '零件明细'
-    classify.value = 'componentSuitDetail'
+    draftField.value = 'componentSuitDetail'
     wangEditorVisible.value = true
   }
   const firstChild = cell?.children[0]?.children[0]

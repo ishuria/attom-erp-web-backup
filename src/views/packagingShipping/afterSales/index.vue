@@ -500,9 +500,10 @@
       </el-table>
     </vab-dialog>
     <wang-editor
-      :classify="classify"
       :content="LogCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="afterSales"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="cancelEditorLog"
@@ -791,7 +792,7 @@ const handleArchive = async (row: any) => {
 }
 
 const wangEditorTitle = ref<string>('')
-const classify = ref<string>('')
+const draftField = ref<string>('')
 const wangEditorLogVisible = ref<boolean>(false)
 const LogCopy = ref<string>('')
 const cancelEditorLog = () => {
@@ -824,7 +825,7 @@ const imagePreviewClose = () => {
 //     LogCopy.value = row.afterSalesLog
 //     // row.afterSalesLog = data
 //     wangEditorTitle.value = '编辑售后日志'
-//     classify.value = 'afterSalesLog'
+//     draftField.value = 'afterSalesLog'
 //     wangEditorLogVisible.value = !wangEditorLogVisible.value
 //   }
 // }
@@ -838,7 +839,7 @@ const contactedInputChange = async (row: any, column: any) => {
     row.salesLog = data
     wangEditorTitle.value = '编辑售后日志'
     detailId.value = row.id
-    classify.value = 'salesLog'
+    draftField.value = 'salesLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
 }

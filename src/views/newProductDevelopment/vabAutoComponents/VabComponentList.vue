@@ -413,9 +413,9 @@
           <template #default="{ row }">
             <el-tooltip content="" effect="dark" placement="top">
               <template #content>
-                <div class="custom-tooltip">{{ row.remarks }}</div>
+                <div class="custom-tooltip">{{ formatRichRemark(row.remarks) }}</div>
               </template>
-              <div class="multi-line-ellipsis">{{ row.remarks }}</div>
+              <div class="multi-line-ellipsis">{{ formatRichRemark(row.remarks) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -445,9 +445,10 @@
 
     <!-- 开发日志显示 -->
     <wang-editor
-      :classify="classify"
       :content="progressLog"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="productProgressComponent.componentList"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorVisible"
       @click-boolean="clickLogBool"
@@ -465,8 +466,6 @@
       @update:create-consumable-visible="handleCloseCreateConsumable"
       @update:table-value="handleSubmitConsumable"
     />
-    <!-- 修改备注 -->
-    <vab-remark-dialog v-model="remarkVisible" :remark="remark" :title="title" @update:remark="handleUpdateRemark" />
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
@@ -501,7 +500,7 @@ import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/typ
 import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString, toDecimal, toPercentage } from '/@/utils/stringUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineComponent({
   name: 'VabComponentList',
@@ -522,12 +521,9 @@ const progressId = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 const progressLog = ref<string>('')
 const wangEditorTitle = ref<string>('')
-const classify = ref<string>('')
+const draftField = ref<string>('')
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
-const remarkVisible = ref<boolean>(false)
-const remark = ref<string>('')
-const title = ref<string>('')
 
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
@@ -624,19 +620,30 @@ interface SpanMethodProps {
 }
 
 const handleUpdateRemark = async (value: string) => {
-  let invoicingTaxRate = 0
-  let actualTaxRate = 0
-  if (rowCopy.actualTaxRate !== null && rowCopy.actualTaxRate !== undefined) {
-    actualTaxRate = toDecimal(rowCopy.actualTaxRate)
-  }
-  if (rowCopy.invoicingTaxRate !== null && rowCopy.invoicingTaxRate !== undefined) {
-    invoicingTaxRate = toDecimal(rowCopy.invoicingTaxRate)
-  }
-  await updateComponenet({ ...rowCopy, invoicingTaxRate, actualTaxRate, remarks: value })
+  if (!rowCopy) return
 
-  remarkVisible.value = false
+  const previousRemarks = rowCopy.remarks
   rowCopy.remarks = value
-  $baseMessage('修改备注成功！', 'success')
+  progressLog.value = value
+
+  try {
+    let invoicingTaxRate = 0
+    let actualTaxRate = 0
+    if (rowCopy.actualTaxRate !== null && rowCopy.actualTaxRate !== undefined) {
+      actualTaxRate = toDecimal(rowCopy.actualTaxRate)
+    }
+    if (rowCopy.invoicingTaxRate !== null && rowCopy.invoicingTaxRate !== undefined) {
+      invoicingTaxRate = toDecimal(rowCopy.invoicingTaxRate)
+    }
+    await updateComponenet({ ...rowCopy, invoicingTaxRate, actualTaxRate, remarks: value })
+
+    props.trialCalculationData?.()
+  } catch (error) {
+    rowCopy.remarks = previousRemarks
+    progressLog.value = previousRemarks || ''
+    console.error('修改备注失败:', error)
+    $baseMessage('修改备注失败，请重试', 'error')
+  }
 }
 const uploadImage = async (file: File) => {
   try {
@@ -989,14 +996,15 @@ const copyComponentInfo = async (row: IProgressProdcutComponent) => {
 }
 
 // 零件清单table单击修改
-const detailId = ref<number>(-1)
+const detailId = ref<string | number>(-1)
 const componentTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '备注') {
     rowCopy = row
-    title.value = '修改备注'
-    remarkVisible.value = true
-    remark.value = row.remarks
-    detailId.value = row.componentId!
+    wangEditorTitle.value = '修改备注'
+    draftField.value = 'componentRemarks'
+    progressLog.value = row.remarks || ''
+    detailId.value = `${row.componentId!}:${row.supplierId!}`
+    wangEditorVisible.value = true
     return
   }
   // // 不能被修改cell的下标
@@ -1144,7 +1152,8 @@ const handleGetLog = async () => {
   wangEditorVisible.value = true
   progressLog.value = data
   wangEditorTitle.value = '查看开发日志'
-  classify.value = 'progressLog'
+  draftField.value = 'progressLog'
+  detailId.value = Number(props.progressId)
 }
 
 const clickLogBool = (val: any) => {
@@ -1154,9 +1163,22 @@ const clickLogBool = (val: any) => {
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {
-  // console.log('新的val', val);
+  if (draftField.value === 'componentRemarks') {
+    await handleUpdateRemark(val)
+    return
+  }
+
   progressLog.value = val
   await updateProgressLog({ progressId: parseInt(props.progressId), progressLog: progressLog.value }) //发送更新数据请求
+}
+
+const formatRichRemark = (value?: string | null) => {
+  if (!value) return ''
+
+  const text = removeHtmlTags(value)
+  if (text) return text
+
+  return /<img\b/i.test(value) ? '[图片]' : ''
 }
 // 去掉图片列的padding
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {

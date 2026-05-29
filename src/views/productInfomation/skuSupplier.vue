@@ -234,18 +234,20 @@
       </template>
     </vab-dialog>
     <wang-editor
-      :classify="classify"
       :content="attentionCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="skuSupplier"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorAttentionVisible"
       @click-boolean="clickAttentionCancel"
       @click-child="clickAttentionConfirm"
     />
     <wang-editor
-      :classify="classify"
       :content="contractCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="skuSupplier"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorContractVisible"
       @click-boolean="clickContractCancel"
@@ -524,7 +526,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     attentionCopy.value = row.purchaseMatters
     // row.purchaseMatters = data
     wangEditorTitle.value = '零件采购注意事项'
-    classify.value = 'purchaseMatters'
+    draftField.value = 'purchaseMatters'
     detailId.value = row.id
     wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
   } else if (column.property == 'contractTerms') {
@@ -534,7 +536,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     detailId.value = row.id
     // row.contractTerms = data
     wangEditorTitle.value = '合同条款'
-    classify.value = 'contractTerms'
+    draftField.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
   }
   const firstChild = cell?.children[0]?.children[0]
@@ -662,8 +664,8 @@ const handleCurrencyChange = async (row: any) => {
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
-// 分类
-const classify = ref<string>('')
+// 草稿字段
+const draftField = ref<string>('')
 // 点击零件采购注意事项弹出富文本框是否显示
 const wangEditorAttentionVisible = ref<boolean>(false)
 // 点击合同条款弹出富文本框是否显示

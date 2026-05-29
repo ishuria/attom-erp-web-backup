@@ -227,9 +227,10 @@
   </el-row>
   <!-- 产品描述显示 -->
   <wang-editor
-    :classify="classify"
     :content="progressLogCopy"
-    :progress-id="detailId"
+    :draft-field="draftField"
+    :draft-id="detailId"
+    source-page="productProgressComponent.trialCalculation"
     :title="wangEditorTitle"
     :wang-editor-visible="wangEditorLogVisible"
     @click-boolean="clickLogBool"
@@ -276,7 +277,7 @@ const wangEditorLogVisible = ref<boolean>(false)
 
 const progressLogCopy = ref<string | undefined>('')
 
-const classify = ref<string>('')
+const draftField = ref<string>('')
 const _index = ref<number>(0)
 
 const isValueAllInput = (row: IProgressSample) => {
@@ -481,7 +482,7 @@ const sampelTrialTableInputChage = async (row: any, column: any, cell: HTMLTable
     row.desc = data
     progressLogCopy.value = data
     wangEditorTitle.value = '编辑产品描述'
-    classify.value = 'desc'
+    draftField.value = 'desc'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
   const firstChild = cell?.children[0]?.children[0]

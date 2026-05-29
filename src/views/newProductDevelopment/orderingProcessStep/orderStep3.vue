@@ -347,9 +347,10 @@
         <h3>--为了精准核算利润，运费需要准确填写。</h3>
       </vab-alert>
       <wang-editor
-        :classify="classify"
         :content="editorContent"
-        :progress-id="detailId"
+        :draft-field="draftField"
+        :draft-id="detailId"
+      source-page="orderingProcess.orderStep3"
         :title="wangEditorTitle"
         :wang-editor-visible="wangEditorVisible"
         @click-boolean="clickEditorCancel"
@@ -1010,8 +1011,8 @@ const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
-// 分类
-const classify = ref<string>('')
+// 草稿字段
+const draftField = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 // const attentionCopy = ref<string>('')
 // const contractCopy = ref<string>('')
@@ -1021,7 +1022,7 @@ const editorContent = ref<string>('')
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickEditorConfirm = async (val: any) => {
-  switch (classify.value) {
+  switch (draftField.value) {
     case 'purchaseMatters': {
       const { data } = await reviewStepNo3UpdatePurchaseMatters({
         reviewComponentId: clickRow.value.reviewComponentId,
@@ -1362,7 +1363,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       row.purchaseMatters = data
       detailId.value = row.reviewComponentId!
       wangEditorTitle.value = '零件采购注意事项'
-      classify.value = 'purchaseMatters'
+      draftField.value = 'purchaseMatters'
       wangEditorVisible.value = true
 
       break
@@ -1374,7 +1375,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       row.contractTerms = data
       detailId.value = row.reviewComponentId!
       wangEditorTitle.value = '合同条款'
-      classify.value = 'contractTerms'
+      draftField.value = 'contractTerms'
       wangEditorVisible.value = true
 
       break
@@ -1386,7 +1387,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       row.componentSuitDetail = data
       wangEditorTitle.value = '零件明细'
       detailId.value = row.reviewComponentId!
-      classify.value = 'componentSuitDetail'
+      draftField.value = 'componentSuitDetail'
       wangEditorVisible.value = true
 
       break

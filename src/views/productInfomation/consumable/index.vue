@@ -238,18 +238,20 @@
       @size-change="handleSizeChange"
     />
     <wang-editor
-      :classify="classify"
       :content="attentionCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="consumable"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorAttentionVisible"
       @click-boolean="clickAttentionCancel"
       @click-child="clickAttentionConfirm"
     />
     <wang-editor
-      :classify="classify"
       :content="contractCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="consumable"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorContractVisible"
       @click-boolean="clickContractCancel"
@@ -552,8 +554,8 @@ const handleDelConsumableType = async (row: any, index: number) => {
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
-// 分类
-const classify = ref<string>('')
+// 草稿字段
+const draftField = ref<string>('')
 // 点击零件采购注意事项弹出富文本框是否显示
 const wangEditorAttentionVisible = ref<boolean>(false)
 // 点击合同条款弹出富文本框是否显示
@@ -607,14 +609,14 @@ const handleSupplier = (row: any) => {
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickAttentionConfirm = async (val: any) => {
-  const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val })
+  const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, text: val })
   if (data === true) {
     attentionCopy.value = val
     clickRow.value.purchaseMatters = val
   }
 }
 const clickContractConfirm = async (val: any) => {
-  const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val })
+  const { data } = await saveProductContractTerms({ id: clickRow.value.id, text: val })
   if (data === true) {
     contractCopy.value = val
     clickRow.value.contractTerms = val
@@ -728,7 +730,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     // row.purchaseMatters = data
     wangEditorTitle.value = '零件采购注意事项'
     detailId.value = row.id
-    classify.value = 'purchaseMatters'
+    draftField.value = 'purchaseMatters'
     wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
   } else if (column.property == 'contractTerms') {
     clickRow.value = row
@@ -737,7 +739,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     // row.contractTerms = data
     wangEditorTitle.value = '合同条款'
     detailId.value = row.id
-    classify.value = 'contractTerms'
+    draftField.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
   }
 

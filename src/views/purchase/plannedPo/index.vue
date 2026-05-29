@@ -124,9 +124,10 @@
       </el-tab-pane>
     </el-tabs>
     <wang-editor
-      :classify="classify"
       :content="progressLogCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="plannedPo"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="clickLogBool"
@@ -483,7 +484,7 @@ const handlePlannedPoCreate = async () => {
 const wangEditorTitle = ref<string>('')
 const wangEditorLogVisible = ref<boolean>(false)
 const progressLogCopy = ref<string | undefined>('')
-const classify = ref<string>('')
+const draftField = ref<string>('')
 const clickRow = ref<any>()
 const detailId = ref<number>(-1)
 
@@ -495,7 +496,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     progressLogCopy.value = data
     row.purchaseMatters = data
     wangEditorTitle.value = '编辑零件采购注意事项'
-    classify.value = 'purchaseMatters'
+    draftField.value = 'purchaseMatters'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
 

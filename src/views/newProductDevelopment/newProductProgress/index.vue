@@ -403,18 +403,20 @@
     </el-tabs>
     <el-image-viewer v-if="dialogVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <wang-editor
-      :classify="classify"
       :content="progressLogCopy"
-      :progress-id="progressId"
+      :draft-field="draftField"
+      :draft-id="progressId"
+      source-page="newProductProgress"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="clickLogBool"
       @click-child="clickLog"
     />
     <wang-editor
-      :classify="classify"
       :content="remarkCopy"
-      :progress-id="progressId"
+      :draft-field="draftField"
+      :draft-id="progressId"
+      source-page="newProductProgress"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorRemarkVisible"
       @click-boolean="clickRemarkBool"
@@ -837,7 +839,7 @@ const wangEditorLogVisible = ref<boolean>(false)
 const wangEditorRemarkVisible = ref<boolean>(false)
 const progressLogCopy = ref<string | undefined>('')
 const remarkCopy = ref<string | undefined>('')
-const classify = ref<string>('')
+const draftField = ref<string>('')
 const tableClickIdx = ref<any>(0)
 const currentRow = ref<any>(undefined) // 保存当前编辑的行数据
 
@@ -1206,7 +1208,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     wangEditorLogVisible.value = false
     progressLogCopy.value = ''
     wangEditorTitle.value = '编辑开发日志'
-    classify.value = 'progressLog'
+    draftField.value = 'progressLog'
     progressId.value = rowProgressId
 
     const { data } = await getProgressLog({ progressId: rowProgressId })
@@ -1218,7 +1220,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   } else if (column.property == 'remark') {
     remarkCopy.value = row.remark
     wangEditorTitle.value = '编辑备注'
-    classify.value = 'remark'
+    draftField.value = 'remark'
     progressId.value = row.progressId
     wangEditorRemarkVisible.value = true
   }

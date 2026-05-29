@@ -178,9 +178,10 @@
         <h3>--为了精准核算利润，运费需要准确填写。</h3>
       </vab-alert>
       <wang-editor
-        :classify="classify"
         :content="editorContent"
-        :progress-id="detailId"
+        :draft-field="draftField"
+        :draft-id="detailId"
+      source-page="orderingProcess.orderCheckStep2"
         :title="wangEditorTitle"
         :wang-editor-visible="wangEditorVisible"
         @click-boolean="clickEditorCancel"
@@ -306,8 +307,8 @@ const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
-// 分类
-const classify = ref<string>('')
+// 草稿字段
+const draftField = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 const editorContent = ref<string>('')
 
@@ -335,7 +336,7 @@ const changeInput = async (row: any, column: any) => {
     row.purchaseMatters = data
     detailId.value = row.reviewComponentId!
     wangEditorTitle.value = '零件采购注意事项'
-    classify.value = 'purchaseMatters'
+    draftField.value = 'purchaseMatters'
     wangEditorVisible.value = true
   } else if (column.property == 'contractTerms') {
     clickRow.value = row
@@ -344,7 +345,7 @@ const changeInput = async (row: any, column: any) => {
     row.contractTerms = data
     wangEditorTitle.value = '合同条款'
     detailId.value = row.reviewComponentId!
-    classify.value = 'contractTerms'
+    draftField.value = 'contractTerms'
     wangEditorVisible.value = true
   } else if (column.property == 'componentSuitDetail') {
     clickRow.value = row
@@ -353,7 +354,7 @@ const changeInput = async (row: any, column: any) => {
     row.componentSuitDetail = data
     wangEditorTitle.value = '零件明细'
     detailId.value = row.reviewComponentId!
-    classify.value = 'componentSuitDetail'
+    draftField.value = 'componentSuitDetail'
     wangEditorVisible.value = true
   }
 }

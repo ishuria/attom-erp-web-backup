@@ -503,9 +503,10 @@
     </div>
 
     <wang-editor
-      :classify="classify"
       :content="editorContent"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="skuDetailView"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorVisible"
       @click-boolean="clickEditorCancel"
@@ -1469,21 +1470,21 @@ const handleRemarksChange = async () => {
 }
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
-// 分类
-const classify = ref<string>('')
+// 草稿字段
+const draftField = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 const editorContent = ref<string>('')
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickEditorConfirm = async (val: any) => {
-  if (classify.value === 'purchaseMatters') {
+  if (draftField.value === 'purchaseMatters') {
     const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, text: val, sku: sku.value.sku })
     if (data === true) {
       editorContent.value = val
       clickRow.value.purchaseMatters = val
     }
-  } else if (classify.value === 'contractTerms') {
+  } else if (draftField.value === 'contractTerms') {
     const { data } = await saveProductContractTerms({ id: clickRow.value.id, text: val, sku: sku.value.sku })
     if (data === true) {
       editorContent.value = val
@@ -1727,7 +1728,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       clickRow.value = row
       editorContent.value = purchaseMatters
       wangEditorTitle.value = '零件采购注意事项'
-      classify.value = 'purchaseMatters'
+      draftField.value = 'purchaseMatters'
       wangEditorVisible.value = true
       break
     }
@@ -1736,7 +1737,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       detailId.value = row.id
       editorContent.value = contractTerms
       wangEditorTitle.value = '合同条款'
-      classify.value = 'contractTerms'
+      draftField.value = 'contractTerms'
       wangEditorVisible.value = true
       break
     }
@@ -1744,7 +1745,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       clickRow.value = row
       editorContent.value = componentSuitDetail
       wangEditorTitle.value = '套装零件明细'
-      classify.value = 'componentSuitDetail'
+      draftField.value = 'componentSuitDetail'
       wangEditorVisible.value = true
       break
     }

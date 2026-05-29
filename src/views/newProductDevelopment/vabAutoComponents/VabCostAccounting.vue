@@ -418,9 +418,10 @@
 
     <!-- 产品描述显示 -->
     <wang-editor
-      :classify="classify"
       :content="progressLogCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="productProgressComponent.costAccounting"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="clickLogBool"
@@ -428,9 +429,10 @@
     />
     <!-- 价格信息显示 -->
     <wang-editor
-      :classify="classify"
       :content="remarkCopy"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="productProgressComponent.costAccounting"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorRemarkVisible"
       @click-boolean="clickRemarkBool"
@@ -495,7 +497,7 @@ const wangEditorLogVisible = ref<boolean>(false)
 const wangEditorRemarkVisible = ref<boolean>(false)
 const progressLogCopy = ref<string | undefined>('')
 const remarkCopy = ref<string | undefined>('')
-const classify = ref<string>('')
+const draftField = ref<string>('')
 const clickRow = ref<any>()
 let copyRow: any
 const imageUploadVisible = ref<boolean>(false)
@@ -662,14 +664,14 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
     row.desc = data
     detailId.value = row.id
     wangEditorTitle.value = '编辑产品描述'
-    classify.value = 'desc'
+    draftField.value = 'desc'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } else if (column.property === 'priceInfo') {
     const { data } = await getProgressPriceInfo({ accountingId: row.id })
     remarkCopy.value = data
     row.priceInfo = data
     wangEditorTitle.value = '编辑价格信息'
-    classify.value = 'priceInfo'
+    draftField.value = 'priceInfo'
     detailId.value = row.id
     wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
   }

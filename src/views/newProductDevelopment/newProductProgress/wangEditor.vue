@@ -66,11 +66,12 @@ let props = defineProps<{
   title: string
   wangEditorVisible: boolean
   content: string | undefined
-  classify: string
-  // 历史命名为 progressId，实际用于区分草稿缓存所属的业务记录。
-  progressId?: number | string
+  draftField: string | number
+  sourcePage?: string
+  draftId?: number | string
 }>()
 
+const route = useRoute()
 const dflag = ref<boolean>(false)
 
 const editorRef = shallowRef<IDomEditor | undefined>()
@@ -98,19 +99,36 @@ const handleDialogOpened = async () => {
 // 草稿过期时间：7 天
 const DRAFT_EXPIRE_MS = 7 * 24 * 60 * 60 * 1000
 
-const getDraftKey = () => {
-  const recordId = Number(props.progressId)
-  if (!props.classify || !Number.isFinite(recordId) || recordId <= 0) return ''
+const normalizeDraftKeyPart = (value: unknown) => {
+  return String(value || '')
+    .trim()
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/[^\w.-]+/g, '-')
+}
 
-  return `${props.classify}_${recordId}`
+const getDraftSourcePage = () => {
+  return normalizeDraftKeyPart(props.sourcePage || route.name || route.path)
+}
+
+const getDraftKey = () => {
+  const recordId = normalizeDraftKeyPart(props.draftId)
+  if (!props.draftField || !recordId) return ''
+
+  const sourcePage = getDraftSourcePage()
+  const editorField = normalizeDraftKeyPart(props.draftField)
+  if (!sourcePage || !editorField) return ''
+
+  return `wangEditorDraft:${sourcePage}:${editorField}:${recordId}`
+}
+
+const removeDraft = (key: string) => {
+  localStorage.removeItem(key)
+  localStorage.removeItem(`${key}_timestamp`)
 }
 
 const clearDraft = () => {
   const key = getDraftKey()
-  if (!key) return
-
-  localStorage.removeItem(key)
-  localStorage.removeItem(`${key}_timestamp`)
+  if (key) removeDraft(key)
 }
 
 // 过期或无时间戳的草稿视为无效，顺带清掉避免僵尸数据
@@ -123,14 +141,15 @@ const readValidDraft = (): string | null => {
 
   const ts = localStorage.getItem(`${key}_timestamp`)
   if (!ts || Date.now() - Number(ts) > DRAFT_EXPIRE_MS) {
-    clearDraft()
+    removeDraft(key)
     return null
   }
+
   return draft
 }
 
 // 对话框打开、内容或业务记录 id 变化时，同步编辑器内容。
-// progressId 是历史 prop 名，可能传 progressId、detailId、零件明细 id 等。
+// draftId 用于区分草稿缓存所属的业务记录。
 // 草稿 key 必须带有效业务记录 id，避免不同记录共用缓存。
 // 内容优先级：
 // 1. 后端内容和 5 分钟内草稿同时存在时，使用草稿续写。
@@ -138,7 +157,7 @@ const readValidDraft = (): string | null => {
 // 3. 只有一方有内容时，使用已有内容；都没有则置空。
 // 点「保存」/「确认」会清草稿；点「取消」/关闭会保留草稿。
 watch(
-  () => [props.wangEditorVisible, props.content, props.progressId, props.classify] as const,
+  () => [props.wangEditorVisible, props.content, props.draftId, props.draftField, props.sourcePage] as const,
   ([newValue]) => {
     dflag.value = newValue
 

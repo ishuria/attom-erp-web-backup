@@ -71,9 +71,10 @@
     <role-edit ref="editRef" @fetch-data="fetchData" />
     <!-- 激励政策弹窗 -->
     <wang-editor
-      :classify="classify"
       :content="editorContent"
-      :progress-id="detailId"
+      :draft-field="draftField"
+      :draft-id="detailId"
+      source-page="systemRole"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorVisible"
       @click-boolean="clickEditorCancel"
@@ -99,8 +100,8 @@ defineOptions({
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 const detailId = ref<number>(-1)
-// 分类
-const classify = ref<string>('')
+// 草稿字段
+const draftField = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 const editorContent = ref<string>('')
 
@@ -134,7 +135,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '激励政策') {
     wangEditorVisible.value = true
     wangEditorTitle.value = '修改激励政策'
-    classify.value = '激励政策'
+    draftField.value = '激励政策'
     editorContent.value = row.incentivePolicy
     detailId.value = row.roleId
     incentivePolicy.value = row.incentivePolicy
