@@ -1,69 +1,71 @@
 <template>
   <div>
     <vab-dialog v-model="visible" :draggable="false" title="发布订货" width="55%" @opened="handleOpened">
-      <el-alert
-        v-if="form.warningMessage"
-        class="release-order-alert"
-        :closable="false"
-        show-icon
-        :title="form.warningMessage"
-        type="warning"
-      />
+      <div class="release-order-content">
+        <el-alert
+          v-if="form.warningMessage"
+          class="release-order-alert"
+          :closable="false"
+          show-icon
+          :title="form.warningMessage"
+          type="warning"
+        />
 
-      <el-form v-loading="loading" class="release-order-form" label-position="top" :model="form">
-        <!-- 第一行：图片、SKU和描述 -->
-        <div class="form-row">
-          <el-form-item class="image-item">
-            <el-image
-              class="sku-image"
-              close-on-press-escape
-              fit="cover"
-              hide-on-click-modal
-              :preview-src-list="form.skuImageUrl ? [form.skuImageUrl] : []"
-              preview-teleported
-              :src="form.skuImageUrl"
-            >
-              <template #error><el-icon /></template>
-            </el-image>
-          </el-form-item>
+        <el-form v-loading="loading" class="release-order-form" label-position="top" :model="form">
+          <!-- 第一行：图片、SKU和描述 -->
+          <div class="form-row">
+            <el-form-item class="image-item">
+              <el-image
+                class="sku-image"
+                close-on-press-escape
+                fit="cover"
+                hide-on-click-modal
+                :preview-src-list="form.skuImageUrl ? [form.skuImageUrl] : []"
+                preview-teleported
+                :src="form.skuImageUrl"
+              >
+                <template #error><el-icon /></template>
+              </el-image>
+            </el-form-item>
 
-          <el-form-item class="sku-item" label="SKU">
-            <el-select v-model="form.sku" class="sku-select" placeholder="请选择SKU" @change="handleSwitchSku">
-              <el-option v-for="item in skuList" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
+            <el-form-item class="sku-item" label="SKU">
+              <el-select v-model="form.sku" class="sku-select" placeholder="请选择SKU" @change="handleSwitchSku">
+                <el-option v-for="item in skuList" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
 
-          <el-form-item class="description-item" label="描述">
-            <el-input v-model="form.description" class="description-input" disabled />
-          </el-form-item>
-        </div>
+            <el-form-item class="description-item" label="描述">
+              <el-input v-model="form.description" class="description-input" disabled />
+            </el-form-item>
+          </div>
 
-        <!-- 第二行：其他信息 -->
-        <div class="form-row">
-          <el-form-item class="number-item" label="订货数量">
-            <el-input-number ref="inputRef" v-model="form.number" class="number-input" :min="0" />
-          </el-form-item>
+          <!-- 第二行：其他信息 -->
+          <div class="form-row">
+            <el-form-item class="number-item" label="订货数量">
+              <el-input-number ref="inputRef" v-model="form.number" class="number-input" :min="0" />
+            </el-form-item>
 
-          <!-- <el-form-item class="split-item" label="拆分">
+            <!-- <el-form-item class="split-item" label="拆分">
             <div class="checkbox-wrapper">
               <el-checkbox v-model="form.split" disabled :false-value="0" :true-value="1" />
               <span class="checkbox-label">{{ form.split ? '是' : '否' }}</span>
             </div>
           </el-form-item> -->
 
-          <el-form-item class="moq-item" label="起订量">
-            <el-input v-model="form.moq" class="info-input" disabled />
-          </el-form-item>
+            <el-form-item class="moq-item" label="起订量">
+              <el-input v-model="form.moq" class="info-input" disabled />
+            </el-form-item>
 
-          <el-form-item class="carton-item" label="整箱数">
-            <el-input v-model="form.numberOfCartons" class="info-input" disabled />
-          </el-form-item>
+            <el-form-item class="carton-item" label="整箱数">
+              <el-input v-model="form.numberOfCartons" class="info-input" disabled />
+            </el-form-item>
 
-          <el-form-item class="manager-item" label="产品经理">
-            <el-input v-model="form.productManagerName" class="info-input" disabled />
-          </el-form-item>
-        </div>
-      </el-form>
+            <el-form-item class="manager-item" label="产品经理">
+              <el-input v-model="form.productManagerName" class="info-input" disabled />
+            </el-form-item>
+          </div>
+        </el-form>
+      </div>
 
       <template #footer>
         <el-button @click="handleCancel">取消</el-button>
@@ -208,13 +210,15 @@ defineExpose({
 
 <style lang="scss" scoped>
 /* 发布订货弹窗样式 */
+.release-order-content {
+  padding: 20px;
+}
+
 .release-order-alert {
-  margin: 16px 20px 0;
+  margin-bottom: 16px;
 }
 
 .release-order-form {
-  padding: 20px;
-
   .form-row {
     display: flex;
     gap: 24px;
