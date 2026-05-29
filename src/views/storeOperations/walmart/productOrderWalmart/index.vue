@@ -390,7 +390,6 @@
       :loading="orderListLoading"
       :sku-list="skuList"
       @confirm="handleReleaseOrder"
-      @image-preview="imagePreviewShow"
       @switch-sku="handleSwitchSku"
     />
     <!-- 季节趋势 -->
@@ -421,11 +420,9 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { adStatusOption, months } from '../../constantOption.ts'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
 import {
-  getOperationOrderSku,
   getOperationOrderSmoothness,
   getOperationOrderSpringFestival,
   getOperationWalmartOrderList,
-  releaseOperationPlanPo,
   updateOperationOrderSmoothness,
   updateOperationOrderSpringFestival,
 } from '/@/api/devlocal/productOrdering'
@@ -445,6 +442,7 @@ import { IGetOperationColumnList } from '/@/type/storeOperation/productPerforman
 import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
+import { useReleaseOrderDialog } from '../../composables/useReleaseOrderDialog'
 
 defineOptions({
   name: 'ProductOrderWalmart',
@@ -620,14 +618,7 @@ const label3Map = new Map([
   ['库存可售', 'esAvailableSaleDay'],
   ['可售含在途', 'esAvailableSaleDayTotal'],
 ])
-const releaseOrderVisible = ref<boolean>(false)
-// 发布订货表单
-
-// 发布订货里面的sku列表
-const skuList = ref<{ value: string; label: string }[]>([])
-
 const smoothForm = reactive<any>({})
-const orderListLoading = ref<boolean>(false)
 
 const currentRoleCode = useAclStore().getRole[0]
 const canViewSalesTrendDetail = computed(() => {
@@ -878,129 +869,44 @@ const handleOpenSmooth = async () => {
   const { data } = await getOperationOrderSmoothness()
   Object.assign(smoothForm, data)
 }
-// 确认发布订货
-const handleReleaseOrder = async (formData: any) => {
-  if (!formData.sku) {
-    $baseMessage('请选择SKU', 'warning')
-    return
-  }
-  // 先判断是否有可认领数量
-  if (formData.totalClaimCount > 0) {
-    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
-    return
-  }
-  if (!formData.number) {
-    $baseMessage('请填写订货数量', 'warning')
-    return
-  }
-  try {
-    // 先关闭弹窗,提升体验
-    releaseOrderVisible.value = false
-
-    const { data } = await releaseOperationPlanPo({
-      asinId: null,
-      sku: formData.sku,
-      number: formData.number,
-      asin: copyRow.asin,
-      site: copyRow.site,
-    })
-
-    if (data) {
-      $baseMessage('发布订货成功！', 'success')
-
-      // 延迟一小段时间后再更新数据，给UI足够的时间响应
-      setTimeout(() => {
-        copyRow.nowSupplementAdvCalcu = data.nowSupplementAdvCalcu
-        copyRow.nowSupplementCalcu = data.nowSupplementCalcu
-        copyRow.planPoPurchaseSkuNumber = data.planPoPurchaseSkuNumber
-      }, 100)
-    }
-  } catch (error) {
-    console.error('发布订货失败:', error)
-    $baseMessage('发布订货失败，请重试', 'error')
-    // 失败时重新打开弹窗
-    releaseOrderVisible.value = true
-  }
-}
-let copyRow: IGetOperationOrderList
-const releaseOrderDialogRef = ref()
-
-const handleSwitchSku = async (sku: string) => {
-  const { data } = await getOperationOrderSku({
-    id: copyRow.id!,
-    sku: sku,
-    asin: copyRow.asin,
-    site: copyRow.site,
-  })
-
-  // 更新组件中的表单数据
-  if (releaseOrderDialogRef.value) {
-    releaseOrderDialogRef.value.setFormData(data)
-  }
-}
-// 打开发布订货
-const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
-  currentRowId.value = row.id
-  copyRow = row
-
-  // 先显示弹窗和loading状态，提升用户体验
-  releaseOrderVisible.value = true
-  orderListLoading.value = true
-
-  try {
-    if (row.sku) {
-      // 确保skuArray 是一个没有空值的数组
-      const skuArray = row.sku?.trim().split(',').filter(Boolean) || []
-
-      skuList.value = skuArray.map((item) => {
-        return {
-          label: item,
-          value: item,
-        }
-      })
-
-      // 修复：检查SKU是否包含搜索关键词
-      const matchSkus = skuList.value.filter((item) => item.value.toLowerCase().includes(queryForm.keyWord.toLowerCase()))
-
-      if (matchSkus.length > 0) {
-        // 如果有多个匹配，可以选择最匹配的或者第一个
-        const selectedSku = matchSkus[0].value
-
-        const { data } = await getOperationOrderSku({
-          id: row.id!,
-          sku: selectedSku,
-          asin: row.asin,
-          site: row.site,
-        })
-
-        // 通过组件实例设置表单数据
-        if (releaseOrderDialogRef.value) {
-          releaseOrderDialogRef.value.setFormData(data)
-        }
-      } else {
-        // 如果没有匹配的SKU，重置表单
-        if (releaseOrderDialogRef.value) {
-          releaseOrderDialogRef.value.resetForm()
-        }
-      }
-    } else {
-      skuList.value = []
-      // 重置组件表单数据
-      if (releaseOrderDialogRef.value) {
-        releaseOrderDialogRef.value.resetForm()
-      }
-    }
-  } catch (error) {
-    console.error('获取SKU数据失败:', error)
-    $baseMessage('获取SKU数据失败，请重试', 'error')
-    // 出错时重置表单
-    if (releaseOrderDialogRef.value) {
-      releaseOrderDialogRef.value.resetForm()
-    }
-  } finally {
-    orderListLoading.value = false
-  }
-}
+const {
+  skuList,
+  releaseOrderVisible,
+  orderListLoading,
+  releaseOrderDialogRef,
+  handleShowReleaseOrder,
+  handleReleaseOrder,
+  handleSwitchSku,
+} = useReleaseOrderDialog<IGetOperationOrderList>({
+  onOpen: (row) => {
+    currentRowId.value = row.id
+  },
+  resolveInitialSku: (_row, skuList) => {
+    const keyWord = queryForm.keyWord?.toLowerCase()
+    if (!keyWord) return skuList[0]?.value
+    return skuList.find((item) => item.value.toLowerCase().includes(keyWord))?.value
+  },
+  getSkuParams: (row, sku) => ({
+    id: row.id!,
+    sku,
+    asin: row.asin,
+    site: row.site,
+  }),
+  getReleaseParams: (row, formData) => ({
+    asinId: null,
+    sku: formData.sku,
+    number: formData.number,
+    asin: row.asin,
+    site: row.site,
+  }),
+  onReleased: (row, data) => {
+    setTimeout(() => {
+      row.nowSupplementAdvCalcu = data.nowSupplementAdvCalcu
+      row.nowSupplementCalcu = data.nowSupplementCalcu
+      row.planPoPurchaseSkuNumber = data.planPoPurchaseSkuNumber
+    }, 100)
+  },
+})
 // 修改运营分类
 const handleUpdateAsinOpeType = async (row: IGetOperationOrderList) => {
   await updateOperationASINOperateTypeList({

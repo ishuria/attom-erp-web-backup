@@ -374,7 +374,6 @@
       :loading="orderListLoading"
       :sku-list="skuList"
       @confirm="handleReleaseOrder"
-      @image-preview="imagePreviewShow"
     />
     <!-- 订货明细弹窗 -->
     <vab-product-order-table ref="productOrderTableRef" />
@@ -392,7 +391,7 @@ import { IProductOrderTableRef } from '~/src/type/storeOperation/productOrdering
 import { months } from '../../constantOption.ts'
 import { getOperationTypeUserList } from '/@/api/devlocal/frontPage.ts'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
-import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering.ts'
+import { useReleaseOrderDialog } from '../../composables/useReleaseOrderDialog'
 import {
   addWalmartOperationLog,
   getCurrencyWalmartOperation,
@@ -420,93 +419,28 @@ defineOptions({
   name: 'ProductPerformanceWalmart',
 })
 
-const skuList = ref<{ value: string; label: string }[]>([])
-const releaseOrderVisible = ref<boolean>(false)
-const orderListLoading = ref<boolean>(false)
-const releaseOrderDialogRef = ref()
-let skuRow: any
-// 打开发布订货
-const handleShowReleaseOrder = async (row: any) => {
-  // currentRowId.value = row.id
-  skuRow = row
-  releaseOrderVisible.value = true
-
-  if (row.sku) {
-    orderListLoading.value = true
-    // 确保skuArray 是一个没有空值的数组
-
-    skuList.value = [
-      {
-        label: row.sku,
-        value: row.sku,
-      },
-    ]
-
-    const { data } = await getOperationOrderSku({
+const { skuList, releaseOrderVisible, orderListLoading, releaseOrderDialogRef, handleShowReleaseOrder, handleReleaseOrder } =
+  useReleaseOrderDialog<any>({
+    getSkuValues: (row) => (row.sku ? [row.sku] : []),
+    getSkuParams: (row, sku) => ({
       id: null,
-      sku: row.sku,
+      sku,
       asin: '',
       site: row.site,
-    })
-    // 通过组件实例设置表单数据
-    if (releaseOrderDialogRef.value) {
-      releaseOrderDialogRef.value.setFormData(data)
-    }
-
-    orderListLoading.value = false
-  } else {
-    skuList.value = []
-    // 重置组件表单数据
-    if (releaseOrderDialogRef.value) {
-      releaseOrderDialogRef.value.resetForm()
-    }
-  }
-}
-
-// 确认发布订货
-const handleReleaseOrder = async (formData: any) => {
-  if (!formData.sku) {
-    $baseMessage('请选择SKU', 'warning')
-    return
-  }
-  // 先判断是否有可认领数量
-  if (formData.totalClaimCount > 0) {
-    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
-    return
-  }
-  if (!formData.number) {
-    $baseMessage('请填写订货数量', 'warning')
-    return
-  }
-  try {
-    // 先关闭弹窗,提升体验
-    releaseOrderVisible.value = false
-    orderListLoading.value = true
-
-    const { data } = await releaseOperationPlanPo({
+    }),
+    getReleaseParams: (row, formData) => ({
       asinId: null,
       sku: formData.sku,
       number: formData.number,
       asin: undefined,
-      site: skuRow.site,
-    })
-
-    if (data) {
-      $baseMessage('发布订货成功！', 'success')
-      // 延迟一小段时间后再更新数据，给UI足够的时间响应
+      site: row.site,
+    }),
+    onReleased: (row, data) => {
       setTimeout(() => {
-        skuRow.nowSupplementCalcu = data.nowSupplementCalcu
+        row.nowSupplementCalcu = data.nowSupplementCalcu
       }, 100)
-    }
-  } catch (error) {
-    console.error('发布订货失败:', error)
-    $baseMessage('发布订货失败，请重试', 'error')
-    // 失败时重新打开弹窗
-    releaseOrderVisible.value = true
-  } finally {
-    orderListLoading.value = false
-  }
-}
+    },
+  })
 const _row = ref<any>({})
 const remark = ref('')
 const operationLogVisible = ref<boolean>(false)

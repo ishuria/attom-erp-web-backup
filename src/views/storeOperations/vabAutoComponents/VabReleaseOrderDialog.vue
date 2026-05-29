@@ -1,11 +1,28 @@
 <template>
   <div>
     <vab-dialog v-model="visible" :draggable="false" title="发布订货" width="55%" @opened="handleOpened">
+      <el-alert
+        v-if="form.warningMessage"
+        class="release-order-alert"
+        :closable="false"
+        show-icon
+        :title="form.warningMessage"
+        type="warning"
+      />
+
       <el-form v-loading="loading" class="release-order-form" label-position="top" :model="form">
         <!-- 第一行：图片、SKU和描述 -->
         <div class="form-row">
           <el-form-item class="image-item">
-            <el-image class="sku-image" :src="form.skuImageUrl" @click="handleImagePreview">
+            <el-image
+              class="sku-image"
+              close-on-press-escape
+              fit="cover"
+              hide-on-click-modal
+              :preview-src-list="form.skuImageUrl ? [form.skuImageUrl] : []"
+              preview-teleported
+              :src="form.skuImageUrl"
+            >
               <template #error><el-icon /></template>
             </el-image>
           </el-form-item>
@@ -73,7 +90,6 @@ interface Emits {
   (e: 'update:modelValue', value: boolean): void
   (e: 'confirm', form: any): void
   (e: 'switch-sku', sku: string): void
-  (e: 'image-preview', url: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -104,6 +120,7 @@ const form = reactive({
   moq: '',
   numberOfCartons: '',
   productManagerName: '',
+  warningMessage: '',
 })
 
 // 监听弹窗显示状态
@@ -122,13 +139,6 @@ watch(visible, (newValue) => {
 // 处理SKU切换
 const handleSwitchSku = (sku: string) => {
   emit('switch-sku', sku)
-}
-
-// 处理图片预览
-const handleImagePreview = () => {
-  if (form.skuImageUrl) {
-    emit('image-preview', form.skuImageUrl)
-  }
 }
 
 // 处理取消
@@ -173,6 +183,7 @@ const resetForm = () => {
     moq: '',
     numberOfCartons: '',
     productManagerName: '',
+    warningMessage: '',
   })
 }
 
@@ -182,15 +193,25 @@ const setFormData = (data: any) => {
   form.number = data.orderQuantity
 }
 
+const setSelectedSku = (sku: string) => {
+  resetForm()
+  form.sku = sku
+}
+
 // 暴露方法给父组件
 defineExpose({
   resetForm,
   setFormData,
+  setSelectedSku,
 })
 </script>
 
 <style lang="scss" scoped>
 /* 发布订货弹窗样式 */
+.release-order-alert {
+  margin: 16px 20px 0;
+}
+
 .release-order-form {
   padding: 20px;
 

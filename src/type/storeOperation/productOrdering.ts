@@ -257,6 +257,7 @@ export interface IGetOperationOrderSkuRes {
     productManagerName: string
     orderQuantity: number
     asinId?: number
+    warningMessage?: string
   }
 }
 export interface IUpdateOperationOrderShipmentQuantityReq {

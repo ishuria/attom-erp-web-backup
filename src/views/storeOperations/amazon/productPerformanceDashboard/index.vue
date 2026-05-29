@@ -575,7 +575,6 @@
       :loading="orderListLoading"
       :sku-list="skuList"
       @confirm="handleReleaseOrder"
-      @image-preview="imagePreviewShow"
     />
     <selling-point-performance-dialog
       v-if="sellingPointPerformanceVisible"
@@ -604,7 +603,7 @@ import { useUserStore } from '/@//store/modules/user'
 import { createAiConversation, createNewProductAdKeywordConversation, createSellingPointPerformanceConversation } from '/@/api/devlocal/ai'
 import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis.ts'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { getOperationOrderSku, releaseOperationPlanPo } from '/@/api/devlocal/productOrdering'
+import { useReleaseOrderDialog } from '../../composables/useReleaseOrderDialog'
 import {
   getAmazonOptionUserList,
   getCurrencyASINAmazonOperation,
@@ -664,13 +663,24 @@ const userName = useUserStore().getUsername
 const currentRole = useAclStore().getRole
 const aiStore = useAiStore()
 const isBoss = computed(() => currentRole.includes(ROLE_BOSS_CODE) || currentRole.includes(ROLE_ECOMMERCEOPERATIONLEAD_CODE))
-// 发布订货里面的sku列表
-const skuList = ref<{ value: string; label: string }[]>([])
-const releaseOrderVisible = ref<boolean>(false)
-const orderListLoading = ref<boolean>(false)
-const releaseOrderDialogRef = ref()
-const asinId = ref<number | undefined>(undefined)
-let skuRow: any
+const { skuList, releaseOrderVisible, orderListLoading, releaseOrderDialogRef, handleShowReleaseOrder, handleReleaseOrder } =
+  useReleaseOrderDialog<any>({
+    getSkuValues: (row) => (row.sku ? [row.sku] : []),
+    getSkuParams: (row, sku) => ({
+      id: null,
+      sku,
+      asin: row.asin,
+      site: row.site,
+    }),
+    resolveAsinId: (_row, data) => data.asinId,
+    getReleaseParams: (row, formData, asinId) => ({
+      asinId: asinId ?? null,
+      sku: formData.sku,
+      number: formData.number,
+      asin: row.asin,
+      site: row.site,
+    }),
+  })
 const spFileUploadVisible = ref<boolean>(false)
 const logSummaryVisible = ref<boolean>(false)
 const aiTitleOptimizationLoadingIds = ref<Array<number | string>>([])
@@ -679,88 +689,6 @@ const aiNewProductAdKeywordLoadingIds = ref<Array<number | string>>([])
 const sellingPointPerformanceVisible = ref(false)
 const sellingPointPerformanceRow = ref<any>(null)
 const sellingPointPerformanceSubmitting = ref(false)
-// 打开发布订货
-const handleShowReleaseOrder = async (row: any) => {
-  // currentRowId.value = row.id
-  skuRow = row
-  releaseOrderVisible.value = true
-
-  if (row.sku) {
-    orderListLoading.value = true
-    // 确保skuArray 是一个没有空值的数组
-
-    skuList.value = [
-      {
-        label: row.sku,
-        value: row.sku,
-      },
-    ]
-
-    const { data } = await getOperationOrderSku({
-      id: null,
-      sku: row.sku,
-      asin: row.asin,
-      site: row.site,
-    })
-    // 通过组件实例设置表单数据
-    if (releaseOrderDialogRef.value) {
-      releaseOrderDialogRef.value.setFormData(data)
-    }
-    asinId.value = data.asinId
-
-    orderListLoading.value = false
-  } else {
-    skuList.value = []
-    // 重置组件表单数据
-    if (releaseOrderDialogRef.value) {
-      releaseOrderDialogRef.value.resetForm()
-    }
-  }
-}
-// 确认发布订货
-const handleReleaseOrder = async (formData: any) => {
-  if (!formData.sku) {
-    $baseMessage('请选择SKU', 'warning')
-    return
-  }
-  // 先判断是否有可认领数量
-  if (formData.totalClaimCount > 0) {
-    $baseMessage('有其他站点多订数量，需要先认领完再订货。认领流程：去打包任务拆分需要订货的数量并将站点改为自己的站点。', 'error')
-    return
-  }
-  if (!formData.number) {
-    $baseMessage('请填写订货数量', 'warning')
-    return
-  }
-  try {
-    // 先关闭弹窗,提升体验
-    releaseOrderVisible.value = false
-    orderListLoading.value = true
-
-    const { data } = await releaseOperationPlanPo({
-      asinId: asinId.value!,
-      sku: formData.sku,
-      number: formData.number,
-      asin: skuRow.asin,
-      site: skuRow.site,
-    })
-
-    if (data) {
-      $baseMessage('发布订货成功！', 'success')
-      // fetchData()
-      // skuRow.nowSupplementAdvCalcu = data.nowSupplementAdvCalcu
-      // skuRow.nowSupplementCalcu = data.nowSupplementCalcu
-      // skuRow.planPoPurchaseSkuNumber = data.planPoPurchaseSkuNumber
-    }
-  } catch (error) {
-    console.error('发布订货失败:', error)
-    $baseMessage('发布订货失败，请重试', 'error')
-    // 失败时重新打开弹窗
-    releaseOrderVisible.value = true
-  } finally {
-    orderListLoading.value = false
-  }
-}
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.id
