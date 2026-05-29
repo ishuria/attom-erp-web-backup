@@ -225,7 +225,7 @@
       </template>
     </vab-dialog>
 
-    <distribute-skus v-if="distributeSkusVisible" v-model="distributeSkusVisible" title="分配SKU" @confirm="handleConfirmDistributeSkus" />
+    <distribute-skus v-model="distributeSkusVisible" title="分配SKU" @confirm="handleConfirmDistributeSkus" />
     <deadline-extension-application
       v-if="deadlineExtensionApplicationVisible"
       v-model:visible="deadlineExtensionApplicationVisible"
