@@ -424,6 +424,18 @@ export interface IGetOperationAmazonSKUList {
    * 库龄361对应的价格
    */
   inventoryAgeLevel3Value?: number
+  /**
+   * 是否成人用品
+   */
+  isAdultProduct?: number
+  /**
+   * 是否有视频
+   */
+  hasVideo?: number
+  /**
+   * 是否有A+
+   */
+  hasAPlus?: number
   [property: string]: any
 }
 
@@ -1022,6 +1034,18 @@ export interface IGetOperationParentAsinList {
    * 1年TACOS
    */
   yearTacos?: number
+  /**
+   * 是否成人用品
+   */
+  isAdultProduct?: number
+  /**
+   * 是否有视频
+   */
+  hasVideo?: number
+  /**
+   * 是否有A+
+   */
+  hasAPlus?: number
   [property: string]: any
 }
 

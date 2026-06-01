@@ -507,6 +507,16 @@
   <!-- 预估下月仓储费 -->
   <span v-else-if="item.label === '预估下月仓储费'">{{ row.currencyIcon }}{{ row.estimateNextMonthStorageFee }}</span>
 
+  <!-- Keepa标记 -->
+  <span v-else-if="keepaFlagSet.has(item.prop)">
+    <el-tooltip effect="dark" placement="top">
+      <template #content>
+        <div class="custom-tooltip">{{ getKeepaFlagLabel(item.prop) }}：{{ isTruthyFlag(row[item.prop]) ? '是' : '否' }}</div>
+      </template>
+      <vab-icon :class="getKeepaFlagClass(item.prop, row[item.prop])" :icon="getKeepaFlagIcon(item.prop)" />
+    </el-tooltip>
+  </span>
+
   <!-- 默认显示：如果以上条件都不匹配，直接显示原始值 -->
   <span v-else>{{ row[item.prop] }}</span>
 </template>
@@ -620,6 +630,7 @@ const label2Set = new Set([
 ])
 const label3Set = new Set(['上新', '可售', '可售总'])
 const label4Set = new Set(['今广', '半年有货率', '月广%'])
+const keepaFlagSet = new Set(['isAdultProduct', 'hasVideo', 'hasAPlus'])
 
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
@@ -659,6 +670,26 @@ const label4Map = new Map([
   ['半年有货率', 'availableRate'],
   ['月广%', 'monthAdv'],
 ])
+
+const isTruthyFlag = (value: unknown) => value === 1 || value === true || value === '1'
+
+const getKeepaFlagIcon = (prop: string) => {
+  if (prop === 'hasVideo') return 'play-circle-fill'
+  if (prop === 'hasAPlus') return 'image-add-fill'
+  return 'error-warning-fill'
+}
+
+const getKeepaFlagLabel = (prop: string) => {
+  if (prop === 'hasVideo') return '有视频'
+  if (prop === 'hasAPlus') return '有A+'
+  return '成人用品'
+}
+
+const getKeepaFlagClass = (prop: string, value: unknown) => {
+  if (!isTruthyFlag(value)) return 'keepa-flag-icon keepa-flag-icon--inactive'
+  if (prop === 'isAdultProduct') return 'keepa-flag-icon keepa-flag-icon--danger'
+  return 'keepa-flag-icon keepa-flag-icon--active'
+}
 
 // 判断函数
 const isOutOfStock = (row: any) => {
@@ -989,6 +1020,19 @@ const publishPrice = async (row: any) => {
 .icon-red {
   font-size: 20px;
   color: #e32e00;
+}
+.keepa-flag-icon {
+  font-size: 22px;
+  vertical-align: middle;
+}
+.keepa-flag-icon--active {
+  color: var(--el-color-success);
+}
+.keepa-flag-icon--danger {
+  color: var(--el-color-danger);
+}
+.keepa-flag-icon--inactive {
+  color: var(--el-text-color-placeholder);
 }
 // .el-popper.is-customized {
 //   padding: 6px 12px;
