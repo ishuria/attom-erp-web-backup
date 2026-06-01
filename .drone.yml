@@ -39,6 +39,7 @@ steps:
   - name: build-docker-image
     pull: if-not-exists
     image: plugins/docker
+    privileged: true
     settings:
       username: admin
       password:
