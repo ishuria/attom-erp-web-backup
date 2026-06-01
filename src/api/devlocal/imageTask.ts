@@ -285,8 +285,9 @@ export function getSellingPointSiteList(): Promise<{ data: { id: number; label: 
 }
 /**
  * @description 美工任务-卖点翻译成译文
+ * 后端仅返回 LangFlow 触发结果，译文字段由 LangFlow 服务端落库
  */
-export function translateArtDesignSellingPoint(id: number): Promise<{ data: Partial<IGetSellingPoint> }> {
+export function translateArtDesignSellingPoint(id: number): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/artdesign/sell/point/${id}/translate`,
     method: 'post',

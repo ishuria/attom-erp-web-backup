@@ -136,7 +136,7 @@
                     class="precautions-editor-content"
                     :default-config="precautionsEditorConfig"
                     mode="default"
-                    @on-change="debouncedSave"
+                    @on-change="handlePrecautionsChange"
                     @on-created="handlePrecautionsCreated"
                   />
                 </div>
@@ -301,7 +301,9 @@ const selectedSKUForm = reactive<{ sku: string }>({
 const differencesOption = ref<{ id: number; label: string }[]>([])
 const reasonsOption = ref<{ id: number; label: string }[]>([])
 const siteOption = ref<{ id: number; label: string }[]>([])
-const form = reactive<IGetSellingPoint>({
+
+// 表单默认值：初始化和接口回填时共用，避免后端缺字段时残留上一次数据
+const createEmptySellingPointForm = (): IGetSellingPoint => ({
   productNameEn: '',
   site: undefined,
   productDifferences: 0,
@@ -320,8 +322,11 @@ const form = reactive<IGetSellingPoint>({
   title2: '',
   linkKeywordsTs: '',
   sellingPointContentTs: '',
+  summaryId: undefined,
+  artDesignTaskId: undefined,
   id: null,
 })
+const form = reactive<IGetSellingPoint>(createEmptySellingPointForm())
 
 // ASIN 列表格式校验：必须是英文逗号隔开的字母数字 ASIN，不能含空格或其他字符
 const asinListPattern = /^[A-Za-z0-9]+(,[A-Za-z0-9]+)*$/
@@ -400,6 +405,7 @@ const closeSelectedSKU = () => {
   selectSKUVisible.value = false
 }
 const handleConfirmSave = async () => {
+  syncPrecautionsFromEditor()
   formRef1.value?.validate(async (isValid) => {
     if (isValid) {
       if (isSingleSellingPoint.value) {
@@ -463,6 +469,13 @@ const handleTranslate = async () => {
 
   translating.value = true
   try {
+    // 翻译会触发整表刷新，先把当前防抖中的内容立即保存，避免富文本被旧数据覆盖
+    const saved = await flushAutoSave()
+    if (!saved) {
+      $baseMessage('当前内容保存失败，请稍后再翻译', 'error')
+      return
+    }
+
     const { data } = await translateArtDesignSellingPoint(_id.value)
     if (data) {
       $baseMessage('翻译成功！', 'success')
@@ -570,58 +583,66 @@ const debouncedSave = () => {
   if (saveTimer) {
     clearTimeout(saveTimer)
   }
-  saveTimer = setTimeout(async () => {
+  const timer = setTimeout(async () => {
+    if (saveTimer === timer) {
+      saveTimer = null
+    }
     await autoSave()
   }, 1000) // 1秒防抖
+  saveTimer = timer
 }
 
-// 自动保存到后端（仅单个SKU）
-const autoSave = async () => {
+// 实际执行自动保存；外层 autoSave 会负责串行化，避免多个保存请求交错写入
+const doAutoSave = async () => {
   try {
     if (isSingleSellingPoint.value) {
+      // wangEditor 的 v-model 可能有时序差，保存前主动读取一次编辑器 HTML
+      syncPrecautionsFromEditor()
       // 单个SKU保存
       const { summary, ...filteredForm } = form
-      await saveArtDesignSellingPointRealtime({
+      const { data } = await saveArtDesignSellingPointRealtime({
         ...filteredForm,
         artDesignTaskId: Number(route.query.id),
         summaryId: form.summary,
       })
+      return Boolean(data)
     }
     // 批量SKU不自动保存，只在确定按钮时保存
+    return true
   } catch (error) {
     console.warn('自动保存失败:', error)
+    return false
   }
+}
+
+let autoSaveQueue = Promise.resolve(true)
+
+// 自动保存到后端（仅单个SKU），用 Promise 队列保证后发起的最新保存最后落库
+const autoSave = () => {
+  const saveTask = autoSaveQueue.catch(() => true).then(() => doAutoSave())
+  autoSaveQueue = saveTask.then(
+    () => true,
+    () => true
+  )
+  return saveTask
+}
+
+// 立即执行正在防抖等待中的保存，用在翻译前确保本地最新内容已落库
+const flushAutoSave = async () => {
+  if (saveTimer) {
+    clearTimeout(saveTimer)
+    saveTimer = null
+  }
+  return await autoSave()
 }
 
 // 加载卖点数据
 const fetchSellingPointData = async () => {
-  // 重置表单数据
-  Object.assign(form, {
-    productNameEn: '',
-    site: undefined,
-    productDifferences: 0,
-    summary: 0,
-    competitiveProductDifferences: '',
-    targetAudience: '',
-    usageScenario: '',
-    material: '',
-    brand: '',
-    competitiveAsin: '',
-    sameTrackAsin: '',
-    linkKeywords: '',
-    precautions: '',
-    sellingPointContent: '',
-    title1: '',
-    title2: '',
-    linkKeywordsTs: '',
-    sellingPointContentTs: '',
-    id: null,
-  })
-  _id.value = null
-
   const currentSku = querySku.value
   const currentSkus = querySkus.value
   if (!currentSku && !currentSkus) {
+    Object.assign(form, createEmptySellingPointForm())
+    _id.value = null
     $baseMessage('目前没有SKU，无法获取卖点', 'warning')
     return
   }
@@ -632,14 +653,17 @@ const fetchSellingPointData = async () => {
       sku: sku.value,
     })
     _id.value = data.id!
-    Object.assign(form, data)
+    // 接口返回后再合并默认值和后端数据，避免请求前清空表单导致编辑器闪空或误保存
+    Object.assign(form, createEmptySellingPointForm(), data)
   } else if (currentSkus) {
     // 批量修改，直接从后端获取数据
     sku.value = currentSkus.split(',').sort().join(',')
     const { data } = await getBatchArtDesignSellingPoint({
       skus: sku.value,
     })
-    Object.assign(form, data)
+    _id.value = null
+    // 批量接口也用默认值补齐，防止未返回字段沿用上一次表单值
+    Object.assign(form, createEmptySellingPointForm(), data)
   }
 }
 
@@ -693,20 +717,50 @@ const precautionsEditorConfig = reactive<any>({
   },
 })
 
-const handlePrecautionsCreated = (editor: IDomEditor) => {
-  precautionsEditorRef.value = Object.seal(editor)
+// 标记当前是程序回显到编辑器，避免 editor.setHtml 触发 on-change 后又自动保存
+let syncingPrecautionsFromForm = false
+
+// 保存/提交前主动从编辑器读取最新 HTML，确保 form.precautions 是当前可见内容
+const syncPrecautionsFromEditor = () => {
+  const editor = precautionsEditorRef.value
+  if (!editor) return
+
+  const current = editor.getHtml()
+  if (form.precautions !== current) {
+    form.precautions = current
+  }
 }
 
-// 数据从后端拉取后 Object.assign(form, data) 不会触发编辑器重渲，需要手动 setHtml
+// 只有用户真实编辑富文本时才触发自动保存，程序回显不触发
+const handlePrecautionsChange = () => {
+  if (syncingPrecautionsFromForm) return
+  debouncedSave()
+}
+
+// 把 form.precautions 回显到 wangEditor，并避免这次回显触发自动保存
+const setPrecautionsEditorHtml = (html: string) => {
+  const editor = precautionsEditorRef.value
+  if (!editor) return
+  if (editor.getHtml() === html) return
+
+  syncingPrecautionsFromForm = true
+  editor.setHtml(html)
+  void nextTick(() => {
+    syncingPrecautionsFromForm = false
+  })
+}
+
+// 编辑器创建完成后，把当前表单里的 precautions 回显到 wangEditor
+const handlePrecautionsCreated = (editor: IDomEditor) => {
+  precautionsEditorRef.value = Object.seal(editor)
+  setPrecautionsEditorHtml(form.precautions || '')
+}
+
+// 数据从后端拉取后 Object.assign(form, data) 不一定触发编辑器重渲，需要手动 setHtml
 watch(
   () => form.precautions,
   (newVal) => {
-    const editor = precautionsEditorRef.value
-    if (!editor) return
-    const current = editor.getHtml()
-    if (current !== (newVal || '')) {
-      editor.setHtml(newVal || '')
-    }
+    setPrecautionsEditorHtml(newVal || '')
   }
 )
 
