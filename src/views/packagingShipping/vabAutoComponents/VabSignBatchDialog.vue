@@ -33,7 +33,7 @@ const emit = defineEmits<{
 
 const formRef = ref<FormInstance>()
 const form = reactive<{ signedBoxCount: string; signOrder: string }>({
-  signedBoxCount: '',
+  signedBoxCount: '1',
   signOrder: '',
 })
 const rules = reactive<FormRules<{ signedBoxCount: string; signOrder: string }>>({

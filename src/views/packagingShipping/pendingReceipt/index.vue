@@ -905,7 +905,7 @@ const signVisible = ref<boolean>(false)
 const signForm = reactive<any>({
   signCount: '',
   signOrder: '',
-  signedBoxCount: '',
+  signedBoxCount: '1',
 })
 const signRules = reactive<any>({
   signedBoxCount: [{ pattern: /^[1-9]\d*$/, message: '签收箱数必须为正整数', trigger: 'blur' }],
@@ -914,14 +914,12 @@ const signRules = reactive<any>({
 })
 const signFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
-const getLatestSignedBoxCount = (signedBoxCount?: string) => signedBoxCount?.split(',')[0]?.trim() || ''
 // 展示签收弹窗
 const showSignDialog = (row: any) => {
   signVisible.value = true
   copyRow.value = row
   // 默认初始化签收数量为零件采购数量
   signForm.signCount = Number(row.purchaseCount - row.signCount)
-  signForm.signedBoxCount = getLatestSignedBoxCount(row.signedBoxCount)
 }
 // 关闭签收弹窗
 const closeSignDialog = () => {
