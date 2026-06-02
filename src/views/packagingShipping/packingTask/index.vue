@@ -7,6 +7,7 @@
             <el-form inline>
               <el-form-item>
                 <el-button type="primary">工作量预估</el-button>
+                <el-button :icon="Tickets" plain type="primary" @click="handleShowOperationLog">日志记录</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="allTaskForm.site" clearable placeholder="全部" @change="queryAllTaskData">
@@ -634,6 +635,9 @@
       </el-tab-pane>
     </el-tabs>
 
+    <!-- 打包任务操作日志 -->
+    <package-task-operation-log-dialog v-model="operationLogVisible" :site-list="siteList" />
+
     <!-- 零件清单 -->
     <vab-dialog v-model="dialogPartsListTableVisible" title="零配件清单" width="45%">
       <el-table
@@ -1073,11 +1077,12 @@
 </template>
 
 <script lang="ts" setup>
-import { CirclePlus, Search } from '@element-plus/icons-vue'
+import { CirclePlus, Search, Tickets } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { sizeOption } from '../constantOption'
+import PackageTaskOperationLogDialog from '../vabAutoComponents/PackageTaskOperationLogDialog.vue'
 import PackagingVerifyBarCodeDialog from '../vabAutoComponents/PackagingVerifyBarCodeDialog.vue'
 import { getColumnsForTab, PackingTaskTab, type PackingTaskColumn } from './packingTaskColumns'
 import {
@@ -1117,7 +1122,11 @@ import { getDistributionOptionUserList } from '/@/api/devlocal/productDistributi
 import { updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import PackingTaskPermission from '/@/permissions/packingTask'
 import { useUserStore } from '/@/store/modules/user'
-import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
+import type {
+  IGetPackageTaskListQuery,
+  IGetQualityCheck,
+  IPackageTaskSplitOption,
+} from '/@/type/packagingShipping/packagingType'
 import { formatDate } from '/@/utils/dateUtils'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -1180,6 +1189,11 @@ const skuId = ref<number>(0)
 const taskId = ref<number>(0)
 const newQualityInspectionReportVisible = ref<boolean>(false)
 const activeName = ref<number>(7)
+
+const operationLogVisible = ref<boolean>(false)
+const handleShowOperationLog = () => {
+  operationLogVisible.value = true
+}
 
 // 获取各个tab的列配置
 const allTaskColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(PackingTaskTab.ALL))

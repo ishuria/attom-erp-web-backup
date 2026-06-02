@@ -173,6 +173,7 @@ declare module 'vue' {
     OperationLogDialog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/OperationLogDialog.vue')['default']
     OperationLogManualSum: typeof import('./../../../src/views/storeOperations/vabAutoComponents/OperationLogManualSum.vue')['default']
     PackageEditorDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/PackageEditorDialog.vue')['default']
+    PackageTaskOperationLogDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/PackageTaskOperationLogDialog.vue')['default']
     PackagingVerifyBarCodeDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/PackagingVerifyBarCodeDialog.vue')['default']
     PackingImageCapture: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/PackingImageCapture.vue')['default']
     PackingImageInfoDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/PackingImageInfoDialog.vue')['default']

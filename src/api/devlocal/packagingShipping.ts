@@ -70,6 +70,8 @@ import type {
   IPackageFeedbackUpdateStatusReq,
   IPackageFeedbackListResp,
   IPackageFeedbackItemResp,
+  IPackageTaskOperationLogQuery,
+  IPackageTaskOperationLogResp,
   IVerifyPackageTaskReq,
 } from '/@/type/packagingShipping/packagingType'
 
@@ -239,6 +241,18 @@ export function getPackageAllTaskList(params: IGetPackageTaskListQuery): Promise
     data: params,
   })
 }
+
+/**
+ * 打包任务操作日志
+ */
+export function getPackageTaskOperationLogList(params: IPackageTaskOperationLogQuery): Promise<IPackageTaskOperationLogResp> {
+  return request({
+    url: `${BASE_API}/package/task/operation/log/list`,
+    method: 'post',
+    data: params,
+  })
+}
+
 /**
  * 打包任务-待新品质检
  * @param params 查询参数

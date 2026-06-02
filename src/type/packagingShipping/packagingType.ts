@@ -184,6 +184,44 @@ export interface IGetPackageTaskListResp {
   }
 }
 
+export interface IPackageTaskOperationLogQuery {
+  keyWord?: string
+  operationType?: number
+  startTime?: string
+  endTime?: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IPackageTaskOperationLogResp {
+  data?: {
+    list?: IPackageTaskOperationLogItem[]
+    total?: number
+  }
+}
+
+export interface IPackageTaskOperationLogItem {
+  id?: number
+  poId?: number
+  po?: string
+  sku?: string
+  packageTaskId?: number
+  toPackageTaskId?: number
+  operationType?: number
+  operationTypeName?: string
+  fromSite?: number
+  toSite?: number
+  splitCount?: number
+  beforeTaskCount?: number
+  afterTaskCount?: number
+  totalSignCount?: number
+  actualSignCount?: number
+  actualArrivalCount?: number
+  createUserId?: number
+  createUserName?: string
+  createTime?: string
+}
+
 export interface IGetPackageTaskList {
   /**
    * 实际完成数
