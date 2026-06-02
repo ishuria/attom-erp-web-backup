@@ -686,8 +686,9 @@ const getKeepaFlagLabel = (prop: string) => {
 }
 
 const getKeepaFlagClass = (prop: string, value: unknown) => {
-  if (!isTruthyFlag(value)) return 'keepa-flag-icon keepa-flag-icon--inactive'
+  if (prop === 'isAdultProduct' && !isTruthyFlag(value)) return 'keepa-flag-icon keepa-flag-icon--success'
   if (prop === 'isAdultProduct') return 'keepa-flag-icon keepa-flag-icon--danger'
+  if (!isTruthyFlag(value)) return 'keepa-flag-icon keepa-flag-icon--inactive'
   return 'keepa-flag-icon keepa-flag-icon--active'
 }
 
@@ -1026,6 +1027,9 @@ const publishPrice = async (row: any) => {
   vertical-align: middle;
 }
 .keepa-flag-icon--active {
+  color: var(--el-color-success);
+}
+.keepa-flag-icon--success {
   color: var(--el-color-success);
 }
 .keepa-flag-icon--danger {
