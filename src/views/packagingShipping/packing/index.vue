@@ -53,6 +53,9 @@
         >
           发货计划渠道
         </el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_AMAZON] }" type="primary" @click="shipmentNewAmazonDialogRef?.open()">
+          发货(新亚马逊)
+        </el-button>
 
         <!-- <el-button type="success">装箱检查</el-button> -->
         <el-select
@@ -169,7 +172,7 @@
       :data="list"
       :default-sort="{ prop: 'createTime', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
-      max-height="calc(100vh - 300px)"
+      max-height="calc(var(--el-container-height) - 200px)"
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod"
       @cell-click="handleCellClick"
@@ -511,6 +514,8 @@
         </div>
       </template>
     </vab-dialog>
+    <!-- 发货新（亚马逊）-->
+    <vab-shipment-new-amazon-dialog ref="shipmentNewAmazonDialogRef" :select-rows="selectRows" />
     <!-- 发货规划 -->
     <vab-dialog v-model="shippingPlanningVisible" title="发货规划" width="20%" @close="closeShippingPlanning">
       <el-form
@@ -742,6 +747,8 @@ const showQuantityCheck = () => {
 
 // 发货计划渠道管理
 const shippingPlanChannelVisible = ref<boolean>(false)
+// 发货（新亚马逊）组件引用
+const shipmentNewAmazonDialogRef = ref<InstanceType<typeof import('../vabAutoComponents/VabShipmentNewAmazonDialog.vue')['default']> | null>(null)
 
 // 订货总数查看展示
 const viewOrderVisible = ref<boolean>(false)

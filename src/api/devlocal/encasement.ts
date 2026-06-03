@@ -850,3 +850,67 @@ export const deleteShipmentPlanChannelConfig = (id: number) => {
     params: { id },
   })
 }
+
+export interface IShipmentTaskFee {
+  amount: string
+  code: string
+  target: string
+  type: string
+}
+
+export interface IShipmentTaskItem {
+  asin: string
+  fnsku: string
+  msku: string
+  parentAsin: string
+  productName: string
+  sku: string
+  title: string
+  url: string
+}
+
+export interface IShipmentTaskAddress {
+  addressLine1: string
+  addressLine2: string
+  city: string
+  companyName: string
+  countryCode: string
+  email: string
+  name: string
+  phoneNumber: string
+  postalCode: string
+  stateOrProvinceCode: string
+}
+
+export interface IShipmentTaskShipmentInfo {
+  address: IShipmentTaskAddress
+  itemCount: string
+  itemList: IShipmentTaskItem[]
+  postalCodeMark: string
+  shipmentId: string
+  shipmentName: string
+  wareHouseId: string
+}
+
+export interface IShipmentTaskPlacementOption {
+  feeCount: string
+  fees: IShipmentTaskFee[]
+  placementOptionId: string
+  placementStatus: string
+  shipmentInformationList: IShipmentTaskShipmentInfo[]
+}
+
+export interface IShipmentTaskCreateRes {
+  data: IShipmentTaskPlacementOption[]
+}
+
+/**
+ * @description 发货（新亚马逊）- 创建货件任务
+ */
+export const createShipmentTask = (data: { encasementIds: number[]; channelId: number }): Promise<IShipmentTaskCreateRes> => {
+  return request({
+    url: `${BASE_API}/shipment/task/create`,
+    method: 'post',
+    data,
+  })
+}
