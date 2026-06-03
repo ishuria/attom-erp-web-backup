@@ -367,7 +367,7 @@ const queryForm = reactive<IQueryForm>({
   site: [],
   status: -1,
   oldProductClaim: 0,
-  hideZeroDistribution: 0,
+  hideZeroDistribution: 1,
   haltStatus: 1,
 })
 const listLoading = ref<boolean>(false)

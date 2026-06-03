@@ -1,14 +1,20 @@
 <template>
   <!-- 生成AI调研报告 -->
-  <vab-dialog v-model="visible" title="生成AI调研报告" width="640" @closed="resetAIReportForm">
-    <el-form ref="aiReportFormRef" label-position="top" :model="aiReportForm" :rules="aiReportRules" @submit.prevent>
+  <vab-dialog
+    v-model="visible"
+    class="ai-report-dialog"
+    title="生成AI调研报告"
+    width="min(640px, calc(100vw - 32px))"
+    @closed="resetAIReportForm"
+  >
+    <el-form ref="aiReportFormRef" class="ai-report-form" label-position="top" :model="aiReportForm" :rules="aiReportRules" @submit.prevent>
       <el-form-item label="产品品名" prop="productName">
         <el-input v-model.trim="aiReportForm.productName" clearable placeholder="请输入产品品名" />
       </el-form-item>
       <el-form-item prop="competitorAsin">
         <template #label>
           <span class="form-label">
-            需要分析的主要竞对ASIN
+            <span class="label-title">需要分析的主要竞对ASIN</span>
             <span class="label-tip">要求逗号分割不区分中英文</span>
           </span>
         </template>
@@ -17,15 +23,22 @@
       <el-form-item prop="coreKeyWord">
         <template #label>
           <span class="form-label">
-            调研核心关键词
+            <span class="label-title">调研核心关键词</span>
             <span class="label-tip">不填写关键词时，请填写AI挖掘核心关键词数量</span>
           </span>
         </template>
         <el-input v-model.trim="aiReportForm.coreKeyWord" clearable placeholder="例如：Power bank, portable charger, battery" />
       </el-form-item>
-      <el-form-item label="除了已给到的核心关键词外，需要AI自行挖掘并调研的核心关键词数量，建议1-3个" prop="count">
-        <el-input-number v-model="aiReportForm.count" controls-position="right" :max="3" :min="0" :precision="0" :step="1" />
-        <div class="form-tip">未填写调研核心关键词时，此数量不能为0。</div>
+      <el-form-item prop="count">
+        <template #label>
+          <span class="form-label">
+            <span class="label-title">需要AI自行挖掘并调研的核心关键词数量（除了已给到的核心关键词之外）</span>
+          </span>
+        </template>
+        <div class="keyword-count-row">
+          <el-input-number v-model="aiReportForm.count" controls-position="right" :max="3" :min="0" :precision="0" :step="1" />
+          <span class="label-tip">未填写调研核心关键词时，此数量不能为0，建议1-3个。</span>
+        </div>
       </el-form-item>
       <el-form-item label="产品差异化初步想法" prop="userIdea">
         <el-input
@@ -37,8 +50,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">取消</el-button>
-      <el-button :loading="aiReportSubmitting" type="primary" @click="submitAIReport">生成报告</el-button>
+      <div class="dialog-footer">
+        <el-button @click="visible = false">取消</el-button>
+        <el-button :loading="aiReportSubmitting" type="primary" @click="submitAIReport">生成报告</el-button>
+      </div>
     </template>
   </vab-dialog>
 </template>
@@ -83,6 +98,49 @@ const createDefaultAIReportForm = (): AIReportForm => ({
 })
 const aiReportForm = reactive<AIReportForm>(createDefaultAIReportForm())
 
+const asinPattern = /^B0[A-Z0-9]{8}$/i
+const asinInTextPattern = /\bB0[A-Z0-9]{8}\b/i
+const commaSeparatorPattern = /[,，]/
+const splitCommaSeparatedInput = (value: string) => value.split(commaSeparatorPattern).map((item) => item.trim())
+
+const validateCompetitorAsin = (_rule: any, value: string, callback: (error?: Error) => void) => {
+  const inputValue = value?.trim()
+  if (!inputValue) {
+    callback()
+    return
+  }
+
+  const asinList = splitCommaSeparatedInput(inputValue)
+  if (asinList.some((asin) => !asin)) {
+    callback(new Error('ASIN之间请用逗号分隔，且不要保留空项'))
+    return
+  }
+
+  const invalidAsin = asinList.find((asin) => !asinPattern.test(asin))
+  if (invalidAsin) {
+    callback(new Error(`ASIN格式错误：${invalidAsin} 不是有效ASIN，请输入10位以B0开头的字母/数字ASIN`))
+    return
+  }
+
+  callback()
+}
+
+const validateCoreKeyWord = (_rule: any, value: string, callback: (error?: Error) => void) => {
+  const inputValue = value?.trim()
+  if (!inputValue) {
+    callback()
+    return
+  }
+
+  const asinMatch = inputValue.match(asinInTextPattern)
+  if (asinMatch) {
+    callback(new Error(`检测到疑似ASIN：${asinMatch[0]}，请填写到“需要分析的主要竞对ASIN”中`))
+    return
+  }
+
+  callback()
+}
+
 const validateKeywordCount = (_rule: any, value: number, callback: (error?: Error) => void) => {
   if (!Number.isInteger(value) || value < 0) {
     callback(new Error('关键词数量必须是大于等于0的整数'))
@@ -97,6 +155,8 @@ const validateKeywordCount = (_rule: any, value: number, callback: (error?: Erro
 
 const aiReportRules = reactive<FormRules<AIReportForm>>({
   productName: [{ required: true, message: '产品品名是必填项', trigger: 'blur' }],
+  competitorAsin: [{ validator: validateCompetitorAsin, trigger: 'blur' }],
+  coreKeyWord: [{ validator: validateCoreKeyWord, trigger: 'blur' }],
   count: [{ validator: validateKeywordCount, trigger: 'change' }],
 })
 
@@ -225,22 +285,133 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.ai-report-form {
+  padding: 2px 2px 4px;
+}
+
+.ai-report-form :deep(.el-form-item) {
+  margin-bottom: 18px;
+}
+
+.ai-report-form :deep(.el-form-item:last-child) {
+  margin-bottom: 0;
+}
+
+.ai-report-form :deep(.el-form-item__label) {
+  padding-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--el-text-color-primary);
+}
+
+.ai-report-form :deep(.el-form-item__content) {
+  align-items: flex-start;
+}
+
+.ai-report-form :deep(.el-input),
+.ai-report-form :deep(.el-textarea) {
+  width: 100%;
+}
+
+.ai-report-form :deep(.el-input__wrapper),
+.ai-report-form :deep(.el-textarea__inner) {
+  border-radius: 6px;
+  transition:
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.ai-report-form :deep(.el-input__wrapper:hover),
+.ai-report-form :deep(.el-textarea__inner:hover) {
+  box-shadow: 0 0 0 1px var(--el-border-color-hover) inset;
+}
+
+.ai-report-form :deep(.el-input__wrapper.is-focus),
+.ai-report-form :deep(.el-textarea__inner:focus) {
+  box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+}
+
+.ai-report-form :deep(.el-input__inner::placeholder),
+.ai-report-form :deep(.el-textarea__inner::placeholder) {
+  color: #a8b1c0;
+}
+
+.ai-report-form :deep(.el-textarea__inner) {
+  min-height: 96px !important;
+  line-height: 1.55;
+}
+
+.ai-report-form :deep(.el-form-item__error) {
+  padding-top: 4px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
 .form-label {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+  min-width: 0;
+}
+
+.label-title {
+  color: var(--el-text-color-primary);
 }
 
 .label-tip {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--el-text-color-secondary);
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 1px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--el-color-primary);
+  white-space: normal;
+  background: var(--el-color-primary-light-9);
+  border: 1px solid var(--el-color-primary-light-7);
+  border-radius: 4px;
 }
 
-.form-tip {
-  margin-top: 6px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--el-text-color-secondary);
+.keyword-count-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.keyword-count-row :deep(.el-input-number) {
+  flex: 0 0 108px;
+  width: 108px;
+}
+
+.dialog-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.dialog-footer :deep(.el-button) {
+  min-width: 78px;
+  border-radius: 6px;
+}
+
+.dialog-footer :deep(.el-button + .el-button) {
+  margin-left: 0;
+}
+
+@media (max-width: 720px) {
+  .ai-report-form :deep(.el-form-item) {
+    margin-bottom: 16px;
+  }
+
+  .label-tip,
+  .keyword-count-row .label-tip {
+    max-width: 100%;
+  }
 }
 </style>
