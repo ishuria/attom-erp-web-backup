@@ -15,7 +15,7 @@
         <template #label>
           <span class="form-label">
             <span class="label-title">需要分析的主要竞对ASIN</span>
-            <span class="label-tip">要求逗号分割不区分中英文</span>
+            <span class="label-tip">要求逗号分割</span>
           </span>
         </template>
         <el-input v-model.trim="aiReportForm.competitorAsin" clearable placeholder="例如：B0XXXXXXXX, B0YYYYYYYY" />
@@ -24,10 +24,10 @@
         <template #label>
           <span class="form-label">
             <span class="label-title">调研核心关键词</span>
-            <span class="label-tip">不填写关键词时，请填写AI挖掘核心关键词数量</span>
+            <span class="label-tip">可不填，让AI自己挖掘；多个关键词请用逗号分割</span>
           </span>
         </template>
-        <el-input v-model.trim="aiReportForm.coreKeyWord" clearable placeholder="例如：Power bank, portable charger, battery" />
+        <el-input v-model="aiReportForm.coreKeyWord" clearable placeholder="例如：Power bank, portable charger, battery" />
       </el-form-item>
       <el-form-item prop="count">
         <template #label>
@@ -100,8 +100,7 @@ const aiReportForm = reactive<AIReportForm>(createDefaultAIReportForm())
 
 const asinPattern = /^B0[A-Z0-9]{8}$/i
 const asinInTextPattern = /\bB0[A-Z0-9]{8}\b/i
-const commaSeparatorPattern = /[,，]/
-const splitCommaSeparatedInput = (value: string) => value.split(commaSeparatorPattern).map((item) => item.trim())
+const splitCommaSeparatedInput = (value: string) => value.split(/[,，]/).map((item) => item.trim())
 
 const validateCompetitorAsin = (_rule: any, value: string, callback: (error?: Error) => void) => {
   const inputValue = value?.trim()
@@ -110,15 +109,9 @@ const validateCompetitorAsin = (_rule: any, value: string, callback: (error?: Er
     return
   }
 
-  const asinList = splitCommaSeparatedInput(inputValue)
-  if (asinList.some((asin) => !asin)) {
-    callback(new Error('ASIN之间请用逗号分隔，且不要保留空项'))
-    return
-  }
-
-  const invalidAsin = asinList.find((asin) => !asinPattern.test(asin))
+  const invalidAsin = splitCommaSeparatedInput(inputValue).find((asin) => asin && !asinPattern.test(asin))
   if (invalidAsin) {
-    callback(new Error(`ASIN格式错误：${invalidAsin} 不是有效ASIN，请输入10位以B0开头的字母/数字ASIN`))
+    callback(new Error(`ASIN格式错误：${invalidAsin} 不是有效ASIN，请输入正确的ASIN`))
     return
   }
 
@@ -299,7 +292,7 @@ watch(
 
 .ai-report-form :deep(.el-form-item__label) {
   padding-bottom: 6px;
-  font-size: 14px;
+
   font-weight: 600;
   line-height: 22px;
   color: var(--el-text-color-primary);
@@ -365,7 +358,7 @@ watch(
   align-items: center;
   min-height: 22px;
   padding: 1px 8px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 18px;
   color: var(--el-color-primary);
