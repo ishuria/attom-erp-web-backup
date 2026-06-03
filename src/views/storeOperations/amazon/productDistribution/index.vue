@@ -34,6 +34,9 @@
           <el-form-item>
             <div class="filter-group">
               <el-checkbox v-model="queryForm.oldProductClaim" :false-value="0" :true-value="1" @change="queryData">老品认领</el-checkbox>
+              <el-checkbox v-model="queryForm.hideZeroDistribution" :false-value="0" :true-value="1" @change="queryData">
+                隐藏零分配
+              </el-checkbox>
             </div>
           </el-form-item>
           <el-form-item>
@@ -76,6 +79,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
+      v-loading="listLoading"
       border
       :cell-class-name="clearPadding"
       :cell-style="cellStyle"
@@ -214,11 +218,11 @@
 import { Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import { allocationOption } from '/@/api/devlocal/openrationAllocate.ts'
 import {
   addDistributionList,
   delDistributionList,
   getDistributionList,
-  getDistributionOptionUserList,
   getDistributionProductList,
   getDistributionSiteList,
   getDistributionUserType,
@@ -228,13 +232,12 @@ import {
   updateDistributionUserType,
   updateOldStatus,
 } from '/@/api/devlocal/productDistribution'
+import { getAmazonOptionUserList } from '/@/api/devlocal/productPerformance.ts'
 import { ROLE_BOSS_CODE } from '/@/const/role'
+import StoreOperationPermission from '/@/permissions/storeOperation.ts'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { getAmazonOptionUserList } from '/@/api/devlocal/productPerformance.ts'
-import { allocationOption } from '/@/api/devlocal/openrationAllocate.ts'
-import StoreOperationPermission from '/@/permissions/storeOperation.ts'
 
 defineOptions({
   name: 'ProductDistribution',
@@ -354,6 +357,7 @@ type IQueryForm = {
   site: CheckboxValueType[]
   status: number
   oldProductClaim: number
+  hideZeroDistribution: number
   haltStatus: number
 }
 const queryForm = reactive<IQueryForm>({
@@ -363,6 +367,7 @@ const queryForm = reactive<IQueryForm>({
   site: [],
   status: -1,
   oldProductClaim: 0,
+  hideZeroDistribution: 0,
   haltStatus: 1,
 })
 const listLoading = ref<boolean>(false)
@@ -546,6 +551,7 @@ const fetchData = async () => {
       ...filterQueryForm,
       siteCodes: site.join(','),
       oldProductClaim: queryForm.oldProductClaim,
+      hideZeroDistribution: queryForm.hideZeroDistribution,
       haltStatus: queryForm.haltStatus,
     })
     total.value = data.total

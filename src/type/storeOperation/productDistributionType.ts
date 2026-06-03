@@ -13,6 +13,7 @@ export interface IGetDistributionProductListReq {
   pageNo: number
   pageSize: number
   oldProductClaim: number
+  hideZeroDistribution: number
   haltStatus: number
 }
 export interface IGetDistributionProductListRes {
