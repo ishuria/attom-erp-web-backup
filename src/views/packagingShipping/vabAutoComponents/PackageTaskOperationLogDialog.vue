@@ -4,7 +4,13 @@
       <vab-query-form-left-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item label="关键词">
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="PO / SKU / 任务ID" style="width: 220px" @keyup.enter="queryLog" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="PO / SKU / 任务ID"
+              style="width: 220px"
+              @keyup.enter="queryLog"
+            />
           </el-form-item>
           <el-form-item label="操作类型">
             <el-select v-model="queryForm.operationType" placeholder="全部" style="width: 130px" @change="queryLog">
@@ -46,25 +52,15 @@
       <el-table-column align="center" label="关联任务ID" min-width="130" prop="toPackageTaskId">
         <template #default="{ row }">{{ getTargetTaskText(row) }}</template>
       </el-table-column>
-      <el-table-column align="center" label="站点信息" min-width="260">
+      <el-table-column align="center" label="站点" min-width="260">
         <template #default="{ row }">
           <div v-if="isSiteUpdate(row.operationType)" class="site-flow">
             <el-tag :style="getSiteStyle(row.fromSite)">{{ getSiteLabel(row.fromSite) }}</el-tag>
             <span class="site-flow-arrow">→</span>
             <el-tag :style="getSiteStyle(row.toSite)">{{ getSiteLabel(row.toSite) }}</el-tag>
           </div>
-          <div v-else-if="isSplit(row.operationType) && hasSite(getSplitSite(row))" class="site-pair">
-            <el-tag :style="getSiteStyle(getSplitSite(row))">{{ getSiteLabel(getSplitSite(row)) }}</el-tag>
-          </div>
-          <div v-else-if="hasSite(row.fromSite) || hasSite(row.toSite)" class="site-pair">
-            <span v-if="hasSite(row.fromSite)" class="site-note">
-              <span class="site-note-label">原任务站点</span>
-              <el-tag :style="getSiteStyle(row.fromSite)">{{ getSiteLabel(row.fromSite) }}</el-tag>
-            </span>
-            <span v-if="hasSite(row.toSite)" class="site-note">
-              <span class="site-note-label">{{ getTargetSiteText(row.operationType) }}</span>
-              <el-tag :style="getSiteStyle(row.toSite)">{{ getSiteLabel(row.toSite) }}</el-tag>
-            </span>
+          <div v-else-if="hasSite(row.fromSite)" class="site-pair">
+            <el-tag :style="getSiteStyle(row.fromSite)">{{ getSiteLabel(row.fromSite) }}</el-tag>
           </div>
           <span v-else>-</span>
         </template>
@@ -158,19 +154,7 @@ const getTaskCountChangeText = (row: IPackageTaskOperationLogItem) => {
 
 const isSiteUpdate = (operationType?: number) => operationType === OperationType.SITE_UPDATE
 
-const isSplit = (operationType?: number) => operationType === OperationType.SPLIT
-
 const hasSite = (siteId?: number) => siteId !== undefined && siteId !== null
-
-const getSplitSite = (row: IPackageTaskOperationLogItem) => {
-  if (row.beforeTaskCount === 0 && hasSite(row.toSite)) return row.toSite
-  return row.fromSite
-}
-
-const getTargetSiteText = (operationType?: number) => {
-  if (operationType === OperationType.COUNT_UPDATE) return '转入站点'
-  return '目标站点'
-}
 
 const getSiteBaseColor = (siteName: string) => {
   if (!siteName) return '#909399'
@@ -266,24 +250,12 @@ const handleCurrentChange = (value: number) => {
   white-space: nowrap;
 }
 
-.site-note {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
 .site-pair {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 6px 10px;
-}
-
-.site-note-label {
-  color: var(--el-text-color-secondary);
 }
 
 .site-flow-arrow,
