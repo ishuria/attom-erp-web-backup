@@ -72,7 +72,10 @@ const fetchSkuComponent = async () => {
       tableData.value.forEach((item: any) => {
         item.totalPrice = item.totalPrice ? formattedPrice(item.totalPrice) : null
         item.taxIncludedPrice = item.taxIncludedPrice ? formattedPrice(item.taxIncludedPrice) : null
-        item.supplierName = item.suppliserList && item.suppliserList.length > 0 ? item.suppliserList[0].label : null
+        item.supplierName =
+          item.suppliserId && item.suppliserList && item.suppliserList.length > 0
+            ? item.suppliserList.find((supplier: any) => Number(supplier.id) === Number(item.suppliserId))?.label
+            : null
         item.purchaseName = item.purchaseId
           ? purchaseRes.data.find((purchase: any) => Number(purchase.id) === Number(item.purchaseId)).label
           : null
