@@ -241,10 +241,10 @@ export interface IStringRes {
  */
 export interface IUpdateEncasementReq {
   id?: number
-  grossWeight?: number
-  length?: number
-  width?: number
-  height?: number
+  grossWeight?: string | number
+  length?: string | number
+  width?: string | number
+  height?: string | number
   site?: number
   boxNumber?: number
   partner?: number[]
