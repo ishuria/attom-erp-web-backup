@@ -1296,9 +1296,15 @@ const handlerUpdateComponentNameDialog = () => {
 }
 const _row = ref<any>({})
 const handleUpdateComponentName = (row: any) => {
-  _row.value = row
-  updateComponentNameVisible.value = true
-  componentNameForm.componentName = row.componentName
+  $baseConfirm(
+    '任何零件名的修改，只允许修正或补充描述，不得更改零件属性',
+    '温馨提示',
+    () => {
+      _row.value = row
+      updateComponentNameVisible.value = true
+      componentNameForm.componentName = row.componentName
+    }
+  )
 }
 const handleSubmitComponentName = async () => {
   componentNameFormRef.value?.validate(async (valid: any) => {
